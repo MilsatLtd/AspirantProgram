@@ -1,0 +1,665 @@
+import instagram from "../Assets/instagram.svg"
+import linkedin from "../Assets/linkedin.svg"
+import twitter from "../Assets/twitter.svg"
+import blocker from "../Assets/blocker.svg"
+import progress from "../Assets/progress.svg"
+import learnWithMentor from "../Assets/learn-mentor.svg"
+import community from "../Assets/community-picture.jpeg"
+import frontend from "../Assets/frontend-picture.jpeg"
+import designer from "../Assets/designer-picture.jpeg"
+import triangleBlue from "../Assets/triangleTexture-blue.svg"
+import triangleGreen from "../Assets/triangleTexture-green.svg"
+import trianglePurple from "../Assets/triangleTexture-purple.svg"
+import esriLogo from "../Assets/partners-logo/esri.svg"
+
+export const navLinks = [
+    
+    {
+        id:1,
+        name: 'Home',
+        link: '/'
+    },
+    {
+        id:2,
+        name: 'Explore',
+        link: '/explore'
+    },
+    // {
+    //     id:3,
+    //     name: 'About',
+    //     link: '/about'
+    // },
+    {
+        id:4,
+        name: 'FAQs',
+        link: '/faqs'
+    }
+]
+export const bottomline = [
+
+    {
+        bg_color: '#2BBDB2'
+    },
+    {
+        bg_color: '#B58BB8'
+    },
+    {
+        bg_color: '#383639'
+    },
+    {
+        bg_color: '#2BBDB2'
+    },
+    {
+        bg_color: '#B58BB8'
+    },
+    {
+        bg_color: '#383639'
+    },
+    {
+        bg_color: '#2BBDB2'
+    },
+    {
+        bg_color: '#B58BB8'
+    },
+    {
+        bg_color: '#383639'
+    }
+]
+
+export const socialMediaIcon = [
+    {
+        id: 1,
+        icon: linkedin,
+        name: 'linkedin-icon',
+        link: 'https://www.linkedin.com/company/milsat'
+     },
+    {
+       id: 2,
+       icon: instagram,
+       name: 'instagram-icon',
+       link: 'https://www.instagram.com/insidemilsat/'
+    },
+   
+     {
+        id: 3,
+        icon: twitter,
+        name: 'twitter-icon',
+        link: 'https://twitter.com/milsat_africa'
+     }
+]
+
+export const eligibility = [
+    {
+        id: 1,
+        criteria: "Lorem ipsum dolor sit amet consectetur."
+    },
+    {
+        id: 2,
+        criteria: "Lorem ipsum dolor sit amet consectetur."
+    },
+    {
+        id: 3,
+        criteria: "Lorem ipsum dolor sit amet consectetur."
+    }
+]
+
+export const AvailableTracks = [
+    {
+        id: "1",
+        trackName: "Community Developer",
+        description: "Lorem ipsum dolor sit amet consectetur. Faucibus volutpat imperdiet dictum.",
+        learningTimeLine: "5 weeks",
+        TrackInfo: [
+            {
+                name: "Track-curriculum",
+                list: [
+                    {
+                        id: 1,
+                        criteria: "Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Velit officia consequat duis enim velit mollit. Exercitation veniam consequat sunt nostrud amet."
+                    },
+                    {
+                        id: 2,
+                        criteria: "Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Velit officia consequat duis enim velit mollit. Exercitation veniam consequat sunt nostrud amet."
+                    },
+                    {
+                        id: 3,
+                        criteria: "Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Velit officia consequat duis enim velit mollit. Exercitation veniam consequat sunt nostrud amet."
+                    }
+                ]
+            },
+            {
+                name: "What to learn",
+                list: [
+                    {
+                        id: 1,
+                        criteria: "Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Velit officia consequat duis enim velit mollit. Exercitation veniam consequat sunt nostrud amet."
+                    },
+                    {
+                        id: 2,
+                        criteria: "Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Velit officia consequat duis enim velit mollit. Exercitation veniam consequat sunt nostrud amet."
+                    },
+                    {
+                        id: 3,
+                        criteria: "Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Velit officia consequat duis enim velit mollit. Exercitation veniam consequat sunt nostrud amet."
+                    }
+                ]
+            },
+            {
+                name: "Track Requirement",
+                list: [
+                    {
+                        id: 1,
+                        criteria: "Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Velit officia consequat duis enim velit mollit. Exercitation veniam consequat sunt nostrud amet."
+                    },
+                    {
+                        id: 2,
+                        criteria: "Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Velit officia consequat duis enim velit mollit. Exercitation veniam consequat sunt nostrud amet."
+                    },
+                    {
+                        id: 3,
+                        criteria: "Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Velit officia consequat duis enim velit mollit. Exercitation veniam consequat sunt nostrud amet."
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        id: "3",
+        trackName: "Geospatial Front-end",
+        description: "Lorem ipsum dolor sit amet consectetur. Faucibus volutpat imperdiet dictum.",
+        learningTimeLine: "5 weeks",
+        TrackInfo: [
+            {
+                name: "Track-curriculum",
+                list: [
+                    {
+                        id: 1,
+                        criteria: "Lorem ipsum dolor sit amet consectetur."
+                    },
+                    {
+                        id: 2,
+                        criteria: "Lorem ipsum dolor sit amet consectetur."
+                    },
+                    {
+                        id: 3,
+                        criteria: "Lorem ipsum dolor sit amet consectetur."
+                    },
+                    {
+                        id: 4,
+                        criteria: "Lorem ipsum dolor sit amet consectetur."
+                    }
+                ]
+            },
+            {
+                name: "Track Requirement",
+                list: [
+                    {
+                        id: 1,
+                        criteria: "Lorem ipsum dolor sit amet consectetur."
+                    },
+                    {
+                        id: 2,
+                        criteria: "Lorem ipsum dolor sit amet consectetur."
+                    },
+                    {
+                        id: 3,
+                        criteria: "Lorem ipsum dolor sit amet consectetur."
+                    },
+                    {
+                        id: 4,
+                        criteria: "Lorem ipsum dolor sit amet consectetur."
+                    },
+                    {
+                        id: 5,
+                        criteria: "Lorem ipsum dolor sit amet consectetur."
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        id: "2",
+        trackName: "Geospatial Designer",
+        description: "Lorem ipsum dolor sit amet consectetur. Faucibus volutpat imperdiet dictum.",
+        learningTimeLine: "5 weeks",
+        TrackInfo: [
+            {
+                name: "Track-curriculum",
+                list: [
+                    {
+                        id: 1,
+                        criteria: "Lorem ipsum dolor sit amet consectetur."
+                    },
+                    {
+                        id: 2,
+                        criteria: "Lorem ipsum dolor sit amet consectetur."
+                    },
+                    {
+                        id: 3,
+                        criteria: "Lorem ipsum dolor sit amet consectetur."
+                    },
+                    {
+                        id: 4,
+                        criteria: "Lorem ipsum dolor sit amet consectetur."
+                    }
+                ]
+            },
+            {
+                name: "Track Requirement",
+                list: [
+                    {
+                        id: 1,
+                        criteria: "Lorem ipsum dolor sit amet consectetur."
+                    },
+                    {
+                        id: 2,
+                        criteria: "Lorem ipsum dolor sit amet consectetur."
+                    },
+                    {
+                        id: 3,
+                        criteria: "Lorem ipsum dolor sit amet consectetur."
+                    },
+                    {
+                        id: 4,
+                        criteria: "Lorem ipsum dolor sit amet consectetur."
+                    },
+                    {
+                        id: 5,
+                        criteria: "Lorem ipsum dolor sit amet consectetur."
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        id: "4",
+        trackName: "Geospatial Back-end",
+        description: "Lorem ipsum dolor sit amet consectetur. Faucibus volutpat imperdiet dictum.",
+        learningTimeLine: "5 weeks",
+        TrackInfo: [
+            {
+                name: "Track-curriculum",
+                list: [
+                    {
+                        id: 1,
+                        criteria: "Lorem ipsum dolor sit amet consectetur."
+                    },
+                    {
+                        id: 2,
+                        criteria: "Lorem ipsum dolor sit amet consectetur."
+                    },
+                    {
+                        id: 3,
+                        criteria: "Lorem ipsum dolor sit amet consectetur."
+                    },
+                    {
+                        id: 4,
+                        criteria: "Lorem ipsum dolor sit amet consectetur."
+                    }
+                ]
+            },
+            {
+                name: "Track Requirement",
+                list: [
+                    {
+                        id: 1,
+                        criteria: "Lorem ipsum dolor sit amet consectetur."
+                    },
+                    {
+                        id: 2,
+                        criteria: "Lorem ipsum dolor sit amet consectetur."
+                    },
+                    {
+                        id: 3,
+                        criteria: "Lorem ipsum dolor sit amet consectetur."
+                    },
+                    {
+                        id: 4,
+                        criteria: "Lorem ipsum dolor sit amet consectetur."
+                    },
+                    {
+                        id: 5,
+                        criteria: "Lorem ipsum dolor sit amet consectetur."
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        id: "5",
+        trackName: "Geospatial Analyst",
+        description: "Lorem ipsum dolor sit amet consectetur. Faucibus volutpat imperdiet dictum.",
+        learningTimeLine: "5 weeks",
+        TrackInfo: [
+            {
+                name: "Track-curriculum",
+                list: [
+                    {
+                        id: 1,
+                        criteria: "Lorem ipsum dolor sit amet consectetur."
+                    },
+                    {
+                        id: 2,
+                        criteria: "Lorem ipsum dolor sit amet consectetur."
+                    },
+                    {
+                        id: 3,
+                        criteria: "Lorem ipsum dolor sit amet consectetur."
+                    },
+                    {
+                        id: 4,
+                        criteria: "Lorem ipsum dolor sit amet consectetur."
+                    }
+                ]
+            },
+            {
+                name: "Track Requirement",
+                list: [
+                    {
+                        id: 1,
+                        criteria: "Lorem ipsum dolor sit amet consectetur."
+                    },
+                    {
+                        id: 2,
+                        criteria: "Lorem ipsum dolor sit amet consectetur."
+                    },
+                    {
+                        id: 3,
+                        criteria: "Lorem ipsum dolor sit amet consectetur."
+                    },
+                    {
+                        id: 4,
+                        criteria: "Lorem ipsum dolor sit amet consectetur."
+                    },
+                    {
+                        id: 5,
+                        criteria: "Lorem ipsum dolor sit amet consectetur."
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        id: "6",
+        trackName: "Geospatial Mobile Developer",
+        description: "Lorem ipsum dolor sit amet consectetur. Faucibus volutpat imperdiet dictum.",
+        learningTimeLine: "5 weeks",
+        TrackInfo: [
+            {
+                name: "Track-curriculum",
+                list: [
+                    {
+                        id: 1,
+                        criteria: "Lorem ipsum dolor sit amet consectetur."
+                    },
+                    {
+                        id: 2,
+                        criteria: "Lorem ipsum dolor sit amet consectetur."
+                    },
+                    {
+                        id: 3,
+                        criteria: "Lorem ipsum dolor sit amet consectetur."
+                    },
+                    {
+                        id: 4,
+                        criteria: "Lorem ipsum dolor sit amet consectetur."
+                    }
+                ]
+            },
+            {
+                name: "Track Requirement",
+                list: [
+                    {
+                        id: 1,
+                        criteria: "Lorem ipsum dolor sit amet consectetur."
+                    },
+                    {
+                        id: 2,
+                        criteria: "Lorem ipsum dolor sit amet consectetur."
+                    },
+                    {
+                        id: 3,
+                        criteria: "Lorem ipsum dolor sit amet consectetur."
+                    },
+                    {
+                        id: 4,
+                        criteria: "Lorem ipsum dolor sit amet consectetur."
+                    },
+                    {
+                        id: 5,
+                        criteria: "Lorem ipsum dolor sit amet consectetur."
+                    }
+                ]
+            }
+        ]
+    }
+]
+
+
+export const applictionTimeline = {
+        statDate: "00 November, 2023",
+        endDate: "00 December, 2023"
+    }
+
+
+    export const termsAndConditions = {
+        firstTerms: "I hereby declare that all information  provided are accurate and complete",
+        secondTerms: "Lorem ipsum dolor sit amet consectetur. Faucibus volutpat imperdiet dictum lobortis nulla. Quis adipiscing pretium feugiat vulputate non"
+    }
+
+    export const TAndCDetails = [
+        {
+            id:1,
+            title: "Lorem ipsum dolor sit amet",
+            description: "Lorem ipsum dolor sit amet consectetur. Faucibus volutpat imperdiet dictum lobortis nulla. Quis adipiscing pretium feugiat vulputate non egestas elementum sagittis bibendum. Sagittis leo magna rhoncus pellentesque vitae quis volutpat vitae suscipit. Magnis platea diam. Lorem ipsum dolor sit amet consectetur. Faucibus volutpat imperdiet dictum lobortis nulla. Quis adipiscing pretium feugiat vulputate non egestas elementum sagittis bibendum. Sagittis leo magna rhoncus pellentesque vitae quis volutpat vitae suscipit. Magnis platea diam."
+        },
+        {
+            id:2,
+            title: "Lorem ipsum dolor sit amet",
+            description: "Lorem ipsum dolor sit amet consectetur. Faucibus volutpat imperdiet dictum lobortis nulla. Quis adipiscing pretium feugiat vulputate non egestas elementum sagittis bibendum. Sagittis leo magna rhoncus pellentesque vitae quis volutpat vitae suscipit. Magnis platea diam. Lorem ipsum dolor sit amet consectetur. Faucibus volutpat imperdiet dictum lobortis nulla. Quis adipiscing pretium feugiat vulputate non egestas elementum sagittis bibendum. Sagittis leo magna rhoncus pellentesque vitae quis volutpat vitae suscipit. Magnis platea diam."
+        },
+        {
+            id:3,
+            title: "Lorem ipsum dolor sit amet",
+            description: "Lorem ipsum dolor sit amet consectetur. Faucibus volutpat imperdiet dictum lobortis nulla. Quis adipiscing pretium feugiat vulputate non egestas elementum sagittis bibendum. Sagittis leo magna rhoncus pellentesque vitae quis volutpat vitae suscipit. Magnis platea diam. Lorem ipsum dolor sit amet consectetur. Faucibus volutpat imperdiet dictum lobortis nulla. Quis adipiscing pretium feugiat vulputate non egestas elementum sagittis bibendum. Sagittis leo magna rhoncus pellentesque vitae quis volutpat vitae suscipit. Magnis platea diam."
+        },
+    ]
+
+
+    export const ProgrammeFeatures = [
+        {
+            id: 1,
+            icon:learnWithMentor,
+            title: "Learn with a mentor",
+            description:"At our program, we don't just offer learning, we offer mentorship. Get paired with an experienced mentor who is ready to provide you with valuable insights and guidance throughout your GIS journey"
+        },
+        {
+            id: 2,
+            icon: progress,
+            title: "Committed to progress",
+            description:"Our program offers a scheme to help you stay consistent and on-track with your learning journey."
+        },
+        {
+            id: 3,
+            icon:blocker,
+            title: "Raise Blockers",
+            description:"We understand that questions and blockers can arise during learning. Our program is designed to keep you on track towards achieving your goals"
+        }
+
+    ]
+
+
+    export const TrackCardsInfo = [
+            {
+                id:1,
+                name: 'Community Developer',
+                picture: community,
+                route: "/track/1"
+            },
+            {
+                id:2,
+                name: 'Geospatial Designer',
+                picture: designer,
+                route: "/track/2"
+            },
+            {
+                id:3,
+                name: 'Geospatial Front-end',
+                picture: frontend,
+                route: "/track/3"
+            },
+            {
+                id:4,
+                name: 'Geospatial Analyst',
+                picture: frontend,
+                route: "/track/4"
+            },
+            {
+                id:5,
+                name: 'Geospatial Back-end',
+                picture: frontend,
+                route: "/track/5"
+            },
+            {
+                id:6,
+                name: 'Geospatial Moblie Developer',
+                picture: frontend,
+                route: "/track/6"
+            }
+    ]
+
+export const knowledgeInfo = {
+    title: "Elevate Your GIS Knowledge",
+    description: "At our GIS learning platform, we believe that knowledge is power. That's why we're committed to providing you with the tools and resources you need to succeed. Join us today and take the first step towards unlocking your full potential in the exciting world of GIS."
+}
+
+export const ChortMessages = [
+    {
+        id:1, 
+        title: "Lorem ipsum dolor sit amet consectetur faucibus",
+        message: "Lorem ipsum dolor sit amet consectetur faucibus",
+        color: '#007A71',
+        texture: triangleGreen
+    },
+    {
+        id:2, 
+        title: "Lorem ipsum dolor sit amet consectetur faucibus",
+        message: "Lorem ipsum dolor sit amet consectetur faucibus",
+        color: '#5A275D',
+        texture: trianglePurple
+    },
+    {
+        id:3, 
+        title: "Lorem ipsum dolor sit amet consectetur faucibus",
+        message: "Lorem ipsum dolor sit amet consectetur faucibus",
+        color: '#312987',
+        texture: triangleBlue
+    },
+    {
+        id:4, 
+        title: "Lorem ipsum dolor sit amet consectetur faucibus",
+        message: "Lorem ipsum dolor sit amet consectetur faucibus",
+        color: '#312987',
+        texture: triangleBlue
+    },
+    {
+        id:5, 
+        title: "Lorem ipsum dolor sit amet consectetur faucibus",
+        message: "Lorem ipsum dolor sit amet consectetur faucibus",
+        color: '#007A71',
+        texture: triangleGreen
+    },
+    {
+        id:6, 
+        title: "Lorem ipsum dolor sit amet consectetur faucibus",
+        message: "Lorem ipsum dolor sit amet consectetur faucibus",
+        color: '#5A275D',
+        texture: trianglePurple
+    }
+]
+
+export const Partners = [
+    {
+        id: 1,
+        name: "Esri",
+        logo: esriLogo
+    }
+]
+
+export const Faqs  = [
+    {
+        id: 1,
+        faqTitle: "About the program",
+        faqList: [
+            {
+                id: 1,
+                question: "What is M.A.P",
+                answer: "Lorem ipsum dolor sit amet consectetur. Faucibus volutpat imperdiet dictum lobortis nulla. Quis adipiscing pretium feugiat vulputate non egestas elementum sagittis bibendum. Sagittis leo magna rhoncus pellentesque vitae quis volutpat vitae suscipit. Magnis platea diam."
+            },
+            {
+                id: 2,
+                question: "Lorem ipsum dolor sit amet consectetur. ",
+                answer: "Lorem ipsum dolor sit amet consectetur. Faucibus volutpat imperdiet dictum lobortis nulla. Quis adipiscing pretium feugiat vulputate non egestas elementum sagittis bibendum. Sagittis leo magna rhoncus pellentesque vitae quis volutpat vitae suscipit. Magnis platea diam."
+            },
+            {
+                id: 3,
+                question: "Lorem ipsum dolor sit amet consectetur. ",
+                answer: "Lorem ipsum dolor sit amet consectetur. Faucibus volutpat imperdiet dictum lobortis nulla. Quis adipiscing pretium feugiat vulputate non egestas elementum sagittis bibendum. Sagittis leo magna rhoncus pellentesque vitae quis volutpat vitae suscipit. Magnis platea diam."
+            }
+        ]
+    },
+    {
+        id: 2,
+        faqTitle: "Programme Scope",
+        faqList: [
+            {
+                id: 1,
+                question: "What is M.A.P",
+                answer: "Lorem ipsum dolor sit amet consectetur. Faucibus volutpat imperdiet dictum lobortis nulla. Quis adipiscing pretium feugiat vulputate non egestas elementum sagittis bibendum. Sagittis leo magna rhoncus pellentesque vitae quis volutpat vitae suscipit. Magnis platea diam."
+            },
+            {
+                id: 2,
+                question: "Lorem ipsum dolor sit amet consectetur. ",
+                answer: "Lorem ipsum dolor sit amet consectetur. Faucibus volutpat imperdiet dictum lobortis nulla. Quis adipiscing pretium feugiat vulputate non egestas elementum sagittis bibendum. Sagittis leo magna rhoncus pellentesque vitae quis volutpat vitae suscipit. Magnis platea diam."
+            },
+            {
+                id: 3,
+                question: "Lorem ipsum dolor sit amet consectetur. ",
+                answer: "Lorem ipsum dolor sit amet consectetur. Faucibus volutpat imperdiet dictum lobortis nulla. Quis adipiscing pretium feugiat vulputate non egestas elementum sagittis bibendum. Sagittis leo magna rhoncus pellentesque vitae quis volutpat vitae suscipit. Magnis platea diam."
+            }
+        ]
+    }
+]
+
+export const MobileFeatures = [
+    {
+        id: 1,
+        description: "Lorem ipsum dolor sit amet consectetur. Faucibus volutpat imperdiet dictum."
+    },
+    {
+        id: 2,
+        description: "Lorem ipsum dolor sit amet consectetur. "
+    },
+    {
+        id: 3,
+        description: "Lorem ipsum dolor sit amet consectetur. "
+    },
+]
+
+export const oppourtunity = [
+
+    {
+        id:1,
+        title: "What you stand to gain",
+        oppourtunityList: [
+            {
+                id:1,
+                description:"You become our first contact for job opportunity"
+            },
+            {
+                id:2,
+                description:"Be job ready and add value to the society with your skill"
+            },
+        ]
+    }
+]

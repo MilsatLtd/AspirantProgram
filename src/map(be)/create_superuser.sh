@@ -1,0 +1,2 @@
+#!/bin/bash
+python manage.py shell -c "from django.contrib.auth import get_user_model; User = get_user_model(); User.objects.filter(email='$DJANGO_SUPERUSER_EMAIL').exists() or User.objects.create_superuser('$DJANGO_SUPERUSER_EMAIL', first_name='map', last_name='admin', gender=0, country='Nigeria', phone_number='$DJANGO_SUPERUSER_PHONE_NUMBER', bio='', password='$DJANGO_SUPERUSER_PASSWORD')"

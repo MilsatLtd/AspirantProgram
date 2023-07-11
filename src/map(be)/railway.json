@@ -1,0 +1,11 @@
+{
+    "$schema": "https://railway.app/railway.schema.json",
+    "build": {
+        "builder": "NIXPACKS"
+    },
+    "deploy": {
+        "startCommand": "sh -c 'bash ./create_superuser.sh python manage.py migrate & apt-get update && apt-get install -y redis-server && redis-server & celery -A map worker -l info & gunicorn map.wsgi' ",
+        "restartPolicyType": "ON_FAILURE",
+        "restartPolicyMaxRetries": 10
+    }
+}

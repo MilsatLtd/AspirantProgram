@@ -1,0 +1,52 @@
+import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+// import { RootState } from "../store";
+import { applicationResponseType, allApplicationList, currentCohort } from "../dataTypes";
+
+
+export const applyApi = createApi({
+    reducerPath: "applyApi",
+    baseQuery: fetchBaseQuery({
+    baseUrl: `https://map.up.railway.app/api`
+  }),
+
+  tagTypes: ['Admin'],
+  endpoints: (builder) => ({    
+    getCurrentCohort: builder.query<currentCohort["data"],undefined>({
+        query: () => {
+            return {
+              url: "/applications/cohorts/open",
+              method: "get",
+              providesTags: ['Apply']
+            };
+          },
+    }),
+    getAllApplications: builder.query<allApplicationList, undefined>({
+        query: () => {
+            return {
+              url: "/applications/",
+              method: "get",
+              providesTags: ['Apply']
+            };
+          },
+    }),
+    apply: builder.mutation({
+      query: (body: FormData) => {
+          return {
+            url: "/cohorts/apply",
+            method: "post",
+            // headers: {
+            //   'content-type': 'multipart/form-data'
+            // },
+            body,
+            providesTags: ['Apply']
+          };
+        },
+      })
+  }),
+})
+
+export const {
+   useGetCurrentCohortQuery, 
+   useGetAllApplicationsQuery,
+   useApplyMutation
+  } = applyApi
