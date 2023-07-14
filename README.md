@@ -8,4 +8,6 @@ This repository contains different folders under the `src` folder that represent
 
 **2. APIs FOLDER:** Django was used in this part of the system to create the APIs and services that the client-side needed.
 
-**3. WEB FOLDER:** The web interface of the M.A.P. system utilizes NextJS and Tailwind CSS.
+**3. WEB FOLDER:** This web interface of the M.A.P. system utilizes NextJS and Tailwind CSS.
+
+**4. ADMIN FOLDER:** This web interface of the M.A.P. system for Admins utilizes ReactJS 
