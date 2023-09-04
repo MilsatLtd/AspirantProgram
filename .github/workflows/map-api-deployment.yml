@@ -45,7 +45,7 @@ jobs:
       run: |
         cd src/apis
         docker build -t ${{ github.event.inputs.repo-name }} .
-        docker tag ${{ github.event.inputs.repo-name }}:latest $ECR_REGISTRY/${{ github.event.inputs.repo-name }}:latest
+        docker tag ${{ github.event.inputs.repo-name }}:latest 282421455628.dkr.ecr.us-east-1.amazonaws.com/${{ github.event.inputs.repo-name }}:latest
         docker push $ECR_REGISTRY/${{ github.event.inputs.repo-name }}:latest
 
     - name: Update ECS service
