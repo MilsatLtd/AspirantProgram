@@ -8,7 +8,7 @@ on:
         required: true
         type: string
       repo-name:
-        description: 'Django App Name'
+        description: 'Repo Name'
         required: true
         type: string
       ecsServiceName:
