@@ -1,0 +1,18 @@
+# Docker Base Image
+FROM python:3.11.5-alpine3.18
+
+# Set the working directory in the container
+WORKDIR /app
+
+# Install any needed packages specified in requirements.txt
+COPY requirements.txt /app/
+RUN pip install -r requirements.txt
+
+# Copy the current directory contents into the container at /app/
+COPY . /app/
+
+# Make port 8000 available to the world outside this container
+EXPOSE 8000
+
+# Run Django
+CMD ["gunicorn", "map.wsgi:application", "--bind", "0.0.0.0:8000"]
