@@ -1,5 +1,8 @@
 # Docker Base Image
-FROM python:3.11.5-alpine3.18
+FROM python:3.11
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y libpq-dev
 
 # Set the working directory in the container
 WORKDIR /app
