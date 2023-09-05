@@ -62,7 +62,7 @@ jobs:
       uses: aws-actions/amazon-ecs-deploy-task-definition@v1
       with:
         task-definition: ${{ steps.task-def.outputs.task-definition }}
-        service: map-api-service
+        service: map-api-service5
         cluster: milsat-aspirant-program
         wait-for-service-stability: true
         
