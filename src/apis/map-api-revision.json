@@ -3,8 +3,8 @@
     "containerDefinitions": [
         {
             "name": "map-api",
-            "image": "282421455628.dkr.ecr.us-east-1.amazonaws.com/map-api/map-api:latest",
-            "cpu": 0,
+            "image": "282421455628.dkr.ecr.us-east-1.amazonaws.com/map-api:latest",
+            "cpu": 1024,
             "portMappings": [
                 {
                     "name": "map-api-80-tcp",
@@ -50,7 +50,7 @@
         {
             "name": "postgres",
             "image": "282421455628.dkr.ecr.us-east-1.amazonaws.com/map-api/postgres:latest",
-            "cpu": 0,
+            "cpu": 1024,
             "portMappings": [
                 {
                     "name": "postgres-5432-tcp",
