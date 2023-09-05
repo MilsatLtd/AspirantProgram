@@ -29,7 +29,7 @@
                 },
                 {
                     "name": "DATABASE_HOST",
-                    "value": "localhost"
+                    "value": "map-api-database.cnmcuwnludvg.us-east-1.rds.amazonaws.com"
                 }
             ],
             "environmentFiles": [],
