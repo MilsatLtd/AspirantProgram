@@ -36,17 +36,18 @@ jobs:
         aws-region: ${{ github.event.inputs.awsRegion }}
 
     - name: Login to Amazon ECR
-      run: |
-        aws ecr get-login-password --region ${{ github.event.inputs.awsRegion }} | docker login --username AWS --password-stdin 282421455628.dkr.ecr.${{ github.event.inputs.awsRegion }}.amazonaws.com
+      id: login-ecr
+      uses: aws-actions/amazon-ecr-login@v1
 
     - name: Build and Push Docker image
       env:
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        IMAGE_TAG: ${{ github.sha }}
       run: |
         cd src/apis
-        docker build -t ${{ github.event.inputs.repo-name }} .
-        docker tag ${{ github.event.inputs.repo-name }}:latest 282421455628.dkr.ecr.us-east-1.amazonaws.com/${{ github.event.inputs.repo-name }}:latest
-        docker push 282421455628.dkr.ecr.us-east-1.amazonaws.com/${{ github.event.inputs.repo-name }}:latest
+        docker build -t $ECR_REGISTRY/${{ github.event.inputs.repo-name }}:$IMAGE_TAG .
+        docker push $ECR_REGISTRY/${{ github.event.inputs.repo-name }}:$IMAGE_TAG
+        echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
 
     - name: Update ECS service
       run: | 
