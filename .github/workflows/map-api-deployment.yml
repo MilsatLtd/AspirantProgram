@@ -36,8 +36,7 @@ jobs:
         aws-region: ${{ github.event.inputs.awsRegion }}
 
     - name: Login to Amazon ECR
-      id: login-ecr
-      uses: aws-actions/amazon-ecr-login@v1
+      run: aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 282421455628.dkr.ecr.us-east-1.amazonaws.com
 
     - name: Build and Push Docker image
       env:
