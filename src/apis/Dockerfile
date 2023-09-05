@@ -18,7 +18,9 @@ COPY . /app/
 EXPOSE 8000
 
 # Do migrations
-CMD python manage.py migrate 
+CMD python manage.py migrate
+
+RUN echo 'Migrations run'
 
 # Run Django
 CMD python manage.py runserver
