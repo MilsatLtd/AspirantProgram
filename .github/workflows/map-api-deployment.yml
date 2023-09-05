@@ -50,19 +50,19 @@ jobs:
         docker push 282421455628.dkr.ecr.us-east-1.amazonaws.com/map-api:latest
         echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:latest"
 
-    - name: Fill in the new image ID for the API container in the Amazon ECS task definition
-      id: task-def
-      uses: aws-actions/amazon-ecs-render-task-definition@v1
-      with:
-        task-definition: src/apis/map-api-revision.json
-        container-name: map-api
-        image: ${{ steps.build-image.outputs.image }}
+    # - name: Fill in the new image ID for the API container in the Amazon ECS task definition
+    #   id: task-def
+    #   uses: aws-actions/amazon-ecs-render-task-definition@v1
+    #   with:
+    #     task-definition: src/apis/map-api-revision.json
+    #     container-name: map-api
+    #     image: ${{ steps.build-image.outputs.image }}
 
     - name: Deploy Amazon ECS task definition
       uses: aws-actions/amazon-ecs-deploy-task-definition@v1
       with:
-        task-definition: ${{ steps.task-def.outputs.task-definition }}
-        service: map-api-service5
+        # task-definition: ${{ steps.task-def.outputs.task-definition }}
+        service: map-api-service6
         cluster: milsat-aspirant-program
         wait-for-service-stability: true
         
