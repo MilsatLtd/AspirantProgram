@@ -133,11 +133,5 @@
         "operatingSystemFamily": "LINUX"
     },
     "registeredAt": "2023-09-05T18:55:15.761Z",
-    "registeredBy": "arn:aws:iam::282421455628:user/chidera.okoye",
-    "tags": [
-        {
-            "key": "test_2",
-            "value": ""
-        }
-    ]
+    "registeredBy": "arn:aws:iam::282421455628:user/chidera.okoye"
 }
