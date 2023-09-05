@@ -42,16 +42,16 @@ jobs:
     - name: Temp
       run: echo "${{ steps.login-ecr.outputs.registry }}"
 
-    # - name: Build and Push Docker image
-    #   env:
-    #     ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-    #     IMAGE_TAG: ${{ github.sha }}
-    #   run: |
-    #     cd src/apis
-    #     docker build -t $ECR_REGISTRY/${{ github.event.inputs.repo-name }}:$IMAGE_TAG .
-    #     docker push $ECR_REGISTRY/${{ github.event.inputs.repo-name }}:$IMAGE_TAG
-    #     echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
+    - name: Build and Push Docker image
+      env:
+        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        IMAGE_TAG: ${{ github.sha }}
+      run: |
+        cd src/apis
+        docker build -t 282421455628.dkr.ecr.us-east-1.amazonaws.com/map-api:$IMAGE_TAG .
+        docker push 282421455628.dkr.ecr.us-east-1.amazonaws.com/map-api:$IMAGE_TAG
+        echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
 
-    # - name: Update ECS service
-    #   run: | 
-    #     aws ecs update-service --service ${{ github.event.inputs.ecsServiceName }} --task-definition ${{ github.event.inputs.ecsServiceName }} --desired-count 1 --cluster ${{ github.event.inputs.ecsClusterName }}
+    - name: Update ECS service
+      run: | 
+        aws ecs update-service --service ${{ github.event.inputs.ecsServiceName }} --task-definition ${{ github.event.inputs.ecsServiceName }} --desired-count 1 --cluster ${{ github.event.inputs.ecsClusterName }}
