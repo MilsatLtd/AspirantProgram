@@ -1,5 +1,4 @@
 {
-    "taskDefinitionArn": "arn:aws:ecs:us-east-1:282421455628:task-definition/map-api-2:2",
     "containerDefinitions": [
         {
             "name": "map-api",
