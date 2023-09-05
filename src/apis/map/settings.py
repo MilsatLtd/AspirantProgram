@@ -136,7 +136,7 @@ except:
             "NAME": "map_db",
             "USER": "postgres",
             "PASSWORD": "fanswitch",
-            "HOST": "localhost",
+            "HOST": "map-api-database.cnmcuwnludvg.us-east-1.rds.amazonaws.com",
             "PORT": "5432",
         }
     }
