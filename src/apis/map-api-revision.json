@@ -1,10 +1,12 @@
 {
-    "family": "map-api",
+    "taskDefinitionArn": "arn:aws:ecs:us-east-1:282421455628:task-definition/map-api-2:2",
     "containerDefinitions": [
         {
             "name": "map-api",
             "image": "282421455628.dkr.ecr.us-east-1.amazonaws.com/map-api:latest",
             "cpu": 1024,
+            "memory": 3072,
+            "memoryReservation": 1024,
             "portMappings": [
                 {
                     "name": "map-api-80-tcp",
@@ -40,7 +42,7 @@
                 "logDriver": "awslogs",
                 "options": {
                     "awslogs-create-group": "true",
-                    "awslogs-group": "/ecs/map-api",
+                    "awslogs-group": "/ecs/map-api-2",
                     "awslogs-region": "us-east-1",
                     "awslogs-stream-prefix": "ecs"
                 },
@@ -48,41 +50,22 @@
             }
         },
         {
-            "name": "postgres",
-            "image": "282421455628.dkr.ecr.us-east-1.amazonaws.com/map-api/postgres:latest",
-            "cpu": 1024,
-            "portMappings": [
-                {
-                    "name": "postgres-5432-tcp",
-                    "containerPort": 5432,
-                    "hostPort": 5432,
-                    "protocol": "tcp",
-                    "appProtocol": "http"
-                }
-            ],
+            "name": "aws-otel-collector",
+            "image": "public.ecr.aws/aws-observability/aws-otel-collector:v0.32.0",
+            "cpu": 0,
+            "portMappings": [],
             "essential": true,
-            "environment": [
-                {
-                    "name": "POSTGRES_USER",
-                    "value": "postgres"
-                },
-                {
-                    "name": "POSTGRES_PASSWORD",
-                    "value": "fanswitch"
-                },
-                {
-                    "name": "POSTGRES_DB",
-                    "value": "map-api-database"
-                }
+            "command": [
+                "--config=/etc/ecs/ecs-cloudwatch-xray.yaml"
             ],
-            "environmentFiles": [],
+            "environment": [],
             "mountPoints": [],
             "volumesFrom": [],
             "logConfiguration": {
                 "logDriver": "awslogs",
                 "options": {
                     "awslogs-create-group": "true",
-                    "awslogs-group": "/ecs/map-api",
+                    "awslogs-group": "/ecs/ecs-aws-otel-sidecar-collector",
                     "awslogs-region": "us-east-1",
                     "awslogs-stream-prefix": "ecs"
                 },
@@ -90,19 +73,71 @@
             }
         }
     ],
+    "family": "map-api-2",
     "taskRoleArn": "arn:aws:iam::282421455628:role/ecs-role",
     "executionRoleArn": "arn:aws:iam::282421455628:role/ecs-role",
     "networkMode": "awsvpc",
+    "revision": 2,
+    "volumes": [],
+    "status": "ACTIVE",
+    "requiresAttributes": [
+        {
+            "name": "com.amazonaws.ecs.capability.logging-driver.awslogs"
+        },
+        {
+            "name": "ecs.capability.execution-role-awslogs"
+        },
+        {
+            "name": "com.amazonaws.ecs.capability.ecr-auth"
+        },
+        {
+            "name": "com.amazonaws.ecs.capability.docker-remote-api.1.19"
+        },
+        {
+            "name": "com.amazonaws.ecs.capability.docker-remote-api.1.21"
+        },
+        {
+            "name": "com.amazonaws.ecs.capability.task-iam-role"
+        },
+        {
+            "name": "ecs.capability.execution-role-ecr-pull"
+        },
+        {
+            "name": "ecs.capability.extensible-ephemeral-storage"
+        },
+        {
+            "name": "com.amazonaws.ecs.capability.docker-remote-api.1.18"
+        },
+        {
+            "name": "ecs.capability.task-eni"
+        },
+        {
+            "name": "com.amazonaws.ecs.capability.docker-remote-api.1.29"
+        }
+    ],
+    "placementConstraints": [],
+    "compatibilities": [
+        "EC2",
+        "FARGATE"
+    ],
     "requiresCompatibilities": [
         "FARGATE"
     ],
     "cpu": "2048",
-    "memory": "7168",
+    "memory": "6144",
     "ephemeralStorage": {
         "sizeInGiB": 25
     },
     "runtimePlatform": {
         "cpuArchitecture": "X86_64",
         "operatingSystemFamily": "LINUX"
-    }
+    },
+    "registeredAt": "2023-09-05T18:55:15.761Z",
+    "registeredBy": "arn:aws:iam::282421455628:user/chidera.okoye",
+    "tags": [
+        {
+            "key": "test_2",
+            "value": ""
+        }
+    ]
 }
