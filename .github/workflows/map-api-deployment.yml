@@ -49,8 +49,6 @@ jobs:
 
     - name: Push images
       run: |
-        docker tag service1 ${{ env.ECR_REPOSITORY_1 }}:latest
-        docker tag service2 ${{ env.ECR_REPOSITORY_2 }}:latest
         docker push ${{ env.ECR_REPOSITORY_1 }}:latest
         docker push ${{ env.ECR_REPOSITORY_2 }}:latest
 
