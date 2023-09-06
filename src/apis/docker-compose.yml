@@ -1,0 +1,30 @@
+version: '3'
+services:
+  web:
+    build:
+      context: .
+    command: >
+      sh -c 'bash ./create_superuser.sh &&
+              python manage.py migrate &&
+              apt-get update &&
+              apt-get install -y redis-server &&
+              redis-server &
+              celery -A map worker -l info &
+              gunicorn --bind 0.0.0.0:8000 map.wsgi --workers=4'
+    expose:
+      - "8000"
+    networks:
+      - django-network
+  nginx:
+    build: ./nginx/
+    restart: always
+
+    ports:
+      - "80:80"
+    depends_on:
+      - web
+    networks:
+      - django-network
+networks:
+  django-network:
+    name: django-network
