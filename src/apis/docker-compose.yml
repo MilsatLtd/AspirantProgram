@@ -12,9 +12,12 @@ services:
               redis-server &
               celery -A map worker -l info &
               gunicorn --bind 0.0.0.0:8000 map.wsgi --workers=4'
-    environment:
-      env_file:
-        - web-vars.env
+   environment:
+      - NAME
+      - USER
+      - PASSWORD
+      - HOST
+      - PORT
     expose:
       - "8000"
     networks:
