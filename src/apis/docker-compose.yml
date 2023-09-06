@@ -12,13 +12,13 @@ services:
               redis-server &
               celery -A map worker -l info &
               gunicorn --bind 0.0.0.0:8000 map.wsgi --workers=4'
-   environment:
+    environment:  
       - NAME
       - USER
       - PASSWORD
       - HOST
       - PORT
-    expose:
+    expose:  
       - "8000"
     networks:
       - django-network
@@ -27,7 +27,6 @@ services:
        context: ./nginx/
     image: 282421455628.dkr.ecr.us-east-1.amazonaws.com/nginx-proxy
     restart: always
-
     ports:
       - "80:80"
     depends_on:
