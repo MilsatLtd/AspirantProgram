@@ -17,8 +17,8 @@ COPY . /app/
 # Make port 8000 available to the world outside this container
 EXPOSE 8000
 
-# Do migrations
-CMD python manage.py migrate
+# # Do migrations
+# CMD python manage.py migrate
 
 RUN echo 'Migrations run'
 
