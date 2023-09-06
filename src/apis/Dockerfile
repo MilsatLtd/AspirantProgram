@@ -1,26 +1,28 @@
-# Docker Base Image
-FROM python:3.11
+# Use Ubuntu 22.04 as the base image
+FROM ubuntu:22.04 AS base
 
-# Install system dependencies
-RUN apt-get update && apt-get install -y libpq-dev
-
-# Set the working directory in the container
+# Set working directory
 WORKDIR /app
 
-# Install any needed packages specified in requirements.txt
-COPY requirements.txt /app/
-RUN pip install -r requirements.txt
+# Update package list and install dependencies
+RUN apt-get update -y && \
+    apt-get install python3-pip sudo ufw build-essential libpq-dev libmysqlclient-dev python3-dev default-libmysqlclient-dev libpython3-dev -y
 
-# Copy the current directory contents into the container at /app/
-COPY . /app/
+# Cache dependencies
+COPY requirements.txt .
+RUN python3 -m pip install --upgrade setuptools && \
+    python3 -m pip install -r requirements.txt
 
-# Make port 8000 available to the world outside this container
+# Application code is added here
+COPY . /app
+
+# Run firewall and other setups
+RUN sudo ufw allow 8000
+
+# Expose the application port
 EXPOSE 8000
 
-# # Do migrations
-# CMD python manage.py migrate
-
-RUN echo 'Migrations run'
-
+# # Run your application (Modify this as per your needs)
+# CMD ["python3", "your_app.py"]
 # Run Django
-CMD python manage.py runserver
+# CMD ["gunicorn", "map.wsgi:application", "--bind", "0.0.0.0:8000"]
