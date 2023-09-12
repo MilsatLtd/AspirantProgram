@@ -212,6 +212,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+SECURE_SSL_REDIRECT = True
 
 CELERY_BROKER_URL = "redis://default:pv5k1UZDyOSnKjV2b6Ed@containers-us-west-179.railway.app:7757"
 CELERY_RESULT_BACKEND = "redis://default:pv5k1UZDyOSnKjV2b6Ed@containers-us-west-179.railway.app:7757"
