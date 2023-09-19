@@ -8,7 +8,6 @@ import InfoList from "../CustomInfo/InfoList";
 import { applicationInfoType } from "@/utils/types";
 
 const ApplicantInfo = (props: applicationInfoType) => {
-  const [activeItem, setActiveItem] = useState("");
   const [allInfo, showAllInfo] = useState(false);
   return (
     <aside className="lg:col-span-5 relative z-0 col-span-1 w-full flex flex-col lg:gap-56 md:gap-48 gap-32 lg:mt-[4.5rem] mt-[0.5rem]">
@@ -25,8 +24,6 @@ const ApplicantInfo = (props: applicationInfoType) => {
       <InfoList title={"Eligibility Criteria"} list={eligibility} />
       <div
         className="flex flex-col lg:space-y-32 space-y-24"
-        onMouseEnter={() => setActiveItem("activate")}
-        onMouseLeave={() => setActiveItem("")}
       >
         <div className="pb-16 flex items-center justify-between"
         onClick={() => showAllInfo(!allInfo)}
@@ -36,9 +33,7 @@ const ApplicantInfo = (props: applicationInfoType) => {
               Application Timeline
             </h2>
             <hr
-              className={`border-[2px] border-G200 transition-all delay-150 ease-in-out ${
-                activeItem === "activate" ? "w-[13rem]" : "w-[6rem]"
-              }`}
+              className="border-[2px] border-G200 transition-all delay-150 ease-in-out w-[7rem]"
             ></hr>
           </div>
           <Image

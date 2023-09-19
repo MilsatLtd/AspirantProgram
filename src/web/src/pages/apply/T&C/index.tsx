@@ -2,10 +2,9 @@ import Footer from "@/components/organism/Footer";
 import Header from "@/components/organism/Header";
 import { TAndCDetails } from "@/utils/data"
 import blurEffectTopRight from "../../../Assets/blur-effect-top-right.svg"
-import React, { useState } from "react";
+import React from "react";
 
 const TermsConditionsPage = () => {
-  const [actveTerm, setActiveTerm] = useState(0)
 
   return (
     <div>
@@ -24,13 +23,11 @@ const TermsConditionsPage = () => {
                 TAndCDetails.map((TCdetail)=> {
                     return(
                         <div key={TCdetail.id} className="pb-16 space-y-16 "
-                        onMouseEnter={()=> setActiveTerm(TCdetail.id)}
-                            onMouseLeave={()=> setActiveTerm(0)}
                         >
                             <h2 className="lg:leading-[32px] leading-[28px] text-m-base lg:text-base text-N400 font-bold">
                                 {TCdetail.title}
                             </h2>
-                            <hr className={`w-[6rem] border-[2px] border-G200 transition-all delay-150 ease-in-out ${TCdetail.id === actveTerm ? "w-full": null}  `}></hr>
+                            <hr className="w-[6rem] border-[2px] border-G200 transition-all delay-150 ease-in-out"></hr>
                             <p className="lg:text-base text-m-base text-N200 font-medium lg:leading-[32px] leading-[28px]">{TCdetail.description}</p>
                          </div>
                     )

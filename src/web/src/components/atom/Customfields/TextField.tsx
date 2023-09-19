@@ -5,8 +5,11 @@ interface TextFieldType {
     onTextChange: React.ChangeEventHandler<HTMLInputElement> | undefined;
     type: string;
     error: string | undefined;
+    placeholder: string;
     inputStyle: string;
     containerStyle: string;
+    maxlength?: number;
+    minlength?: number;
 }
 
 const TextField = (props: TextFieldType) => {
@@ -22,7 +25,10 @@ const TextField = (props: TextFieldType) => {
             } 
             ${props.inputStyle}`}
             type={props.type}
+            placeholder={props.placeholder}
             onChange={props.onTextChange}    
+            maxLength={props.maxlength}
+            minLength={props.minlength}
         />
         <span className="h-[2px] text-R300 text-sm">{props.error}</span>
     </div>

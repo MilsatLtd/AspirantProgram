@@ -6,6 +6,7 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup"
 import { ChangeEvent } from "react";
+import MultiTextField from "@/components/atom/Customfields/MultiTextField";
 
 interface formSectionType {
   changeSection: () => void;
@@ -21,10 +22,10 @@ const FormSectionA = (props: formSectionType) => {
     email: Yup.string().required("Email is required"),
     education: Yup.number().required("Level of Education is required"),
     gender: Yup.number().required("Gender is required"),
-    role: Yup.number().required("Role is required"),
+    role: Yup.number().required("Select role"),
     phone_number: Yup.string().required("Phone Number is required"),
     country: Yup.string().required("Country is required"),
-    skills: Yup.string().required("Skills is required"),
+    skills: Yup.string().required("Skills are required"),
     purpose: Yup.string().required("Purpose is required"),
   })
 
@@ -41,6 +42,7 @@ const FormSectionA = (props: formSectionType) => {
 
   // Sends data to main form component and chnages form section
   const onSubmit = (data: basicInfo) => {
+    console.log(data)
     props.passData(data)
     props.changeSection()
   }
@@ -49,30 +51,41 @@ const FormSectionA = (props: formSectionType) => {
     setValue(name, value, { shouldValidate: true })
   }
 
+  const checkKeyDown = (e: any) => {
+    if (e.key === 'Enter') e.preventDefault();
+  };
+
 
   return (
-    <form className="w-full flex flex-col gap-24"  onSubmit={handleSubmit(onSubmit)} encType="multipart/form-data" >
+    <form className="w-full flex flex-col gap-24"  onSubmit={handleSubmit(onSubmit)} onKeyDown={(e) => checkKeyDown(e)} encType="multipart/form-data" >
       <div className="grid lg:grid-cols-12 grid-cols-1 gap-24 w-full">
         <TextField
           label="First Name"
           onTextChange={(e) => handleSetValue(e.target.value, "first_name")}
           inputStyle=""
+          placeholder=""
           containerStyle="lg:col-span-6 col-span-1"
           type="text"
           error={errors.first_name?.message}
+          minlength={1}
+          maxlength={30}
         />
         <TextField
           label="Last Name"
           onTextChange={(e)=> handleSetValue(e.target.value, "last_name")}
           inputStyle=""
+          placeholder=""
           containerStyle="lg:col-span-6 col-span-1"
           type="text"
           error={errors.last_name?.message}
+          minlength={1}
+          maxlength={30}
         />
       </div>
       <div className="grid  lg:grid-cols-12 grid-cols-1 gap-24 w-full">
         <TextField
           label="Email"
+          placeholder="Enter email"
           onTextChange={(e)=> handleSetValue(e.target.value, "email")}
           inputStyle=""
           containerStyle="col-span-12 col-span-1"
@@ -108,33 +121,33 @@ const FormSectionA = (props: formSectionType) => {
         <TextField
           label="Phone Number"
           onTextChange={(e)=> handleSetValue(e.target.value, "phone_number")}
+          placeholder="Add phone number"
           inputStyle=""
           containerStyle="lg:col-span-6 col-span-1"
           type="phone number"
           error={errors.phone_number?.message}
+          minlength={1}
+          maxlength={30}
         />
       </div>
-      <div className="grid  lg:grid-cols-12 grid-cols-1 gap-24 w-full">
-        <DropDownField
+      <div className="grid lg:grid-cols-12 grid-cols-1 gap-24 w-full">
+        <MultiTextField 
           label="Skills"
-          placeholder="Select skills"
-          textValue={undefined}
-          options={[{label: "Design", value: "Design"}, {label: "Programming", value:"Programming"}, 
-          {label: "Analysis", value:"Analysis"}
-        ]}
-          dropDownStyle=""
-          onTextChange={(e)=> handleSetValue(e, "skills")}
-          inputStyle=""
+          placeholder= "Add Skills"
           containerStyle="lg:col-span-8 col-span-1"
           error={errors.skills?.message}
-        />
+          sendSkills={(skills: string) => handleSetValue(skills, "skills")}
+        />  
         <TextField
           label="Country"
           onTextChange={(e)=> handleSetValue(e.target.value, "country")}
           inputStyle=""
+          placeholder="Enter Country"
           containerStyle="lg:col-span-4 col-span-1"
           type="text"
           error={errors.country?.message}
+          minlength={1}
+          maxlength={30}
         />
          <DropDownField
           label="Role"
@@ -144,7 +157,7 @@ const FormSectionA = (props: formSectionType) => {
           dropDownStyle=""
           onTextChange={(e)=> handleSetValue(e, "role")}
           inputStyle=""
-          containerStyle="lg:col-span-12 cols-span-1" 
+          containerStyle="lg:col-span-12 col-span-1" 
           error={errors.role?.message}
         />
       </div>

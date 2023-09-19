@@ -36,7 +36,9 @@ const FormSectionB = (props: formSectionType) => {
   // remove file from file upload
   const removeFile = (filename: string) => {
     setFile(file.filter(file => file.name !== filename))
-    setValue("file", undefined, { shouldValidate: true })
+    if(file.length == 1){
+      setValue("file", undefined, { shouldValidate: true })
+    }
   }
 
   // setting form SectionB validation with Yup
@@ -114,7 +116,7 @@ useEffect(() => {
           containerStyle="col-span-12"
           error={errors.track_id?.message}
         />
-        <FileUploader file={file} error={errors.file?.message} setFiles={setFile} addFile={(file)=> {handleSetValue(file, "file"); console.log("pass");}} />
+        <FileUploader file={file} error={errors.file?.message} setFiles={setFile} addFile={(file)=> {handleSetValue(file, "file")}} />
         <FileList allFiles={file} handleFileRemove={(file)=>removeFile(file)} />
        <TextAreaField 
         label="Reason for applying "
@@ -123,6 +125,8 @@ useEffect(() => {
         containerStyle="col-span-12"
         error={errors.reason?.message}
         onTextChange={(e)=>  setValue("reason", e.target.value, { shouldValidate: true })}
+        maxLength={100}
+        minLength={1}
        />
         <DropDownField
           label="How did you hear about us?"

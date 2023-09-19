@@ -12,11 +12,11 @@ const FileUploader = ({file , error, setFiles, addFile}:FileUploaderType) => {
 
   function handleFileChange(event: React.ChangeEvent<HTMLInputElement>): void {
     let selectedFile = event.target.files?.[0];
-    if (selectedFile && selectedFile.size <= 2 * 1024 * 1024 && file.length < 1) {
+    if (selectedFile && selectedFile.size <= 2 * 1024 * 1024 && file.length < 2) {
       setFiles([...file, selectedFile]);
       addFile(selectedFile);
-    } else if(selectedFile && selectedFile.size <= 2 * 1024 * 1024 && file.length >= 1){
-      alert("You can only upload 1 file");
+    } else if(file.length >= 2){
+      alert("You can only upload 2 files");
       selectedFile= undefined;
     }else {
       alert("Please select a file that is 2MB or smaller.");
@@ -28,7 +28,7 @@ const FileUploader = ({file , error, setFiles, addFile}:FileUploaderType) => {
   return (
     <div className="flex flex-col gap-8">
       <label className="text-[16px] leading-[28px] text-N400 lg:font-semibold font-medium">
-        Attach Documents (Resume, Certificates, Accomplishments - 1 limit)
+        Attach Documents (Resume, Certificates, Accomplishments - 2 limits)
       </label>
       <div className={`flex relative border-dashed border-[1px]  ${error ? " border-R300": "border-N75"} h-[124px] rounded-lg`}>
         <div className="text-N400 flex items-center  justify-center w-full h-full ">
@@ -44,7 +44,7 @@ const FileUploader = ({file , error, setFiles, addFile}:FileUploaderType) => {
               <span className="text-P300 lg:leading-[28px] leading-[24px] lg:font-semibold font-medium">
                 Click here
               </span>{" "}
-              to upload or <span className="font-semibold">Drag and Drop</span>
+              to upload
             </p>
             <p className="font-medium text-sm leading-[20px] text-center">
               Maximum file size{" "}

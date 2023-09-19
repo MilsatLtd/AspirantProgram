@@ -1,12 +1,13 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 // import { RootState } from "../store";
 import { applicationResponseType, allApplicationList, currentCohort } from "../dataTypes";
+import { API_ENDPOINT } from "../../../config/index";
 
 
 export const applyApi = createApi({
     reducerPath: "applyApi",
     baseQuery: fetchBaseQuery({
-    baseUrl: `https://map.up.railway.app/api`
+    baseUrl: API_ENDPOINT
   }),
 
   tagTypes: ['Admin'],

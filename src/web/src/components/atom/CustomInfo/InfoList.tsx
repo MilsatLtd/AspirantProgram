@@ -11,19 +11,16 @@ interface infoListType {
     }>;
 }
 const InfoList = (props: infoListType) => {
-    const [activeItem, setActiveItem] = useState("")
     const [allInfo, showAllInfo] = useState(false) 
   return (
     <div className='flex flex-col lg:space-y-32 space-y-24'
-    onMouseEnter={()=> setActiveItem("activate")}
-    onMouseLeave={()=> setActiveItem("")}
     >
     <div className='pb-16 flex flex-row items-center justify-between'
     onClick={()=> showAllInfo(!allInfo)}
     >
         <div className='space-y-16'>
             <h2 className='lg:leading-[32px] leading-[28px] lg:text-base text-m-base text-N400 lg:font-extrabold font-semibold'>{props.title}</h2>
-            <hr className={` border-[2px] border-G200 transition-all delay-150 ease-in-out ${activeItem === "activate" ? "w-[13rem]": 'w-[6rem]'} `}></hr>
+            <hr className="border-[2px] border-G200 transition-all delay-150 ease-in-out w-[7rem]"></hr>
         </div>
         <Image src={forwardIcon} alt='forward' className={`h-auto w-auto lg:hidden block ${allInfo && 'transform rotate-90'}`} 
         />

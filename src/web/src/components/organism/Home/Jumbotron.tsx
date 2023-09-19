@@ -15,7 +15,7 @@ const Jumbotron = () => {
             <Header showNavLinks={true} showApplyButton={true} />
             <HeroContent/>
 
-        <div className='absolute top-[30%] lg:top-0 md:top-0 md:right-0 bottom-0 left-0 z-0 lg:h-[180%] md:h-[180%] h-full'>
+        <div className='absolute top-[30%] z-0 lg:top-0 md:top-0 md:right-0 bottom-0 left-0 z-0 lg:h-[180%] md:h-[180%] h-full'>
             <Image src={HeroBlurEffectRight} alt="Blur-effect-right"  className='h-full lg:w-full md:w-full w-auto'  />
         </div>
     </div>
