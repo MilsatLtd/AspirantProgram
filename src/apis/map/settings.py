@@ -29,7 +29,7 @@ SECRET_KEY = "django-insecure-0qomica5!fmu8@l9_gr7ny7&h$v2es4r-0&)x$z&ig9otop2#h
 try:
     DEBUG = not bool(os.environ['DEBUG'])
 except KeyError:
-    DEBUG = True
+    DEBUG = False
 
 # add localhost to allowed hosts
 ALLOWED_HOSTS = ["*"]
@@ -68,20 +68,13 @@ MIDDLEWARE = [
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 CORS_ALLOWED_ORIGINS = [
-    "http://www.map.up.railway.app",
-    "https://www.map.up.railway.app",
-    "http://localhost:5173"
-    # Replace with your client domain
 ]
 
 
 # allow all csrf origins
 CSRF_TRUSTED_ORIGINS = [
-    'http://www.map.up.railway.app', 'https://www.map.up.railway.app', 'http://localhost:5173'
 ]
 
-# allow all cors hosts
-CORS_ORIGIN_ALLOW_ALL = True
 
 CORS_ALLOW_CREDENTIALS = True
 
