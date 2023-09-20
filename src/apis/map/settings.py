@@ -68,13 +68,15 @@ MIDDLEWARE = [
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 CORS_ALLOWED_ORIGINS = [
-    "https://admin-asp.milsat.africa"
+    "https://admin-asp.milsat.africa",
+    "https://aspirant.milsat.africa"
 ]
 
 
 # allow all csrf origins
 CSRF_TRUSTED_ORIGINS = [
-    "https://admin-asp.milsat.africa"
+    "https://admin-asp.milsat.africa",
+    "https://aspirant.milsat.africa"
 ]
 
 
