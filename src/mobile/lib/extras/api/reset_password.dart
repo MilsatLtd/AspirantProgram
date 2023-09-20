@@ -3,9 +3,11 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:milsat_project_app/extras/api/data.dart';
 
+import '../components/base_url.dart';
+
 final dioProvider = Provider<Dio>((ref) {
   return Dio(BaseOptions(
-    baseUrl: 'https://map.up.railway.app/api',
+    baseUrl: APIEndpoint.baseUrl,
     headers: {
       'accept': 'application/json',
       'Authorization': 'Bearer ${cred['access']}',
@@ -23,7 +25,7 @@ class ApiService {
 
   Future<void> resetPassword(data) async {
     try {
-      String url = 'https://map.up.railway.app/api/auth/password/change';
+      String url = '${APIEndpoint.baseUrl}/api/auth/password/change';
 
       final response = await dio.put(
         url,

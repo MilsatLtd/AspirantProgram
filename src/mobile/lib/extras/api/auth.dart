@@ -7,6 +7,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:milsat_project_app/extras/components/files.dart';
 
+import '../components/base_url.dart';
+
 final signInProvider =
     StateNotifierProvider.autoDispose<SignInStateNotifier, SignInState>(
         (ref) => SignInStateNotifier());
@@ -65,7 +67,7 @@ class SignInStateNotifier extends StateNotifier<SignInState> {
       state = SignInState.loading();
 
       final response = await Dio().post(
-        'https://map.up.railway.app/api/auth/login',
+        '${APIEndpoint.baseUrl}/api/auth/login',
         data: jsonEncode({'email': email, 'password': password}),
         options: Options(
           headers: {

@@ -4,6 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../components/base_url.dart';
 import '../components/files.dart';
 
 final dioProvider = Provider<Dio>((ref) {
@@ -33,7 +34,7 @@ class APIService {
       });
 
       final response = await dio.post(
-        'https://map.up.railway.app/api/todos/submit',
+        '${APIEndpoint.baseUrl}/api/todos/submit',
         data: formData,
         options: Options(
           headers: {
@@ -70,7 +71,7 @@ class APIService {
   Future<void> uploadImage(String userId, File image) async {
     try {
       String url =
-          'https://map.up.railway.app/api/users/update/picture/$userId'; // Replace with your API endpoint
+          '${APIEndpoint.baseUrl}/api/users/update/picture/$userId'; // Replace with your API endpoint
 
       FormData formData = FormData.fromMap({
         'profile_picture': await MultipartFile.fromFile(
@@ -111,7 +112,7 @@ class APIService {
   }
 
   Future<void> updateStatus(String userId, String bio) async {
-    final url = 'https://map.up.railway.app/api/users/update/$userId';
+    final url = '${APIEndpoint.baseUrl}/api/users/update/$userId';
     const csrfToken =
         'TU6MsR9FbN1siKAZqSsD8xRyKWANm0qsvLcypDYRSMAUmVjwfa5bISJO6fhbljHf';
     try {

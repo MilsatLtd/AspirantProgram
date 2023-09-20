@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../components/base_url.dart';
 import 'data.dart';
 
 final dioApiProvider = Provider<Dio>((ref) {
@@ -24,7 +25,7 @@ class ApiService {
   ApiService(this.dio);
 
   Future<Response> getTracks(String id) async {
-    final url = 'https://map.up.railway.app/api/tracks/cohort/$id';
+    final url = '${APIEndpoint.baseUrl}/api/tracks/cohort/$id';
     try {
       final response = await dio.get(url);
       if (kDebugMode) {

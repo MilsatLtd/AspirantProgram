@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../components/base_url.dart';
 import '../components/files.dart';
 
 final blockerProvider = Provider<APIService>((ref) => APIService());
@@ -23,7 +24,7 @@ class APIService {
     required String title,
     required int status,
   }) async {
-    const url = 'https://map.up.railway.app/api/blockers';
+    const url = '${APIEndpoint.baseUrl}/api/blockers';
 
     final data = {
       'track': trackId,
@@ -56,7 +57,7 @@ class APIService {
     required String title,
     required int status,
   }) async {
-    final url = 'https://map.up.railway.app/api/blockers/$blockerId';
+    final url = '${APIEndpoint.baseUrl}/api/blockers/$blockerId';
 
     final data = {
       'track': trackId,
@@ -91,7 +92,7 @@ class APIService {
     required String userId,
     required String blocker,
   }) async {
-    final url = 'https://map.up.railway.app/api/blockers/comments/$blocker';
+    final url = '${APIEndpoint.baseUrl}/api/blockers/comments/$blocker';
 
     final data = {
       'message': message,
@@ -116,7 +117,7 @@ class APIService {
   }
 
   Future<Response> getRaisedBlockers() async {
-    const url = 'https://map.up.railway.app/api/blockers';
+    const url = '${APIEndpoint.baseUrl}/api/blockers';
     try {
       final response = await dio.get(
         url,
@@ -145,7 +146,7 @@ class APIService {
   }
 
   Future<Response> getCommentsById(String blockerId) async {
-    final url = 'https://map.up.railway.app/api/blockers/comments/$blockerId';
+    final url = '${APIEndpoint.baseUrl}/api/blockers/comments/$blockerId';
     try {
       final response = await dio.get(
         url,
