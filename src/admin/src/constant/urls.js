@@ -1,9 +1,9 @@
 const urls = {
-    getAllCohorts: "https://map.up.railway.app/api/cohorts/",
-    getAllApplications: "https://map.up.railway.app/api/applications/",
-    getAllTracks: "https://map.up.railway.app/api/tracks/",
-    login: "https://map.up.railway.app/api/auth/login",
-    reviewApplication: "https://map.up.railway.app/api/applications/",
+    getAllCohorts: "https://aspirant-api.milsat.africa/api/cohorts/",
+    getAllApplications: "https://aspirant-api.milsat.africa/api/applications/",
+    getAllTracks: "https://aspirant-api.milsat.africa/api/tracks/",
+    login: "https://aspirant-api.milsat.africa/api/auth/login",
+    reviewApplication: "https://aspirant-api.milsat.africa/api/applications/",
 
 }
 
