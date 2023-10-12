@@ -210,6 +210,8 @@ STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+SECURE_SSL_REDIRECT = True
 
 CELERY_BROKER_URL = os.environ.get("REDIS_DB")
 CELERY_RESULT_BACKEND = os.environ.get("REDIS_DB")
