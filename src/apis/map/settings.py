@@ -212,7 +212,7 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 
 CELERY_BROKER_URL = os.environ.get("REDIS_DB")
-CELERY_RESULT_BACKEND = "redis://default:pv5k1UZDyOSnKjV2b6Ed@containers-us-west-179.railway.app:7757"
+CELERY_RESULT_BACKEND = os.environ.get("REDIS_DB")
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TASK_SERIALIZER = 'json'
