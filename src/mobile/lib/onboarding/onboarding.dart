@@ -136,7 +136,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     );
   }
 
-  Container buildContainer(int index, BuildContext context) {
+  Widget buildContainer(int index, BuildContext context) {
     return Container(
       width: 8.w,
       height: 4.w,
