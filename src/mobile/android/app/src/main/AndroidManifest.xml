@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.milsat_project_app">
+    package="com.chris.milsat_project_app">
     <uses-permission android:name="android.permission.INTERNET"/>
    <application
         android:label="Milsat Aspirant"

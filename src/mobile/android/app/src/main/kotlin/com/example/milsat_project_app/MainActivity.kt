@@ -1,4 +1,4 @@
-package com.example.milsat_project_app
+package com.chris.milsat_project_app
 
 import io.flutter.embedding.android.FlutterActivity
 
