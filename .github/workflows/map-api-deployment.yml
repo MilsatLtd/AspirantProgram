@@ -58,7 +58,7 @@ jobs:
      # Tag and Push Docker image to Amazon ECR
     - name: Tag and Push to Amazon ECR
       run: |
-        docker tag user/app:latest 282421455628.dkr.ecr.us-east-1.amazonaws.com/map-api:latest
+        docker tag map-api:latest 282421455628.dkr.ecr.us-east-1.amazonaws.com/map-api:latest
         docker push 282421455628.dkr.ecr.us-east-1.amazonaws.com/map-api:latest
       env:
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
