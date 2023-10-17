@@ -2,11 +2,11 @@ name: Deploy map-api to ECS
 
 on:
   workflow_dispatch:
-    inputs:
-      awsRegion:
-        description: 'AWS Region'
-        required: true
-        type: string
+    # inputs:
+    #   awsRegion:
+    #     description: 'AWS Region'
+    #     required: true
+    #     type: string
       # repo-name:
       #   description: 'Repo Name'
       #   required: true
@@ -19,9 +19,9 @@ on:
       #   description: 'ECS Cluster Name'
       #   required: true
       #   type: string
-env:              
-  ECR_REPOSITORY_1: 282421455628.dkr.ecr.us-east-1.amazonaws.com/map-api     
-  ECR_REPOSITORY_2: 282421455628.dkr.ecr.us-east-1.amazonaws.com/nginx-proxy
+# env:              
+#   ECR_REPOSITORY_1: 282421455628.dkr.ecr.us-east-1.amazonaws.com/map-api     
+  # ECR_REPOSITORY_2: 282421455628.dkr.ecr.us-east-1.amazonaws.com/nginx-proxy
   
 jobs:
   deploy:
@@ -29,28 +29,40 @@ jobs:
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
 
     - name: Configure AWS credentials
-      uses: aws-actions/configure-aws-credentials@v1
+      uses: aws-actions/configure-aws-credentials@v4
       with:
         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: ${{ github.event.inputs.awsRegion }}
+        aws-region: us-east-1
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+
+    # Build Docker image
+    - name: Build Docker image
+      id: docker_build
+      uses: docker/build-push-action@v5
+      with:
+        context: ./src/apis   
+        file: ./src/apis/Dockerfile  
+        push: false
+        tags: map-api:latest  
 
     - name: Login to Amazon ECR
-      run: aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 282421455628.dkr.ecr.us-east-1.amazonaws.com
+      id: login-ecr
+      uses: aws-actions/amazon-ecr-login@v2
 
-      # Build images using Docker Compose
-    - name: Build images
-      run: |
-        cd src/apis 
-        docker-compose build
-
-    - name: Push images
-      run: |
-        docker push ${{ env.ECR_REPOSITORY_1 }}:latest
-        docker push ${{ env.ECR_REPOSITORY_2 }}:latest
+     # Push Docker image to Amazon ECR
+    - name: Push to Amazon ECR
+      uses: jwalton/gh-ecr-push@v1
+      with:
+        access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        region: us-east-1  
+        image: 282421455628.dkr.ecr.us-east-1.amazonaws.com/map-api:latest
 
 
     # - name: Build and Push Docker image
