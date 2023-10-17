@@ -51,6 +51,9 @@ jobs:
         push: false
         tags: map-api:latest  
 
+    - name: List Docker images
+      run: docker images
+
     - name: Login to Amazon ECR
       id: login-ecr
       uses: aws-actions/amazon-ecr-login@v2
