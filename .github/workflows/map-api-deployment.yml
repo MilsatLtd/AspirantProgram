@@ -2,26 +2,6 @@ name: Deploy map-api to ECS
 
 on:
   workflow_dispatch:
-    # inputs:
-    #   awsRegion:
-    #     description: 'AWS Region'
-    #     required: true
-    #     type: string
-      # repo-name:
-      #   description: 'Repo Name'
-      #   required: true
-      #   type: string
-      # ecsServiceName:
-      #   description: 'ECS Service Name'
-      #   required: true
-      #   type: string
-      # ecsClusterName:
-      #   description: 'ECS Cluster Name'
-      #   required: true
-      #   type: string
-# env:              
-#   ECR_REPOSITORY_1: 282421455628.dkr.ecr.us-east-1.amazonaws.com/map-api     
-  # ECR_REPOSITORY_2: 282421455628.dkr.ecr.us-east-1.amazonaws.com/nginx-proxy
   
 jobs:
   deploy:
@@ -57,17 +37,6 @@ jobs:
 
     - name: List Docker images
       run: docker images
-
-    #  # Tag and Push Docker image to Amazon ECR
-    # - name: Tag and Push to Amazon ECR
-    #   run: |
-    #     # docker tag map-api:latest 282421455628.dkr.ecr.us-east-1.amazonaws.com/map-api:latest
-    #     docker push 282421455628.dkr.ecr.us-east-1.amazonaws.com/map-api:latest
-    #   env:
-    #     AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-    #     AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-    #     AWS_DEFAULT_REGION: us-east-1
-    #     AWS_REGION: us-east-1
 
     # - name: Build and Push Docker image
     #   id: build-image
