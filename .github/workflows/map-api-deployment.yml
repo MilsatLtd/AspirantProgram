@@ -2,7 +2,15 @@ name: Deploy map-api to ECS
 
 on:
   workflow_dispatch:
-  
+
+env:
+  AWS_REGION: us-east-1
+  ECR_REPOSITORY: map-api
+  ECS_SERVICE: map-api
+  ECS_CLUSTER: milsat-aspirant-program
+  ECS_TASK_DEFINITION: ./src/apis/.aws/task-definition.json
+  CONTAINER_NAME: "map-api"
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -35,8 +43,21 @@ jobs:
         push: true  
         tags: 282421455628.dkr.ecr.us-east-1.amazonaws.com/map-api:latest 
 
-    - name: List Docker images
-      run: docker images
+    - name: Fill in the new image ID in the Amazon ECS task definition
+      id: task-def
+      uses: aws-actions/amazon-ecs-render-task-definition@v1
+      with:
+        task-definition: ${{ env.ECS_TASK_DEFINITION }}
+        container-name: ${{ env.CONTAINER_NAME }}
+        image: 282421455628.dkr.ecr.us-east-1.amazonaws.com/map-api:latest
+
+    - name: Deploy Amazon ECS task definition
+      uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+      with:
+        task-definition: ${{ steps.task-def.outputs.task-definition }}
+        service: ${{ env.ECS_SERVICE }}
+        cluster: ${{ env.ECS_CLUSTER }}
+        wait-for-service-stability: true
 
     # - name: Build and Push Docker image
     #   id: build-image
