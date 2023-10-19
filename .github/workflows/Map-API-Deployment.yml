@@ -45,7 +45,7 @@ jobs:
         run: | 
           unzip api.zip -d api/
           echo "listing /home/runner/work/AspirantProgram/AspirantProgram/src/apis/.platform"
-          ls api/
+          ls -la api/
 
       # - name: Install Elastic Beanstalk CLI
       #   run: pip install awsebcli --upgrade
