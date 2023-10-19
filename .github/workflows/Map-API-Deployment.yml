@@ -42,21 +42,20 @@ jobs:
           name: api.zip
 
       - name: Unzip artifact and copy folders
+        run: | 
+          unzip api.zip -d api
+          cp -R /home/runner/work/AspirantProgram/AspirantProgram/src/apis/.ebextensions api/
+          cp -R /home/runner/work/AspirantProgram/AspirantProgram/src/apis/.platform api/
+
+      - name: Install Elastic Beanstalk CLI
+        run: pip install awsebcli --upgrade
+
+      - name: Initialize and Deploy to Elastic Beanstalk
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         run: |
-          pwd 
-      #     unzip api.zip -d api
-      #     cp -R /src/apis/.ebextensions api/
-      #     cp -R /src/apis/.platform api/
-
-      # - name: Install Elastic Beanstalk CLI
-      #   run: pip install awsebcli --upgrade
-
-      # - name: Initialize and Deploy to Elastic Beanstalk
-      #   env:
-      #     AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      #     AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      #   run: |
-      #     cd api/
-      #     eb init MAPProduction --region us-east-1
-      #     eb use MAPProduction
-      #     eb deploy
+          cd api/
+          eb init MAPProduction --region us-east-1
+          eb use MAPProduction
+          eb deploy
