@@ -1,0 +1,31 @@
+name: Provisioning ElasticBeanstalk Environment 
+
+on:
+  workflow_dispatch:
+    inputs:
+      env_name:
+        description: 'Environment Name'
+        required: true
+        type: string
+
+      description:
+        description: 'Description for the Elastic Beanstalk application'
+        required: true
+        type: string
+
+      solution_stack:
+        description: 'Solution Stack for Elastic Beanstalk'
+        required: true
+        type: string
+
+jobs:
+  call-workflow:
+    uses: MilsatLtd/Builds/.github/workflows/EB-provisioning.yml@master
+    # secrets: inherit
+    secrets:
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+    with:
+      env_name: ${{ github.event.inputs.env_name }}
+      description: ${{ github.event.inputs.description}}
+      solution_stack: ${{ github.event.inputs.solution_stack }}
