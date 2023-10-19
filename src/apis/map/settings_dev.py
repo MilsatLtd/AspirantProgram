@@ -26,7 +26,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = "django-insecure-0qomica5!fmu8@l9_gr7ny7&h$v2es4r-0&)x$z&ig9otop2#h"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 # add localhost to allowed hosts
 ALLOWED_HOSTS = ["*"]
@@ -115,22 +115,21 @@ WSGI_APPLICATION = "map.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'map.milsat'
-        'USER': 'postgres',
-        'PASSWORD': 'Milsat123',
-        'HOST': 'http://map-api-db.cnmcuwnludvg.us-east-1.rds.amazonaws.com',
-        'PORT': '5432',
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": "map.milsat",
+        "USER": "postgres",
+        "PASSWORD": "Milsat123",
+        "HOST": "localhost",
+        "PORT": "5432"
     }
-}
-
+}   
 
 AWS_ACCESS_KEY_ID = os.environ.get("AWS_ACCESS_KEY_ID")
 AWS_SECRET_ACCESS_KEY = os.environ.get("AWS_SECRET_ACCESS_KEY")
 DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
-AWS_STORAGE_BUCKET_NAME = os.environ.get("AWS_STORAGE_BUCKET_NAME")
-AWS_S3_REGION_NAME = os.environ.get("AWS_S3_REGION_NAME")
+AWS_STORAGE_BUCKET_NAME = "map-milsat"
+AWS_S3_REGION_NAME = "us-west-2"
 AWS_QUERYSTRING_AUTH = False
 
 try:
@@ -147,6 +146,10 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
+    # 'DEFAULT_RENDERER_CLASSES': (
+    #     'api.common.generic_response.CustomJsonRenderer',
+    #     'rest_framework.renderers.BrowsableAPIRenderer',
+    # ),
     'EXCEPTION_HANDLER': 'api.exceptions.custom_exception_handler',
 }
 
@@ -193,8 +196,8 @@ STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 
-CELERY_BROKER_URL = os.environ.get("REDIS_DB")
-CELERY_RESULT_BACKEND = os.environ.get("REDIS_DB")
+CELERY_BROKER_URL = "redis://default:pv5k1UZDyOSnKjV2b6Ed@containers-us-west-179.railway.app:7757"
+CELERY_RESULT_BACKEND = "redis://default:pv5k1UZDyOSnKjV2b6Ed@containers-us-west-179.railway.app:7757"
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TASK_SERIALIZER = 'json'
