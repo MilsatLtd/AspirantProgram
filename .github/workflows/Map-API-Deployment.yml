@@ -22,6 +22,12 @@ jobs:
           pip install --no-cache-dir -r requirements.txt
           zip -r api.zip .
 
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: api.zip
+          path: src/apis/api.zip
+
   deploy:
     needs: build
     runs-on: ubuntu-latest
