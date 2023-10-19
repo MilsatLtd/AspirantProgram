@@ -117,10 +117,10 @@ WSGI_APPLICATION = "map.wsgi.application"
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'map.milsat'
+        'NAME': 'map.milsat',
         'USER': 'postgres',
         'PASSWORD': 'Milsat123',
-        'HOST': 'http://map-api-db.cnmcuwnludvg.us-east-1.rds.amazonaws.com',
+        'HOST': 'map-api-db.cnmcuwnludvg.us-east-1.rds.amazonaws.com',
         'PORT': '5432',
     }
 }
