@@ -1,0 +1,50 @@
+name: Build and Deploy API to Elastic Beanstalk
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.10
+
+      - name: Install dependencies
+        run: |
+          cd src/apis
+          python -m pip install --upgrade pip
+          pip install --no-cache-dir -r src/apis/requirements.txt
+          zip -r api.zip .
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Download built artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: api.zip
+
+      - name: Install Elastic Beanstalk CLI
+        run: pip install awsebcli --upgrade
+
+      - name: Initialize and Deploy to Elastic Beanstalk
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        run: |
+          cd src/apis
+          eb init MAPProduction --region us-east-1
+          eb use MAPProduction
+          eb deploy
