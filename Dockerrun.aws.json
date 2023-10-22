@@ -1,0 +1,53 @@
+{
+  "AWSEBDockerrunVersion": 2,
+  "containerDefinitions": [
+    {
+      "name": "map-api",
+      "image": "map-api:latest",
+      "memory": 512,
+      "essential": true,
+      "build": {
+        "dockerfile": "src/apis/Dockerfile",
+        "args": {}
+      },
+      "portMappings": [
+        {
+          "hostPort": 8000,
+          "containerPort": 8000
+        }
+      ]
+    },
+    {
+      "name": "map-admin",
+      "image": "map-admin:latest",
+      "memory": 512,
+      "essential": true,
+      "build": {
+        "dockerfile": "src/admin/Dockerfile",
+        "args": {}
+      },
+      "portMappings": [
+        {
+          "hostPort": 3001,
+          "containerPort": 3001
+        }
+      ]
+    },
+    {
+      "name": "map-web",
+      "image": "map-web:latest",
+      "memory": 512,
+      "essential": true,
+      "build": {
+        "dockerfile": "src/web/Dockerfile",
+        "args": {}
+      },
+      "portMappings": [
+        {
+          "hostPort": 3000,
+          "containerPort": 3000
+        }
+      ]
+    }
+  ]
+}
