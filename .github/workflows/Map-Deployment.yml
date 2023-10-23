@@ -27,5 +27,5 @@ jobs:
         AWS_REGION: 'us-west-1'
       run: |
         cd src/
-        eb init MAPProduction --region $AWS_REGION
+        eb init MAPProduction --region $AWS_REGION --platform "Python 3.8 running on 64bit Amazon Linux 2"
         eb deploy MAPProduction
