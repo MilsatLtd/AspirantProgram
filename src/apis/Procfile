@@ -1,1 +1,1 @@
-web: gunicorn map.wsgi:application --bind 0.0.0.0:8000
+web: gunicorn --bind :8000 --workers 2 --threads 2 map.wsgi:application
