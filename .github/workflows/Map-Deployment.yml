@@ -44,6 +44,7 @@ jobs:
         with:
           name: apps
           path: |
+            /src
             src/admin/build
             src/web/.next
             src/apis
@@ -57,15 +58,20 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: apps
+          path: deploy.zip  
+          
+      - name: Unzip artifacts
+        run: unzip deploy.zip
 
       - name: list apps folder
         run: |
-          ls -al /home/runner/work/AspirantProgram/AspirantProgram/src
-
+          ls -al /deploy
+          ls -al /deploy/apps
+          
       - name: Deploy to AWS Elastic Beanstalk
         run: |
           pip install awsebcli
-          cd src
+          cd /deploy/apps
           eb init -p python-3.8 MAPProduction
           eb use MAPProduction
           eb deploy
