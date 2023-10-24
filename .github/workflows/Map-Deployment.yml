@@ -47,6 +47,7 @@ jobs:
             src/admin/dist
             src/web/.next
             src/apis
+            src/Procfile
             src/.ebextensions
 
   deploy:
