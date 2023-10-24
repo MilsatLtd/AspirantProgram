@@ -58,9 +58,9 @@ jobs:
         with:
           name: apps
 
-      # - name: Unzip artifacts
-      #   run: |
-      #     unzip apps.zip
+      - name: list apps folder
+        run: |
+          ls /apps/
 
       - name: Deploy to AWS Elastic Beanstalk
         run: |
