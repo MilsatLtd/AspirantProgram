@@ -59,25 +59,18 @@ jobs:
           name: apps
           path: /home/runner/work/AspirantProgram/AspirantProgram/apps/
 
-      - name: Display structure of downloaded files
-        run: ls -R
-        working-directory: /home/runner/work/AspirantProgram/AspirantProgram/apps/
+      # - name: Display structure of downloaded files
+      #   run: ls -R
+      #   working-directory: /home/runner/work/AspirantProgram/AspirantProgram/apps/
                 
-      # - name: Unzip artifacts
-      #   run: unzip /home/runner/work/AspirantProgram/AspirantProgram/apps.zip
-
-      # - name: list apps folder
-      #   run: |
-      #     ls -al /home/runner/work/AspirantProgram/AspirantProgram/apps
-      #     ls -al /home/runner/work/AspirantProgram/AspirantProgram/apps/apps
           
-      # - name: Deploy to AWS Elastic Beanstalk
-      #   run: |
-      #     pip install awsebcli
-      #     cd /deploy/apps
-      #     eb init -p python-3.8 MAPProduction
-      #     eb use MAPProduction
-      #     eb deploy
-      #   env:
-      #     AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      #     AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      - name: Deploy to AWS Elastic Beanstalk
+        run: |
+          pip install awsebcli
+          cd /deploy/apps
+          eb init MAPProduction --region us-east-1 -p python-3.8 
+          eb use MAPProduction
+          eb deploy
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
