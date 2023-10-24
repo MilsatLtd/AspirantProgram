@@ -47,6 +47,7 @@ jobs:
             src/admin/dist
             src/web/.next
             src/apis
+            src/.ebextensions
 
   deploy:
     needs: build-and-deploy
@@ -59,15 +60,11 @@ jobs:
           name: apps
           path: /home/runner/work/AspirantProgram/AspirantProgram/apps/
 
-      # - name: Display structure of downloaded files
-      #   run: ls -R
-      #   working-directory: /home/runner/work/AspirantProgram/AspirantProgram/apps/
-                
           
       - name: Deploy to AWS Elastic Beanstalk
         run: |
           pip install awsebcli
-          cd /deploy/apps
+          cd /home/runner/work/AspirantProgram/AspirantProgram/apps/
           eb init MAPProduction --region us-east-1 -p python-3.8 
           eb use MAPProduction
           eb deploy
