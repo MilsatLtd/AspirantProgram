@@ -60,7 +60,7 @@ jobs:
 
       - name: list apps folder
         run: |
-          ls /apps/
+          ls -al /home/runner/work/AspirantProgram/AspirantProgram/
 
       - name: Deploy to AWS Elastic Beanstalk
         run: |
