@@ -44,8 +44,7 @@ jobs:
         with:
           name: apps
           path: |
-            /src
-            src/admin/build
+            src/admin/dist
             src/web/.next
             src/apis
 
