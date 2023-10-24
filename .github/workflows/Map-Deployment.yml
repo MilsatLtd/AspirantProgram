@@ -61,12 +61,12 @@ jobs:
           path: deploy.zip  
           
       - name: Unzip artifacts
-        run: unzip deploy.zip
+        run: unzip /home/runner/work/AspirantProgram/AspirantProgram/deploy.zip
 
       - name: list apps folder
         run: |
-          ls -al /deploy
-          ls -al /deploy/apps
+          ls -al /home/runner/work/AspirantProgram/AspirantProgram/deploy
+          ls -al /home/runner/work/AspirantProgram/AspirantProgram/deploy/apps
           
       # - name: Deploy to AWS Elastic Beanstalk
       #   run: |
