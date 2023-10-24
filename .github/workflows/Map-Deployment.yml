@@ -67,7 +67,7 @@ jobs:
           cd /home/runner/work/AspirantProgram/AspirantProgram/apps/
           eb init MAPProduction --region us-east-1 -p python-3.8 
           eb use MAPProduction
-          eb deploy
+          eb deploy -v -p
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
