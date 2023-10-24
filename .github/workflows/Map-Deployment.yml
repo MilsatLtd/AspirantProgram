@@ -58,15 +58,19 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: apps
-          path: apps.zip  
-          
-      - name: Unzip artifacts
-        run: unzip /home/runner/work/AspirantProgram/AspirantProgram/apps.zip
+          path: /home/runner/work/AspirantProgram/AspirantProgram/apps/
 
-      - name: list apps folder
-        run: |
-          ls -al /home/runner/work/AspirantProgram/AspirantProgram/apps
-          ls -al /home/runner/work/AspirantProgram/AspirantProgram/apps/apps
+      - name: Display structure of downloaded files
+        run: ls -R
+        working-directory: /home/runner/work/AspirantProgram/AspirantProgram/apps/
+                
+      # - name: Unzip artifacts
+      #   run: unzip /home/runner/work/AspirantProgram/AspirantProgram/apps.zip
+
+      # - name: list apps folder
+      #   run: |
+      #     ls -al /home/runner/work/AspirantProgram/AspirantProgram/apps
+      #     ls -al /home/runner/work/AspirantProgram/AspirantProgram/apps/apps
           
       # - name: Deploy to AWS Elastic Beanstalk
       #   run: |
