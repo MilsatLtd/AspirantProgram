@@ -49,6 +49,7 @@ jobs:
             src/apis
             src/Procfile
             src/.ebextensions
+            src/.platform
 
   deploy:
     needs: build-and-deploy
