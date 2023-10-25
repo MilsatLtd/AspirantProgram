@@ -1,19 +1,12 @@
 #!/bin/bash
 
-# Install NVM
-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0/install.sh | bash
+# Download Node.js 16.13.0 installer script
+curl -fsSL https://nodejs.org/dist/v16.13.0/node-v16.13.0-linux-x64.tar.xz -o node-v16.13.0-linux-x64.tar.xz
 
-# Export NVM environment variable
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads NVM
+# Extract the tarball to /usr/local (this will create a directory /usr/local/node-v16.13.0-linux-x64)
+sudo tar -Jxf node-v16.13.0-linux-x64.tar.xz -C /usr/local
 
-# Install Node.js version 16.16.0 using NVM
-nvm install 16
-
-# Ensure npm is available
-nvm use 16
-
-# Add the following lines to ensure the PATH is updated for non-interactive shells
-echo 'export NVM_DIR="$HOME/.nvm"' >> ~/.bashrc
-echo '[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"' >> ~/.bashrc
-echo 'export PATH="$PATH:$HOME/.nvm/versions/node/$(nvm current)/bin"' >> ~/.bashrc
+# Create a symbolic link to make node and npm commands available system-wide
+sudo ln -s /usr/local/node-v16.13.0-linux-x64/bin/node /usr/local/bin/node
+sudo ln -s /usr/local/node-v16.13.0-linux-x64/bin/npm /usr/local/bin/npm
+sudo ln -s /usr/local/node-v16.13.0-linux-x64/bin/npx /usr/local/bin/npx
