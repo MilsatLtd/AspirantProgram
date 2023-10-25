@@ -11,4 +11,4 @@ export NVM_DIR="$HOME/.nvm"
 nvm install 16
 
 # Ensure npm is available
-nvm use 16.16.0
+nvm use 16
