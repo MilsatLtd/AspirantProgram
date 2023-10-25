@@ -12,3 +12,8 @@ nvm install 16
 
 # Ensure npm is available
 nvm use 16
+
+# Add the following lines to ensure the PATH is updated for non-interactive shells
+echo 'export NVM_DIR="$HOME/.nvm"' >> ~/.bashrc
+echo '[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"' >> ~/.bashrc
+echo 'export PATH="$PATH:$HOME/.nvm/versions/node/$(nvm current)/bin"' >> ~/.bashrc
