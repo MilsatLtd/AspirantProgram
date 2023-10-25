@@ -10,7 +10,11 @@ import designer from "../Assets/designer-picture.jpeg"
 import triangleBlue from "../Assets/triangleTexture-blue.svg"
 import triangleGreen from "../Assets/triangleTexture-green.svg"
 import trianglePurple from "../Assets/triangleTexture-purple.svg"
+import globe from "../Assets/globe.svg"
+import rocket from "../Assets/rocket.svg"
+import planet from "../Assets/planetIcon.svg"
 import esriLogo from "../Assets/partners-logo/esri.svg"
+import { title } from "process"
 
 export const navLinks = [
     
@@ -466,28 +470,39 @@ export const applictionTimeline = {
     ]
 
 
-    export const ProgrammeFeatures = [
-        {
-            id: 1,
-            icon:learnWithMentor,
-            title: "Learn with a mentor",
-            description:"At our program, we don't just offer learning, we offer mentorship. Get paired with an experienced mentor who is ready to provide you with valuable insights and guidance throughout your GIS journey"
-        },
-        {
-            id: 2,
-            icon: progress,
-            title: "Committed to progress",
-            description:"Our program offers a scheme to help you stay consistent and on-track with your learning journey."
-        },
-        {
-            id: 3,
-            icon:blocker,
-            title: "Raise Blockers",
-            description:"We understand that questions and blockers can arise during learning. Our program is designed to keep you on track towards achieving your goals"
-        }
-
-    ]
-
+    export const ProgrammeFeatures = {
+        title: "How it works",
+        howItWorks: [
+            {
+                id: 1,
+                title: "Choose a track",
+                description:"Explore our range of courses and choose your preferred track that aligns with your goals and leverages your unique strength."
+            },
+            {
+                id: 2,
+                title: "Kickstart your GIS journey",
+                description:"Work through your track in your own time, whenever and wherever suits you. All you need is access to the internet and a device to learn on."
+            },
+            {
+                id: 3,
+                title: "Be job ready",
+                description:"Prove your new skills with a professional accreditation and take the next step in your career or academic journey."
+            },
+    
+        ],
+        featuresIcons: [
+            {
+                icon: rocket
+            },
+            {
+                icon: globe
+            },
+            {
+                icon: planet
+            }
+        ]
+    }
+       
 
     export const TrackCardsInfo = [
             {

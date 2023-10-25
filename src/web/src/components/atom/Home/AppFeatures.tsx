@@ -1,39 +1,73 @@
-import React, { useState } from 'react'
-import { ProgrammeFeatures } from '@/utils/data'
-import blurEffectDownLeft from "../../../Assets/blur-effect-down-left.svg"
-import blurEffectDownRight from "../../../Assets/blur-effect-down-right.svg"
-import Image from 'next/image'
+import React, { useState } from "react";
+import { ProgrammeFeatures } from "@/utils/data";
+import blurEffectDownLeft from "../../../Assets/blur-effect-down-left.svg";
+import blurEffectDownRight from "../../../Assets/blur-effect-down-right.svg";
+import Image from "next/image";
 
-const AppFeatures = () => {
-const [activeFeature, setActiveFeature] = useState(0)
-  return (
-    <div className='h-[800px] relative'>
-            <Image src={blurEffectDownLeft} alt="Blur-effect-right" className='absolute top-0 bottom-0 left-0 h-full z-0' />
-            <div className="absolute h-full w-full top-0 flex lg:items-start items-center justify-center z-10">
-                <div className='lg:w-[70%] md:w-[72%] w-full px-16 flex flex-col gap-[80px]'>
-                    {
-                        ProgrammeFeatures.map((feature) => {
-                            return(
-                                <div key={feature.id} className='flex lg:items-center md:items-center lg:gap-56 md:32 gap-24'
-                                onMouseEnter={()=> setActiveFeature(feature.id)}
-                                onMouseLeave={()=> setActiveFeature(0)}
-                                >
-                                        <Image src={feature.icon} alt={feature.title}
-                                        className={`lg:w-[96px] lg:h-[96px] md:[64px] md:h-[64px] w-[48px] h-[48px] transition-all delay-200 ease-in-out ${activeFeature === feature.id ? " rotate-180": null}`} 
-                                        />
-                                    <div className='flex-grow flex flex-col gap-16'>
-                                        <h2 className='lg:text-xl md:text-lg  text-m-xl text-N400 leading-[28px] lg:leading-[40px] font-semibold'>{feature.title}</h2>
-                                        <p className='lg:text-lg md:text-base text-m-base text-N300 lg:leading-[36px] leading-[28px] font-medium'>{feature.description}</p>
-                                    </div>
-                                </div>
-                            )
-                        } )
-                    }
-                </div>
-            </div>
-            <Image src={blurEffectDownRight} alt="Blur-effect-right" className='absolute top-0 bottom-0 w-[50%] h-full right-0 z-0' />
-    </div>
-  )
+interface FeatureCardProps {
+  id: number;
+  title: string;
+  description: string;
 }
 
-export default AppFeatures
+const AppFeatures = () => {
+  const [activeFeature, setActiveFeature] = useState(0);
+
+  const { title, howItWorks, featuresIcons } = ProgrammeFeatures;
+  return (
+    <div className="h-[800px] flex items-center justify-center bg-P50">
+      <div className="mx-auto max-w-[65vw] space-y-[5.18em]">
+        <h2 className="text-3xl font-bold text-N500 text-center">{title}</h2>
+        <div className="flex gap-40">
+          <div className="flex-1">
+            {howItWorks.map((feature, index) => {
+              return (
+                <FeatureCard
+                  key={index}
+                  id={feature.id}
+                  title={feature.title}
+                  description={feature.description}
+                />
+              );
+            })}
+          </div>
+          <div className="flex-1 grid grid-cols-2">
+            {featuresIcons.map((feature, index) => {
+              return (
+                <div
+                  key={index}
+                  className="col-span-1 flex items-center justify-center"
+                >
+                  <div className="">
+                    <Image src={feature.icon} alt="feature-icon" />
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default AppFeatures;
+
+const FeatureCard = ({ id, title, description }: FeatureCardProps) => {
+  return (
+    <div className="flex gap-32 min-h-[10em]">
+      <div className="relative flex flex-col gap-0 items-center">
+        <div className="w-[55px] h-[64px] bg-G400 flex items-center justify-center rounded-[22px]">
+          <span className="text-white font-bold text-xl leading-[53px]">
+            {id}
+          </span>
+          </div>
+          <hr className="h-full w-4 bg-G400 items-center"></hr>
+      </div>
+      <div className="space-y-4 pb-11">
+        <h3 className="text-xl text-N500 font-bold">{title}</h3>
+        <p className="text-lg text-N400 font-medium">{description}</p>
+      </div>
+    </div>
+  );
+};
