@@ -16,9 +16,9 @@ const ApplySection = () => {
           }}
         >
             <div className='flex flex-col justify-center gap-16 px-16 lg:p-0'>
-                <h2 className='text-semibold px-22 lg:text-xl text-m-xl lg:leading-[40px] leading-[28px] font-semibold text-P50 text-center'>Apply Now and Unlock Your Potential in GIS</h2>
+                <h2 className='text-semibold px-22 lg:text-xl text-m-xl lg:leading-[40px] leading-[28px] font-bold text-P50 text-center'>Your Path to GIS Excellence Starts Here</h2>
                 <div className='flex justify-center'>
-                    <p className='text-center leading-[28px] text-m-lg lg:leading-[32px] lg:text-base text-P50 font-medium w-full md:w-[60%] lg:w-[70%]'> Join our thriving community of learners and take your GIS skills to the next level.</p>
+                    <p className='text-center leading-[28px] text-m-lg lg:leading-[32px] lg:text-base text-P50 font-medium w-full md:w-[60%] lg:w-[70%]'>Join our growing community of learners and take your GIS skills to the next level.</p>
                 </div>
                
             </div>

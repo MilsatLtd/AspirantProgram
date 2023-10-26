@@ -15,7 +15,7 @@ interface headerType {
 const Header = (props: headerType) => {
   const [showMenu, setShowMenu] = useState(false);
   return (
-    <div className="">
+    <div>
     <div className="lg:px-96 md:px-48 overflow-x-clip scrollbar-hide px-16 py-24 grid lg:grid-cols-12 grid-cols-2 items-center w-full z-50 relative">
       <div className="flex justify-start lg:col-span-4 col-span-1">
         <Link href="/">

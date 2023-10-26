@@ -15,8 +15,7 @@ const index = () => {
       <div className='relative'>
         <Jumbotron />
       </div>
-       <AdvertText/>
-      <section className=' relative'>
+      <section className='relative'>
       <TrackCards />
       <KnowlegeGap />
       <ChortInfo />

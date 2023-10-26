@@ -8,13 +8,13 @@ const TrackCards = () => {
 
     const [activeCard, setActiveCard] = useState(1)
   return (
-    <section className="lg:px-96 md:px-48 px-16 text-center flex flex-col justify-center lg:items-center md:items-center lg:gap-50 gap-24 mb-[122.9px] z-20 relative ">
-      <div className="text-center items-center justify-center lg:p-0 md:p-0 px-52 flex flex-col">
-        <h2 className="lg:text-xl text-m-lg lg:leading-[40px] leading-[28px] text-center font-semibold text-N400">
-          Take your GIS Career to the Next Level
+    <section className="lg:px-96 md:px-48 px-16 text-center flex flex-col justify-center lg:items-center md:items-center lg:gap-50 gap-24 mt-58 mb-[122.9px] z-20 relative ">
+      <div className="text-center items-center justify-center gap-12 lg:p-0 md:p-0 px-52 flex flex-col">
+        <h2 className="lg:text-[2.7em] text-m-lg lg:leading-[40px] leading-[28px] text-center font-semibold text-N400">
+          Not sure where to start?
         </h2>
-        <p className="lg:text-lg lg:w-[500px] text-m-base font-medium lg:leading-[36px] leading-[28px] text-N200 text-center ">
-          Explore Our Expertly Curated Courses and Empower your Journey Today.
+        <p className="lg:text-lg lg:w-[600px] text-m-base font-medium lg:leading-[36px] leading-[28px] text-N200 text-center ">
+        Navigate your GIS learning journey with our expertly curated courses to make informed career choices.
         </p>
       </div>  
 
@@ -25,7 +25,7 @@ const TrackCards = () => {
             trackcard.id < 4 &&
             <div
               key={trackcard.id}
-              className={`lg:p-24 p-16  ${trackcard.id === activeCard ? "": null} transition-all lg:w-auto lg:h-auto  w-[253px] h-full delay-100 ease-in-out shadow-1xl border-[0.5px] flex flex-col lg:gap-28 md:gap-28 gap-10 border-P50 bg-N00  col-span-1 rounded-[24px]`}
+              className={`lg:p-24 p-16  ${trackcard.id === activeCard ? "": null} transition-all lg:w-auto lg:h-auto  w-[253px] h-full delay-100 ease-in-out shadow-card border-[0.5px] flex flex-col lg:gap-28 md:gap-28 gap-10 border-P50 bg-N00  col-span-1 rounded-[24px]`}
               onMouseEnter={() => setActiveCard(trackcard.id)}
               onMouseLeave={()=> setActiveCard(2)}
             >
@@ -56,7 +56,7 @@ const TrackCards = () => {
       <div>
         <Link
             href={"explore"}
-            className="text-N00 px-40 py-12 bg-P300 transition-all delay-150 ease-in-out hover:bg-P200 text-center rounded-lg text-semibold leading-[32px] text-base"
+            className="text-N00 px-32 py-14 bg-P300 transition-all delay-150 ease-in-out hover:bg-P200 text-center rounded-lg font-semibold leading-[32px] text-base"
         >
             Explore Tracks
         </Link>

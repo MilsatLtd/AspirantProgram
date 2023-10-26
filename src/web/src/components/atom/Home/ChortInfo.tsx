@@ -47,7 +47,7 @@ const ChortInfo = () => {
                         <div 
                         className=" col-span-1 flex flex-col lg:gap-48 gap-36 lg:px-32 px-24 lg:py-40 py-30 lg:h-[358px] h-[270px] w-full bg-no-repeat bg-auto bg-left"
                         >   
-                            <h3 className="lg:text-lg text-m-base lg:font-extrabold font-semibold lg:leading-[36px] leading-[24px] text-P50">{chortmessage.title}</h3>
+                            <h3 className="lg:text-xl text-m-lg lg:font-bold font-semibold lg:leading-[36px] leading-[24px] text-P50">{chortmessage.title}</h3>
                             <p className="lg:text-lg text-m-base lg:font-medium font-normal lg:leadng-[36px] leading-[24px] text-P50">{chortmessage.message}</p>
                         </div>
                         </div>
