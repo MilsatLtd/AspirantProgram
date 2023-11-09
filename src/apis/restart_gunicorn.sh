@@ -1,5 +1,6 @@
 #!/bin/bash
 
+export PATH="/home/ubuntu/.local/bin:$PATH"
 # Gunicorn settings
 APP_NAME="map.wsgi:application"
 BIND_ADDRESS="0.0.0.0:8000"
