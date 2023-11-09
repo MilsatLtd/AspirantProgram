@@ -1,0 +1,36 @@
+name: Deploy Admin Page
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - dera-milsat-patch-1
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Rsync files to server
+        uses: easingthemes/ssh-deploy@main
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_KEY }}
+          REMOTE_HOST: ${{ secrets.SERVER_IP }}
+          REMOTE_USER: ${{ secrets.SERVER_USER }}
+          REMOTE_PORT: ${{ secrets.SERVER_PORT }}
+          ARGS: "-avzr --delete"
+          SOURCE: "src/admin/"
+          TARGET: "~/AspirantProgram/src/admin/"
+
+      - name: SSH and Build on Server
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SERVER_IP }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            cd ~/AspirantProgram/src/admin/
+            npm install
+            npm run build
