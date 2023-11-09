@@ -35,4 +35,7 @@ jobs:
            [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
             cd ~/AspirantProgram/src/admin/
             npm install
+            export PORT=3001
             npm run build
+            env:
+              NODE_ENV: production
