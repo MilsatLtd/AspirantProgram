@@ -14,7 +14,7 @@ pkill -f "gunicorn.*$APP_NAME"
 sleep 5
 
 # Start a new Gunicorn daemon
-gunicorn $APP_NAME --bind $BIND_ADDRESS &
+gunicorn $APP_NAME --bind $BIND_ADDRESS --daemon &
 
 echo "Gunicorn restarted for $APP_NAME"
 
