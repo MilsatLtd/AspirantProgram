@@ -13,10 +13,10 @@ jobs:
       - name: Rsync files to server
         uses: easingthemes/ssh-deploy@main
         env:
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-          REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
-          REMOTE_USER: ${{ secrets.REMOTE_USER }}
-          REMOTE_PORT: ${{ secrets.REMOTE_PORT }}
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_KEY }}
+          REMOTE_HOST: ${{ secrets.SERVER_IP }}
+          REMOTE_USER: ${{ secrets.SERVER_USER }}
+          REMOTE_PORT: ${{ secrets.SERVER_PORT }}
           ARGS: "-avzr --delete"
           SOURCE: "src/apis/"
           TARGET: "~/AspirantProgram/src/apis/"
