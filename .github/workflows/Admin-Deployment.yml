@@ -37,5 +37,3 @@ jobs:
             npm install
             export PORT=3001
             npm run build
-            env:
-              NODE_ENV: production
