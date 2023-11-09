@@ -24,9 +24,9 @@ jobs:
       - name: SSH and Deploy Django App
         uses: appleboy/ssh-action@master
         with:
-          host: ${{ secrets.SERVER_HOST }}
+          host: ${{ secrets.SERVER_IP }}
           username: ${{ secrets.SERVER_USER }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          key: ${{ secrets.SSH_KEY }}
           script: |
             cd ~/AspirantProgram/src/apis/
             pip install -r requirements.txt
