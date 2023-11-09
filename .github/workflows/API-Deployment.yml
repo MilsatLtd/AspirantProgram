@@ -30,4 +30,5 @@ jobs:
           script: |
             cd ~/AspirantProgram/src/apis/
             pip install -r requirements.txt
+            chmod +x restart_gunicorn.sh
             ./restart_gunicorn.sh
