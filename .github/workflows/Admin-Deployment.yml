@@ -35,5 +35,6 @@ jobs:
            [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
             cd ~/AspirantProgram/src/admin/
             npm install
-            export PORT=3001
             npm run build
+            tmux kill-session -t admin-app 2>/dev/null || true
+            tmux new -d -s admin-app "serve -s build -l 3001"
