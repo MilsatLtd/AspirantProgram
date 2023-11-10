@@ -2,9 +2,6 @@ name: Deploy Admin Page
 
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - dera-milsat-patch-1
 
 jobs:
   deploy:
