@@ -36,5 +36,6 @@ jobs:
             cd ~/AspirantProgram/src/web/
             npm install
             npm run build
+            cd .next/
             tmux kill-session -t web-app 2>/dev/null || true
             tmux new -d -s web-app "serve -s -l 3000"
