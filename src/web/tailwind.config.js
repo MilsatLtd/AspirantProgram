@@ -140,7 +140,8 @@ module.exports = {
         /****** shadow for containers *******/
         'lg':  '0px 6.94684px 27.7873px -1.73671px rgba(143, 48, 143, 0.15)',
          'xl': '0px 2px 8px rgba(56, 54, 57, 0.05)',
-         'lg': '0px 0px 16px rgba(49, 47, 49, 0.15)'
+         'lg': '0px 0px 16px rgba(49, 47, 49, 0.15)',
+         'card': '0px 8px 15px -2px rgba(143, 48, 143, 0.15)'
      }
     },
   },  

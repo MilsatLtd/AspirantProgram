@@ -1,39 +1,84 @@
-import React, { useState } from 'react'
-import { ProgrammeFeatures } from '@/utils/data'
-import blurEffectDownLeft from "../../../Assets/blur-effect-down-left.svg"
-import blurEffectDownRight from "../../../Assets/blur-effect-down-right.svg"
-import Image from 'next/image'
+import { ProgrammeFeatures } from "@/utils/data";
+import Image from "next/image";
 
-const AppFeatures = () => {
-const [activeFeature, setActiveFeature] = useState(0)
-  return (
-    <div className='h-[800px] relative'>
-            <Image src={blurEffectDownLeft} alt="Blur-effect-right" className='absolute top-0 bottom-0 left-0 h-full z-0' />
-            <div className="absolute h-full w-full top-0 flex lg:items-start items-center justify-center z-10">
-                <div className='lg:w-[70%] md:w-[72%] w-full px-16 flex flex-col gap-[80px]'>
-                    {
-                        ProgrammeFeatures.map((feature) => {
-                            return(
-                                <div key={feature.id} className='flex lg:items-center md:items-center lg:gap-56 md:32 gap-24'
-                                onMouseEnter={()=> setActiveFeature(feature.id)}
-                                onMouseLeave={()=> setActiveFeature(0)}
-                                >
-                                        <Image src={feature.icon} alt={feature.title}
-                                        className={`lg:w-[96px] lg:h-[96px] md:[64px] md:h-[64px] w-[48px] h-[48px] transition-all delay-200 ease-in-out ${activeFeature === feature.id ? " rotate-180": null}`} 
-                                        />
-                                    <div className='flex-grow flex flex-col gap-16'>
-                                        <h2 className='lg:text-xl md:text-lg  text-m-xl text-N400 leading-[28px] lg:leading-[40px] font-semibold'>{feature.title}</h2>
-                                        <p className='lg:text-lg md:text-base text-m-base text-N300 lg:leading-[36px] leading-[28px] font-medium'>{feature.description}</p>
-                                    </div>
-                                </div>
-                            )
-                        } )
-                    }
-                </div>
-            </div>
-            <Image src={blurEffectDownRight} alt="Blur-effect-right" className='absolute top-0 bottom-0 w-[50%] h-full right-0 z-0' />
-    </div>
-  )
+interface FeatureCardProps {
+  id: number;
+  title: string;
+  description: string;
 }
 
-export default AppFeatures
+const AppFeatures = () => {
+
+  const { title, howItWorks, featuresIcon } = ProgrammeFeatures;
+  return (
+    <div className="pt-[4.6em] mt-[2em] pb-[8em] flex items-center justify-center bg-P50">
+      <div className="mx-auto lg:max-w-[65vw] md:max-w-[80vw] max-w-[90vw] space-y-[5.18em]">
+        <h2 className="md:text-3xl text-xl font-bold text-N500 text-center">
+          {title}
+        </h2>
+        <div className="flex md:flex-row flex-col  md:gap-[11em] gap-[5em]">
+          <div className="flex-1">
+            {howItWorks.map((feature, index) => {
+              return (
+                <FeatureCard
+                  key={index}
+                  id={feature.id}
+                  title={feature.title}
+                  description={feature.description}
+                />
+              );
+            })}
+          </div>
+          <div className="flex-1 flex flex-col justify-center md:gap-[2em] gap-10 ">
+            <div className="bg-P300 rounded-[2em] md:rounded-[4em] md:p-[2.36em] p-[1.6em] md:h-max h-[8em] w-max">
+              <Image
+                src={featuresIcon.rocket}
+                alt="Rocket-icon"
+                className="w-full h-full"
+              />
+            </div>
+            <div className="flex items-center gap-[2em]">
+              <div className="md:h-full h-[8em]">
+                <Image
+                  src={featuresIcon.globe}
+                  alt="Globe-icon"
+                  className="w-full h-full"
+                />
+              </div>
+              <div className="md:rounded-[4em] rounded-[2em] md:p-[3.125em] p-[1.6em] md:h-full h-[8em] bg-S300">
+                <Image
+                  src={featuresIcon.planet}
+                  alt="Planet-icon"
+                  className="w-full h-full "
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default AppFeatures;
+
+const FeatureCard = ({ id, title, description }: FeatureCardProps) => {
+  return (
+    <div className="flex gap-32 min-h-[10em]">
+      <div className="flex flex-col items-center">
+        <div className="w-[55px] md:h-[64px] bg-G400 flex items-center justify-center rounded-[22px]">
+          <span className="text-white font-bold text-xl leading-[53px]">
+            {id}
+          </span>
+        </div>
+        <hr className="h-full w-[0.2em] bg-G400 items-center"></hr>
+      </div>
+      <div className="space-y-4 pb-11">
+        <h3 className="md:text-xl text-lg text-N500 font-bold">{title}</h3>
+        <p className="md:text-lg text-base text-N400 font-medium">
+          {description}
+        </p>
+      </div>
+    </div>
+  );
+};

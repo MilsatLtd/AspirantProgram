@@ -1,8 +1,9 @@
-import { navLinks } from "@/utils/data";
+import { routes } from "@/utils/data";
 import { useRouter } from "next/router";
 
 const NavLink = () => {
   const router = useRouter()
+  const { navLinks } = routes;
   return (
     <ul className="col-span-1 flex lg:flex-row flex-col items-center justify-center gap-32 transition-all delay-150">
       {navLinks.map((nav, index) => {

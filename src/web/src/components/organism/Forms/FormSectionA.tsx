@@ -33,16 +33,14 @@ const FormSectionA = (props: formSectionType) => {
   const {
     handleSubmit,
     setValue,
-    getValues,
     formState: { errors },
   } = useForm<basicInfo>({
-    resolver: yupResolver(validationSchema)
+    resolver: yupResolver<Yup.AnyObjectSchema>(validationSchema),
   });
 
 
   // Sends data to main form component and chnages form section
   const onSubmit = (data: basicInfo) => {
-    console.log(data)
     props.passData(data)
     props.changeSection()
   }
