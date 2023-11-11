@@ -1,0 +1,40 @@
+name: Deploy Web Page
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - dera-milsat-patch-1
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Rsync files to server
+        uses: easingthemes/ssh-deploy@main
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_KEY }}
+          REMOTE_HOST: ${{ secrets.SERVER_IP }}
+          REMOTE_USER: ${{ secrets.SERVER_USER }}
+          REMOTE_PORT: ${{ secrets.SERVER_PORT }}
+          ARGS: "-avzr --delete"
+          SOURCE: "src/web/"
+          TARGET: "~/AspirantProgram/src/web/"
+
+      - name: SSH and Build on Server
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SERVER_IP }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+           export NVM_DIR="/home/ubuntu/.nvm"
+           [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+            cd ~/AspirantProgram/src/web/
+            npm install
+            npm run build
+            tmux kill-session -t web-app 2>/dev/null || true
+            tmux new -d -s web-app "serve -s -l 3000"
