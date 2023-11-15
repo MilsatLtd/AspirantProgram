@@ -1,0 +1,23 @@
+name: Review PR
+
+on:
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  Review:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code 
+      uses: actions/checkout@v3
+
+    - name: Review PR file(s) with chat-gpt
+      uses: anc95/ChatGPT-CodeReview@main
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        OPENAI_API_KEY: ${{ secrets.TEMP_OPEN_AI_KEY }}
+        OPENAI_API_ENDPOINT: https://api.openai.com/v1
+        MODEL: gpt-4
+        LANGUAGE: English
