@@ -17,7 +17,7 @@ jobs:
           REMOTE_HOST: ${{ secrets.SERVER_IP }}
           REMOTE_USER: ${{ secrets.SERVER_USER }}
           REMOTE_PORT: ${{ secrets.SERVER_PORT }}
-          ARGS: "-avzr --delete"
+          ARGS: "-avzr"
           SOURCE: "src/web/"
           TARGET: "~/AspirantProgram/src/web/"
 
