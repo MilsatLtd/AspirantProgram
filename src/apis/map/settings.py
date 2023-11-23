@@ -69,7 +69,7 @@ CORS_ALLOWED_ORIGINS = [
     "https://aspirant.milsat.africa",
     "https://aspirant-api.milsat.africa",
     "http://localhost:5173",
-    "https://localhost:5173"
+    "https://localhost:5173",
     "http://localhost:3000",
     "https://localhost:3000"
 ]
