@@ -67,7 +67,11 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 CORS_ALLOWED_ORIGINS = [
     "https://admin-asp.milsat.africa",
     "https://aspirant.milsat.africa",
-    "https://aspirant-api.milsat.africa"
+    "https://aspirant-api.milsat.africa",
+    "http://localhost:5173",
+    "https://localhost:5173"
+    "http://localhost:3000",
+    "https://localhost:3000"
 ]
 
 
@@ -75,7 +79,11 @@ CORS_ALLOWED_ORIGINS = [
 CSRF_TRUSTED_ORIGINS = [
     "https://admin-asp.milsat.africa",
     "https://aspirant.milsat.africa",
-    "https://aspirant-api.milsat.africa"
+    "https://aspirant-api.milsat.africa",
+    "http://localhost:5173",
+    "https://localhost:5173",
+    "http://localhost:3000",
+    "https://localhost:3000"
 ]
 
 
