@@ -9,6 +9,16 @@ import django.db.models.deletion
 import django.utils.timezone
 import uuid
 
+from django.db.migrations import RunPython
+
+def seed_data( app, schema_editor):
+    from django.contrib.auth import get_user_model
+    User = get_user_model()
+
+    if not User.objects.filter(email='admin@milsat.tech').exists():
+        User.objects.create_superuser('admin@milsat.tech',first_name='map',
+                                      last_name='admin', gender=0, country='Nigeria',
+                                      phone_number='07039496535', bio='', password='Password123?_')
 
 class Migration(migrations.Migration):
 
@@ -205,4 +215,7 @@ class Migration(migrations.Migration):
                  related_name='applications', to=settings.AUTH_USER_MODEL)),
             ],
         ),
+
+        RunPython(seed_data)
+
     ]

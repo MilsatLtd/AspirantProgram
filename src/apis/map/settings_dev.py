@@ -119,7 +119,7 @@ DATABASES = {
         "ENGINE": "django.db.backends.postgresql",
         "NAME": "map.milsat",
         "USER": "postgres",
-        "PASSWORD": "Milsat123",
+        "PASSWORD": "rootroot",
         "HOST": "localhost",
         "PORT": "5432"
     }

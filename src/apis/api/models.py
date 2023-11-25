@@ -44,14 +44,14 @@ class User(AbstractUser):
     )
     user_id = models.UUIDField(
         primary_key=True, default=uuid.uuid4, editable=False)
-    email = models.EmailField(max_length=40, unique=True)
+    email = models.EmailField(max_length=70, unique=True)
     password2 = models.CharField(max_length=128, default='')
-    first_name = models.CharField(max_length=30)
-    last_name = models.CharField(max_length=30)
+    first_name = models.CharField(max_length=50)
+    last_name = models.CharField(max_length=50)
     gender = models.IntegerField(choices=GENDER_CHOICES)
     country = models.CharField(max_length=30)
     phone_number = models.CharField(max_length=11)
-    bio = models.TextField(blank=True, max_length=120, default='')
+    bio = models.TextField(blank=True, max_length=350, default='')
     profile_picture = models.ImageField(
         upload_to=unique_profile_picture, blank=True, null=True)
     objects = UserManager()
@@ -124,10 +124,10 @@ class Applications(models.Model):
 
     applicant_id = models.UUIDField(
         primary_key=True, default=uuid.uuid4, editable=False)
-    reason = models.TextField(max_length=200)
-    referral = models.CharField(max_length=30)
-    skills = models.TextField(max_length=50)
-    purpose = models.TextField(max_length=50)
+    reason = models.TextField(max_length=350)
+    referral = models.CharField(max_length=50)
+    skills = models.TextField(max_length=350)
+    purpose = models.TextField(max_length=350)
     education = models.IntegerField(choices=EDUCATION_CHOICES)
     submission_date = models.DateTimeField(auto_now_add=True)
     review_date = models.DateTimeField(blank=True, null=True)
@@ -146,8 +146,8 @@ class Applications(models.Model):
 class Track(models.Model):
     track_id = models.UUIDField(
         primary_key=True, default=uuid.uuid4, editable=False)
-    name = models.CharField(max_length=30)
-    description = models.TextField(blank=True, max_length=120, default='')
+    name = models.TextField(blank=False, default='')
+    description = models.TextField(blank=True, default='')
     enrolled_count = models.IntegerField(default=0)
     cohort = models.ForeignKey(
         'Cohort', on_delete=models.CASCADE, null=True,  blank=True, related_name='tracks')
@@ -161,11 +161,10 @@ class Track(models.Model):
 class Course(models.Model):
     course_id = models.UUIDField(
         primary_key=True, default=uuid.uuid4, editable=False)
-    name = models.CharField(max_length=30)
-    description = models.TextField(blank=True, max_length=120, default='')
-    requirements = models.TextField(blank=True, max_length=120, default='')
-    access_link = models.URLField(
-        max_length=200, default='https://milsat.africa')
+    name = models.CharField(max_length=200)
+    description = models.TextField(blank=True, default='')
+    requirements = models.TextField(blank=True, default='')
+    access_link = models.URLField(default='https://milsat.africa')
     track = models.ForeignKey(
         'Track', on_delete=models.CASCADE, related_name='courses')
     order = models.IntegerField(default=0)
@@ -206,7 +205,7 @@ def unique_todo_filename(instance, filename):
 class Todo(models.Model):
     todo_id = models.UUIDField(
         primary_key=True, default=uuid.uuid4, editable=False)
-    summary = models.TextField(blank=True, max_length=120, default='')
+    summary = models.TextField(blank=True, max_length=350, default='')
     submitted_at = models.DateTimeField(auto_now_add=True)
     status = models.TextField(choices=((0, 'Pending'), (1, 'Completed')))
     course = models.ForeignKey(
@@ -222,15 +221,15 @@ class Todo(models.Model):
 class Cohort(models.Model):
     cohort_id = models.UUIDField(
         primary_key=True, default=uuid.uuid4, editable=False)
-    name = models.CharField(max_length=30)
+    name = models.CharField(max_length=40)
     start_date = models.DateTimeField()
     end_date = models.DateTimeField()
     apply_start_date = models.DateTimeField()
     apply_end_date = models.DateTimeField()
     status = models.IntegerField(
         choices=((0, 'Active'), (1, 'Inactive'), (2, 'Upcoming')))
-    task_id_1 = models.CharField(max_length=50, null=True, blank=True)
-    task_id_2 = models.CharField(max_length=50, null=True, blank=True)
+    task_id_1 = models.CharField(max_length=100, null=True, blank=True)
+    task_id_2 = models.CharField(max_length=100, null=True, blank=True)
     duration = models.PositiveIntegerField(default=0, editable=False)
 
     def save(self, *args, **kwargs):
@@ -322,10 +321,10 @@ class Report(models.Model):
     cohort = models.ForeignKey(
         Cohort, on_delete=models.CASCADE, related_name='reports')
     sumbitted_at = models.DateTimeField(auto_now_add=True)
-    question_1 = models.TextField(max_length=200)
-    question_2 = models.TextField(max_length=200)
-    question_3 = models.TextField(max_length=200)
-    mentor_feedback = models.TextField(max_length=200, null=True)
+    question_1 = models.TextField()
+    question_2 = models.TextField()
+    question_3 = models.TextField()
+    mentor_feedback = models.TextField(null=True)
 
     def calculate_age(self):
         return round((timezone.now() - self.sumbitted_at).seconds / 60)\
