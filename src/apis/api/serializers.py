@@ -229,6 +229,7 @@ class CohortSerializer(serializers.Serializer):
             'apply_start_date', instance.apply_start_date)
         instance.apply_end_date = validated_data.get(
             'apply_end_date', instance.apply_end_date)
+        instance.status = validated_data.get('status', instance.status)
         instance.save()
 
         tracks = validated_data.get('tracks', [])

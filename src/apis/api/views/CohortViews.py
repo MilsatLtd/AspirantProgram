@@ -49,7 +49,7 @@ class GetAndUpdateCohortView(mixins.RetrieveModelMixin,
         return GetCohortById(cohort_id).get()
 
     @swagger_auto_schema(operation_summary="Update a cohort by its cohort_id",
-                         request_body=CreateCohortSerializer,
+                         request_body=CohortSerializer,
                          responses={200: CohortSerializer})
     def put(self, request, cohort_id):
         return UpdateCohort().update(cohort_id, request.data)
