@@ -272,9 +272,6 @@ class CohortSerializer(serializers.Serializer):
         if start_date < timezone.now():
             raise serializers.ValidationError(
                 {"message": "Start date cannot be in the past \U0001F636"})
-        if apply_start_date < timezone.now():
-            raise serializers.ValidationError(
-                {"message": "Application start date cannot be in the past \U0001F636"})
         # validate that the cohort does not overlap with another cohort
         cohorts = Cohort.objects.exclude(
             cohort_id=self.instance.cohort_id).all()
