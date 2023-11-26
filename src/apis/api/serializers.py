@@ -36,10 +36,12 @@ class CourseAdminSerializer(serializers.ModelSerializer):
         repr_ = super().to_representation(instance)
         repr_['order'] = instance.order
         return repr_
+    
+    def validate(self, attrs):
+        return super().validate(attrs)
 
 
 class CreateCohortTrack(serializers.ModelSerializer):
-    courses = CourseAdminSerializer(many=True)
 
     class Meta:
         model = Track
@@ -52,10 +54,30 @@ class CreateCohortTrack(serializers.ModelSerializer):
         for course_data in courses_data:
             Course.objects.create(**course_data, track=track)
         return track
+    
+class CourseSerializer(serializers.Serializer):
+    course_id = serializers.UUIDField(read_only=True)
+    name = serializers.CharField(max_length=200)
+    description = serializers.CharField(max_length=500)
+    requirements = serializers.CharField(max_length=500)
+    access_link = serializers.CharField(max_length=500)
+    track_id = serializers.UUIDField()
 
-
+    def create(self, validated_data):
+        track_id = validated_data.pop('track_id')
+        track = Track.objects.get(track_id=track_id)
+        course = Course.objects.create(track=track, **validated_data)
+        return course
+    
+class CourseUpdateSerializer(serializers.Serializer):
+    course_id = serializers.UUIDField()
+    name = serializers.CharField(max_length=200)
+    description = serializers.CharField(max_length=500)
+    requirements = serializers.CharField(max_length=500)
+    access_link = serializers.CharField(max_length=500)
+    
 class TrackSerializer(serializers.ModelSerializer):
-    courses = CourseAdminSerializer(many=True)
+    courses = CourseAdminSerializer(many=True,)
 
     class Meta:
         model = Track
@@ -68,6 +90,34 @@ class TrackSerializer(serializers.ModelSerializer):
             Course.objects.create(**course_data, track=track)
         return track
 
+    def update(self, instance, validated_data):
+        instance.name = validated_data.get('name', instance.name)
+        instance.description = validated_data.get(
+            'description', instance.description)
+        instance.save()
+
+        courses = validated_data.pop('courses')
+
+        for course_data in courses:
+            course_id = course_data.get('course_id')
+            edit_course = Course.objects.filter(
+                course_id=course_id, track=instance).first()
+            if edit_course:
+                edit_course.name = course_data.get('name', edit_course.name)
+                edit_course.description = course_data.get(
+                    'description', edit_course.description)
+                edit_course.requirements = course_data.get(
+                    'requirements', edit_course.requirements)
+                edit_course.access_link = course_data.get(
+                    'access_link', edit_course.access_link)
+                edit_course.save()
+        return instance
+
+class TrackSerializerAnonymous(serializers.ModelSerializer):
+    class Meta:
+        model = Track
+        fields = ['track_id', 'name', 'description']
+
     def update(self):
         instance = self.instance
         instance.name = self.validated_data.get('name', instance.name)
@@ -75,11 +125,6 @@ class TrackSerializer(serializers.ModelSerializer):
             'description', instance.description)
         instance.save()
         return instance
-
-class TrackSerializerAnonymous(serializers.ModelSerializer):
-    class Meta:
-        model = Track
-        fields = ['track_id', 'name', 'description']
 
 
 class CreateCohortSerializer(serializers.Serializer):
@@ -97,7 +142,7 @@ class CreateCohortSerializer(serializers.Serializer):
             tracks_data = validated_data.pop('tracks')
             cohort = Cohort.objects.create(
                 **validated_data, status=COHORT_STATUS.UPCOMING.value)
-            cohort.schedule_create()
+            # cohort.schedule_create()
             for track_data in tracks_data:
                 track = Track.objects.get(track_id=track_data.track_id)
                 new_track = Track.objects.create(
@@ -105,17 +150,9 @@ class CreateCohortSerializer(serializers.Serializer):
                 for course in track.courses.all():
                     Course.objects.create(
                         name=course.name, description=course.description, track=new_track)
-
-            # apply_end_date = validated_data.get('apply_end_date')
-            # time_difference = apply_end_date - timezone.now()
-            # update_cohort = tasks.cohort_apply_to_live.apply_async(
-            #     [cohort.cohort_id], countdown=time_difference.total_seconds())
             return cohort
         except Exception as e:
             cohort.delete()
-            tracks = Track.objects.filter(cohort=cohort)
-            for track in tracks:
-                track.delete()
             raise serializers.ValidationError({"message":"Error creating cohort \U0001F636"})
 
     # validate that a cohort with the same name does not exist

@@ -55,3 +55,18 @@ class GetAndUpdateTrackView(mixins.RetrieveModelMixin,
     @swagger_auto_schema( operation_summary="Update a track by its id")
     def put(self, request, track_id):
         return UpdateTrack().update(track_id, request.data)
+    
+class AddCourseToTrackView(CreateAPIView):
+    serializer_class = CourseSerializer
+    permission_classes = (IsAuthenticated, IsAdmin)
+
+    @swagger_auto_schema( operation_summary="Add a course to a track")
+    def post(self, request):
+        return AddCourseToTrack(request.data).add_course()
+    
+class DeleteTrackView(DestroyAPIView):
+    permission_classes = (IsAuthenticated, IsAdmin)
+
+    @swagger_auto_schema( operation_summary="Delete a track by its id")
+    def delete(self, request, track_id):
+        return DeleteTrack(track_id).delete()
