@@ -59,7 +59,7 @@ const MultiTextField = (props: MultiTextFieldType) => {
       </div>
       <div className='flex flex-col gap-8 w-full'>
         <div className='flex gap-6 flex-wrap'>
-        <input placeholder={props.placeholder} className={`py-10 flex-1 px-16 flex justify-between leading-[28px] outline-none  focus:border-P300 rounded-md border-[1px] cursor-pointer
+        <input placeholder={props.placeholder} className={`py-10 flex-1 px-16 flex text-N75  justify-between text-[16px] leading-[28px] font-medium outline-none  focus:border-P300 rounded-md border-[1px] cursor-pointer
             ${
                 props.error ? "border-R200" : "border-N75"
               }

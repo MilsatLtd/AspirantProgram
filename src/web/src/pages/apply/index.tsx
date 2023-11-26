@@ -10,6 +10,7 @@ import SubmitInfo from "@/components/atom/application/SubmitInfo";
 import blurEffectTop from "../../Assets/blur-effect-top.svg";
 import { ThreeCircles } from "react-loader-spinner";
 import React, { useEffect, useState } from "react";
+import Head from 'next/head'
 
 const ApplicationPage = () => {
   const {
@@ -67,6 +68,33 @@ const ApplicationPage = () => {
 
 
   return (
+    <>
+    
+    <Head>
+    <title>Apply to Cohort</title>
+      <meta name="description" content="Apply to MAP live Cohort" />
+      <meta name="keywords" content="MAP, Aspirant Programmer, GIS Training, Milsat, Educaton, GIS Skills, GIS Mentorship, Esri,Fundalmental of GIS, Field Mapping, Data collection, Africa GIS, Data, learning GIS" />
+      
+      {/* Add a link to your favicon (replace 'favicon.ico' with your actual favicon) */}
+      <link rel="icon" href="/favicon.ico" />
+
+      {/* Add an Open Graph image (replace 'og-image.jpg' with your actual image)
+      <meta property="og:image" content="/og-image.jpg" /> */}
+
+      {/* Add a canonical URL if needed */}
+      <link rel="canonical" href="https://aspirant.milsat.africa/apply" />
+
+      {/* Add your CSS styles or external stylesheets */}
+      <link rel="stylesheet" href="/styles.css" />
+
+      {/* Add your logo image (replace 'logo.png' with your actual logo) */}
+      <link rel="apple-touch-icon" sizes="180x180" href="/logo.png" />
+      <link rel="icon" type="image/png" sizes="32x32" href="/logo.png" />
+      <link rel="icon" type="image/png" sizes="16x16" href="/logo.png" />
+
+      {/* Specify the viewport for responsive design */}
+      <meta name="viewport" content="width=device-width, initial-scale=1" />
+    </Head>
     <div className="h-full">
       { isLoading || isSubmitting  && (
         <div className="z-20 w-screen fixed right-0 h-full bg-[rgba(0,0,0,0.5)] flex items-center justify-center">
@@ -108,6 +136,7 @@ const ApplicationPage = () => {
       </div>
       <Footer />
     </div>
+    </>
   );
 };
 

@@ -125,7 +125,8 @@ export default CohortTable;
 
 
 function NewCohorts ({closeEdit}) {
-    const [cohortDetails, setCohortDetails] = useState({})
+    const [cohortName, setCohortName] = useState("")
+    const [trackIDs, setTrackIDs] = useState([])
     const [time, setTime] = useState({
         apply_start_date: "00.00",
         apply_end_date: "00.00",
@@ -149,36 +150,26 @@ function NewCohorts ({closeEdit}) {
     const handleChange = (e) => {
         let { name, value } = e.target;
         setDate((prevState) => ({...prevState, [name]: value}));
-    
-        if(e.target.name === "end_date" 
-        || e.target.name === "start_date"
-        || e.target.name === "apply_start_date"
-        || e.target.name === "apply_end_date"
-        ) {
-            value = utils.formatDateToISO(date[name], time[name])
-        }
-        setCohortDetails((prevState) => ({
-            ...prevState,
-            [name]: value,
-        }));
-        console.log(cohortDetails)
     }
 
     const handleTimeChange = (e) => {
         let { name, value } = e.target;
         setTime((prevState) => ({...prevState, [e.target.name]: e.target.value})); 
-        value = utils.formatDateToISO(date[name], time[name])
-        setCohortDetails((prevState) => ({
-            ...prevState,
-            [name]: value,
-        }));
     }
     const handleSubmit = (event) => {
         event.preventDefault();
-       const allCohortDetails = {...cohortDetails, tracks: trackIDs}
-       console.log(allCohortDetails)
-        setCohortDetails(allCohortDetails)
-        addCohort.mutate(allCohortDetails)
+        if(cohortName && trackIDs.length > 0 && date.start_date && date.end_date && date.apply_start_date && date.apply_end_date){
+            const cohortDetails = { 
+                name: cohortName,
+                start_date: utils.formatDateToISO(date.start_date, time.start_date),
+                end_date: utils.formatDateToISO(date.end_date, time.end_date),
+                apply_start_date: utils.formatDateToISO(date.apply_start_date, time.apply_start_date),
+                apply_end_date: utils.formatDateToISO(date.apply_end_date, time.apply_end_date),
+            } 
+           const allCohortDetails = {...cohortDetails, tracks: trackIDs}
+           addCohort.mutate(allCohortDetails)
+        }
+       
     }
 
     return (
@@ -193,17 +184,17 @@ function NewCohorts ({closeEdit}) {
                 <div className="flex flex-col gap-4">
                     <label htmlFor="name" className="font-semibold">Cohort Name</label>
                     <input type="text" name="name" id="name"  className="p-4 border-[1px] border-black rounded-md"
-                    onChange={handleChange}
+                    onChange={(e) => setCohortName(e.target.value)}
                     />
                 </div>
                 <div className="flex flex-col gap-4">
                     <label htmlFor="start_date" className="font-semibold">Cohort Start Date & Time</label>
-                    <div className="flex gap-5">
-                        <input type="time" name="start_date" id="start_date" className=" flex-1 p-4 border-[1px] border-black rounded-md"
-                        onChange={handleTimeChange}
-                        />
+                    <div className="flex gap-5"> 
                         <input type="date" name="start_date" id="start_date" className=" flex-1 p-4 border-[1px] border-black rounded-md" 
                         onChange={handleChange}
+                        />
+                        <input type="time" name="start_date" id="start_date" className=" flex-1 p-4 border-[1px] border-black rounded-md"
+                        onChange={handleTimeChange}
                         />
                     </div>
                     
@@ -211,36 +202,37 @@ function NewCohorts ({closeEdit}) {
                 <div className="flex flex-col gap-4">
                     <label htmlFor="end_date" className="font-semibold">Cohort End Date & Time</label>
                     <div className="flex gap-5">
-                        <input type="time" name="end_date" id="end_date" className=" flex-1 p-4 border-[1px] border-black rounded-md"
-                        onChange={handleTimeChange}
-                        />
                         <input type="date" name="end_date" id="end_date" className=" flex-1 p-4 border-[1px] border-black rounded-md"
                      onChange={handleChange}
                     />
+                     <input type="time" name="end_date" id="end_date" className=" flex-1 p-4 border-[1px] border-black rounded-md"
+                        onChange={handleTimeChange}
+                        />
                     </div>
                    
                 </div>
                 <div className="flex flex-col gap-4 ">
                     <label htmlFor="apply_start_date" className="font-semibold">Application Start Date & Time</label>
                     <div className="flex gap-5">
-                        <input type="time" name="apply_start_date" id="apply_start_date" className=" flex-1 p-4 border-[1px] border-black rounded-md"
-                        onChange={handleTimeChange}
-                        />
+                        
                         <input type="date" name="apply_start_date" id="apply_start_date" className=" flex-1 p-4 border-[1px] border-black rounded-md" 
                      onChange={handleChange}
                     />  
+                    <input type="time" name="apply_start_date" id="apply_start_date" className=" flex-1 p-4 border-[1px] border-black rounded-md"
+                        onChange={handleTimeChange}
+                        />
                     </div>
                    
                 </div>
                 <div className="flex flex-col gap-4">
                     <label htmlFor="apply_start_date" className="font-semibold">Application End Date & Time</label>
                     <div className="flex gap-5">
-                        <input type="time" name="apply_end_date" id="apply_end_date"  className=" flex-1 p-4 border-[1px] border-black rounded-md"
-                        onChange={handleTimeChange}
-                        />
                         <input type="date" name="apply_end_date" id="apply_end_date" className=" flex-1 p-4 border-[1px] border-black rounded-md" 
                      onChange={handleChange}
                     />
+                    <input type="time" name="apply_end_date" id="apply_end_date"  className=" flex-1 p-4 border-[1px] border-black rounded-md"
+                        onChange={handleTimeChange}
+                        />
                     </div>
                    
                 </div>

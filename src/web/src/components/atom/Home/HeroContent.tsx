@@ -1,5 +1,4 @@
 import React from 'react'
-import { Partners } from '@/utils/data'
 import Image from 'next/image'
 import HeroImage from './HeroImage'
 import topArrow from '../../../Assets/topArrow.svg'
@@ -13,7 +12,7 @@ const HeroContent = () => {
             <div className='flex-grow flex flex-col justify-center lg:gap-[56px] gap-[48px]'>
                 <div className='flex flex-col gap-32'>
                     <h1 className='lg:text-[3.56em] text-m-2xl font-extrabold lg:leading-[68px] leading-[48px] text-N500 w-[342px] lg:w-[600px]'>Learn High-Demand Geo-Skills</h1>
-                    <p className='lg:text-lg lg:leading-[32px] leading-[28px] font-medium text-N300 w-[342px]  lg:w-[550px]'>Empower your GIS journey unlock your full potential with expertly curated Courses and mentorship</p>
+                    <p className='lg:text-lg lg:leading-[32px] leading-[28px] font-medium text-N300 w-[342px]  lg:w-[550px]'>Boost your GIS skills and reach full potential with expert-designed courses and mentorship</p>
                 </div>
                 <Link href={"/apply"} className='flex gap-12 items-center px-32 py-12 bg-P300 rounded-lg z-40 w-max'>
                     <span className='text-[16px] font-semibold text-N00 leading-[28px]'>Join Cohort</span>
