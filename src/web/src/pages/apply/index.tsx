@@ -102,7 +102,7 @@ const ApplicationPage = () => {
       >
         <Header showNavLinks={true} showApplyButton={false} />
         <section className="grid lg:grid-cols-12 grid-cols-1 lg:px-96 md:px-48 px-16 mt-[3rem] mb-[200px]">
-          <ApplicantInfo applicationTimeline={{start_date: "00 November, 2023", end_date: "00 December, 2023"}} />
+          <ApplicantInfo applicationTimeline={{start_date: "12 November, 2023", end_date: "31 December, 2023"}} />
           <ApplicationForm  postResponse={(form)=> handleSubmitApplication(form)}/>
         </section>
       </div>

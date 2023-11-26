@@ -132,7 +132,12 @@ function NewCohorts ({closeEdit}) {
         start_date: "00.00",
         end_date: "00.00",
         })
-    const [trackIDs, setTrackIDs] = useState([])
+    const [date, setDate] = useState({
+        apply_start_date: "",
+        apply_end_date: "",
+        start_date: "",
+        end_date: "",
+        })
     const handleClose = () => {
         closeEdit();
     }
@@ -143,12 +148,14 @@ function NewCohorts ({closeEdit}) {
 
     const handleChange = (e) => {
         let { name, value } = e.target;
+        setDate((prevState) => ({...prevState, [name]: value}));
+    
         if(e.target.name === "end_date" 
         || e.target.name === "start_date"
         || e.target.name === "apply_start_date"
         || e.target.name === "apply_end_date"
         ) {
-            value = utils.formatDateToISO(value, time[name])
+            value = utils.formatDateToISO(date[name], time[name])
         }
         setCohortDetails((prevState) => ({
             ...prevState,
@@ -158,8 +165,13 @@ function NewCohorts ({closeEdit}) {
     }
 
     const handleTimeChange = (e) => {
+        let { name, value } = e.target;
         setTime((prevState) => ({...prevState, [e.target.name]: e.target.value})); 
-        console.log(time)
+        value = utils.formatDateToISO(date[name], time[name])
+        setCohortDetails((prevState) => ({
+            ...prevState,
+            [name]: value,
+        }));
     }
     const handleSubmit = (event) => {
         event.preventDefault();

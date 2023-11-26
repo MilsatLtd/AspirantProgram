@@ -8,7 +8,7 @@ const Hero = () => {
     <div className='lg:px-96 md:px-48 px-16 grid lg:grid-cols-2 md:grid-cols-2 lg:gap-[100px] gap-56  lg:min-h-[60%] py-[72px] grid-col-1 z-0 relative'>
         <div className='col-span-1 flex flex-col gap-24 justify-center'>
             <h1 className='lg:text-3xl text-m-2xl font-medium lg:leading-[68px] leading-[48px] text-N400 w-[342px] lg:w-[450px]'>Explore the World most demanding skill</h1>
-            <p className='lg:text-base lg:leading-[32px] leading-[28px] font-medium text-N200 w-[342px]  lg:w-[500px]'>Empower your GIS journey unlock your full potential with expertly curated Courses and mentorship</p>
+            <p className='lg:text-base lg:leading-[32px] leading-[28px] font-medium text-N200 w-[342px]  lg:w-[500px]'>Fuel your ambitions with tailored learning, guiding you towards your GIS career advancement one step at a time</p>
         </div>
         <div className='col-span-1 w-full relative flex justify-end items-center'>
           <div className='lg:h-full col-span-1 lg:w-full h-[219px] w-[287px]'>

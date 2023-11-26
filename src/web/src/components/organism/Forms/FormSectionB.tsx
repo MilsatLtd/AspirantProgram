@@ -96,7 +96,7 @@ useEffect(() => {
     <form className="w-full flex flex-col gap-24"  onSubmit={handleSubmit(onSubmit)} encType="multipart/form-data">
         <DropDownField
           label="Cohort"
-          placeholder="Select chorts"
+          placeholder="Select Cohorts"
           textValue={undefined}
           options={chortslist}
           dropDownStyle=""
@@ -107,7 +107,7 @@ useEffect(() => {
         />
         <DropDownField
           label="Tracks"
-          placeholder="Select tracks"
+          placeholder="Select Track"
           textValue={undefined}
           options={tracks}
           dropDownStyle=""
@@ -120,7 +120,7 @@ useEffect(() => {
         <FileList allFiles={file} handleFileRemove={(file)=>removeFile(file)} />
        <TextAreaField 
         label="Reason for applying "
-        placeholder="Let us know why your applying for the program"
+        placeholder="Let us know why you are applying for the program"
         inputStyle="h-[205px]"
         containerStyle="col-span-12"
         error={errors.reason?.message}

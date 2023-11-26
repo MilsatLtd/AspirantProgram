@@ -31,7 +31,36 @@ const getAllTracksDetails  = (cohort: currentCohort["data"]) => {
    return {trackInfo ,cohortInfo, applicationTimeline};
 }
 
+const downloadFile = (filePath: string, fileName: string) => {
+    // Fetch the file
+    fetch(filePath,{
+        headers: {
+            'Content-Type': 'application/pdf', // Adjust based on the file type
+          },
+    })
+      .then(response => response.blob())
+      .then(blob => {
+        // Create a link element
+        const link = document.createElement('a');
+
+        // Create a URL for the Blob and set it as the link's href
+        link.href = window.URL.createObjectURL(blob);
+
+        // Set the download attribute with the desired file name
+        link.download = fileName;
+
+        // Append the link to the document
+        document.body.appendChild(link);
+
+        // Trigger a click on the link to start the download
+        link.click();
+
+        // Remove the link from the document
+        document.body.removeChild(link);
+      });
+  };
 
 
 
-export { formatDate, getEnumKeyByValue, getAllTracksDetails };
+
+export { formatDate, getEnumKeyByValue, getAllTracksDetails, downloadFile };

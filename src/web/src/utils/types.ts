@@ -9,6 +9,8 @@ export interface basicInfo {
     country: string | undefined;
     skills: string | undefined;
     purpose: string | undefined;
+    accurate: boolean | undefined;
+    terms: boolean | undefined;
   }
 
 export interface reasonInfo {
