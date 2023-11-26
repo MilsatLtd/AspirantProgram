@@ -40,7 +40,7 @@ const DropDownField = (props: dropDownFieldType) => {
         </label>
       </div>
       <div
-        className={`py-10 px-16 flex justify-between leading-[28px] rounded-md border-[1px] cursor-pointer ${
+        className={`py-10 px-16 flex justify-between text-[16px] leading-[28px] font-medium rounded-md border-[1px] cursor-pointer ${
           props.error ? "border-R200" : dropdown ? "border-P300" : "border-N75"
         } ${props.inputStyle}`}
         onClick={() => showDropdown(!dropdown)}
@@ -49,7 +49,7 @@ const DropDownField = (props: dropDownFieldType) => {
           className={`${
             value.valueText
               ? "text-N400 text-[16px] font-medium"
-              : "text-N75 text-[16px] font-normal"
+              : "text-N100 text-[16px] leading-[28px] font-medium"
           } `}
         >
           {value.valueText === "" ? props.placeholder : value.valueText}

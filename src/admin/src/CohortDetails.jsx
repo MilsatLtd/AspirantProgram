@@ -4,11 +4,14 @@ import Enums from "./constant/enum";
 import utils from "./constant/common";
 import { Link } from "react-router-dom";
 import Applications from "./Application";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation } from "@tanstack/react-query";
 import fetchCohortById from "./api/fetchCohortById";
+import updateCohortById from "./api/updateCohortById";
+
 import Loader from "./Loader";
 
 const formatCohort = (cohort) => {
+
     if (!isNaN(Number(cohort.status))) {
         cohort.status = utils.getEnumKeyByValue(Enums.COHORT_STATUS, cohort.status)
 
@@ -24,6 +27,20 @@ const formatCohort = (cohort) => {
 
     return cohort
 }
+
+const formatCohortForUpdate = (cohort, status) => {
+    const { task_id_1, task_id_2, tracks, ...updatedCohort } = { ...cohort };
+    
+    // Check if 'tracks' is defined before mapping
+    updatedCohort.tracks = tracks ? tracks.map(track => track.track_id) : [];
+    delete updatedCohort.task_id_1;
+    delete updatedCohort.task_id_2;
+    
+    // Provide a default value for 'status' if it is not defined
+    updatedCohort.status = status !== undefined ? status : null;
+    
+    return updatedCohort;
+  };
  
 function CohortTrack ( { track }) {
     return (
@@ -44,6 +61,7 @@ function CohortTrack ( { track }) {
 function CohortDetails () {
     const { cohort_id } = useParams()
     const results = useQuery( ['icohort'], () => fetchCohortById(cohort_id), { staleTime: 1000 * 60 * 5 })
+    const newResults = useQuery( ['uncohort'], () => fetchCohortById(cohort_id), { staleTime: 1000 * 60 * 5 })
 
     const cohort = results?.data ? formatCohort(results.data) : {
         name: "",
@@ -55,11 +73,26 @@ function CohortDetails () {
         tracks: []
     };
 
+    const handleCohortStatusChange = (status) => {
+        const updatedCohort = { ...newResults?.data}
+        const formatedCohort = formatCohortForUpdate(updatedCohort, status)
+        updateCohortById(cohort_id, formatedCohort )
+    }
+
     return (
     <>
     <Navbar  showLinks={true}/>
     <div className="flex">
-    <h1 className="text-4xl font-semibold m-7">Cohort Details</h1>
+    <div className="flex gap-5 items-center">
+        <h1 className="text-4xl font-semibold m-7">Cohort Details</h1>
+        {
+            cohort.status === Enums.COHORT_STATUS.LIVE ?
+            <button className="border-2 border-black text-black p-4 rounded-md hover:opacity-90"
+        onClick={()=>handleCohortStatusChange(Enums.COHORT_STATUS.LIVE)}
+        >Start Cohort</button> : null
+        }
+    </div>
+   
     {results.isLoading ? <Loader css1={"flex justify-center items-center"} css2="w-[30px] h-[30px]" /> : null}
     </div>
     <form action="">

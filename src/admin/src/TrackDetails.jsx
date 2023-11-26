@@ -12,18 +12,28 @@ import Modal from "./Modal";
 
 const TrackDetails = () => {
     const [isUpdateTrack, setIsUpdateTrack] = useState(false);
-    const { track_id } = useParams();
-    const results = useQuery( ['itrack'], () => fetchTrackById(track_id), { staleTime: 1000 * 60 * 5 })
-    const track = results.data?? {
+    const [track, setTrack] = useState({
         name: "",
         description: "",
         courses: []
-    };
+    })
+    const { track_id } = useParams();
 
+    const results = useQuery( ['itrack'], () => fetchTrackById(track_id))
+
+    useEffect(() => {
+        // Refetch data when track_id changes
+        results.refetch();
+        setTrack(results.data ?? {
+            name: "",
+            description: "",
+            courses: []
+        });
+      }, [track_id, results.data]);
 
   return (
         <>
-        <Navbar  showLinks={true}/>
+        <Navbar showLinks={true}/>
         <div className="flex items-center gap-10 m-7">
         <h1 className="text-4xl font-semibold ">Track Details</h1>
         {results.isLoading ? <Loader css1={"flex justify-center items-center"} css2="w-[30px] h-[30px]" /> : null}
@@ -43,11 +53,11 @@ const TrackDetails = () => {
                     <div className="flex flex-col gap-5 ml-5 w-[600px]">
                         <label className="font-bold text-xl" htmlFor="cohort_name">Track Name</label> 
                         <input className="border-2 border-black rounded-xl p-2 "
-                            type="text" name="cohort_name" id="cohort_name" defaultValue={track.name}/>
+                            type="text" name="cohort_name" id="cohort_name" defaultValue={track.name && track.name}/>
     
                         <label className="font-bold text-xl" htmlFor="cohort_status">Track Description</label>
                         <input className="border-2 border-black rounded-xl p-2 "
-                            type="text" name="cohort_status" id="cohort_status" defaultValue={track.description}/>
+                            type="text" name="cohort_status" id="cohort_status" defaultValue={track.description && track.description}/>
     
                     </div>
                     <div className="flex flex-col gap-8">
@@ -142,7 +152,6 @@ function UpdateTrack ({closeEdit, trackId}) {
             ...prevState,
             [name]: value,
         }));
-        console.log(trackDetails)
     }
 
     useEffect(() => {
@@ -153,12 +162,10 @@ function UpdateTrack ({closeEdit, trackId}) {
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        console.log(trackDetails)
         const formattedCourseDetails = utils.formatCourseDetails(courseDetails)
         const allTrackDetails = {name: trackDetails.name,
             description: trackDetails.description,  
             courses: formattedCourseDetails}
-        console.log(allTrackDetails)
         updateTrackById(trackDetails.track_id, allTrackDetails)
         handleClose();
     }

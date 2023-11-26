@@ -7,7 +7,7 @@ import BgContourTexture from "../../../Assets/contourTexture.svg";
 import redirect from "../../../Assets/redirect.svg";
 import Link from "next/link";
 import InfoList from "@/components/atom/CustomInfo/InfoList";
-import { AvailableTracks } from "@/utils/data";
+import { AvailableTracks, Brochure } from "@/utils/data";
 import  { downloadFile } from "@/utils/apiFunctions"
 
 
@@ -15,7 +15,7 @@ const TrackDetails = () => {
   const router = useRouter();
   const trackId = router.query.trackId;
 
-
+  const brochureDirectory = trackId === "fundamental-of-gis" ? Brochure.FundamentalOfGIS : trackId === "field-mapping-and-data-collection" ? Brochure.FieldMappingAndDataCollection : ""
 
 
   return (
@@ -31,9 +31,9 @@ const TrackDetails = () => {
             >
               <Header showNavLinks={true} showApplyButton={false} />
 
-              <section className="lg:px-96 md:px-48 px-16 py-24 lg:h-[50em] h-full gap-[3em] lg:gap-[20em] my-0 mx-auto flex lg:flex-row flex-col lg:items-center w-full">
-                <div className="grid lg:grid-rows-4 lg:gap-[64px] gap-40 mt-[1em] lg:mt-0 flex-1">
-                  <div className="lg:row-span-3 flex flex-col gap-24 lg:w-[555px] w-[250px]">
+              <section className="lg:px-96 md:px-48 px-16 py-24 lg:h-[50em] h-full gap-[8%] lg:gap-[20em] my-0 mx-auto flex lg:flex-row flex-col lg:items-center w-full">
+                <div className="grid lg:grid-rows-4 lg:gap-[64px] md:gap-40 gap-24 lg:mt-0 flex-1">
+                  <div className="lg:row-span-3 flex flex-col gap-24 lg:w-[555px] w-[280px]">
                     <h2 className="lg:text-3xl text-m-2xl font-semibold lg:leading-[68px] lg:w-[10em] leading-[48px]">
                       {Track.trackName}
                     </h2>
@@ -41,14 +41,21 @@ const TrackDetails = () => {
                       {Track.description}
                     </p>
                   </div>
-                  <div className="lg:row-span-1">
+                  <div className="lg:row-span-1 flex gap-24 ">
                     <Link
                       href="/apply"
-                      className="py-[17px] px-32 flex items-center leading-[28px] gap-12 bg-P300 hover:bg-P200  text-N00 rounded-lg w-max"
+                      className="md:py-[17px] md:px-32 px-16 py-10 flex items-center text-m-sm md:text-base leading-[28px] font-semibold gap-12 bg-P300 hover:bg-P200  text-N00 rounded-lg w-max h-max"
                     >
                       <span>Enroll</span>
                       <Image src={redirect} alt="redirect-icon" />
                     </Link>
+                    <div className="flex items-start">
+                    <button className="md:py-[16px] md:px-32 px-16 py-8  flex items-center leading-[28px] gap-12 font-semibold bg-white border-2 border-P300 text-P300 text-m-sm md:text-base rounded-lg h-max w-max"
+                      onClick={() => downloadFile(brochureDirectory, `${Track.trackName}.pdf`)}
+                    >
+                          Download Brochure
+                        </button>
+                  </div>
                   </div>
                 </div>
                 <div className="flex-1 flex flex-row gap-12 md:flex-col w-full">
@@ -71,15 +78,7 @@ const TrackDetails = () => {
                         {Track.learningTimeLine}
                       </p>
                     </div>
-                  </div>
-                  <div className="flex items-start">
-                    <button className="py-8 px-12 flex items-center leading-[28px] gap-12 bg-P300 hover:bg-P200 text-m-sm md:text-base  text-N00 rounded-lg h-max w-max"
-                      onClick={() => downloadFile("/Milsat_GIS_training_curriculum_Basic.pdf", `${Track.trackName}.pdf`)}
-                    >
-                          Download Syllabus
-                        </button>
-                  </div>
-                  
+                  </div> 
                 </div>
               </section>
             </header>

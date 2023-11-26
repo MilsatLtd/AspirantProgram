@@ -50,8 +50,8 @@ export const routes = {
   tracks: [
     {
       id: 2,
-      name: "Fundalmental of GIS",
-      link: "/track/fundalmental-of-gis",
+      name: "Fundamental of GIS",
+      link: "/track/fundamental-of-gis",
     },
     {
       id: 1,
@@ -147,8 +147,8 @@ export const eligibility = [
 
 export const AvailableTracks = [
   {
-    id: "fundalmental-of-gis",
-    trackName: "Fundalmental of GIS",
+    id: "fundamental-of-gis",
+    trackName: "Fundamental of GIS",
     description:
       "Explore the foundational principles and essential skills of Geographic Information Systems (GIS) in this beginner-friendly track, gaining a solid understanding of the system",
     learningTimeLine: "2 weeks",
@@ -173,7 +173,7 @@ export const AvailableTracks = [
             criteria: "Basic Geoprocessing tools",
           },
           {
-            id: 3,
+            id: 5,
             criteria: "Querying in GIS",
           },
         ],
@@ -276,26 +276,6 @@ export const termsAndConditions = {
     "Lorem ipsum dolor sit amet consectetur. Faucibus volutpat imperdiet dictum lobortis nulla. Quis adipiscing pretium feugiat vulputate non",
 };
 
-export const TAndCDetails = [
-  {
-    id: 1,
-    title: "Lorem ipsum dolor sit amet",
-    description:
-      "Lorem ipsum dolor sit amet consectetur. Faucibus volutpat imperdiet dictum lobortis nulla. Quis adipiscing pretium feugiat vulputate non egestas elementum sagittis bibendum. Sagittis leo magna rhoncus pellentesque vitae quis volutpat vitae suscipit. Magnis platea diam. Lorem ipsum dolor sit amet consectetur. Faucibus volutpat imperdiet dictum lobortis nulla. Quis adipiscing pretium feugiat vulputate non egestas elementum sagittis bibendum. Sagittis leo magna rhoncus pellentesque vitae quis volutpat vitae suscipit. Magnis platea diam.",
-  },
-  {
-    id: 2,
-    title: "Lorem ipsum dolor sit amet",
-    description:
-      "Lorem ipsum dolor sit amet consectetur. Faucibus volutpat imperdiet dictum lobortis nulla. Quis adipiscing pretium feugiat vulputate non egestas elementum sagittis bibendum. Sagittis leo magna rhoncus pellentesque vitae quis volutpat vitae suscipit. Magnis platea diam. Lorem ipsum dolor sit amet consectetur. Faucibus volutpat imperdiet dictum lobortis nulla. Quis adipiscing pretium feugiat vulputate non egestas elementum sagittis bibendum. Sagittis leo magna rhoncus pellentesque vitae quis volutpat vitae suscipit. Magnis platea diam.",
-  },
-  {
-    id: 3,
-    title: "Lorem ipsum dolor sit amet",
-    description:
-      "Lorem ipsum dolor sit amet consectetur. Faucibus volutpat imperdiet dictum lobortis nulla. Quis adipiscing pretium feugiat vulputate non egestas elementum sagittis bibendum. Sagittis leo magna rhoncus pellentesque vitae quis volutpat vitae suscipit. Magnis platea diam. Lorem ipsum dolor sit amet consectetur. Faucibus volutpat imperdiet dictum lobortis nulla. Quis adipiscing pretium feugiat vulputate non egestas elementum sagittis bibendum. Sagittis leo magna rhoncus pellentesque vitae quis volutpat vitae suscipit. Magnis platea diam.",
-  },
-];
 
 export const ProgrammeFeatures = {
   title: "How it works ?",
@@ -329,9 +309,9 @@ export const ProgrammeFeatures = {
 export const TrackCardsInfo = [
   {
     id: 1,
-    name: "Fundalmental of GIS",
+    name: "Fundamental of GIS",
     picture: community,
-    route: "/track/fundalmental-of-gis",
+    route: "/track/fundamental-of-gis", 
   },
   {
     id: 2,
@@ -369,7 +349,7 @@ export const ChortMessages = [
     id: 3,
     title: "Connect with Peers",
     message:
-      "Gain valuable insights into the GIS industry, its applications, and future developments from experts in the field.",
+      "Engage, network and collaborate with a supportive community of fellow GIS enthusiasts and learners.",
     color: "#312987",
     texture: triangleBlue,
   },
@@ -490,3 +470,9 @@ export const oppourtunity = [
     ],
   },
 ];
+
+
+export const Brochure =  {
+  FundamentalOfGIS: "/Fundamental_of_GIS.pdf",
+  FieldMappingAndDataCollection: "/Milsat_GIS_training_curriculum_Basic.pdf",
+}

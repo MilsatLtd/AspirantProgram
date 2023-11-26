@@ -24,8 +24,9 @@ REJECTED: 2,
 
 const COHORT_STATUS = {
 LIVE: 0,
-ENDED: 1,
+ENDED: 3,
 UPCOMING: 2,
+INACTIVE: 1,
 };
 
 const Enums = {
