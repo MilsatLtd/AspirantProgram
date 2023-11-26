@@ -142,7 +142,7 @@ class CreateCohortSerializer(serializers.Serializer):
             tracks_data = validated_data.pop('tracks')
             cohort = Cohort.objects.create(
                 **validated_data, status=COHORT_STATUS.UPCOMING.value)
-            cohort.schedule_create()
+            # cohort.schedule_create()
             for track_data in tracks_data:
                 track = Track.objects.get(track_id=track_data.track_id)
                 new_track = Track.objects.create(
@@ -153,9 +153,6 @@ class CreateCohortSerializer(serializers.Serializer):
             return cohort
         except Exception as e:
             cohort.delete()
-            tracks = Track.objects.filter(cohort=cohort)
-            for track in tracks:
-                track.delete()
             raise serializers.ValidationError({"message":"Error creating cohort \U0001F636"})
 
     # validate that a cohort with the same name does not exist
