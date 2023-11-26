@@ -13,7 +13,7 @@ const ApplicantInfo = (props: applicationInfoType) => {
     <aside className="lg:col-span-5 relative z-0 col-span-1 w-full flex flex-col lg:gap-56 md:gap-48 gap-32 lg:mt-[4.5rem] mt-[0.5rem]">
       <div className="relative flex flex-col w-[20rem] h-[8rem]">
         <h2 className="font-extrabold lg:text-lg text-m-lg  lg:leading-[36px] leading-[28px] text-N400 z-10">
-          You’re one step ahead to achieving your goal
+          You’re one step closer to achieving your goal
         </h2>
         <Image
           src={sign}

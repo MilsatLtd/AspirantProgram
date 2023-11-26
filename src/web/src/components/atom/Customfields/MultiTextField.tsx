@@ -34,6 +34,16 @@ const MultiTextField = (props: MultiTextFieldType) => {
         }
     }
 
+    const handleAddSkillsButton = () => {
+            if(potentialSkill !== undefined){
+                const UpdatedSkills: string[] = [...allSkills, potentialSkill]
+                setAllSkills(UpdatedSkills)
+                const skills = UpdatedSkills.toString()
+                props.sendSkills(skills)
+                setPotentaialSkills("")
+            }
+    }
+
     const removeSkills = (skills: string) => {
         const removedSkills = allSkills.filter((skill)=> skill !== skills)
         setAllSkills(removedSkills)
@@ -48,7 +58,8 @@ const MultiTextField = (props: MultiTextFieldType) => {
         </label>
       </div>
       <div className='flex flex-col gap-8 w-full'>
-        <input placeholder={props.placeholder} className={`py-10 px-16 flex justify-between leading-[28px] outline-none  focus:border-P300 rounded-md border-[1px] cursor-pointer
+        <div className='flex gap-6 flex-wrap'>
+        <input placeholder={props.placeholder} className={`py-10 flex-1 px-16 flex justify-between leading-[28px] outline-none  focus:border-P300 rounded-md border-[1px] cursor-pointer
             ${
                 props.error ? "border-R200" : "border-N75"
               }
@@ -57,6 +68,13 @@ const MultiTextField = (props: MultiTextFieldType) => {
         onKeyUp={UpdateAddSkills}
         value={ potentialSkill}
         />
+        <div className='flex items-center py-10 px-16 w-max  bg-P300 font-semibold text-white rounded-md cursor-pointer'
+        onClick={()=>handleAddSkillsButton()}
+        >
+            Add Skill
+        </div>
+        </div>
+        
         <div className='flex flex-wrap gap-24 '>
             {
                 allSkills.map((skill, id)=> {

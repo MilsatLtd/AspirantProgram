@@ -35,50 +35,51 @@ export const routes = {
       link: "/faqs",
     },
   ],
-  quickLinks : [
+  quickLinks: [
     {
-        id:1,
-        name: 'Application Here',
-        link: "/apply"
+      id: 1,
+      name: "Application Here",
+      link: "/apply",
     },
     {
-        id:1, 
-        name: 'Terms and Conditions',
-        link: 'apply/T&C'
-    }
+      id: 1,
+      name: "Terms and Conditions",
+      link: "apply/T&C",
+    },
   ],
-  tracks : [
+  tracks: [
     {
-        id:1,
-        name: 'Community Developer',
-        link: '/track/1'
+      id: 2,
+      name: "Fundalmental of GIS",
+      link: "/track/fundalmental-of-gis",
     },
     {
-        id:2,
-        name: 'Geospatial Designer',
-        link: '/track/2'
+      id: 1,
+      name: "Field Mapping and Data Collection",
+      link: "/track/field-mapping-and-data-collection",
     },
-    {
-        id:3,
-        name: 'Geospatial Front-end',
-        link: '/track/3'
-    },
-    {
-        id:4,
-        name: 'Geospatial Analyst',
-        link: '/track/4'
-    },
-    {
-        id:5,
-        name: 'Geospatial Back-end',
-        link: '/track/5'
-    },
-    {
-        id:6,
-        name: 'Geospatial Mobile Developer',
-        link: '/track/6'
-    }
-  ]
+
+    // {
+    //     id:3,
+    //     name: 'Geospatial Front-end',
+    //     link: '/track/3'
+    // },
+    // {
+    //     id:4,
+    //     name: 'Geospatial Analyst',
+    //     link: '/track/4'
+    // },
+    // {
+    //     id:5,
+    //     name: 'Geospatial Back-end',
+    //     link: '/track/5'
+    // },
+    // {
+    //     id:6,
+    //     name: 'Geospatial Mobile Developer',
+    //     link: '/track/6'
+    // }
+  ],
 };
 
 export const bottomline = [
@@ -136,63 +137,44 @@ export const socialMediaIcon = [
 export const eligibility = [
   {
     id: 1,
-    criteria: "Lorem ipsum dolor sit amet consectetur.",
+    criteria: "Basic computer skills",
   },
   {
     id: 2,
-    criteria: "Lorem ipsum dolor sit amet consectetur.",
-  },
-  {
-    id: 3,
-    criteria: "Lorem ipsum dolor sit amet consectetur.",
+    criteria: "Access to a computer with internet connectivity",
   },
 ];
 
 export const AvailableTracks = [
   {
-    id: "1",
-    trackName: "Community Developer",
+    id: "fundalmental-of-gis",
+    trackName: "Fundalmental of GIS",
     description:
-      "Lorem ipsum dolor sit amet consectetur. Faucibus volutpat imperdiet dictum.",
-    learningTimeLine: "5 weeks",
+      "Explore the foundational principles and essential skills of Geographic Information Systems (GIS) in this beginner-friendly track, gaining a solid understanding of the system",
+    learningTimeLine: "2 weeks",
     TrackInfo: [
       {
         name: "Track-curriculum",
         list: [
           {
             id: 1,
-            criteria:
-              "Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Velit officia consequat duis enim velit mollit. Exercitation veniam consequat sunt nostrud amet.",
+            criteria: "Introduction to Geographic Information System (GIS)",
           },
           {
             id: 2,
-            criteria:
-              "Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Velit officia consequat duis enim velit mollit. Exercitation veniam consequat sunt nostrud amet.",
+            criteria: "Setting Up your GIS software",
           },
           {
             id: 3,
-            criteria:
-              "Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Velit officia consequat duis enim velit mollit. Exercitation veniam consequat sunt nostrud amet.",
-          },
-        ],
-      },
-      {
-        name: "What to learn",
-        list: [
-          {
-            id: 1,
-            criteria:
-              "Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Velit officia consequat duis enim velit mollit. Exercitation veniam consequat sunt nostrud amet.",
+            criteria: "Coordinate system and Georeferencing in GIS",
           },
           {
-            id: 2,
-            criteria:
-              "Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Velit officia consequat duis enim velit mollit. Exercitation veniam consequat sunt nostrud amet.",
+            id: 4,
+            criteria: "Basic Geoprocessing tools",
           },
           {
             id: 3,
-            criteria:
-              "Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Velit officia consequat duis enim velit mollit. Exercitation veniam consequat sunt nostrud amet.",
+            criteria: "Querying in GIS",
           },
         ],
       },
@@ -202,27 +184,26 @@ export const AvailableTracks = [
           {
             id: 1,
             criteria:
-              "Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Velit officia consequat duis enim velit mollit. Exercitation veniam consequat sunt nostrud amet.",
+              "Completed the Milsat Field Mapping and Data Collection Certification Courses",
           },
           {
             id: 2,
-            criteria:
-              "Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Velit officia consequat duis enim velit mollit. Exercitation veniam consequat sunt nostrud amet.",
+            criteria: "Completed and passed the Basic Gis Courses",
           },
           {
             id: 3,
             criteria:
-              "Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Velit officia consequat duis enim velit mollit. Exercitation veniam consequat sunt nostrud amet.",
+              "Proficient Understanding of GIS and the Practical Procedure of Data Collection",
           },
         ],
       },
     ],
   },
   {
-    id: "3",
-    trackName: "Geospatial Front-end",
+    id: "field-mapping-and-data-collection",
+    trackName: "Field Mapping and Data Collection",
     description:
-      "Lorem ipsum dolor sit amet consectetur. Faucibus volutpat imperdiet dictum.",
+      "Dive into fundamental topics such as GIS basics, data collection techniques, technology integration, mapping best practices, data analysis, and practical applications",
     learningTimeLine: "5 weeks",
     TrackInfo: [
       {
@@ -230,19 +211,35 @@ export const AvailableTracks = [
         list: [
           {
             id: 1,
-            criteria: "Lorem ipsum dolor sit amet consectetur.",
+            criteria: "Introduction to Field Mapping and Data Collection",
           },
           {
             id: 2,
-            criteria: "Lorem ipsum dolor sit amet consectetur.",
+            criteria: "Geographic Information Systems (GIS) Basics",
           },
           {
             id: 3,
-            criteria: "Lorem ipsum dolor sit amet consectetur.",
+            criteria: "Data Collection Techniques",
           },
           {
             id: 4,
-            criteria: "Lorem ipsum dolor sit amet consectetur.",
+            criteria: "Technology and Field Devices",
+          },
+          {
+            id: 5,
+            criteria: "Field Mapping Best Practices",
+          },
+          {
+            id: 6,
+            criteria: "Data Analysis and Visualization",
+          },
+          {
+            id: 7,
+            criteria: "Practical Applications",
+          },
+          {
+            id: 8,
+            criteria: "Final Project",
           },
         ],
       },
@@ -251,253 +248,25 @@ export const AvailableTracks = [
         list: [
           {
             id: 1,
-            criteria: "Lorem ipsum dolor sit amet consectetur.",
+            criteria: " Basic computer skills.",
           },
           {
             id: 2,
-            criteria: "Lorem ipsum dolor sit amet consectetur.",
+            criteria: "Understanding of geographic concepts.",
           },
           {
             id: 3,
-            criteria: "Lorem ipsum dolor sit amet consectetur.",
-          },
-          {
-            id: 4,
-            criteria: "Lorem ipsum dolor sit amet consectetur.",
-          },
-          {
-            id: 5,
-            criteria: "Lorem ipsum dolor sit amet consectetur.",
+            criteria: "Access to a computer with internet connectivity.",
           },
         ],
       },
     ],
-  },
-  {
-    id: "2",
-    trackName: "Geospatial Designer",
-    description:
-      "Lorem ipsum dolor sit amet consectetur. Faucibus volutpat imperdiet dictum.",
-    learningTimeLine: "5 weeks",
-    TrackInfo: [
-      {
-        name: "Track-curriculum",
-        list: [
-          {
-            id: 1,
-            criteria: "Lorem ipsum dolor sit amet consectetur.",
-          },
-          {
-            id: 2,
-            criteria: "Lorem ipsum dolor sit amet consectetur.",
-          },
-          {
-            id: 3,
-            criteria: "Lorem ipsum dolor sit amet consectetur.",
-          },
-          {
-            id: 4,
-            criteria: "Lorem ipsum dolor sit amet consectetur.",
-          },
-        ],
-      },
-      {
-        name: "Track Requirement",
-        list: [
-          {
-            id: 1,
-            criteria: "Lorem ipsum dolor sit amet consectetur.",
-          },
-          {
-            id: 2,
-            criteria: "Lorem ipsum dolor sit amet consectetur.",
-          },
-          {
-            id: 3,
-            criteria: "Lorem ipsum dolor sit amet consectetur.",
-          },
-          {
-            id: 4,
-            criteria: "Lorem ipsum dolor sit amet consectetur.",
-          },
-          {
-            id: 5,
-            criteria: "Lorem ipsum dolor sit amet consectetur.",
-          },
-        ],
-      },
-    ],
-  },
-  {
-    id: "4",
-    trackName: "Geospatial Back-end",
-    description:
-      "Lorem ipsum dolor sit amet consectetur. Faucibus volutpat imperdiet dictum.",
-    learningTimeLine: "5 weeks",
-    TrackInfo: [
-      {
-        name: "Track-curriculum",
-        list: [
-          {
-            id: 1,
-            criteria: "Lorem ipsum dolor sit amet consectetur.",
-          },
-          {
-            id: 2,
-            criteria: "Lorem ipsum dolor sit amet consectetur.",
-          },
-          {
-            id: 3,
-            criteria: "Lorem ipsum dolor sit amet consectetur.",
-          },
-          {
-            id: 4,
-            criteria: "Lorem ipsum dolor sit amet consectetur.",
-          },
-        ],
-      },
-      {
-        name: "Track Requirement",
-        list: [
-          {
-            id: 1,
-            criteria: "Lorem ipsum dolor sit amet consectetur.",
-          },
-          {
-            id: 2,
-            criteria: "Lorem ipsum dolor sit amet consectetur.",
-          },
-          {
-            id: 3,
-            criteria: "Lorem ipsum dolor sit amet consectetur.",
-          },
-          {
-            id: 4,
-            criteria: "Lorem ipsum dolor sit amet consectetur.",
-          },
-          {
-            id: 5,
-            criteria: "Lorem ipsum dolor sit amet consectetur.",
-          },
-        ],
-      },
-    ],
-  },
-  {
-    id: "5",
-    trackName: "Geospatial Analyst",
-    description:
-      "Lorem ipsum dolor sit amet consectetur. Faucibus volutpat imperdiet dictum.",
-    learningTimeLine: "5 weeks",
-    TrackInfo: [
-      {
-        name: "Track-curriculum",
-        list: [
-          {
-            id: 1,
-            criteria: "Lorem ipsum dolor sit amet consectetur.",
-          },
-          {
-            id: 2,
-            criteria: "Lorem ipsum dolor sit amet consectetur.",
-          },
-          {
-            id: 3,
-            criteria: "Lorem ipsum dolor sit amet consectetur.",
-          },
-          {
-            id: 4,
-            criteria: "Lorem ipsum dolor sit amet consectetur.",
-          },
-        ],
-      },
-      {
-        name: "Track Requirement",
-        list: [
-          {
-            id: 1,
-            criteria: "Lorem ipsum dolor sit amet consectetur.",
-          },
-          {
-            id: 2,
-            criteria: "Lorem ipsum dolor sit amet consectetur.",
-          },
-          {
-            id: 3,
-            criteria: "Lorem ipsum dolor sit amet consectetur.",
-          },
-          {
-            id: 4,
-            criteria: "Lorem ipsum dolor sit amet consectetur.",
-          },
-          {
-            id: 5,
-            criteria: "Lorem ipsum dolor sit amet consectetur.",
-          },
-        ],
-      },
-    ],
-  },
-  {
-    id: "6",
-    trackName: "Geospatial Mobile Developer",
-    description:
-      "Lorem ipsum dolor sit amet consectetur. Faucibus volutpat imperdiet dictum.",
-    learningTimeLine: "5 weeks",
-    TrackInfo: [
-      {
-        name: "Track-curriculum",
-        list: [
-          {
-            id: 1,
-            criteria: "Lorem ipsum dolor sit amet consectetur.",
-          },
-          {
-            id: 2,
-            criteria: "Lorem ipsum dolor sit amet consectetur.",
-          },
-          {
-            id: 3,
-            criteria: "Lorem ipsum dolor sit amet consectetur.",
-          },
-          {
-            id: 4,
-            criteria: "Lorem ipsum dolor sit amet consectetur.",
-          },
-        ],
-      },
-      {
-        name: "Track Requirement",
-        list: [
-          {
-            id: 1,
-            criteria: "Lorem ipsum dolor sit amet consectetur.",
-          },
-          {
-            id: 2,
-            criteria: "Lorem ipsum dolor sit amet consectetur.",
-          },
-          {
-            id: 3,
-            criteria: "Lorem ipsum dolor sit amet consectetur.",
-          },
-          {
-            id: 4,
-            criteria: "Lorem ipsum dolor sit amet consectetur.",
-          },
-          {
-            id: 5,
-            criteria: "Lorem ipsum dolor sit amet consectetur.",
-          },
-        ],
-      },
-    ],
-  },
+  }
 ];
 
 export const applictionTimeline = {
-  statDate: "00 November, 2023",
-  endDate: "00 December, 2023",
+  statDate: "12 November, 2023",
+  endDate: "31 December, 2023",
 };
 
 export const termsAndConditions = {
@@ -560,40 +329,17 @@ export const ProgrammeFeatures = {
 export const TrackCardsInfo = [
   {
     id: 1,
-    name: "Community Developer",
+    name: "Fundalmental of GIS",
     picture: community,
-    route: "/track/1",
+    route: "/track/fundalmental-of-gis",
   },
   {
     id: 2,
-    name: "Geospatial Designer",
+    name: "Field Mapping and Data Collection",
     picture: designer,
-    route: "/track/2",
+    route: "/track/field-mapping-and-data-collection",
   },
-  {
-    id: 3,
-    name: "Geospatial Front-end",
-    picture: frontend,
-    route: "/track/3",
-  },
-  {
-    id: 4,
-    name: "Geospatial Analyst",
-    picture: frontend,
-    route: "/track/4",
-  },
-  {
-    id: 5,
-    name: "Geospatial Back-end",
-    picture: frontend,
-    route: "/track/5",
-  },
-  {
-    id: 6,
-    name: "Geospatial Moblie Developer",
-    picture: frontend,
-    route: "/track/6",
-  },
+  
 ];
 
 export const knowledgeInfo = {
@@ -715,16 +461,15 @@ export const Faqs = [
 export const MobileFeatures = [
   {
     id: 1,
-    description:
-      "Lorem ipsum dolor sit amet consectetur. Faucibus volutpat imperdiet dictum.",
+    description: "Interactive learning environment",
   },
   {
     id: 2,
-    description: "Lorem ipsum dolor sit amet consectetur. ",
+    description: "Customized GIS proficiency",
   },
   {
     id: 3,
-    description: "Lorem ipsum dolor sit amet consectetur. ",
+    description: "Personalized Support",
   },
 ];
 

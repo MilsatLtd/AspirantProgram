@@ -36,7 +36,7 @@ const ApplicationForm = (props: applicationFormType) => {
 
   return (
     <main
-      className="col-span-7 bg-N00 p-32 rounded-3xl drop-shadow-2xl h-full"
+      className="col-span-7 md:mt-0 mt-20 bg-N00 p-32 rounded-3xl drop-shadow-2xl h-full"
       ref={topRef}
     >
       <h3 className="text-N300 lg:text-lg text-m-lg lg:leading-[36px] leading-[28px] font-semibold">
