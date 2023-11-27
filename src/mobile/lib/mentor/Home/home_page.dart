@@ -307,7 +307,15 @@ class _MentorHomePageState extends ConsumerState<MentorHomePage> {
                 ],
               );
             },
-            error: (((error, stackTrace) => Text(error.toString()))),
+            error: (((error, stackTrace) => Center(
+                    child: Padding(
+                  padding: const EdgeInsets.all(24.0),
+                  child: Text(
+                    error.toString(),
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(fontSize: 20),
+                  ),
+                )))),
             loading: () {
               return const Center(
                 child: CircularProgressIndicator(),
