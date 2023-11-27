@@ -13,8 +13,8 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 from celery.schedules import crontab, schedule
 from datetime import timedelta
 from pathlib import Path
-import os
 from dotenv import load_dotenv
+import os
 
 load_dotenv()  # This loads the .env file
 
