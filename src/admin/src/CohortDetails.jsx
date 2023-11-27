@@ -1,4 +1,5 @@
 import { useParams } from "react-router-dom"
+import { useEffect, useState } from "react"
 import Navbar from "./Navbar"
 import Enums from "./constant/enum";
 import utils from "./constant/common";
@@ -60,27 +61,47 @@ function CohortTrack ( { track }) {
 
 function CohortDetails () {
     const { cohort_id } = useParams()
-    const results = useQuery( ['icohort'], () => fetchCohortById(cohort_id), { staleTime: 1000 * 60 * 5 })
-    const newResults = useQuery( ['uncohort'], () => fetchCohortById(cohort_id), { staleTime: 1000 * 60 * 5 })
-
-    const cohort = results?.data ? formatCohort(results.data) : {
+    const [cohort, setCohort] = useState({
         name: "",
         status: "",
         start_date: "",
         end_date: "",
         apply_start_date: "",
-        apply_end_date: "",
+        apply_end_date: "", 
         tracks: []
-    };
+    });
+    const results = useQuery( ['icohort'], () => fetchCohortById(cohort_id), { staleTime: 1000 * 60 * 5 })
+    const newResults = useQuery( ['uncohort'], () => fetchCohortById(cohort_id), { staleTime: 1000 * 60 * 5 })
+
 
     const handleCohortStatusChange = (status) => {
         const updatedCohort = { ...newResults?.data}
         const formatedCohort = formatCohortForUpdate(updatedCohort, status)
         updateCohortById(cohort_id, formatedCohort )
+        results.refetch()
     }
 
-    console.log(cohort.status)
+    const handleDeleteCoHort = (cohort_id) => {
 
+    }
+
+    useEffect(() => {
+        // Refetch data when track_id changes
+        results.refetch();
+        newResults.refetch();
+        if(results.data){
+            setCohort(formatCohort(results.data) ?? {
+                name: "",
+                status: "",
+                start_date: "",
+                end_date: "",
+                apply_start_date: "",
+                apply_end_date: "", 
+                tracks: []
+            });
+        }
+       
+      }, [cohort_id, results.data, newResults.data]);
     return (
     <>
     <Navbar  showLinks={true}/>
@@ -88,10 +109,14 @@ function CohortDetails () {
     <div className="flex gap-5 items-center">
         <h1 className="text-4xl font-semibold m-7">Cohort Details</h1>
         {
-            cohort.status === "LIVE" ?
-            <button className="border-2 border-black text-black p-4 rounded-md hover:opacity-90"
-        onClick={()=>handleCohortStatusChange(Enums.COHORT_STATUS.LIVE)}
-        >Start Cohort</button> : null
+            cohort.status === "UPCOMING" ? (
+                <button className="border-2 border-black text-black p-4 rounded-md hover:opacity-90"
+                onClick={()=>handleCohortStatusChange(Enums.COHORT_STATUS.ENDED)}
+                >Start Cohort</button>
+            ): cohort.status === "LIVE" ? (
+                <button className="border-2 border-black text-black p-4 rounded-md hover:opacity-90"
+        onClick={()=>handleCohortStatusChange(Enums.COHORT_STATUS.ENDED)}
+        >End Cohort</button>): null 
         }
     </div>
    

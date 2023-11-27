@@ -149,7 +149,9 @@ function ApplicationRow ( {label, detail} ) {
                     <a href={detail} className="min-h-[50px] px-3 flex items-center  text-blue-500 cursor:"
                     target="_blank" rel="noopener noreferrer"   
                     >{detail}</a>
-                ) : (
+                ) : label === "submission_date" || label === "review_date" ? (
+                    <p className="border-2 border-black min-h-[50px] px-3 flex items-center ">{utils.formatDate(detail)}</p>
+                ):(
                     <p className="border-2 border-black min-h-[50px] px-3 flex items-center ">{detail}</p>
                 )
             }
@@ -180,7 +182,6 @@ function ApplicationDetails ( {details, close} ) {
         {
             Object.keys(details.user).filter(key => key !=='user')
             .map((key, index) => {
-                console.log(key, index)
                 return (
                     <ApplicationRow key={index} label={key} detail={details.user[key]} />
                 )
@@ -190,7 +191,6 @@ function ApplicationDetails ( {details, close} ) {
 
         Object.keys(details).filter(key => key !=='user')
         .map((key, index) => {
-            console.log(key, index)
             return (
                 <ApplicationRow key={index} label={key} detail={details[key]} />
             )

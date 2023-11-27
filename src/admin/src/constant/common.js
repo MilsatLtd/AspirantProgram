@@ -12,6 +12,8 @@ const formatDate = (date) => {
   return `${d.getDate()}th ${monthNames[d.getMonth()]} ${d.getFullYear()}`;
 
 }
+
+
 const formatDateToISO = (date, time) => {
 // Combine the date and time strings into a single string in ISO 8601 format
 const dateTimeString = `${date}T${time}`;
