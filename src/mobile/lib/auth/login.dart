@@ -140,6 +140,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                         .read(signInProvider.notifier)
                                         .signIn(emailController.text.trim(),
                                             passwordController.text.trim());
+                                    await ref
+                                        .read(apiServiceProvider)
+                                        .getUserData(cred['Id']);
                                   }
                                 },
                           style: ButtonStyle(

@@ -109,12 +109,12 @@ class EditProfile extends ConsumerWidget {
                           else
                             CircleAvatar(
                               radius: 44.r,
-                              backgroundImage: data.profilePicture == null
+                              backgroundImage: data?.profilePicture == null
                                   ? const AssetImage(
                                       'assets/defaultImage.jpg',
                                     )
                                   : NetworkImage(
-                                      data.profilePicture,
+                                      data?.profilePicture,
                                     ) as ImageProvider<Object>?,
                               backgroundColor: Colors.grey,
                             ),
@@ -196,7 +196,7 @@ class EditProfile extends ConsumerWidget {
                             height: 108.h,
                           ),
                           ProfileCardContent(
-                            trackName: data.track!.name!,
+                            trackName: data!.track!.name!,
                           ),
                         ],
                       ),

@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../extras/components/files.dart';
 import '../../../extras/models/aspirant_model.dart';
 
-final aspirantDetails = FutureProvider.autoDispose<AspirantModelClass>((ref) {
+final aspirantDetails = FutureProvider.autoDispose<AspirantModelClass?>((ref) {
   return ref.read(apiServiceProvider).getUserData(cred['Id']);
 });
 
