@@ -64,8 +64,6 @@ class SignInStateNotifier extends StateNotifier<SignInState> {
   Future<void> signIn(String email, String password) async {
     try {
       state = SignInState.loading();
-      print('${Env.apiUrl}/api/auth/login');
-
       final response = await Dio().post(
         '${Env.apiUrl}/api/auth/login',
         data: jsonEncode({'email': email, 'password': password}),
