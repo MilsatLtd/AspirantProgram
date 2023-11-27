@@ -2,10 +2,11 @@ import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:milsat_project_app/extras/api/data.dart';
+import 'package:milsat_project_app/extras/env.dart';
 
 final dioProvider = Provider<Dio>((ref) {
   return Dio(BaseOptions(
-    baseUrl: 'https://map.up.railway.app/api',
+    baseUrl: '${Env.apiUrl}/api',
     headers: {
       'accept': 'application/json',
       'Authorization': 'Bearer ${cred['access']}',

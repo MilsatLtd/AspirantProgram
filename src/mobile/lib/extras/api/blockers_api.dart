@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:milsat_project_app/extras/env.dart';
 
 import '../components/files.dart';
 
@@ -13,8 +14,6 @@ class APIService {
     'accept': 'application/json',
     'Authorization': 'Bearer ${cred['access']}',
     'Content-Type': 'application/json',
-    'X-CSRFToken':
-        'S6U3cJRwFsmJYL1RsF4VXyhIWRdTmTRzuX0P9vGImrVb2WKohXHtxT9YiaUhlc8m',
   };
   Future<Response> postBlocker({
     required String trackId,
@@ -23,7 +22,7 @@ class APIService {
     required String title,
     required int status,
   }) async {
-    const url = 'https://map.up.railway.app/api/blockers';
+    const url = '${Env.apiUrl}/api/blockers';
 
     final data = {
       'track': trackId,
@@ -56,7 +55,7 @@ class APIService {
     required String title,
     required int status,
   }) async {
-    final url = 'https://map.up.railway.app/api/blockers/$blockerId';
+    final url = '${Env.apiUrl}/api/blockers/$blockerId';
 
     final data = {
       'track': trackId,
@@ -91,7 +90,7 @@ class APIService {
     required String userId,
     required String blocker,
   }) async {
-    final url = 'https://map.up.railway.app/api/blockers/comments/$blocker';
+    final url = '${Env.apiUrl}/api/blockers/comments/$blocker';
 
     final data = {
       'message': message,
@@ -116,7 +115,7 @@ class APIService {
   }
 
   Future<Response> getRaisedBlockers() async {
-    const url = 'https://map.up.railway.app/api/blockers';
+    const url = '${Env.apiUrl}/api/blockers';
     try {
       final response = await dio.get(
         url,
@@ -145,7 +144,7 @@ class APIService {
   }
 
   Future<Response> getCommentsById(String blockerId) async {
-    final url = 'https://map.up.railway.app/api/blockers/comments/$blockerId';
+    final url = '${Env.apiUrl}/api/blockers/comments/$blockerId';
     try {
       final response = await dio.get(
         url,

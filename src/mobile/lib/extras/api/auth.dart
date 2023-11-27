@@ -6,6 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:milsat_project_app/extras/components/files.dart';
+import 'package:milsat_project_app/extras/env.dart';
 
 final signInProvider =
     StateNotifierProvider.autoDispose<SignInStateNotifier, SignInState>(
@@ -63,16 +64,15 @@ class SignInStateNotifier extends StateNotifier<SignInState> {
   Future<void> signIn(String email, String password) async {
     try {
       state = SignInState.loading();
+      print('${Env.apiUrl}/api/auth/login');
 
       final response = await Dio().post(
-        'https://map.up.railway.app/api/auth/login',
+        '${Env.apiUrl}/api/auth/login',
         data: jsonEncode({'email': email, 'password': password}),
         options: Options(
           headers: {
             'accept': 'application/json',
             'Content-Type': 'application/json',
-            'X-CSRFToken':
-                'AQVk6pv7EADO6JpcxeSMbqj2dNrXrnCAcH163bkjlzcgaU8JmwvkLLbiz68lqGTn',
           },
         ),
       );
@@ -116,7 +116,8 @@ class SignInStateNotifier extends StateNotifier<SignInState> {
           e.type == DioErrorType.receiveTimeout) {
         state = SignInState.error('Request timeout. Please try again later.');
       } else {
-        state = SignInState.error('An error occurred. Please try again later.');
+        state = SignInState.error(
+            'Error: ${e.response?.statusMessage}, Please try again later!');
       }
     } catch (e) {
       state = SignInState.error(e.toString());

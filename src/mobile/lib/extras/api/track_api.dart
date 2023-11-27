@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:milsat_project_app/extras/env.dart';
 
 import 'data.dart';
 
@@ -24,7 +25,7 @@ class ApiService {
   ApiService(this.dio);
 
   Future<Response> getTracks(String id) async {
-    final url = 'https://map.up.railway.app/api/tracks/cohort/$id';
+    final url = '${Env.apiUrl}/api/tracks/cohort/$id';
     try {
       final response = await dio.get(url);
       if (kDebugMode) {
