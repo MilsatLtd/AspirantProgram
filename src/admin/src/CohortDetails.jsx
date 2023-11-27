@@ -79,6 +79,8 @@ function CohortDetails () {
         updateCohortById(cohort_id, formatedCohort )
     }
 
+    console.log(cohort.status)
+
     return (
     <>
     <Navbar  showLinks={true}/>
@@ -86,7 +88,7 @@ function CohortDetails () {
     <div className="flex gap-5 items-center">
         <h1 className="text-4xl font-semibold m-7">Cohort Details</h1>
         {
-            cohort.status === Enums.COHORT_STATUS.LIVE ?
+            cohort.status === "LIVE" ?
             <button className="border-2 border-black text-black p-4 rounded-md hover:opacity-90"
         onClick={()=>handleCohortStatusChange(Enums.COHORT_STATUS.LIVE)}
         >Start Cohort</button> : null
