@@ -142,3 +142,23 @@ class GetLatestCohort:
         except Exception as e:
             logger.exception(e)
             return None
+
+class DeleteCohort:
+    def delete(self, cohort_id):
+        try:
+            cohort = Cohort.objects.get(cohort_id=cohort_id)
+            cohort.delete()
+            return Response(
+                data={"message": "Cohort with id: {} deleted successfully \U0001F44D".format(
+                    cohort_id)},
+                status=status.HTTP_200_OK)
+        except Cohort.DoesNotExist:
+            return Response(
+                data={"message": "Cohort with id: {} does not exist \U0001F9D0".format(
+                    cohort_id)},
+                status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            logger.exception(e)
+            return Response(
+                data={"message": "Something went wrong \U0001F9D0"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR)
