@@ -15,17 +15,18 @@ homeWidget(BuildContext context, WidgetRef ref) {
     print(dayOfWeek);
   }
   final aspirantData = ref.watch(aspirantDetails);
-  return WillPopScope(
-      onWillPop: () async {
-        final shouldPop = await showWarning(context);
+  return aspirantData.when(
+      data: (data) {
+        if (data != null) {
+          String userName = data.fullName ?? 'Stranger';
+          d = data;
+          return WillPopScope(
+            onWillPop: () async {
+              final shouldPop = await showWarning(context);
 
-        return shouldPop ?? false;
-      },
-      child: aspirantData.when(
-          data: (data) {
-            String userName = data.fullName ?? 'Stranger';
-            d = data;
-            return Scaffold(
+              return shouldPop ?? false;
+            },
+            child: Scaffold(
               appBar: AppBar(
                 title: Text('Hi, ${userName.split(' ').elementAt(0)}',
                     style: kAppBarTextStyle),
@@ -199,18 +200,6 @@ homeWidget(BuildContext context, WidgetRef ref) {
                               }
                             },
                           ),
-                          // CustomHolder(
-                          //   color: AppTheme.kThirdIconColor,
-                          //   icon: SvgPicture.asset(
-                          //     'assets/team_task.svg',
-                          //     colorFilter: const ColorFilter.mode(
-                          //       Color(0xFF0C7145),
-                          //       BlendMode.srcIn,
-                          //     ),
-                          //   ),
-                          //   label: 'Team Task',
-                          //   onTap: () {},
-                          // ),
                         ],
                       ),
                       Stack(
@@ -242,14 +231,25 @@ homeWidget(BuildContext context, WidgetRef ref) {
                   ),
                 ),
               ),
-            );
-          },
-          error: (((error, stackTrace) => Text(error.toString()))),
-          loading: () {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          }));
+            ),
+          );
+        }
+      },
+      error: (((error, stackTrace) => Center(
+            child: Padding(
+              padding: const EdgeInsets.all(24.0),
+              child: Text(
+                error.toString(),
+                textAlign: TextAlign.center,
+                style: const TextStyle(fontSize: 20),
+              ),
+            ),
+          ))),
+      loading: () {
+        return const Center(
+          child: CircularProgressIndicator(),
+        );
+      });
 }
 
 Future<bool?> showWarning(BuildContext context) async {

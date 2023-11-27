@@ -122,7 +122,7 @@ class SignInStateNotifier extends StateNotifier<SignInState> {
     } catch (e) {
       state = SignInState.error(e.toString());
     } finally {
-      Timer(const Duration(seconds: 3), () {
+      Timer(const Duration(seconds: 5), () {
         state = SignInState.initial();
         return;
       });

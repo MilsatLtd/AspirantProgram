@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -27,7 +29,7 @@ class ApiService {
   AspirantModelClass aspirantData = AspirantModelClass();
   CourseModel courses = CourseModel();
 
-  Future<AspirantModelClass> getUserData(String id) async {
+  Future<AspirantModelClass?> getUserData(String id) async {
     final url = '${Env.apiUrl}/api/students/$id';
     try {
       final response = await dio.get(url);
@@ -44,9 +46,22 @@ class ApiService {
         case 404:
           throw ('Invalid userId');
       }
+    } on DioError catch (e) {
+      if (e.response?.statusCode == 401) {
+        throw ('${e.response}');
+      } else if (e.error is SocketException) {
+        throw ('${e.response}');
+      } else if (e.type == DioErrorType.connectionTimeout ||
+          e.type == DioErrorType.receiveTimeout) {
+        throw ('${e.response}');
+      } else if (e.response?.statusCode == 404) {
+        throw ('${e.response}');
+      } else {
+        throw ('${e.response}');
+      }
     } catch (e) {
       if (kDebugMode) {
-        print('failed');
+        print(e);
       }
     }
     return aspirantData;
@@ -87,14 +102,11 @@ class ApiService {
       return response;
     } on DioError catch (e) {
       if (e.response != null) {
-        // Request was made and server responded with a status code
         return e.response!;
       } else {
-        // Request was made but no response received or request failed before it could complete
         throw Exception('Error making request: ${e.message}');
       }
     } catch (e) {
-      // Catch any other errors
       throw Exception('Error making request: ${e.toString()}');
     }
   }
