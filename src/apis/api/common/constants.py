@@ -1,5 +1,12 @@
 from api.common.enums import ROLE
 
+from datetime import datetime
+
+def format_timestamp(timestamp):
+    timestamp = str(timestamp)
+    dt = datetime.fromisoformat(timestamp)
+    formatted_timestamp = dt.strftime('%B %d, %Y, %I:%M %p')
+    return formatted_timestamp
 
 def application_message(application, password):
     if application.role == ROLE.STUDENT.value:
@@ -16,7 +23,7 @@ Hi {application.user.first_name},
 Congratulations, your application to join the {application.track.name} track as a {role} has been accepted.
 
 Cohort Name: {application.track.cohort.name}
-Cohort starts on {application.track.cohort.start_date} and ends on {application.track.cohort.end_date}.
+Cohort starts on {format_timestamp(application.track.cohort.start_date)} and ends on {format_timestamp(application.track.cohort.end_date)}.
 
 Your login details are:
 Email: {application.user.email}
