@@ -111,7 +111,7 @@ def validate_file_size(value):
 
 
 def unique_application_filename(instance, filename):
-    name = 'application_files/MAP-Uploads/' + str(instance.applicant_id) + '_' + filename
+    name = 'MAP-Uploads/application_files/' + str(instance.applicant_id) + '_' + filename
     print(name)
     return name
 
