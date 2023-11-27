@@ -282,7 +282,7 @@ LOGGING = {
         'file': {
             'level': 'ERROR',
             'class': 'logging.FileHandler',
-            'filename': '/temp/map.log',
+            'filename': 'c:\temp\map.log',
         },
     },
     'root': {
