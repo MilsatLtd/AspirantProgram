@@ -35,6 +35,7 @@ class CreateandListCohort(CreateAPIView):
 
 class GetAndUpdateCohortView(mixins.RetrieveModelMixin,
                              mixins.UpdateModelMixin,
+                             mixins.DestroyModelMixin,
                              GenericAPIView):
     serializer_class = CohortSerializer
     def get_permissions(self):
@@ -53,6 +54,10 @@ class GetAndUpdateCohortView(mixins.RetrieveModelMixin,
                          responses={200: CohortSerializer})
     def put(self, request, cohort_id):
         return UpdateCohort().update(cohort_id, request.data)
+    
+    @swagger_auto_schema(operation_summary="Delete a cohort by its cohort_id")
+    def delete(self, request, cohort_id):
+        return DeleteCohort().delete(cohort_id)
 
 
 class ApplytoLiveCohortView(CreateAPIView):
