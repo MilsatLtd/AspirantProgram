@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:milsat_project_app/extras/components/files.dart';
+import 'package:milsat_project_app/extras/env.dart';
 import 'package:milsat_project_app/extras/models/aspirant_model.dart';
 
 final dioProvider = Provider<Dio>((ref) {
@@ -27,7 +28,7 @@ class ApiService {
   CourseModel courses = CourseModel();
 
   Future<AspirantModelClass> getUserData(String id) async {
-    final url = 'https://map.up.railway.app/api/students/$id';
+    final url = '${Env.apiUrl}/api/students/$id';
     try {
       final response = await dio.get(url);
 
@@ -52,7 +53,7 @@ class ApiService {
   }
 
   Future<MentorData> getMentorData(String id) async {
-    final url = 'https://map.up.railway.app/api/mentors/$id';
+    final url = '${Env.apiUrl}/api/mentors/$id';
     try {
       final response = await dio.get(url);
 
@@ -76,7 +77,7 @@ class ApiService {
   }
 
   Future<Response> getSubmmittedReport_() async {
-    const url = 'https://map.up.railway.app/api/reports/';
+    const url = '${Env.apiUrl}/api/reports/';
     try {
       final response = await dio.get(url);
       if (kDebugMode) {
@@ -99,7 +100,7 @@ class ApiService {
   }
 
   Future<CourseModel> getTrackCourses(String id, String trackId) async {
-    final url = 'https://map.up.railway.app/api/students/courses/$id/$trackId';
+    final url = '${Env.apiUrl}/api/students/courses/$id/$trackId';
     try {
       final response = await dio.get(url);
 
