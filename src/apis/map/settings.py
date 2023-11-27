@@ -14,6 +14,9 @@ from celery.schedules import crontab, schedule
 from datetime import timedelta
 from pathlib import Path
 import os
+from dotenv import load_dotenv
+
+load_dotenv()  # This loads the .env file
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
