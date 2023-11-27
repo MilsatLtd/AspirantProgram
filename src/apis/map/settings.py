@@ -137,7 +137,7 @@ DATABASES = {
 AWS_ACCESS_KEY_ID = "AKIAUDQNBNMGGCC6ZB5V" #os.environ.get("AWS_ACCESS_KEY_ID")
 AWS_SECRET_ACCESS_KEY = "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" #os.environ.get("AWS_SECRET_ACCESS_KEY")
 DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
-AWS_STORAGE_BUCKET_NAME = "milsat-aspirant-program"
+AWS_STORAGE_BUCKET_NAME = "milsat-fileuploads"
 AWS_S3_REGION_NAME = "us-east-1"
 AWS_QUERYSTRING_AUTH = False
 
