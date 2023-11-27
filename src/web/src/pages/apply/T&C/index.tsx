@@ -1,6 +1,5 @@
 import Footer from "@/components/organism/Footer";
 import Header from "@/components/organism/Header";
-import { TAndCDetails } from "@/utils/data";
 import blurEffectTopRight from "../../../Assets/blur-effect-top-right.svg";
 import Link from "next/link";
 import React from "react";
