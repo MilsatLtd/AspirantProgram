@@ -819,3 +819,8 @@ class ChangeMentorSerializer(serializers.Serializer):
     student_id = serializers.UUIDField(required=True)
     mentor_id = serializers.UUIDField(required=True)
     track_id = serializers.UUIDField(required=True)
+
+class SendAnyEmailSerializer(serializers.Serializer):
+    email = serializers.EmailField(required=True)
+    subject = serializers.CharField(required=True)
+    message = serializers.CharField(required=True)

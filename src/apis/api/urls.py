@@ -158,4 +158,5 @@ urlpatterns += [
         GetMentorLatestTrackView.as_view(),
         name="getMentorTrack",
     ),
+    path("email", SendAnyEmailView.as_view(), name="sendEmail"),
 ]

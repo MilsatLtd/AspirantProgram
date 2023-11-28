@@ -1,3 +1,4 @@
+from api.tasks import send_html_email_task
 from ..models import User
 from ..serializers import UserSerializer, FullUserSerializer
 from rest_framework.response import Response
@@ -130,6 +131,25 @@ class ChangePassword:
                 status=status.HTTP_200_OK)
 
         except Exception as e:
+            return Response(
+                data={"message": "Something went wrong \U0001F9D0"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
+
+class SendAnyEmailService:
+    def send(self, request):
+        try:
+            # send email from html template to any recipient
+            send_html_email_task.delay(
+                subject=request.data['subject'],
+                recipient=[request.data['email']],
+                message=request.data['message'],
+            )
+            return Response(
+                data={"message": "Email scheduled successfully \U0001F44D"},
+                status=status.HTTP_200_OK)
+        except Exception as e:
+            raise e
             return Response(
                 data={"message": "Something went wrong \U0001F9D0"},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR)
