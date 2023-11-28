@@ -32,8 +32,7 @@ def cohort_live_to_end(cohort_id):
     except Exception as e:
         logger.exception(e)
 
-@shared_task()
-def send_html_email_task(subject, recipient, message):
+def send_html_email_task(subject=None, recipient=None, message=None):
     try:
         sender = settings.EMAIL_HOST_USER
         plaintext = html2text.HTML2Text().handle(message)

@@ -140,7 +140,7 @@ class SendAnyEmailService:
     def send(self, request):
         try:
             # send email from html template to any recipient
-            send_html_email_task.delay(
+            send_html_email_task(
                 subject=request.data['subject'],
                 recipient=[request.data['email']],
                 message=request.data['message'],
