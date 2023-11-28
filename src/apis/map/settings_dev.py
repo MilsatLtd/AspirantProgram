@@ -146,10 +146,6 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
-    # 'DEFAULT_RENDERER_CLASSES': (
-    #     'api.common.generic_response.CustomJsonRenderer',
-    #     'rest_framework.renderers.BrowsableAPIRenderer',
-    # ),
     'EXCEPTION_HANDLER': 'api.exceptions.custom_exception_handler',
 }
 
@@ -177,11 +173,9 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = "en-us"
 
-TIME_ZONE = "Africa/Lagos"
-
 USE_I18N = True
 
-USE_TZ = True
+USE_TZ = False
 
 
 # Static files (CSS, JavaScript, Images)
@@ -202,7 +196,6 @@ CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_ACCEPT_CONTENT = ['json']
-CELERY_TIMEZONE = 'Africa/Lagos'
 CELERY_ENABLE_UTC = False
 
 
@@ -269,24 +262,12 @@ LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
     'handlers': {
-        'slack': {
-            'level': 'ERROR',
-            'class': 'api.logging.SlackLogHandler',
-            'logging_url': 'https://hooks.slack.com/services/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',
-            'stack_trace': True
-        },
         'console': {
             'level': 'ERROR',
             'class': 'logging.StreamHandler',
-        },
-        'file': {
-            'level': 'ERROR',
-            'class': 'logging.FileHandler',
-            'filename': 'c:\temp\map.log',
-        },
+        }
     },
     'root': {
-        'handlers': ['slack'],
-        'level': 'ERROR',  # Adjust the log level as needed
+        'level': 'ERROR',
     },
 }
