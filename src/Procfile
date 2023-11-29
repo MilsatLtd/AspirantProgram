@@ -1,1 +1,0 @@
-web: cd /var/app/current/apis && ls -R && gunicorn map.wsgi --bind 0.0.0.0:8000 --workers 2 --threads 2
