@@ -65,11 +65,10 @@ class ApiService {
     return aspirantData;
   }
 
-  Future<MentorData> getMentorData(String id) async {
+  Future<MentorData> getMentorData(String? id) async {
     final url = '${Env.apiUrl}/api/mentors/$id';
     try {
       final response = await dio.get(url);
-
       switch (response.statusCode) {
         case 200:
           if (kDebugMode) {

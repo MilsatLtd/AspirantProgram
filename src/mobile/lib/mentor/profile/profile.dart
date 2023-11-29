@@ -7,6 +7,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:milsat_project_app/extras/components/files.dart';
+import 'package:milsat_project_app/extras/components/shared_prefs/keys.dart';
+import 'package:milsat_project_app/extras/components/shared_prefs/utils.dart';
+import 'package:milsat_project_app/extras/models/decoded_token.dart';
 import 'package:milsat_project_app/mentor/profile/mentor_profile_card.dart';
 
 import '../../extras/api/file_upload.dart';
@@ -99,6 +102,10 @@ class MentorProfilePage extends ConsumerWidget {
                         child: GestureDetector(
                           onTap: () async {
                             try {
+                              DecodedTokenResponse? decodedToken =
+                                  await SecureStorageUtils
+                                      .getTokenResponseFromStorage(
+                                          SharedPrefKeys.tokenResponse);
                               ref.read(pickedImage.notifier).state =
                                   await _imagePicker.pickImage(
                                       source: ImageSource.gallery);
@@ -106,9 +113,8 @@ class MentorProfilePage extends ConsumerWidget {
                                 File imageFile =
                                     File(ref.watch(pickedImage)!.path);
                                 ref.read(image.notifier).state = imageFile;
-                                ref
-                                    .read(apiUploadProvider)
-                                    .uploadImage(cred['Id'], imageFile);
+                                ref.read(apiUploadProvider).uploadImage(
+                                    decodedToken!.userId!, imageFile);
                               }
                             } on PlatformException catch (e) {
                               if (kDebugMode) {

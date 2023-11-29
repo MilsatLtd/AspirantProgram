@@ -1,11 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:milsat_project_app/extras/components/shared_prefs/keys.dart';
+import 'package:milsat_project_app/extras/components/shared_prefs/utils.dart';
+import 'package:milsat_project_app/extras/models/decoded_token.dart';
 import '../../../../extras/api/blockers_api.dart';
 import '../../extras/components/files.dart';
 
-final mentorDetails = FutureProvider<MentorData>((ref) {
-  return ref.read(apiServiceProvider).getMentorData(cred['Id']);
+final mentorDetails = FutureProvider<MentorData>((ref) async {
+  DecodedTokenResponse? response =
+      await SecureStorageUtils.getTokenResponseFromStorage(
+          SharedPrefKeys.tokenResponse);
+  return ref.read(apiServiceProvider).getMentorData(response?.userId);
 });
 
 final allBlockersMentor = FutureProvider((ref) {

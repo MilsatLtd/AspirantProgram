@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:milsat_project_app/extras/components/shared_prefs/keys.dart';
+import 'package:milsat_project_app/extras/components/shared_prefs/utils.dart';
+import 'package:milsat_project_app/extras/models/decoded_token.dart';
 import '../../../extras/api/blockers_api.dart';
 import '../../../extras/components/files.dart';
 
@@ -183,9 +186,13 @@ class _ReplyBlockerState extends ConsumerState<ReplyBlocker> {
                     padding: EdgeInsets.only(right: 16.w),
                     child: InkWell(
                       onTap: () async {
+                        DecodedTokenResponse? decodedToken =
+                            await SecureStorageUtils
+                                .getTokenResponseFromStorage(
+                                    SharedPrefKeys.tokenResponse);
                         await ref.read(blockerProvider).replyABlocker(
                             message: textController.text,
-                            userId: cred['Id'],
+                            userId: decodedToken!.userId!,
                             blocker: widget.blockerId);
                       },
                       child: SvgPicture.asset(

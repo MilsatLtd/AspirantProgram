@@ -1,6 +1,11 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:milsat_project_app/extras/components/shared_prefs/keys.dart';
+import 'package:milsat_project_app/extras/components/shared_prefs/utils.dart';
+import 'package:milsat_project_app/extras/models/decoded_token.dart';
 import '../../../../extras/api/blockers_api.dart';
 import '../../../../extras/components/files.dart';
 
@@ -112,14 +117,18 @@ class AddBlocker extends ConsumerWidget {
                 ),
                 CustomButton(
                   height: 54.h,
-                  pressed: () {
+                  pressed: () async {
+                    DecodedTokenResponse? response =
+                        await SecureStorageUtils.getTokenResponseFromStorage(
+                            SharedPrefKeys.tokenResponse);
                     if (formKey.currentState!.validate()) {
                       ref.read(blockerProvider).postBlocker(
-                          description: descriptionController.text,
-                          status: 0,
-                          title: titleController.text,
-                          trackId: d.track!.trackId!,
-                          userId: cred['Id']);
+                            description: descriptionController.text,
+                            status: 0,
+                            title: titleController.text,
+                            trackId: d.track!.trackId!,
+                            userId: response!.userId!,
+                          );
                       popUp(context);
                     }
                   },
