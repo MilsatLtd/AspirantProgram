@@ -1,3 +1,35 @@
+# Milsat Aspirant Program - Web Application
+
+## Overview
+Web application for the Milsat Aspirant Program, developed with NextJS and Tailwind CSS. It runs on port 3000 and is accessible at [https://aspirant.milsat.africa/](https://aspirant.milsat.africa/).
+
+## Installation
+
+1. Set up Node Version Manager (NVM):
+export NVM_DIR="/home/ubuntu/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+
+2. Install dependencies and build:
+cd ~/AspirantProgram/src/web/
+npm install
+npm run build
+
+3. Start the application using tmux:
+tmux kill-session -t web-app 2>/dev/null || true 
+tmux new -d -s web-app "PORT=3000 npm start"
+
+## Nginx as Reverse Proxy
+Nginx is configured to serve this application on port 3000.
+
+## Deployment
+Automated via GitHub Actions using `.github/workflows/web-Deployment.yml`.
+
+
+
+
+
+## OLDER README DOCUMENTATION
+
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Getting Started
