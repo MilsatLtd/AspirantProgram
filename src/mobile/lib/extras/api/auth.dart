@@ -6,7 +6,10 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:milsat_project_app/extras/components/files.dart';
+import 'package:milsat_project_app/extras/components/shared_prefs/keys.dart';
+import 'package:milsat_project_app/extras/components/shared_prefs/utils.dart';
 import 'package:milsat_project_app/extras/env.dart';
+import 'package:milsat_project_app/extras/models/decoded_token.dart';
 
 final signInProvider =
     StateNotifierProvider.autoDispose<SignInStateNotifier, SignInState>(
@@ -83,21 +86,20 @@ class SignInStateNotifier extends StateNotifier<SignInState> {
         if (kDebugMode) {
           print(cred['access']);
         }
-        Map<String, dynamic> decodedToken = JwtDecoder.decode(token);
 
-        cred['Id'] = decodedToken.values.elementAt(4);
-        if (kDebugMode) {
-          print(cred['Id']);
-        }
-        cred['role'] = decodedToken.values.elementAt(7);
-        cred['email'] = decodedToken.values.elementAt(6);
-        cred['fullName'] = decodedToken.values.elementAt(5);
+        Map<String, dynamic> decodedToken = JwtDecoder.decode(token);
+        final decodedResponse = DecodedTokenResponse.fromJson(decodedToken);
+        SecureStorageUtils.saveTokenResponseToStorage(
+            SharedPrefKeys.tokenResponse, decodedResponse);
+        SecureStorageUtils.saveString(SharedPrefKeys.accessToken, token);
+        SecureStorageUtils.saveString(
+            SharedPrefKeys.refreshToken, refreshToken);
 
         state = SignInState.success();
         if (state.success == true) {
-          if (decodedToken.values.elementAt(7) == 2) {
+          if (decodedResponse.role == 2) {
             AppNavigator.navigateTo(homeRoute);
-          } else if (decodedToken.values.elementAt(7) == 1) {
+          } else if (decodedResponse.role == 1) {
             AppNavigator.navigateTo(mentorSkeletonRoute);
           }
         }

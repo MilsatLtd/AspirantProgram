@@ -11,8 +11,6 @@ final dioProvider = Provider<Dio>((ref) {
       'accept': 'application/json',
       'Authorization': 'Bearer ${cred['access']}',
       'Content-Type': 'application/json',
-      'X-CSRFToken':
-          'f2EHSzIHjKcULae1oEqWCsr1wJgZUJH1RTKtPlxT0JLmPlXydW3ucNjhS2XnT2YO',
     },
   ));
 });
@@ -44,8 +42,6 @@ class ApiService {
           print('Error message: ${e.message}');
         }
       }
-      // ignore: use_rethrow_when_possible
-      throw e;
     } catch (e) {
       if (kDebugMode) {
         print('Unknown error occurred: $e');

@@ -11,8 +11,6 @@ final dioProvider = Provider<Dio>((ref) {
       'accept': 'application/json',
       'Authorization': 'Bearer ${cred['access']}',
       'Content-Type': 'application/json',
-      'X-CSRFToken':
-          'f2EHSzIHjKcULae1oEqWCsr1wJgZUJH1RTKtPlxT0JLmPlXydW3ucNjhS2XnT2YO',
     },
   ));
 });
@@ -41,7 +39,6 @@ class ApiService {
           print(response.data['message']);
         }
       } else {
-        // Handle error response
         if (kDebugMode) {
           print(
             'reset password failed with status code: ${response.statusCode}',
