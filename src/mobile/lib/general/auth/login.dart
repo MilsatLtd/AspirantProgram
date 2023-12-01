@@ -5,7 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:milsat_project_app/extras/components/shared_prefs/keys.dart';
 import 'package:milsat_project_app/extras/components/shared_prefs/utils.dart';
 import 'package:milsat_project_app/extras/models/decoded_token.dart';
-import '../extras/components/files.dart';
+import '../../extras/components/files.dart';
 
 final boolStateProvider = StateProvider<bool>((ref) {
   return false;
