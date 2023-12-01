@@ -11,8 +11,6 @@ final dioProvider = Provider<Dio>((ref) {
   final dio = Dio();
   dio.options.headers['accept'] = 'application/json';
   dio.options.headers['Authorization'] = 'Bearer ${cred['access']}';
-  dio.options.headers['X-CSRFToken'] =
-      'ZGguWASI6mZhHePPV4OGg29PkABNDWfjBxmgTmHUNlyJLpymKmreQn15GTibCfw6';
   return dio;
 });
 
@@ -29,7 +27,7 @@ class ApiService {
   AspirantModelClass aspirantData = AspirantModelClass();
   CourseModel courses = CourseModel();
 
-  Future<AspirantModelClass?> getUserData(String id) async {
+  Future<AspirantModelClass?> getUserData(String? id) async {
     final url = '${Env.apiUrl}/api/students/$id';
     try {
       final response = await dio.get(url);
@@ -67,11 +65,10 @@ class ApiService {
     return aspirantData;
   }
 
-  Future<MentorData> getMentorData(String id) async {
+  Future<MentorData> getMentorData(String? id) async {
     final url = '${Env.apiUrl}/api/mentors/$id';
     try {
       final response = await dio.get(url);
-
       switch (response.statusCode) {
         case 200:
           if (kDebugMode) {
@@ -82,6 +79,19 @@ class ApiService {
 
         case 404:
           throw ('Invalid userId');
+      }
+    } on DioError catch (e) {
+      if (e.response?.statusCode == 401) {
+        throw ('${e.response}');
+      } else if (e.error is SocketException) {
+        throw ('${e.response}');
+      } else if (e.type == DioErrorType.connectionTimeout ||
+          e.type == DioErrorType.receiveTimeout) {
+        throw ('${e.response}');
+      } else if (e.response?.statusCode == 404) {
+        throw ('${e.response}');
+      } else {
+        throw ('${e.response}');
       }
     } catch (e) {
       if (kDebugMode) {
@@ -126,6 +136,19 @@ class ApiService {
 
         case 404:
           throw ('Invalid userId');
+      }
+    } on DioError catch (e) {
+      if (e.response?.statusCode == 401) {
+        throw ('${e.response}');
+      } else if (e.error is SocketException) {
+        throw ('${e.response}');
+      } else if (e.type == DioErrorType.connectionTimeout ||
+          e.type == DioErrorType.receiveTimeout) {
+        throw ('${e.response}');
+      } else if (e.response?.statusCode == 404) {
+        throw ('${e.response}');
+      } else {
+        throw ('${e.response}');
       }
     } catch (e) {
       if (kDebugMode) {

@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
@@ -6,6 +8,9 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:milsat_project_app/extras/components/shared_prefs/keys.dart';
+import 'package:milsat_project_app/extras/components/shared_prefs/utils.dart';
+import 'package:milsat_project_app/extras/models/decoded_token.dart';
 import '../../../extras/components/files.dart';
 import '../../extras/api/file_upload.dart';
 import 'mentor_profile_card.dart';
@@ -41,10 +46,13 @@ class EditMentorProfile extends ConsumerWidget {
           ),
           actions: [
             TextButton(
-              onPressed: () {
+              onPressed: () async {
+                DecodedTokenResponse? decodedToken =
+                    await SecureStorageUtils.getTokenResponseFromStorage(
+                        SharedPrefKeys.tokenResponse);
                 ref
                     .read(apiUploadProvider)
-                    .updateStatus(cred['Id'], bioController.text);
+                    .updateStatus(decodedToken!.userId!, bioController.text);
                 showDialog(
                     context: context,
                     builder: (context) {
@@ -132,6 +140,10 @@ class EditMentorProfile extends ConsumerWidget {
                           bottom: 0,
                           child: GestureDetector(
                             onTap: () async {
+                              DecodedTokenResponse? decodedToken =
+                                  await SecureStorageUtils
+                                      .getTokenResponseFromStorage(
+                                          SharedPrefKeys.tokenResponse);
                               try {
                                 ref.read(pickedImage.notifier).state =
                                     await _imagePicker.pickImage(
@@ -140,9 +152,8 @@ class EditMentorProfile extends ConsumerWidget {
                                   File imageFile =
                                       File(ref.watch(pickedImage)!.path);
                                   ref.read(image.notifier).state = imageFile;
-                                  ref
-                                      .read(apiUploadProvider)
-                                      .uploadImage(cred['Id'], imageFile);
+                                  ref.read(apiUploadProvider).uploadImage(
+                                      decodedToken!.userId!, imageFile);
                                 }
                               } on PlatformException catch (e) {
                                 if (kDebugMode) {

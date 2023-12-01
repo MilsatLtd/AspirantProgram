@@ -1,8 +1,13 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:milsat_project_app/extras/components/shared_prefs/keys.dart';
+import 'package:milsat_project_app/extras/components/shared_prefs/utils.dart';
+import 'package:milsat_project_app/extras/models/decoded_token.dart';
 import '../../../../extras/api/file_upload.dart';
 import '../../../../extras/components/files.dart';
 import 'package:file_picker/file_picker.dart';
@@ -168,7 +173,7 @@ class _SubmitToDoPageState extends ConsumerState<SubmitToDoPage> {
               ),
               CustomButton(
                 height: 54.h,
-                pressed: () {
+                pressed: () async {
                   if (textKey.currentState!.validate() &&
                       ref.watch(fileName) != null) {
                     if (kDebugMode) {
@@ -176,15 +181,18 @@ class _SubmitToDoPageState extends ConsumerState<SubmitToDoPage> {
                           ? 'null'
                           : ref.watch(fileName)!.split('/').last);
                     }
+
+                    DecodedTokenResponse? decodedToken =
+                        await SecureStorageUtils.getTokenResponseFromStorage(
+                            SharedPrefKeys.tokenResponse);
                     if (kDebugMode) {
-                      print(cred['Id']);
+                      print(decodedToken!.userId!);
                       print(widget.courseId);
                     }
-
                     ref.read(apiUploadProvider).submitTodo(
                           textController.text,
                           widget.courseId,
-                          cred['Id'],
+                          decodedToken!.userId!,
                           ref.watch(fileName)!,
                         );
 
@@ -214,9 +222,8 @@ class _SubmitToDoPageState extends ConsumerState<SubmitToDoPage> {
                               height: 54.h,
                               pressed: () {
                                 String trackId = d.track!.trackId!;
-                                ref
-                                    .read(apiServiceProvider)
-                                    .getTrackCourses(cred['Id'], trackId);
+                                ref.read(apiServiceProvider).getTrackCourses(
+                                    decodedToken.userId!, trackId);
                                 Navigator.pushReplacement(context,
                                     MaterialPageRoute(builder: (context) {
                                   return TrackDetails(d: d);

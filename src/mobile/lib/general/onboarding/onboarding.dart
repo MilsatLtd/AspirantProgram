@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../extras/components/files.dart';
+import '../../extras/components/files.dart';
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({Key? key}) : super(key: key);

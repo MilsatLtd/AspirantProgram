@@ -2,6 +2,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:milsat_project_app/extras/components/shared_prefs/keys.dart';
+import 'package:milsat_project_app/extras/components/shared_prefs/utils.dart';
+import 'package:milsat_project_app/extras/models/decoded_token.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../../extras/api/track_api.dart';
 import '../../../../extras/components/files.dart';
@@ -9,10 +12,13 @@ import '../../../../extras/models/aspirant_model.dart';
 
 String courseContent = '';
 
-final coursesDetails = FutureProvider<CourseModel>((ref) {
+final coursesDetails = FutureProvider<CourseModel>((ref) async {
+  DecodedTokenResponse? decodedToken =
+      await SecureStorageUtils.getTokenResponseFromStorage(
+          SharedPrefKeys.tokenResponse);
   return ref
       .read(apiServiceProvider)
-      .getTrackCourses(cred['Id'], d.track!.trackId!);
+      .getTrackCourses(decodedToken!.userId!, d.track!.trackId!);
 });
 final trackDetails = FutureProvider((ref) {
   return ref.read(trackApiProvider).getTracks(d.cohort!.cohortId!);

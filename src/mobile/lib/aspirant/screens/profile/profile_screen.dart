@@ -5,6 +5,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'dart:io';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:milsat_project_app/extras/components/shared_prefs/keys.dart';
+import 'package:milsat_project_app/extras/components/shared_prefs/utils.dart';
+import 'package:milsat_project_app/extras/models/decoded_token.dart';
 
 import '../../../extras/api/file_upload.dart';
 import '../../../extras/components/files.dart';
@@ -107,6 +110,10 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                               bottom: 0,
                               child: GestureDetector(
                                 onTap: () async {
+                                  DecodedTokenResponse? decodedToken =
+                                      await SecureStorageUtils
+                                          .getTokenResponseFromStorage(
+                                              SharedPrefKeys.tokenResponse);
                                   try {
                                     ref.read(pickedImage.notifier).state =
                                         await _imagePicker.pickImage(
@@ -116,9 +123,8 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                                           File(ref.watch(pickedImage)!.path);
                                       ref.read(image.notifier).state =
                                           imageFile;
-                                      ref
-                                          .read(apiUploadProvider)
-                                          .uploadImage(cred['Id'], imageFile);
+                                      ref.read(apiUploadProvider).uploadImage(
+                                          decodedToken!.userId!, imageFile);
                                     }
                                   } on PlatformException catch (e) {
                                     if (kDebugMode) {

@@ -112,8 +112,6 @@ class APIService {
 
   Future<void> updateStatus(String userId, String bio) async {
     final url = '${Env.apiUrl}/api/users/update/$userId';
-    const csrfToken =
-        'TU6MsR9FbN1siKAZqSsD8xRyKWANm0qsvLcypDYRSMAUmVjwfa5bISJO6fhbljHf';
     try {
       final response = await dio.put(
         url,
@@ -123,7 +121,6 @@ class APIService {
             'accept': 'application/json',
             'Authorization': 'Bearer ${cred['access']}',
             'Content-Type': 'application/json',
-            'X-CSRFToken': csrfToken,
           },
         ),
       );

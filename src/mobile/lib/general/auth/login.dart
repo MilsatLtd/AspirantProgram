@@ -2,7 +2,10 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../extras/components/files.dart';
+import 'package:milsat_project_app/extras/components/shared_prefs/keys.dart';
+import 'package:milsat_project_app/extras/components/shared_prefs/utils.dart';
+import 'package:milsat_project_app/extras/models/decoded_token.dart';
+import '../../extras/components/files.dart';
 
 final boolStateProvider = StateProvider<bool>((ref) {
   return false;
@@ -134,6 +137,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           onPressed: ref.watch(signInProvider).loading
                               ? null
                               : () async {
+                                  DecodedTokenResponse? decodedToken =
+                                      await SecureStorageUtils
+                                          .getTokenResponseFromStorage(
+                                              SharedPrefKeys.tokenResponse);
                                   if (formKey.currentState?.validate() ??
                                       false) {
                                     await ref
@@ -142,7 +149,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                             passwordController.text.trim());
                                     await ref
                                         .read(apiServiceProvider)
-                                        .getUserData(cred['Id']);
+                                        .getUserData(decodedToken!.userId);
                                   }
                                 },
                           style: ButtonStyle(

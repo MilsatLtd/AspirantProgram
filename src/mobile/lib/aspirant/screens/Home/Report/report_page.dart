@@ -2,6 +2,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:milsat_project_app/extras/components/shared_prefs/keys.dart';
+import 'package:milsat_project_app/extras/components/shared_prefs/utils.dart';
+import 'package:milsat_project_app/extras/models/decoded_token.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
 import '../../../../extras/api/report_api.dart';
@@ -113,8 +116,13 @@ class ReportPage extends StatelessWidget {
                         height: 350.h,
                       ),
                       OutlinedButton(
-                        onPressed: () {
+                        onPressed: () async {
+                          DecodedTokenResponse? decodedToken =
+                              await SecureStorageUtils
+                                  .getTokenResponseFromStorage(
+                                      SharedPrefKeys.tokenResponse);
                           if (formKey.currentState!.validate()) {
+                            weeklyReport['student_id'] = decodedToken!.userId;
                             weeklyReport['question_1'] = textController.text;
                             AppNavigator.navigateTo(reportRoute1);
                           }
