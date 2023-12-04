@@ -129,10 +129,10 @@ class TrackSerializerAnonymous(serializers.ModelSerializer):
 
 class CreateCohortSerializer(serializers.Serializer):
     name = serializers.CharField(max_length=30)
-    start_date = serializers.DateTimeField(format='%Y-%m-%d %H:%M:%S')
-    end_date = serializers.DateTimeField(format='%Y-%m-%d %H:%M:%S')
-    apply_start_date = serializers.DateTimeField(format='%Y-%m-%d %H:%M:%S')
-    apply_end_date = serializers.DateTimeField(format='%Y-%m-%d %H:%M:%S')
+    start_date = serializers.DateTimeField(format='%Y-%m-%d %H:%M:%S', default_timezone=pytz.utc)
+    end_date = serializers.DateTimeField(format='%Y-%m-%d %H:%M:%S', default_timezone=pytz.utc)
+    apply_start_date = serializers.DateTimeField(format='%Y-%m-%d %H:%M:%S', default_timezone=pytz.utc)
+    apply_end_date = serializers.DateTimeField(format='%Y-%m-%d %H:%M:%S', default_timezone=pytz.utc)
     tracks = serializers.PrimaryKeyRelatedField(
         many=True, queryset=Track.objects.all())
 
