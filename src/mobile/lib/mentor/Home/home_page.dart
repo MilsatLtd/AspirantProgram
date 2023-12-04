@@ -175,7 +175,7 @@ class _MentorHomePageState extends ConsumerState<MentorHomePage> {
                                   count: count,
                                   isLessThanOrEqualTo5: isLessThanOrEqualTo5,
                                   cohortDuration: cohortDuration,
-                                  trackName: data.track!.name!,
+                                  trackName: data.track?.name,
                                   d: data,
                                 ),
                               ],

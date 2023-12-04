@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:dio/dio.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:milsat_project_app/extras/components/files.dart';
@@ -83,9 +82,6 @@ class SignInStateNotifier extends StateNotifier<SignInState> {
         var refreshToken = response.data['refresh'];
         cred['access'] = token;
         cred['refresh'] = refreshToken;
-        if (kDebugMode) {
-          print(cred['access']);
-        }
 
         Map<String, dynamic> decodedToken = JwtDecoder.decode(token);
         final decodedResponse = DecodedTokenResponse.fromJson(decodedToken);

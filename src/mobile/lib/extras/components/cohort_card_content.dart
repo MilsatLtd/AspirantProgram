@@ -10,17 +10,17 @@ import 'mentor_slip.dart';
 
 class CardContent extends ConsumerStatefulWidget {
   const CardContent(
-      {required this.numberEnrolled,
-      required this.contentDuration,
-      required this.trackName,
-      required this.mentorName,
+      {this.numberEnrolled,
+      this.contentDuration,
+      this.trackName,
+      this.mentorName,
       required this.d,
       super.key});
 
-  final int numberEnrolled;
-  final int contentDuration;
-  final String trackName;
-  final String mentorName;
+  final int? numberEnrolled;
+  final int? contentDuration;
+  final String? trackName;
+  final String? mentorName;
   final AspirantModelClass d;
 
   @override
@@ -66,7 +66,7 @@ class _CardContentState extends ConsumerState<CardContent> {
             padding: EdgeInsets.only(left: 16.w),
             height: 55.h,
             child: Text(
-              widget.trackName,
+              widget.trackName!,
               style: GoogleFonts.raleway(
                 color: AppTheme.kAppWhiteScheme,
                 fontSize: 16.sp,
@@ -94,8 +94,8 @@ class _CardContentState extends ConsumerState<CardContent> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 MentorSlip(
-                  mentorName: widget.mentorName,
-                  profileUrl: d.mentor!.profilePicture!,
+                  mentorName: widget.mentorName!,
+                  profileUrl: d.mentor?.profilePicture,
                 ),
                 Text(
                   '${widget.numberEnrolled} Enrolled',

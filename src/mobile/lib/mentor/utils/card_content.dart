@@ -14,8 +14,8 @@ class MentorCardContent extends StatelessWidget {
 
   final int count;
   final bool isLessThanOrEqualTo5;
-  final int cohortDuration;
-  final String trackName;
+  final int? cohortDuration;
+  final String? trackName;
   final MentorData d;
 
   @override
@@ -55,7 +55,7 @@ class MentorCardContent extends StatelessWidget {
           Padding(
             padding: EdgeInsets.only(left: 16.w),
             child: Text(
-              trackName,
+              trackName!,
               style: GoogleFonts.raleway(
                 color: AppTheme.kAppWhiteScheme,
                 fontSize: 16.sp,
