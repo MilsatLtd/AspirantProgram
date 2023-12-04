@@ -289,6 +289,18 @@ class OpenCohortSerializer(serializers.ModelSerializer):
         model = Cohort
         fields = '__all__'
 
+class TrackSerializer2(serializers.ModelSerializer):
+    class Meta:
+        model = Track
+        fields = ['track_id', 'name']
+
+class ApplicationSerializer2(serializers.ModelSerializer):
+    track = TrackSerializer2()
+    class Meta:
+        model = Applications
+        fields = ['applicant_id', 'reason', 'referral', 'skills', 'purpose',
+                  'education', 'submission_date', 'review_date', 'role', 'track', 'cohort', 'status', 'file']
+
 
 class ApplicationSerializer(serializers.ModelSerializer):
     user = UserSerializer()

@@ -12,7 +12,7 @@ from ..backends.map_permissions import IsMentor, IsMentee, IsAdmin
 
 
 class ListApplication(ListAPIView):
-    serializer_class = CreateApplicationSerializer
+    serializer_class = ApplicationSerializer2
     permission_classes = (IsAuthenticated, IsAdmin,)
 
     @swagger_auto_schema( operation_summary="List all applications")
