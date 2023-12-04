@@ -299,7 +299,7 @@ class ApplicationSerializer2(serializers.ModelSerializer):
     user = UserSerializer()
     class Meta:
         model = Applications
-        fields = ['applicant_id', 'reason', 'referral', 'skills', 'purpose',
+        fields = ['applicant_id', 'user', 'reason', 'referral', 'skills', 'purpose',
                   'education', 'submission_date', 'review_date', 'role', 'track', 'cohort', 'status', 'file']
 
 
