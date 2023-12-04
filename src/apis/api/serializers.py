@@ -296,6 +296,7 @@ class TrackSerializer2(serializers.ModelSerializer):
 
 class ApplicationSerializer2(serializers.ModelSerializer):
     track = TrackSerializer2()
+    user = UserSerializer()
     class Meta:
         model = Applications
         fields = ['applicant_id', 'reason', 'referral', 'skills', 'purpose',
