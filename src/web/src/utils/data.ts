@@ -394,48 +394,24 @@ export const Faqs = [
     faqList: [
       {
         id: 1,
-        question: "What is M.A.P",
+        question: "What is M.A.P?",
         answer:
-          "Lorem ipsum dolor sit amet consectetur. Faucibus volutpat imperdiet dictum lobortis nulla. Quis adipiscing pretium feugiat vulputate non egestas elementum sagittis bibendum. Sagittis leo magna rhoncus pellentesque vitae quis volutpat vitae suscipit. Magnis platea diam.",
+          "The Milsat Aspirant Programme (MAP) is crafted to enable individuals with aspirations to acquire knowledge, foster personal development, and excel in the ever-evolving geospatial industry.",
       },
       {
         id: 2,
-        question: "Lorem ipsum dolor sit amet consectetur. ",
+        question: "What background knowledge is necessary?",
         answer:
-          "Lorem ipsum dolor sit amet consectetur. Faucibus volutpat imperdiet dictum lobortis nulla. Quis adipiscing pretium feugiat vulputate non egestas elementum sagittis bibendum. Sagittis leo magna rhoncus pellentesque vitae quis volutpat vitae suscipit. Magnis platea diam.",
+          "No particular prior experience is necessary; this Specialization is well-suited for individuals with a focus on GIS or anyone looking to gain a competitive advantage in the evolving field of GIS.",
       },
       {
         id: 3,
-        question: "Lorem ipsum dolor sit amet consectetur. ",
+        question: "Is this course really 100% online, do I need to attend any classes in person?",
         answer:
-          "Lorem ipsum dolor sit amet consectetur. Faucibus volutpat imperdiet dictum lobortis nulla. Quis adipiscing pretium feugiat vulputate non egestas elementum sagittis bibendum. Sagittis leo magna rhoncus pellentesque vitae quis volutpat vitae suscipit. Magnis platea diam.",
+          "This course is completely online, so there’s no need to show up to a classroom in person. You have the flexibility to reach your lectures, readings, and assignments at your convenience, whether through the web or on your mobile device, from any location.",
       },
     ],
-  },
-  {
-    id: 2,
-    faqTitle: "Programme Scope",
-    faqList: [
-      {
-        id: 1,
-        question: "What is M.A.P",
-        answer:
-          "Lorem ipsum dolor sit amet consectetur. Faucibus volutpat imperdiet dictum lobortis nulla. Quis adipiscing pretium feugiat vulputate non egestas elementum sagittis bibendum. Sagittis leo magna rhoncus pellentesque vitae quis volutpat vitae suscipit. Magnis platea diam.",
-      },
-      {
-        id: 2,
-        question: "Lorem ipsum dolor sit amet consectetur. ",
-        answer:
-          "Lorem ipsum dolor sit amet consectetur. Faucibus volutpat imperdiet dictum lobortis nulla. Quis adipiscing pretium feugiat vulputate non egestas elementum sagittis bibendum. Sagittis leo magna rhoncus pellentesque vitae quis volutpat vitae suscipit. Magnis platea diam.",
-      },
-      {
-        id: 3,
-        question: "Lorem ipsum dolor sit amet consectetur. ",
-        answer:
-          "Lorem ipsum dolor sit amet consectetur. Faucibus volutpat imperdiet dictum lobortis nulla. Quis adipiscing pretium feugiat vulputate non egestas elementum sagittis bibendum. Sagittis leo magna rhoncus pellentesque vitae quis volutpat vitae suscipit. Magnis platea diam.",
-      },
-    ],
-  },
+  }
 ];
 
 export const MobileFeatures = [

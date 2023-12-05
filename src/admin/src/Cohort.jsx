@@ -167,6 +167,7 @@ function NewCohorts ({closeEdit}) {
                 apply_end_date: utils.formatDateToISO(date.apply_end_date, time.apply_end_date),
             } 
            const allCohortDetails = {...cohortDetails, tracks: trackIDs}
+           console.log(allCohortDetails)
            addCohort.mutate(allCohortDetails)
         }
        

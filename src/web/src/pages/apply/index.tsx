@@ -61,7 +61,7 @@ const ApplicationPage = () => {
       }
       if(isSubmitError){
         setShow(true)
-        setSubmissionStatus("Your application was not successfull. Email already exist")
+        setSubmissionStatus("An Error Occured, Please Try Again")
       }
   }, [isSubmitted, isSubmitting, isSubmitError, submitError])
 
@@ -117,7 +117,7 @@ const ApplicationPage = () => {
       {show && (
         <div className={`w-screen h-screen z-40 fixed right-0 top-0 bottom-0 bg-[rgba(0,0,0,0.5)] flex items-center justify-center`}
         >
-          <div className="flex z-40 flex-col w-[35%] items-center gap-20">
+          <div className="flex z-40 flex-col  w-[90%] md:w-[35%] items-center gap-20">
             <SubmitInfo info={SubmissionStatus} removePopup={(status)=>removePopup(status)} />
           </div>
         </div>
