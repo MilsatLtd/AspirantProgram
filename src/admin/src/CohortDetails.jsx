@@ -111,7 +111,7 @@ function CohortDetails () {
         {
             cohort.status === "UPCOMING" ? (
                 <button className="border-2 border-black text-black p-4 rounded-md hover:opacity-90"
-                onClick={()=>handleCohortStatusChange(Enums.COHORT_STATUS.ENDED)}
+                onClick={()=>handleCohortStatusChange(Enums.COHORT_STATUS.LIVE)}
                 >Start Cohort</button>
             ): cohort.status === "LIVE" ? (
                 <button className="border-2 border-black text-black p-4 rounded-md hover:opacity-90"

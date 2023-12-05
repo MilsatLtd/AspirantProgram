@@ -32,7 +32,7 @@ const SubmitInfo = (props: submitInfoProps ) => {
           <Image src={ props.info.length > 57 ? successIcon : warningIcon } alt="success-icon" className="h-[80px] w-[80px]" />
       </div>
         <div className="flex flex-col items-center justify-center gap-32">
-            <h4 className="text-N300 text-lg leading-[36px] font-medium text-center ">{props.info}</h4>
+            <h4 className="text-N300 text-lg leading-[36px] font-medium text-center py-20 ">{props.info}</h4>
             <button
             className="py-12 px-40 bg-P300 hover:bg-P200  text-N00 rounded-lg font-semibold"
             onClick={handleClosePopUp}

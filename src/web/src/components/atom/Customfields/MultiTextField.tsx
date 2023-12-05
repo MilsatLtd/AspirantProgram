@@ -59,7 +59,7 @@ const MultiTextField = (props: MultiTextFieldType) => {
       </div>
       <div className='flex flex-col gap-8 w-full'>
         <div className='flex gap-6 flex-wrap'>
-        <input placeholder={props.placeholder} className={`py-10 flex-1 px-16 flex text-N75  justify-between text-[16px] leading-[28px] font-medium outline-none  focus:border-P300 rounded-md border-[1px] cursor-pointer
+        <input placeholder={props.placeholder} className={`py-10 flex-1 px-16 flex justify-between text-[16px] leading-[28px] font-medium outline-none  focus:border-P300 rounded-md border-[1px] cursor-pointer
             ${
                 props.error ? "border-R200" : "border-N75"
               }
@@ -80,7 +80,7 @@ const MultiTextField = (props: MultiTextFieldType) => {
                 allSkills.map((skill, id)=> {
                     return(
                         <div key={id} className=' bg-N50 py-4 px-10 flex items-center justify-center gap-8 rounded '>
-                            <span className='leading-[24px] text-sm font-medium'>
+                            <span className='leading-[24px] text-base font-medium'>
                                 {skill}
                             </span>
                             <Image src={skillCloseIcon} alt="skill-close" className='h-auto w-auto cursor-pointer' 

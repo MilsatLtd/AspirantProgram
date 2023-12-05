@@ -141,6 +141,10 @@ function Applications() {
 }
 
 function ApplicationRow ( {label, detail} ) {
+    const [trackName, setTrackName] = useState("")
+   
+
+
     return (
         <div className=" flex flex-col">
             <label htmlFor="">{label}:</label>
@@ -151,8 +155,23 @@ function ApplicationRow ( {label, detail} ) {
                     >{detail}</a>
                 ) : label === "submission_date" || label === "review_date" ? (
                     <p className="border-2 border-black min-h-[50px] px-3 flex items-center ">{utils.formatDate(detail)}</p>
-                ):(
-                    <p className="border-2 border-black min-h-[50px] px-3 flex items-center ">{detail}</p>
+                ):
+                    label === "role" ? (
+                        <p className="border-2 border-black min-h-[50px] px-3 flex items-center normal-case">{utils.getEnumKeyByValue(Enums.ROLE, detail)}</p>
+                    ) : label === "status" ? (
+                        <p className="border-2 border-black min-h-[50px] px-3 flex items-center normal-case ">{utils.getEnumKeyByValue(Enums.APPLICATION_STATUS, detail)}</p>
+                    ):
+                    label === "education" ? (
+                        <p className="border-2 border-black min-h-[50px] px-3 flex items-center normal-case">{utils.getEnumKeyByValue(Enums.EDUCATION, detail)}</p>
+                    ):
+                    label === "gender" ? (
+                        <p className="border-2 border-black min-h-[50px] px-3 flex items-center normal-case">{utils.getEnumKeyByValue(Enums.GENDER, detail)}</p>
+                    ):
+                    label === "track" ? (
+                        <p className="border-2 border-black min-h-[50px] px-3 flex items-center normal-case">{detail?.name}</p>
+                    ):
+                (
+                    <p className="border-2 border-black min-h-[50px] px-3 flex items-center normal-case ">{detail}</p>
                 )
             }
         </div>
@@ -169,6 +188,7 @@ function ApplicationDetails ( {details, close} ) {
     const handleClose = () => {
         close()
     }
+
     return (
         <>
         <div className="m-7">
@@ -182,7 +202,7 @@ function ApplicationDetails ( {details, close} ) {
         {
             Object.keys(details.user).filter(key => key !=='user')
             .map((key, index) => {
-                return (
+                return (    
                     <ApplicationRow key={index} label={key} detail={details.user[key]} />
                 )
             })

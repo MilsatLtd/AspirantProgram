@@ -93,7 +93,7 @@ const FormSectionA = (props: formSectionType) => {
           label="First Name"
           onTextChange={(e) => handleSetValue(e.target.value, "first_name")}
           inputStyle=""
-          placeholder=""
+          placeholder="First Name"
           containerStyle="lg:col-span-6 col-span-1"
           type="text"
           error={errors.first_name?.message}
@@ -104,7 +104,7 @@ const FormSectionA = (props: formSectionType) => {
           label="Last Name"
           onTextChange={(e) => handleSetValue(e.target.value, "last_name")}
           inputStyle=""
-          placeholder=""
+          placeholder="Last name"
           containerStyle="lg:col-span-6 col-span-1"
           type="text"
           error={errors.last_name?.message}
