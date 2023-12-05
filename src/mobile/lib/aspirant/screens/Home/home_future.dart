@@ -20,7 +20,6 @@ homeWidget(BuildContext context, WidgetRef ref) {
         if (data != null) {
           String userName = data.fullName ?? 'Stranger';
           d = data;
-          print(data.track?.name);
           return WillPopScope(
             onWillPop: () async {
               final shouldPop = await showWarning(context);
@@ -236,40 +235,50 @@ homeWidget(BuildContext context, WidgetRef ref) {
           );
         }
       },
-      error: (((error, stackTrace) => Center(
-            child: Padding(
-              padding: const EdgeInsets.all(24.0),
-              child: Stack(
-                children: [
-                  CohortCard(
-                    width: double.infinity,
-                    radius: BorderRadius.circular(4.r),
-                    first: -15.5,
-                    second_1: 0,
-                    second_2: 0,
-                    third: 80.53.h,
-                    forth_1: 0,
-                    forth_2: 0,
-                    forthHeight: 157.13.h,
-                    thirdHeight: 230.44.h,
-                    secondHeight: 135.28.h,
-                  ),
-                  Column(
-                    children: [
-                      SvgPicture.asset(
-                        'assets/error_image.svg',
-                        height: 100.h,
-                        width: 100.w,
-                      ),
-                      SizedBox(height: 16.h),
-                      Text(
-                        error.toString(),
-                        textAlign: TextAlign.center,
-                      ),
-                    ],
-                  )
-                ],
-              ),
+      error: (((error, stackTrace) => Padding(
+            padding: const EdgeInsets.all(24.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Stack(
+                  children: [
+                    CohortCard(
+                      width: double.infinity,
+                      height: 212.h,
+                      radius: BorderRadius.circular(4.r),
+                      first: -15.5,
+                      second_1: 0,
+                      second_2: 0,
+                      third: 80.53.h,
+                      forth_1: 0,
+                      forth_2: 0,
+                      forthHeight: 157.13.h,
+                      thirdHeight: 230.44.h,
+                      secondHeight: 135.28.h,
+                    ),
+                    Column(
+                      children: [
+                        SvgPicture.asset(
+                          'assets/error_image.svg',
+                          height: 100.h,
+                          width: 100.w,
+                        ),
+                        SizedBox(height: 16.h),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            error.toString(),
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              color: Theme.of(context).cardColor,
+                            ),
+                          ),
+                        ),
+                      ],
+                    )
+                  ],
+                ),
+              ],
             ),
           ))),
       loading: () {
