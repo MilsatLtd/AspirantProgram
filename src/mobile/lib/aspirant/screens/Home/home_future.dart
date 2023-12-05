@@ -267,7 +267,7 @@ homeWidget(BuildContext context, WidgetRef ref) {
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Text(
-                            error.toString(),
+                            'Try again Later',
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               color: Theme.of(context).cardColor,
