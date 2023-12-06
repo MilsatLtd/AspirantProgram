@@ -49,7 +49,6 @@ class UpdateProfilePictureView(RetrieveModelMixin,
 
 class SendAnyEmailView(GenericAPIView, CreateModelMixin ):
     serializer_class = SendAnyEmailSerializer
-    permission_classes = (IsAuthenticated, IsAdmin)
 
     @swagger_auto_schema(operation_summary="Send any email to a user by user_id")
     def post(self, request):
