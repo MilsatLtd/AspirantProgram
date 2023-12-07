@@ -82,7 +82,6 @@ class SignInStateNotifier extends StateNotifier<SignInState> {
         var refreshToken = response.data['refresh'];
         cred['access'] = token;
         cred['refresh'] = refreshToken;
-
         Map<String, dynamic> decodedToken = JwtDecoder.decode(token);
         final decodedResponse = DecodedTokenResponse.fromJson(decodedToken);
         SecureStorageUtils.saveTokenResponseToStorage(

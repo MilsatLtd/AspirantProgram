@@ -28,15 +28,20 @@ class ApiService {
   CourseModel courses = CourseModel();
 
   Future<AspirantModelClass?> getUserData(String? id) async {
-    final url = '${Env.apiUrl}/api/students/$id';
     try {
-      final response = await dio.get(url);
+      final response = await Dio().get(
+        '${Env.apiUrl}/api/students/$id',
+        options: Options(
+          headers: {
+            'accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ${cred['access']}'
+          },
+        ),
+      );
 
       switch (response.statusCode) {
         case 200:
-          if (kDebugMode) {
-            print('success');
-          }
           AspirantModelClass aspirantData =
               AspirantModelClass.fromJson(response.data);
           return aspirantData;
