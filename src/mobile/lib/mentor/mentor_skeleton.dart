@@ -251,7 +251,7 @@ class _MentorPageSkeletonState extends State<MentorPageSkeleton> {
               TextButton(
                 onPressed: () {
                   Navigator.pop(context, true);
-                  AppNavigator.navigateTo(loginRoute);
+                  AppNavigator.navigateToAndClear(loginRoute);
                 },
                 child: Text(
                   'Yes',
