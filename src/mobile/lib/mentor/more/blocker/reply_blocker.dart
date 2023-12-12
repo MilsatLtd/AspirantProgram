@@ -187,9 +187,10 @@ class _ReplyBlockerState extends ConsumerState<ReplyBlocker> {
                     child: InkWell(
                       onTap: () async {
                         DecodedTokenResponse? decodedToken =
-                            await SecureStorageUtils
-                                .getTokenResponseFromStorage(
-                                    SharedPrefKeys.tokenResponse);
+                            await SecureStorageUtils.getDataFromStorage<
+                                    DecodedTokenResponse>(
+                                SharedPrefKeys.tokenResponse,
+                                DecodedTokenResponse.fromJsonString);
                         await ref.read(blockerProvider).replyABlocker(
                             message: textController.text,
                             userId: decodedToken!.userId!,

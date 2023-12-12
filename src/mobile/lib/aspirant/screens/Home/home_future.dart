@@ -1,19 +1,16 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:milsat_project_app/extras/models/aspirant_model.dart';
+import 'package:milsat_project_app/extras/models/profile_picture_model.dart';
 import '../../../extras/components/files.dart';
 
 late AspirantModelClass d;
 
-homeWidget(BuildContext context, WidgetRef ref) {
+homeWidget(BuildContext context, WidgetRef ref,
+    ProfilePictureResponse? profilePictureResponse) {
   DateTime now = ref.watch(currentTimeProvider);
   String dayOfWeek = DateFormat('EEEE').format(now);
-  if (kDebugMode) {
-    print(now.day);
-    print(dayOfWeek);
-  }
   final aspirantData = ref.watch(aspirantDetails);
   return aspirantData.when(
       data: (data) {
@@ -56,15 +53,11 @@ homeWidget(BuildContext context, WidgetRef ref) {
                                 ),
                               ),
                             )
-                          : personalInfo['personalUserInfo'] != null &&
-                                  personalInfo['personalUserInfo']
-                                          ['profile_picture'] !=
-                                      null
+                          : profilePictureResponse?.profilePicture != null
                               ? CircleAvatar(
                                   radius: 44.r,
                                   backgroundImage: NetworkImage(
-                                    personalInfo['personalUserInfo']
-                                        ['profile_picture'],
+                                    profilePictureResponse!.profilePicture!,
                                   ),
                                   backgroundColor: Colors.grey,
                                 )
@@ -239,6 +232,7 @@ homeWidget(BuildContext context, WidgetRef ref) {
             padding: const EdgeInsets.all(24.0),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Stack(
                   children: [
@@ -267,7 +261,7 @@ homeWidget(BuildContext context, WidgetRef ref) {
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Text(
-                            'Try again Later',
+                            error.toString(),
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               color: Theme.of(context).cardColor,
@@ -318,7 +312,7 @@ Future<bool?> showWarning(BuildContext context) async {
             TextButton(
               onPressed: () {
                 Navigator.pop(context, true);
-                AppNavigator.navigateTo(loginRoute);
+                AppNavigator.navigateToAndClear(loginRoute);
               },
               child: Text(
                 'Yes',

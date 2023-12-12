@@ -8,6 +8,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:milsat_project_app/extras/components/shared_prefs/keys.dart';
 import 'package:milsat_project_app/extras/components/shared_prefs/utils.dart';
 import 'package:milsat_project_app/extras/models/decoded_token.dart';
+import 'package:milsat_project_app/extras/models/profile_picture_model.dart';
 
 import '../../../extras/api/file_upload.dart';
 import '../../../extras/components/files.dart';
@@ -29,7 +30,20 @@ class ProfileScreen extends ConsumerStatefulWidget {
 }
 
 class _ProfileScreenState extends ConsumerState<ProfileScreen> {
+  ProfilePictureResponse? profilePictureResponse;
+  void getUserProfile() async {
+    profilePictureResponse =
+        await SecureStorageUtils.getDataFromStorage<ProfilePictureResponse>(
+            SharedPrefKeys.profileResponse,
+            ProfilePictureResponse.fromJsonString);
+  }
+
   @override
+  void initState() {
+    getUserProfile();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     final aspirantData = ref.watch(aspirantDetails);
@@ -81,15 +95,12 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                                   fit: BoxFit.cover,
                                 ),
                               )
-                            else if (personalInfo['personalUserInfo'] != null &&
-                                personalInfo['personalUserInfo']
-                                        ['profile_picture'] !=
-                                    null)
+                            else if (profilePictureResponse?.profilePicture !=
+                                null)
                               CircleAvatar(
                                 radius: 44.r,
                                 backgroundImage: NetworkImage(
-                                  personalInfo['personalUserInfo']
-                                      ['profile_picture'],
+                                  profilePictureResponse!.profilePicture!,
                                 ),
                                 backgroundColor: Colors.grey,
                               )
@@ -112,8 +123,11 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                                 onTap: () async {
                                   DecodedTokenResponse? decodedToken =
                                       await SecureStorageUtils
-                                          .getTokenResponseFromStorage(
-                                              SharedPrefKeys.tokenResponse);
+                                          .getDataFromStorage<
+                                                  DecodedTokenResponse>(
+                                              SharedPrefKeys.tokenResponse,
+                                              DecodedTokenResponse
+                                                  .fromJsonString);
                                   try {
                                     ref.read(pickedImage.notifier).state =
                                         await _imagePicker.pickImage(

@@ -10,24 +10,44 @@ import 'package:milsat_project_app/extras/components/files.dart';
 import 'package:milsat_project_app/extras/components/shared_prefs/keys.dart';
 import 'package:milsat_project_app/extras/components/shared_prefs/utils.dart';
 import 'package:milsat_project_app/extras/models/decoded_token.dart';
+import 'package:milsat_project_app/extras/models/profile_picture_model.dart';
 import 'package:milsat_project_app/mentor/profile/mentor_profile_card.dart';
 
 import '../../extras/api/file_upload.dart';
 
 final ImagePicker _imagePicker = ImagePicker();
 
-final pickedImage = StateProvider<XFile?>((ref) {
+final pickedMentorImage = StateProvider<XFile?>((ref) {
   return;
 });
-final image = StateProvider<File?>((ref) {
+final mentorImage = StateProvider<File?>((ref) {
   return;
 });
 
-class MentorProfilePage extends ConsumerWidget {
+class MentorProfilePage extends ConsumerStatefulWidget {
   const MentorProfilePage({super.key});
 
   @override
-  Widget build(BuildContext context, ref) {
+  ConsumerState<MentorProfilePage> createState() => _MentorProfilePageState();
+}
+
+class _MentorProfilePageState extends ConsumerState<MentorProfilePage> {
+  ProfilePictureResponse? profilePictureResponse;
+  void getUserProfile() async {
+    profilePictureResponse =
+        await SecureStorageUtils.getDataFromStorage<ProfilePictureResponse>(
+            SharedPrefKeys.profileResponse,
+            ProfilePictureResponse.fromJsonString);
+  }
+
+  @override
+  void initState() {
+    getUserProfile();
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final mentorData = ref.watch(mentorDetails);
     return Scaffold(
       appBar: PreferredSize(
@@ -65,22 +85,20 @@ class MentorProfilePage extends ConsumerWidget {
                 Center(
                   child: Stack(
                     children: [
-                      if (ref.watch(image) != null)
+                      if (ref.watch(mentorImage) != null)
                         ClipOval(
                           child: Image.file(
-                            ref.watch(image)!,
+                            ref.watch(mentorImage)!,
                             height: 88.h,
                             width: 80.w,
                             fit: BoxFit.cover,
                           ),
                         )
-                      else if (personalInfo['personalUserInfo'] != null &&
-                          personalInfo['personalUserInfo']['profile_picture'] !=
-                              null)
+                      else if (profilePictureResponse?.profilePicture != null)
                         CircleAvatar(
                           radius: 44.r,
                           backgroundImage: NetworkImage(
-                            personalInfo['personalUserInfo']['profile_picture'],
+                            profilePictureResponse!.profilePicture!,
                           ),
                           backgroundColor: Colors.grey,
                         )
@@ -103,16 +121,18 @@ class MentorProfilePage extends ConsumerWidget {
                           onTap: () async {
                             try {
                               DecodedTokenResponse? decodedToken =
-                                  await SecureStorageUtils
-                                      .getTokenResponseFromStorage(
-                                          SharedPrefKeys.tokenResponse);
+                                  await SecureStorageUtils.getDataFromStorage<
+                                          DecodedTokenResponse>(
+                                      SharedPrefKeys.tokenResponse,
+                                      DecodedTokenResponse.fromJsonString);
                               ref.read(pickedImage.notifier).state =
                                   await _imagePicker.pickImage(
                                       source: ImageSource.gallery);
                               if (ref.watch(pickedImage) != null) {
                                 File imageFile =
                                     File(ref.watch(pickedImage)!.path);
-                                ref.read(image.notifier).state = imageFile;
+                                ref.read(mentorImage.notifier).state =
+                                    imageFile;
                                 ref.read(apiUploadProvider).uploadImage(
                                     decodedToken!.userId!, imageFile);
                               }

@@ -4,13 +4,15 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:milsat_project_app/extras/components/shared_prefs/keys.dart';
 import 'package:milsat_project_app/extras/components/shared_prefs/utils.dart';
 import 'package:milsat_project_app/extras/models/decoded_token.dart';
+import 'package:milsat_project_app/extras/models/profile_picture_model.dart';
+import 'package:milsat_project_app/mentor/profile/profile.dart';
 import '../../../../extras/api/blockers_api.dart';
 import '../../extras/components/files.dart';
 
 final mentorDetails = FutureProvider<MentorData>((ref) async {
   DecodedTokenResponse? response =
-      await SecureStorageUtils.getTokenResponseFromStorage(
-          SharedPrefKeys.tokenResponse);
+      await SecureStorageUtils.getDataFromStorage<DecodedTokenResponse>(
+          SharedPrefKeys.tokenResponse, DecodedTokenResponse.fromJsonString);
   return ref.read(apiServiceProvider).getMentorData(response?.userId);
 });
 
@@ -26,6 +28,20 @@ class MentorHomePage extends ConsumerStatefulWidget {
 }
 
 class _MentorHomePageState extends ConsumerState<MentorHomePage> {
+  ProfilePictureResponse? profilePictureResponse;
+  void getUserProfile() async {
+    profilePictureResponse =
+        await SecureStorageUtils.getDataFromStorage<ProfilePictureResponse>(
+            SharedPrefKeys.profileResponse,
+            ProfilePictureResponse.fromJsonString);
+  }
+
+  @override
+  void initState() {
+    getUserProfile();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     final mentorData = ref.watch(mentorDetails);
@@ -108,30 +124,27 @@ class _MentorHomePageState extends ConsumerState<MentorHomePage> {
                                     SizedBox(
                                       width: 24.w,
                                     ),
-                                    ref.watch(image) != null
+                                    ref.watch(mentorImage) != null
                                         ? CircleAvatar(
                                             radius: 24.r,
                                             backgroundColor: Colors.grey,
                                             child: ClipOval(
                                               child: Image.file(
-                                                ref.watch(image)!,
+                                                ref.watch(mentorImage)!,
                                                 height: 48.h,
                                                 width: 48.w,
                                                 fit: BoxFit.cover,
                                               ),
                                             ),
                                           )
-                                        : personalInfo['personalUserInfo'] !=
-                                                    null &&
-                                                personalInfo['personalUserInfo']
-                                                        ['profile_picture'] !=
-                                                    null
+                                        : profilePictureResponse
+                                                    ?.profilePicture !=
+                                                null
                                             ? CircleAvatar(
                                                 radius: 24.r,
                                                 backgroundImage: NetworkImage(
-                                                  personalInfo[
-                                                          'personalUserInfo']
-                                                      ['profile_picture'],
+                                                  profilePictureResponse!
+                                                      .profilePicture!,
                                                 ),
                                                 backgroundColor: Colors.grey,
                                               )
@@ -345,7 +358,7 @@ class _MentorHomePageState extends ConsumerState<MentorHomePage> {
                               Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: Text(
-                                  'Try again Later',
+                                  error.toString(),
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
                                     color: Theme.of(context).cardColor,

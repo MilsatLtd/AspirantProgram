@@ -1,18 +1,16 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:milsat_project_app/extras/api/data.dart';
+import 'package:milsat_project_app/extras/components/shared_prefs/keys.dart';
+import 'package:milsat_project_app/extras/components/shared_prefs/utils.dart';
 import 'package:milsat_project_app/extras/env.dart';
 
 final dioProvider = Provider<Dio>((ref) {
-  return Dio(BaseOptions(
-    baseUrl: '${Env.apiUrl}/api',
-    headers: {
-      'accept': 'application/json',
-      'Authorization': 'Bearer ${cred['access']}',
-      'Content-Type': 'application/json',
-    },
-  ));
+  return Dio(
+    BaseOptions(
+      baseUrl: '${Env.apiUrl}/api',
+    ),
+  );
 });
 
 class ApiService {
@@ -22,9 +20,18 @@ class ApiService {
 
   Future<void> submitReport(data) async {
     try {
+      String? token =
+          await SecureStorageUtils.getString(SharedPrefKeys.accessToken);
       await dio.post(
         '/reports/create',
         data: data,
+        options: Options(
+          headers: {
+            'accept': 'application/json',
+            'Authorization': 'Bearer $token',
+            'Content-Type': 'application/json',
+          },
+        ),
       );
       if (kDebugMode) {
         print('Report submitted successfully');

@@ -14,8 +14,8 @@ String courseContent = '';
 
 final coursesDetails = FutureProvider<CourseModel>((ref) async {
   DecodedTokenResponse? decodedToken =
-      await SecureStorageUtils.getTokenResponseFromStorage(
-          SharedPrefKeys.tokenResponse);
+      await SecureStorageUtils.getDataFromStorage<DecodedTokenResponse>(
+          SharedPrefKeys.tokenResponse, DecodedTokenResponse.fromJsonString);
   return ref
       .read(apiServiceProvider)
       .getTrackCourses(decodedToken!.userId!, d.track!.trackId!);

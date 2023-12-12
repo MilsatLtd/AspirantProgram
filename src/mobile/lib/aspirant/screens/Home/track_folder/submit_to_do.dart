@@ -176,15 +176,11 @@ class _SubmitToDoPageState extends ConsumerState<SubmitToDoPage> {
                 pressed: () async {
                   if (textKey.currentState!.validate() &&
                       ref.watch(fileName) != null) {
-                    if (kDebugMode) {
-                      print(ref.watch(fileName) == ''
-                          ? 'null'
-                          : ref.watch(fileName)!.split('/').last);
-                    }
-
                     DecodedTokenResponse? decodedToken =
-                        await SecureStorageUtils.getTokenResponseFromStorage(
-                            SharedPrefKeys.tokenResponse);
+                        await SecureStorageUtils.getDataFromStorage<
+                                DecodedTokenResponse>(
+                            SharedPrefKeys.tokenResponse,
+                            DecodedTokenResponse.fromJsonString);
                     if (kDebugMode) {
                       print(decodedToken!.userId!);
                       print(widget.courseId);

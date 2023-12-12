@@ -118,9 +118,10 @@ class AddBlocker extends ConsumerWidget {
                 CustomButton(
                   height: 54.h,
                   pressed: () async {
-                    DecodedTokenResponse? response =
-                        await SecureStorageUtils.getTokenResponseFromStorage(
-                            SharedPrefKeys.tokenResponse);
+                    DecodedTokenResponse? response = await SecureStorageUtils
+                        .getDataFromStorage<DecodedTokenResponse>(
+                            SharedPrefKeys.tokenResponse,
+                            DecodedTokenResponse.fromJsonString);
                     if (formKey.currentState!.validate()) {
                       ref.read(blockerProvider).postBlocker(
                             description: descriptionController.text,

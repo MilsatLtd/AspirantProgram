@@ -11,6 +11,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:milsat_project_app/extras/components/shared_prefs/keys.dart';
 import 'package:milsat_project_app/extras/components/shared_prefs/utils.dart';
 import 'package:milsat_project_app/extras/models/decoded_token.dart';
+import 'package:milsat_project_app/mentor/profile/profile.dart';
 import '../../../extras/components/files.dart';
 import '../../extras/api/file_upload.dart';
 import 'mentor_profile_card.dart';
@@ -47,9 +48,10 @@ class EditMentorProfile extends ConsumerWidget {
           actions: [
             TextButton(
               onPressed: () async {
-                DecodedTokenResponse? decodedToken =
-                    await SecureStorageUtils.getTokenResponseFromStorage(
-                        SharedPrefKeys.tokenResponse);
+                DecodedTokenResponse? decodedToken = await SecureStorageUtils
+                    .getDataFromStorage<DecodedTokenResponse>(
+                        SharedPrefKeys.tokenResponse,
+                        DecodedTokenResponse.fromJsonString);
                 ref
                     .read(apiUploadProvider)
                     .updateStatus(decodedToken!.userId!, bioController.text);
@@ -102,10 +104,10 @@ class EditMentorProfile extends ConsumerWidget {
                   Center(
                     child: Stack(
                       children: [
-                        if (ref.watch(image) != null)
+                        if (ref.watch(mentorImage) != null)
                           ClipOval(
                             child: Image.file(
-                              ref.watch(image)!,
+                              ref.watch(mentorImage)!,
                               height: 88.h,
                               width: 80.w,
                               fit: BoxFit.cover,
@@ -141,9 +143,10 @@ class EditMentorProfile extends ConsumerWidget {
                           child: GestureDetector(
                             onTap: () async {
                               DecodedTokenResponse? decodedToken =
-                                  await SecureStorageUtils
-                                      .getTokenResponseFromStorage(
-                                          SharedPrefKeys.tokenResponse);
+                                  await SecureStorageUtils.getDataFromStorage<
+                                          DecodedTokenResponse>(
+                                      SharedPrefKeys.tokenResponse,
+                                      DecodedTokenResponse.fromJsonString);
                               try {
                                 ref.read(pickedImage.notifier).state =
                                     await _imagePicker.pickImage(
@@ -151,13 +154,14 @@ class EditMentorProfile extends ConsumerWidget {
                                 if (ref.watch(pickedImage) != null) {
                                   File imageFile =
                                       File(ref.watch(pickedImage)!.path);
-                                  ref.read(image.notifier).state = imageFile;
+                                  ref.read(mentorImage.notifier).state =
+                                      imageFile;
                                   ref.read(apiUploadProvider).uploadImage(
                                       decodedToken!.userId!, imageFile);
                                 }
                               } on PlatformException catch (e) {
                                 if (kDebugMode) {
-                                  print('Failed to pick image: $e');
+                                  print('Failed to pick mentorImage: $e');
                                 }
                               }
                             },

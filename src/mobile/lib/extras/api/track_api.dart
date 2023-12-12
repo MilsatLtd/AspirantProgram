@@ -28,6 +28,7 @@ class ApiService {
     final url = '${Env.apiUrl}/api/tracks/cohort/$id';
     try {
       final response = await dio.get(url);
+      
       if (kDebugMode) {
         print(response.data);
       }

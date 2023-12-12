@@ -2,16 +2,13 @@ import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:milsat_project_app/extras/api/data.dart';
+import 'package:milsat_project_app/extras/components/shared_prefs/keys.dart';
+import 'package:milsat_project_app/extras/components/shared_prefs/utils.dart';
 import 'package:milsat_project_app/extras/env.dart';
 
 final dioProvider = Provider<Dio>((ref) {
   return Dio(BaseOptions(
     baseUrl: '${Env.apiUrl}/api',
-    headers: {
-      'accept': 'application/json',
-      'Authorization': 'Bearer ${cred['access']}',
-      'Content-Type': 'application/json',
-    },
   ));
 });
 
@@ -23,11 +20,17 @@ class ApiService {
   Future<void> resetPassword(data) async {
     try {
       String url = '${Env.apiUrl}/api/auth/password/change';
-
-      final response = await dio.put(
-        url,
-        data: data,
-      );
+      String? token =
+          await SecureStorageUtils.getString(SharedPrefKeys.accessToken);
+      final response = await dio.put(url,
+          data: data,
+          options: Options(
+            headers: {
+              'accept': 'application/json',
+              'Authorization': 'Bearer $token',
+              'Content-Type': 'application/json',
+            },
+          ));
       if (response.statusCode == 200) {
         personalInfo['message'] = response.data['message'];
         if (kDebugMode) {

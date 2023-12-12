@@ -110,9 +110,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     );
                   },
                 ),
-                // SizedBox(
-                //   height: 16.h,
-                // ),
                 TextButton(
                   onPressed: () {
                     AppNavigator.navigateTo(forgotPasswordRoute);
@@ -137,10 +134,14 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           onPressed: ref.watch(signInProvider).loading
                               ? null
                               : () async {
+                                  FocusManager.instance.primaryFocus?.unfocus();
                                   DecodedTokenResponse? decodedToken =
                                       await SecureStorageUtils
-                                          .getTokenResponseFromStorage(
-                                              SharedPrefKeys.tokenResponse);
+                                          .getDataFromStorage<
+                                                  DecodedTokenResponse>(
+                                              SharedPrefKeys.tokenResponse,
+                                              DecodedTokenResponse
+                                                  .fromJsonString);
                                   if (formKey.currentState?.validate() ??
                                       false) {
                                     await ref

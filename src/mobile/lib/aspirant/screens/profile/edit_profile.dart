@@ -10,16 +10,36 @@ import 'package:image_picker/image_picker.dart';
 import 'package:milsat_project_app/extras/components/shared_prefs/keys.dart';
 import 'package:milsat_project_app/extras/components/shared_prefs/utils.dart';
 import 'package:milsat_project_app/extras/models/decoded_token.dart';
+import 'package:milsat_project_app/extras/models/profile_picture_model.dart';
 import '../../../extras/api/file_upload.dart';
 import '../../../extras/components/files.dart';
 
 final ImagePicker _imagePicker = ImagePicker();
 
-class EditProfile extends ConsumerWidget {
+class EditProfile extends ConsumerStatefulWidget {
   const EditProfile({super.key});
 
   @override
-  Widget build(BuildContext context, ref) {
+  ConsumerState<EditProfile> createState() => _EditProfileState();
+}
+
+class _EditProfileState extends ConsumerState<EditProfile> {
+  ProfilePictureResponse? profilePictureResponse;
+  void getUserProfile() async {
+    profilePictureResponse =
+        await SecureStorageUtils.getDataFromStorage<ProfilePictureResponse>(
+            SharedPrefKeys.profileResponse,
+            ProfilePictureResponse.fromJsonString);
+  }
+
+  @override
+  void initState() {
+    getUserProfile();
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final bioController = TextEditingController();
     final aspirantData = ref.watch(aspirantDetails);
     return Scaffold(
@@ -43,9 +63,10 @@ class EditProfile extends ConsumerWidget {
           actions: [
             TextButton(
               onPressed: () async {
-                DecodedTokenResponse? decodedToken =
-                    await SecureStorageUtils.getTokenResponseFromStorage(
-                        SharedPrefKeys.tokenResponse);
+                DecodedTokenResponse? decodedToken = await SecureStorageUtils
+                    .getDataFromStorage<DecodedTokenResponse>(
+                        SharedPrefKeys.tokenResponse,
+                        DecodedTokenResponse.fromJsonString);
                 ref
                     .read(apiUploadProvider)
                     .updateStatus(decodedToken!.userId!, bioController.text);
@@ -93,7 +114,7 @@ class EditProfile extends ConsumerWidget {
                     Center(
                       child: Stack(
                         children: [
-                          if (ref.watch(image) != null)
+                          if (ref.watch(image) != null) ...{
                             ClipOval(
                               child: Image.file(
                                 ref.watch(image)!,
@@ -102,19 +123,16 @@ class EditProfile extends ConsumerWidget {
                                 fit: BoxFit.cover,
                               ),
                             )
-                          else if (personalInfo['personalUserInfo'] != null &&
-                              personalInfo['personalUserInfo']
-                                      ['profile_picture'] !=
-                                  null)
+                          } else if (profilePictureResponse?.profilePicture !=
+                              null) ...{
                             CircleAvatar(
                               radius: 44.r,
                               backgroundImage: NetworkImage(
-                                personalInfo['personalUserInfo']
-                                    ['profile_picture'],
+                                profilePictureResponse!.profilePicture!,
                               ),
                               backgroundColor: Colors.grey,
                             )
-                          else
+                          } else ...{
                             CircleAvatar(
                               radius: 44.r,
                               backgroundImage: data?.profilePicture == null
@@ -125,7 +143,8 @@ class EditProfile extends ConsumerWidget {
                                       data?.profilePicture,
                                     ) as ImageProvider<Object>?,
                               backgroundColor: Colors.grey,
-                            ),
+                            )
+                          },
                           Positioned(
                             right: 0,
                             bottom: 0,
@@ -141,8 +160,11 @@ class EditProfile extends ConsumerWidget {
                                   onTap: () async {
                                     DecodedTokenResponse? decodedToken =
                                         await SecureStorageUtils
-                                            .getTokenResponseFromStorage(
-                                                SharedPrefKeys.tokenResponse);
+                                            .getDataFromStorage<
+                                                    DecodedTokenResponse>(
+                                                SharedPrefKeys.tokenResponse,
+                                                DecodedTokenResponse
+                                                    .fromJsonString);
                                     try {
                                       ref.read(pickedImage.notifier).state =
                                           await _imagePicker.pickImage(

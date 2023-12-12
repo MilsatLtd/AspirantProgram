@@ -1,6 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:milsat_project_app/extras/components/shared_prefs/keys.dart';
+import 'package:milsat_project_app/extras/components/shared_prefs/utils.dart';
 import 'package:milsat_project_app/extras/env.dart';
 
 import '../components/files.dart';
@@ -10,11 +12,6 @@ final blockerProvider = Provider<APIService>((ref) => APIService());
 final Dio dio = Dio();
 
 class APIService {
-  final headers = {
-    'accept': 'application/json',
-    'Authorization': 'Bearer ${cred['access']}',
-    'Content-Type': 'application/json',
-  };
   Future<Response> postBlocker({
     required String trackId,
     required String userId,
@@ -33,6 +30,13 @@ class APIService {
     };
 
     try {
+      String? token =
+          await SecureStorageUtils.getString(SharedPrefKeys.accessToken);
+      final headers = {
+        'accept': 'application/json',
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json',
+      };
       final response = await dio.post(
         url,
         options: Options(headers: headers),
@@ -66,6 +70,13 @@ class APIService {
     };
 
     try {
+      String? token =
+          await SecureStorageUtils.getString(SharedPrefKeys.accessToken);
+      final headers = {
+        'accept': 'application/json',
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json',
+      };
       final response = await dio.put(
         url,
         options: Options(headers: headers),
@@ -99,6 +110,13 @@ class APIService {
     };
 
     try {
+      String? token =
+          await SecureStorageUtils.getString(SharedPrefKeys.accessToken);
+      final headers = {
+        'accept': 'application/json',
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json',
+      };
       final response = await dio.post(
         url,
         options: Options(headers: headers),
@@ -117,6 +135,13 @@ class APIService {
   Future<Response> getRaisedBlockers() async {
     const url = '${Env.apiUrl}/api/blockers';
     try {
+      String? token =
+          await SecureStorageUtils.getString(SharedPrefKeys.accessToken);
+      final headers = {
+        'accept': 'application/json',
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json',
+      };
       final response = await dio.get(
         url,
         options: Options(headers: headers),
@@ -143,6 +168,13 @@ class APIService {
   Future<Response> getCommentsById(String blockerId) async {
     final url = '${Env.apiUrl}/api/blockers/comments/$blockerId';
     try {
+      String? token =
+          await SecureStorageUtils.getString(SharedPrefKeys.accessToken);
+      final headers = {
+        'accept': 'application/json',
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json',
+      };
       final response = await dio.get(
         url,
         options: Options(headers: headers),

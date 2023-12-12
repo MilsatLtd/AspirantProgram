@@ -118,9 +118,10 @@ class ReportPage extends StatelessWidget {
                       OutlinedButton(
                         onPressed: () async {
                           DecodedTokenResponse? decodedToken =
-                              await SecureStorageUtils
-                                  .getTokenResponseFromStorage(
-                                      SharedPrefKeys.tokenResponse);
+                              await SecureStorageUtils.getDataFromStorage<
+                                      DecodedTokenResponse>(
+                                  SharedPrefKeys.tokenResponse,
+                                  DecodedTokenResponse.fromJsonString);
                           if (formKey.currentState!.validate()) {
                             weeklyReport['student_id'] = decodedToken!.userId;
                             weeklyReport['question_1'] = textController.text;

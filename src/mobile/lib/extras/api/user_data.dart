@@ -1,16 +1,15 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:milsat_project_app/extras/components/files.dart';
+import 'package:milsat_project_app/extras/components/shared_prefs/keys.dart';
+import 'package:milsat_project_app/extras/components/shared_prefs/utils.dart';
 import 'package:milsat_project_app/extras/env.dart';
 import 'package:milsat_project_app/extras/models/aspirant_model.dart';
 
 final dioProvider = Provider<Dio>((ref) {
   final dio = Dio();
-  dio.options.headers['accept'] = 'application/json';
-  dio.options.headers['Authorization'] = 'Bearer ${cred['access']}';
   return dio;
 });
 
@@ -29,13 +28,15 @@ class ApiService {
 
   Future<AspirantModelClass?> getUserData(String? id) async {
     try {
+      String? token =
+          await SecureStorageUtils.getString(SharedPrefKeys.accessToken);
       final response = await Dio().get(
         '${Env.apiUrl}/api/students/$id',
         options: Options(
           headers: {
             'accept': 'application/json',
             'Content-Type': 'application/json',
-            'Authorization': 'Bearer ${cred['access']}'
+            'Authorization': 'Bearer $token'
           },
         ),
       );
@@ -63,9 +64,7 @@ class ApiService {
         throw ('${e.response}');
       }
     } catch (e) {
-      if (kDebugMode) {
-        print(e);
-      }
+      throw Exception('Error making request: ${e.toString()}');
     }
     return aspirantData;
   }
@@ -73,12 +72,20 @@ class ApiService {
   Future<MentorData> getMentorData(String? id) async {
     final url = '${Env.apiUrl}/api/mentors/$id';
     try {
-      final response = await dio.get(url);
+      String? token =
+          await SecureStorageUtils.getString(SharedPrefKeys.accessToken);
+      final response = await dio.get(
+        url,
+        options: Options(
+          headers: {
+            'accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer $token'
+          },
+        ),
+      );
       switch (response.statusCode) {
         case 200:
-          if (kDebugMode) {
-            print('success');
-          }
           MentorData mentorData = MentorData.fromJson(response.data);
           return mentorData;
 
@@ -99,9 +106,7 @@ class ApiService {
         throw ('${e.response}');
       }
     } catch (e) {
-      if (kDebugMode) {
-        print('failed');
-      }
+      throw Exception('Error making request: ${e.toString()}');
     }
     return mentorData;
   }
@@ -109,10 +114,18 @@ class ApiService {
   Future<Response> getSubmmittedReport_() async {
     const url = '${Env.apiUrl}/api/reports/';
     try {
-      final response = await dio.get(url);
-      if (kDebugMode) {
-        print(response.data);
-      }
+      String? token =
+          await SecureStorageUtils.getString(SharedPrefKeys.accessToken);
+      final response = await dio.get(
+        url,
+        options: Options(
+          headers: {
+            'accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer $token'
+          },
+        ),
+      );
       cred['reports'] = response.data;
       return response;
     } on DioError catch (e) {
@@ -129,13 +142,21 @@ class ApiService {
   Future<CourseModel> getTrackCourses(String id, String trackId) async {
     final url = '${Env.apiUrl}/api/students/courses/$id/$trackId';
     try {
-      final response = await dio.get(url);
+      String? token =
+          await SecureStorageUtils.getString(SharedPrefKeys.accessToken);
+      final response = await dio.get(
+        url,
+        options: Options(
+          headers: {
+            'accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer $token'
+          },
+        ),
+      );
 
       switch (response.statusCode) {
         case 200:
-          if (kDebugMode) {
-            print('success');
-          }
           CourseModel courses = CourseModel.fromJson(response.data);
           return courses;
 
@@ -156,9 +177,7 @@ class ApiService {
         throw ('${e.response}');
       }
     } catch (e) {
-      if (kDebugMode) {
-        print('failed');
-      }
+      throw Exception('Error making request: ${e.toString()}');
     }
     return courses;
   }
