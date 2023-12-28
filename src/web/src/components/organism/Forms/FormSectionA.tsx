@@ -12,6 +12,7 @@ import MultiTextField from "@/components/atom/Customfields/MultiTextField";
 interface formSectionType {
   changeSection: () => void;
   passData: (data: basicInfo) => void;
+  passEmail: (email:basicInfo["email"]) => void;
 }
 
 const FormSectionA = (props: formSectionType) => {
@@ -50,10 +51,12 @@ const FormSectionA = (props: formSectionType) => {
     if (data.purpose) {
      const formatedData = removeTerms(data);
       props.passData(formatedData);
+      props.passEmail(data?.email)
     } else {
       data.purpose = "";
      const formatedData = removeTerms(data);
      props.passData(formatedData);
+     props.passEmail(data?.email)
     }
     props.changeSection();
   };

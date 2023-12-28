@@ -7,7 +7,7 @@ import BgContourTexture from "../../../Assets/contourTexture.svg";
 import redirect from "../../../Assets/redirect.svg";
 import Link from "next/link";
 import InfoList from "@/components/atom/CustomInfo/InfoList";
-import { AvailableTracks, Brochure } from "@/utils/data";
+import { AvailableTracks, Brochure, applictionTimeline } from "@/utils/data";
 import  { downloadFile } from "@/utils/apiFunctions"
 
 
@@ -15,7 +15,9 @@ const TrackDetails = () => {
   const router = useRouter();
   const trackId = router.query.trackId;
 
-  const brochureDirectory = trackId === "fundamental-of-gis" ? Brochure.FundamentalOfGIS : trackId === "field-mapping-and-data-collection" ? Brochure.FieldMappingAndDataCollection : ""
+  const { startDate, endDate } = applictionTimeline
+
+  const brochureDirectory = trackId === "fundamental-of-gis" ? Brochure.FundamentalOfGIS : trackId === "field-mapping-and-data-collection" ? Brochure.FieldMappingAndDataCollection : trackId === "milsat-enumeration-network" ? Brochure.MilsatEnumerationNetwork : ""
 
 
   return (
@@ -66,7 +68,7 @@ const TrackDetails = () => {
                       </h2>
                       <hr className="w-[6rem] border-[2px] border-G200 "></hr>
                       <p className="text-N300 lg:text-base text-m-sm lg:leading-[32px] leading-[24px] font-semibold">
-                        12 November - 31 December
+                        {startDate} - {endDate}
                       </p>
                     </div>
                     <div className="pb-16 space-y-16 ">

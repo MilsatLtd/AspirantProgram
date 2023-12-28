@@ -58,6 +58,11 @@ export const routes = {
       name: "Field Mapping and Data Collection",
       link: "/track/field-mapping-and-data-collection",
     },
+    {
+      id: 3,
+      name: "Milsat Enumeration Network",
+      link: "/track/milsat-enumeration-network",
+    },
 
     // {
     //     id:3,
@@ -188,7 +193,7 @@ export const AvailableTracks = [
           },
           {
             id: 2,
-            criteria: "Completed and passed the Basic Gis Courses",
+            criteria: "Completed and passed the Basic GIS Courses",
           },
           {
             id: 3,
@@ -261,12 +266,63 @@ export const AvailableTracks = [
         ],
       },
     ],
+  },
+  {
+    id: "milsat-enumeration-network",
+    trackName: "MILSAT ENUMERATION NETWORK",
+    description:
+      "Dive into the Milsat Enumeration Network, covering project policies, Milsat Mapper Network governance, and essential peculiarities of the Mappers Network.",
+    learningTimeLine: "2 weeks",
+    TrackInfo: [
+      {
+        name: "Track-curriculum",
+        list: [
+          {
+            id: 1,
+            criteria: "Enumerator Network",
+          },
+          {
+            id: 2,
+            criteria: "Guidelines for the Milsat Mapper Network",
+          },
+          {
+            id: 3,
+            criteria: "Mappers Network Peculiarities",
+          },
+          {
+            id: 4,
+            criteria: "Technology and Field Devices",
+          }
+        ],
+      },
+      { 
+        name: "Track Requirement",
+        list: [
+          {
+            id: 1,
+            criteria: " Basic computer skills.",
+          },
+          {
+            id: 2,
+            criteria: "Understanding of geographic concepts.",
+          },
+          {
+            id: 3,
+            criteria: "Must have completed Field Mapping and Data Collection Track",
+          },
+          {
+            id: 3,
+            criteria: "Access to a computer with internet connectivity.",
+          },
+        ],
+      },
+    ],
   }
 ];
 
 export const applictionTimeline = {
-  statDate: "12 November, 2023",
-  endDate: "31 December, 2023",
+  startDate: "1 January, 2024",
+  endDate: "31 February, 2024",
 };
 
 export const termsAndConditions = {
@@ -319,7 +375,12 @@ export const TrackCardsInfo = [
     picture: designer,
     route: "/track/field-mapping-and-data-collection",
   },
-  
+  {
+    id: 3,
+    name: "Milsat Enumeration Network",
+    picture: community,
+    route: "/track/milsat-enumeration-network",
+  },
 ];
 
 export const knowledgeInfo = {
@@ -451,4 +512,64 @@ export const oppourtunity = [
 export const Brochure =  {
   FundamentalOfGIS: "/Fundamental_of_GIS.pdf",
   FieldMappingAndDataCollection: "/Milsat_GIS_training_curriculum_Basic.pdf",
+  MilsatEnumerationNetwork: "/Milsat_Enumeration_Network.pdf",
 }
+
+export const MobileAppPlayStoreLink = "https://play.google.com/store/apps/details?id=com.milsat.apirant&pcampaignid=web_share"
+
+export const ApplicationEmailTemplate  = `<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Application Received</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 20px auto;
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+      color: #333;
+    }
+
+    p {
+      color: #666;
+    }
+
+    .cta-button {
+      display: inline-block;
+      padding: 10px 20px;
+      background-color: #3498db;
+      color: #fff;
+      text-decoration: none;
+      border-radius: 5px;
+    }
+    
+    .footer {
+      margin-top: 20px;
+      text-align: center;
+      color: #888;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Application Received Successfully!</h1>
+    <p>Thank you for applying to Milsat Aspirant Program. Your application has been received successfully. Please stay tuned for the review result which will be communicated via email.</p>
+    <p>Your application is now under review.</p>
+    <p>If you have any questions or concerns, feel free to email us at</p> <a href="mailto:mapSupport@gmail.com">Support</a>
+    <p>Best regards,</p>
+    <p class="footer">This is an automated email, please do not reply.</p>
+  </div>
+</body>
+</html>
+`

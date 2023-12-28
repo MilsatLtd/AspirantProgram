@@ -46,6 +46,7 @@ export interface applicationResponseType {
 
 export interface applicationFormType {
     postResponse: (form: FormData)  => void;
+    passEmail: (email: basicInfo["email"]) => void;
 }
 
 export interface applicationInfoType{

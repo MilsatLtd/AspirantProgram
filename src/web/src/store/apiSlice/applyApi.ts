@@ -42,6 +42,16 @@ export const applyApi = createApi({
             providesTags: ['Apply']
           };
         },
+      }),
+    sendEmail: builder.mutation({
+      query: (body: FormData) => {
+          return {
+            url: "/email",
+            method: "post",
+            body,
+            providesTags: ['apply-email']
+          };
+        },
       })
   }),
 })
@@ -49,5 +59,6 @@ export const applyApi = createApi({
 export const {
    useGetCurrentCohortQuery, 
    useGetAllApplicationsQuery,
-   useApplyMutation
+   useApplyMutation,
+   useSendEmailMutation
   } = applyApi

@@ -10,7 +10,6 @@ interface submitInfoProps {
 }
 
 const SubmitInfo = (props: submitInfoProps ) => {
-  console.log(props.info.length)
 
   const handleClosePopUp= () => {
     if(props.info.length > 57){
