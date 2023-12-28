@@ -31,7 +31,7 @@ const ApplicationPage = () => {
   const dispatch = useAppDispatch();
   const [show, setShow] = useState(false);
   const [SubmissionStatus, setSubmissionStatus] = useState("");
-  const [email, setEmail] = useState("");
+  const [email, setEmail] = useState<string | undefined>();
   const [chorts, setChorts] = useState([] as any);
 
   const { startDate, endDate } = applictionTimeline
@@ -64,7 +64,7 @@ const ApplicationPage = () => {
     if(isSubmitted){
         setShow(true)
         setSubmissionStatus("Your application has been sent successfully and under review")
-        sendApplicationEmail({email: email, subject: "Milsat Aspirant Programme Application", message: ApplicationEmailTemplate})
+        sendApplicationEmail({email: email ? email : "", subject: "Milsat Aspirant Programme Application", message: ApplicationEmailTemplate})
       }
       if(isSubmitting){
         setShow(false)
