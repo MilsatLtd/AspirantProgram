@@ -56,7 +56,6 @@ const ApplicationPage = () => {
 
   // POST application data to the backend API endpoint
   const handleSubmitApplication = async (_allresponse: FormData) => {
-    sendApplicationEmail({email: email, subject: "Milsat Aspirant Programme Application", message: ApplicationEmailTemplate})
     submitApplication(_allresponse)
   }
 
