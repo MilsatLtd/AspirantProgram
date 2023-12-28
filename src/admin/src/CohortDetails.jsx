@@ -44,10 +44,11 @@ const formatCohortForUpdate = (cohort, status) => {
   };
  
 function CohortTrack ( { track }) {
+
     return (
         <div className=" flex gap-5 w-full justify-between">
             <h3 className="p-1 col-start-1">{track.name}</h3>
-            <Link to="/">
+            <Link to={`/Tracks/${track?.track_id ?? "/tracks"}`}>
             <button className="active:bg-black active:text-white p-1 pl-2 pr-2 rounded-xl text-sm bg-white
                 text-black border-solid border-2 border-black hover: transition-colors duration-300
                 font-semibold shadow-2xl"

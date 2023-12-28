@@ -70,6 +70,7 @@ const ApplicationForm = (props: applicationFormType) => {
         >
           <FormSectionA
             passData={(data) => setApplicationResponse(data)}
+            passEmail={props.passEmail}
             changeSection={() => {
               setChangeSection("sectionB");
               setPercent(100);

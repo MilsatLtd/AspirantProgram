@@ -2,6 +2,8 @@ import React from 'react'
 import Image from 'next/image'
 import HeroImage from './HeroImage'
 import topArrow from '../../../Assets/topArrow.svg'
+import PlayStore  from '../../../Assets/Playstore.svg'
+import {MobileAppPlayStoreLink} from '../../../utils/data'
 import Link from 'next/link'
 import PartnersSection from './PartnersSection'
 
