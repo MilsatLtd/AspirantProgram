@@ -44,7 +44,7 @@ export const applyApi = createApi({
         },
       }),
     sendEmail: builder.mutation({
-      query: (body: FormData) => {
+      query: (body: { email:string, subject:string, message:string}) => {
           return {
             url: "/email",
             method: "post",
