@@ -68,6 +68,40 @@ class CourseSerializer(serializers.Serializer):
         track = Track.objects.get(track_id=track_id)
         course = Course.objects.create(track=track, **validated_data)
         return course
+
+class CourseSerializer2(serializers.Serializer):
+    course_id = serializers.UUIDField(read_only=True)
+    name = serializers.CharField(max_length=200)
+    description = serializers.CharField(max_length=500)
+    requirements = serializers.CharField(max_length=500)
+    access_link = serializers.CharField(max_length=500)
+
+    def create(self, validated_data):
+        track_id = validated_data.pop('track')
+        track = Track.objects.get(track_id=track_id)
+        course = Course.objects.create(track=track, **validated_data)
+        return course
+    
+class AddCourseToTrackSerializer(serializers.Serializer):
+    # add track_id and list of courses
+    track_id = serializers.UUIDField()
+    courses = CourseSerializer2(many=True)
+
+    def create(self, validated_data):
+        track_id = validated_data.pop('track_id')
+        track = Track.objects.get(track_id=track_id)
+        courses = validated_data.pop('courses')
+        for course in courses:
+            Course.objects.create(track=track, **course)
+        return track
+    
+    # add validation to ensure each course is unique from all other courses in the track
+    def validate(self, data):
+        courses = data.get('courses')
+        for course in courses:
+            if Course.objects.filter(name=course.get('name'), track=data.get('track_id')).exists():
+                raise serializers.ValidationError({"message":"A course with this name already exists in this track \U0001F636"})
+        return super(AddCourseToTrackSerializer, self).validate(data)
     
 class CourseUpdateSerializer(serializers.Serializer):
     course_id = serializers.UUIDField()

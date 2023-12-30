@@ -57,7 +57,7 @@ class GetAndUpdateTrackView(mixins.RetrieveModelMixin,
         return UpdateTrack().update(track_id, request.data)
     
 class AddCourseToTrackView(CreateAPIView):
-    serializer_class = CourseSerializer
+    serializer_class = AddCourseToTrackSerializer
     permission_classes = (IsAuthenticated, IsAdmin)
 
     @swagger_auto_schema( operation_summary="Add a course to a track")
