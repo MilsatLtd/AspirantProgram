@@ -1,7 +1,7 @@
 from rest_framework import status
 from rest_framework.response import Response
 from api.models import Track, Course
-from api.serializers import TrackSerializer, TrackSerializer_C, TrackSerializerAnonymous, CourseSerializer
+from api.serializers import TrackSerializer, TrackSerializer_C, TrackSerializerAnonymous, CourseSerializer, AddCourseToTrackSerializer
 import logging
 from api.backends.map_permissions import get_claim
 from api.common.enums import *
@@ -106,16 +106,8 @@ class AddCourseToTrack:
         self.data = data
 
     def add_course(self):
-        try:
-            track = Track.objects.get(track_id=self.data['track_id'])
-            course = Course.objects.filter(name=self.data['name'], track = track).exists()
-            if course:
-                return Response(
-                    data={"message": "Course with name: {} already exists \U0001F636".format(
-                        self.data['name'])},
-                    status=status.HTTP_400_BAD_REQUEST)
-                        
-            course_serializer = CourseSerializer(data=self.data)
+        try:            
+            course_serializer = AddCourseToTrackSerializer(data=self.data)
             if course_serializer.is_valid():
                 course_serializer.save()
                 return Response(course_serializer.data, status=status.HTTP_200_OK)
