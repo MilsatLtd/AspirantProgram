@@ -75,12 +75,6 @@ class CourseSerializer2(serializers.Serializer):
     description = serializers.CharField(max_length=500)
     requirements = serializers.CharField(max_length=500)
     access_link = serializers.CharField(max_length=500)
-
-    def create(self, validated_data):
-        track_id = validated_data.pop('track')
-        track = Track.objects.get(track_id=track_id)
-        course = Course.objects.create(track=track, **validated_data)
-        return course
     
 class AddCourseToTrackSerializer(serializers.Serializer):
     # add track_id and list of courses
