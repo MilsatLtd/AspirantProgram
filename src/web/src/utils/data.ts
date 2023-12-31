@@ -55,8 +55,8 @@ export const routes = {
     },
     {
       id: 1,
-      name: "Field Mapping and Data Collection",
-      link: "/track/field-mapping-and-data-collection",
+      name: "Data Collection and Field Mapping",
+      link: "/track/data-collection-and-field-mapping",
     },
     {
       id: 3,
@@ -205,8 +205,8 @@ export const AvailableTracks = [
     ],
   },
   {
-    id: "field-mapping-and-data-collection",
-    trackName: "Field Mapping and Data Collection",
+    id: "data-collection-and-field-mapping",
+    trackName: "Data Collection and Field Mapping",
     description:
       "Dive into fundamental topics such as GIS basics, data collection techniques, technology integration, mapping best practices, data analysis, and practical applications",
     learningTimeLine: "5 weeks",
@@ -216,7 +216,7 @@ export const AvailableTracks = [
         list: [
           {
             id: 1,
-            criteria: "Introduction to Field Mapping and Data Collection",
+            criteria: "Introduction to Data Collection and Field Mapping",
           },
           {
             id: 2,
@@ -269,7 +269,7 @@ export const AvailableTracks = [
   },
   {
     id: "milsat-enumeration-network",
-    trackName: "MILSAT ENUMERATION NETWORK",
+    trackName: "Milsat Enumeration Network",
     description:
       "Dive into the Milsat Enumeration Network, covering project policies, Milsat Mapper Network governance, and essential peculiarities of the Mappers Network.",
     learningTimeLine: "2 weeks",
@@ -371,9 +371,9 @@ export const TrackCardsInfo = [
   },
   {
     id: 2,
-    name: "Field Mapping and Data Collection",
+    name: "Data Collection and Field Mapping",
     picture: designer,
-    route: "/track/field-mapping-and-data-collection",
+    route: "/track/data-collection-and-field-mapping",
   },
   {
     id: 3,
