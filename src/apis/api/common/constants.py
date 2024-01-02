@@ -14,16 +14,20 @@ def application_message(application, password):
     elif application.role == ROLE.MENTOR.value:
         role = "mentor"
     return {"subject":
-            f"Acceptance to MAP Cohort",
+            f"Welcome to the Milsat Aspirant Programme!",
 
             "body":
             f"""
 Hi {application.user.first_name},
 
-Congratulations, your application to join the {application.track.name} track as a {role} has been accepted.
+Congratulations! We have carefully reviewed your application and we are pleased to inform you that you have been admitted into the Milsat Aspirant Programme for this cohort. We are excited to welcome you to our program and can't wait for you to thrive in your learning phase.
 
 Cohort Name: {application.track.cohort.name}
 Cohort starts on {format_timestamp(application.track.cohort.start_date)} and ends on {format_timestamp(application.track.cohort.end_date)}.
+
+To commence your journey, kindly download the Milsat Aspirant Programme application on playstore to get started. 
+
+Download Link: https://play.google.com/store/apps/details?id=com.milsat.apirant&pcampaignid=web_share
 
 Your login details are:
 Email: {application.user.email}
@@ -31,12 +35,12 @@ Password: {password}
 
 You can login to the mobile app using the above credentials.
 
-After logging in, change your password to something you can remember.
+If you have any questions or concerns, please don't hesitate to reach out to us at map.milsat@gmail.com.
 
-Regards,
+Best regards.
 MAP Admin
 
-     """}
+"""}
 
 
 {
