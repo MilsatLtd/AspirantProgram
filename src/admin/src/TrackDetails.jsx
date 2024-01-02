@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import updateTrackById from "./api/updateTrackById";
 import addNewTrack from "./api/addNewTrack";
+import deleteTrackById from "./api/deleteTrackById";
+import addNewCourseToTrack from "./api/addNewCourseToTrack";
 import utils from "./constant/common";
 import Navbar from "./Navbar";
 import Loader from "./Loader";
@@ -21,6 +23,15 @@ const TrackDetails = () => {
     const { track_id } = useParams();
 
     const results = useQuery( ['itrack'], () => fetchTrackById(track_id))
+    const deleteTrack = useMutation((track_id) => deleteTrackById(track_id))
+
+
+    const handleTrackDelete = () => {
+        const userConfirmed = window.confirm("Are you sure you want to delete this track?")
+        if (userConfirmed) {
+            deleteTrack.mutate(track_id)
+        }
+    }
 
     useEffect(() => {
         // Refetch data when track_id changes
@@ -31,6 +42,13 @@ const TrackDetails = () => {
             courses: []
         });
       }, [track_id, results.data, isUpdateTrack]);
+
+    useEffect(() => {
+        if(deleteTrack.isSuccess){
+            window.location.href = "#/tracks"
+            window.location.reload();
+        }
+    })
 
   return (
         <>
@@ -46,6 +64,14 @@ const TrackDetails = () => {
                     onClick={() => setIsUpdateTrack(true)}
                 >
                 Update Track
+                </button>
+                <button 
+                className=" active:text-white p-3 pl-3 pr-3 rounded-xl text-sm 
+                text-white  hover: transition-colors duration-300
+                font-semibold shadow-2xl h-max bg-red-500"
+                    onClick={() => handleTrackDelete()}
+                >
+                Delete Track
                 </button>
         </div>
         <form action="">
@@ -103,6 +129,7 @@ const TrackDetails = () => {
 export default TrackDetails
 
 
+
 const CoursesDetails = ({ course, courseNo }) => {
     return(
         <div className="flex flex-col gap-4">
@@ -140,6 +167,7 @@ function UpdateTrack ({closeEdit, trackId}) {
     const results = useQuery( ['itrack'], () => fetchTrackById(trackId), { staleTime: 1000 * 60 * 5 })
     const addTrack = useMutation((newTrack) => addNewTrack(newTrack))
     const updateTrack  = useMutation((updatedTrack) => updateTrackById(track?.track_id, updatedTrack))
+    const addNewCourses  = useMutation((addNewCoursesToTrack) => addNewCourseToTrack(track?.track_id, addNewCoursesToTrack))
     const track = results.data?? {
         name: "",
         description: "",
@@ -173,6 +201,12 @@ function UpdateTrack ({closeEdit, trackId}) {
             courses: formattedCourseDetails}
         if(track?.track_id){
             updateTrack.mutate(allTrackDetails)
+            const onlyNewCourses = allTrackDetails.courses
+                .filter(obj => !obj.hasOwnProperty('course_id'))
+                .map(obj => ({ ...obj}));
+            if (onlyNewCourses.length > 0){
+                addNewCourses.mutate(onlyNewCourses)
+            }   
         }else{
             addTrack.mutate(allTrackDetails)
         }
@@ -202,7 +236,7 @@ function UpdateTrack ({closeEdit, trackId}) {
     course.id ? course.id !== id: course.course_id !== id 
     )
     setCourses(newCourselist)
-    const newCourseDetails = courseDetails.filter((course) => course.id ? course.id !== id: course.course_id !== id )
+    const newCourseDetails = courseDetails.filter((course) => course.id ? course.id !== id: course.course_id !== id)
     setCourseDetails(newCourseDetails)
 }
 
@@ -211,7 +245,7 @@ function UpdateTrack ({closeEdit, trackId}) {
         <div className="flex flex-col gap-8">
             <div className="flex flex-row justify-between items-center font-bold text-lg ">
             <h1 className="text-2xl font-semibold"> Update Track Details </h1>
-            <span onClick={() => handleClose() }
+            <span onClick={() => closeEdit() }
                 className="bg-black text-white rounded-full h-[40px] w-[40px] flex items-center justify-center hover:opacity-80 cursor-pointer">
                 X</span>
             </div>
@@ -253,7 +287,7 @@ function UpdateTrack ({closeEdit, trackId}) {
                     </a>
                 </div>
                 {
-                  updateTrack.isSuccess || addTrack.isSuccess ? 
+                  ((updateTrack.isSuccess && addNewCourses.isSuccess) || updateTrack.isSuccess) || addTrack.isSuccess? 
                   <div className="flex-1 flex flex-col items-center space-y-4">
                      <span className="flex-1 text-center w-full bg-green-500 p-3 rounded-md font-semibold text-base text-white">
                     Track Updated Sucessfully
@@ -262,12 +296,12 @@ function UpdateTrack ({closeEdit, trackId}) {
                      Close
                      </span>
                   </div>
-                 : updateTrack.isError || addTrack.isError ?
+                 : ((updateTrack.isError && addNewCourses.isError) || updateTrack.isError) || addTrack.isError?
                 <span className="flex-1 text-center bg-red-500 p-3 rounded-md font-semibold text-base text-white"
-                onClick={()=> addCohort.reset()}
+                onClick={()=> updateTrack.reset() || addTrack.reset() || addNewCourses.reset()}
                 >
-                    Error Adding Cohort, Click to retry
-                </span> : updateTrack.isLoading || addTrack.isLoading ?
+                    Error Updating Track, Click to retry
+                </span> : ((updateTrack.isLoading && addNewCourses.isLoading) || updateTrack.isLoading) || addTrack.isLoading?
                     <div className="flex items-center justify-center">
                             <Loader css1={"h-[20px] w-[20px]"}/>
                     </div>

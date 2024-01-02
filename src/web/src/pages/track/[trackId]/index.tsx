@@ -17,7 +17,7 @@ const TrackDetails = () => {
 
   const { startDate, endDate } = applictionTimeline
 
-  const brochureDirectory = trackId === "fundamental-of-gis" ? Brochure.FundamentalOfGIS : trackId === "field-mapping-and-data-collection" ? Brochure.FieldMappingAndDataCollection : trackId === "milsat-enumeration-network" ? Brochure.MilsatEnumerationNetwork : ""
+  const brochureDirectory = trackId === "fundamental-of-gis" ? Brochure.FundamentalOfGIS : trackId === "data-collection-and-field-mapping" ? Brochure.DataCollectionAndFieldMapping : trackId === "geospatial-development-tool" ? Brochure.GeospatialDeploymentTool : ""
 
 
   return (
@@ -35,7 +35,7 @@ const TrackDetails = () => {
 
               <section className="lg:px-96 md:px-48 px-16 py-24 lg:h-[50em] h-full gap-[8%] lg:gap-[20em] my-0 mx-auto flex lg:flex-row flex-col lg:items-center w-full">
                 <div className="grid lg:grid-rows-4 lg:gap-[64px] md:gap-40 gap-24 lg:mt-0 flex-1">
-                  <div className="lg:row-span-3 flex flex-col gap-24 lg:w-[555px] w-[280px]">
+                  <div className="lg:row-span-3 flex flex-col gap-24 lg:w-[555px] w-[80%]">
                     <h2 className="lg:text-3xl text-m-2xl font-semibold lg:leading-[68px] lg:w-[10em] leading-[48px]">
                       {Track.trackName}
                     </h2>
@@ -43,7 +43,7 @@ const TrackDetails = () => {
                       {Track.description}
                     </p>
                   </div>
-                  <div className="lg:row-span-1 flex gap-24 ">
+                  <div className="lg:row-span-1 flex md:gap-24 gap-16 ">
                     <Link
                       href="/apply"
                       className="md:py-[17px] md:px-32 px-16 py-10 flex items-center text-m-sm md:text-base leading-[28px] font-semibold gap-12 bg-P300 hover:bg-P200  text-N00 rounded-lg w-max h-max"
@@ -52,7 +52,7 @@ const TrackDetails = () => {
                       <Image src={redirect} alt="redirect-icon" />
                     </Link>
                     <div className="flex items-start">
-                    <button className="md:py-[16px] md:px-32 px-16 py-8  flex items-center leading-[28px] gap-12 font-semibold bg-white border-2 border-P300 text-P300 text-m-sm md:text-base rounded-lg h-max w-max"
+                    <button className="md:py-[16px] md:px-32 px-12 py-8  flex items-center leading-[28px] gap-12 font-semibold bg-white border-2 border-P300 text-P300 text-m-sm md:text-base rounded-lg h-max w-max"
                       onClick={() => downloadFile(brochureDirectory, `${Track.trackName}.pdf`)}
                     >
                           Download Brochure
