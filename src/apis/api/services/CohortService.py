@@ -96,9 +96,6 @@ class UpdateCohort:
 class GetOpenCohort:
     def get(self):
         try:
-            print(timezone.now())
-            cohort = Cohort.objects.filter()
-            print(cohort.values())
             cohort = Cohort.objects.filter(
                 apply_start_date__lte=timezone.now(), apply_end_date__gte=timezone.now())
             cohort_serializer = OpenCohortSerializer(cohort, many=True)

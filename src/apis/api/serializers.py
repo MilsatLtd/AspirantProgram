@@ -224,6 +224,10 @@ class CreateCohortSerializer(serializers.Serializer):
                 raise serializers.ValidationError(
                     {"message":"Cohort cannot overlap with another cohort \U0001F636"})
         return super(CreateCohortSerializer, self).validate(data)
+    
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        return format_tz_repr(instance, representation)
 
 
 class CohortSerializer(serializers.Serializer):
@@ -314,6 +318,13 @@ class CohortSerializer(serializers.Serializer):
                     {"message": "Cohort cannot overlap with another cohort \U0001F636"})
         return super(CohortSerializer, self).validate(data)
 
+def format_tz_repr(instance, representation):
+    utc_plus_one = pytz.timezone('Africa/Lagos')
+    for field in instance._meta.get_fields():
+        value = getattr(instance, field.name, None)
+        if isinstance(value, datetime) and value is not None:
+            representation[field.name] = value.astimezone(utc_plus_one).isoformat()
+    return representation
 
 class OpenCohortSerializer(serializers.ModelSerializer):
     tracks = TrackSerializer(many=True, read_only=True)
@@ -321,6 +332,10 @@ class OpenCohortSerializer(serializers.ModelSerializer):
     class Meta:
         model = Cohort
         fields = '__all__'
+    
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        return format_tz_repr(instance, representation)
 
 class TrackSerializer2(serializers.ModelSerializer):
     class Meta:
