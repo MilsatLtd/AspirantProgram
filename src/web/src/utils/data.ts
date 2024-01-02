@@ -60,30 +60,9 @@ export const routes = {
     },
     {
       id: 3,
-      name: "Milsat Enumeration Network",
-      link: "/track/milsat-enumeration-network",
-    },
-
-    // {
-    //     id:3,
-    //     name: 'Geospatial Front-end',
-    //     link: '/track/3'
-    // },
-    // {
-    //     id:4,
-    //     name: 'Geospatial Analyst',
-    //     link: '/track/4'
-    // },
-    // {
-    //     id:5,
-    //     name: 'Geospatial Back-end',
-    //     link: '/track/5'
-    // },
-    // {
-    //     id:6,
-    //     name: 'Geospatial Mobile Developer',
-    //     link: '/track/6'
-    // }
+      name: "Geospatial Deployment Tool",
+      link: "/track/geospatial-development-tool",
+    }
   ],
 };
 
@@ -181,6 +160,10 @@ export const AvailableTracks = [
             id: 5,
             criteria: "Querying in GIS",
           },
+          {
+            id: 6,
+            criteria: "Cartography and map design",
+          },
         ],
       },
       {
@@ -189,17 +172,8 @@ export const AvailableTracks = [
           {
             id: 1,
             criteria:
-              "Completed the Milsat Field Mapping and Data Collection Certification Courses",
-          },
-          {
-            id: 2,
-            criteria: "Completed and passed the Basic GIS Courses",
-          },
-          {
-            id: 3,
-            criteria:
-              "Proficient Understanding of GIS and the Practical Procedure of Data Collection",
-          },
+              "You will need a mouse and a computer, to install QGIS or ArcMap and a willing mind to learn!",
+          }
         ],
       },
     ],
@@ -208,8 +182,8 @@ export const AvailableTracks = [
     id: "data-collection-and-field-mapping",
     trackName: "Data Collection and Field Mapping",
     description:
-      "Dive into fundamental topics such as GIS basics, data collection techniques, technology integration, mapping best practices, data analysis, and practical applications",
-    learningTimeLine: "5 weeks",
+      "Designed to equip participants with the essential skills and knowledge needed for effective field data collection, spatial analysis, and utilizing cutting-edge data collection technologies",
+    learningTimeLine: "4 weeks",
     TrackInfo: [
       {
         name: "Track-curriculum",
@@ -220,23 +194,23 @@ export const AvailableTracks = [
           },
           {
             id: 2,
-            criteria: "Geographic Information Systems (GIS) Basics",
+            criteria: "Guide to Field Data Collection",
           },
           {
             id: 3,
-            criteria: "Data Collection Techniques",
-          },
-          {
-            id: 4,
             criteria: "Technology and Field Devices",
           },
           {
+            id: 4,
+            criteria: "Field Practical",
+          },
+          {
             id: 5,
-            criteria: "Field Mapping Best Practices",
+            criteria: "Milsat Enumeration Network",
           },
           {
             id: 6,
-            criteria: "Data Analysis and Visualization",
+            criteria: "Guidelines for the Milsat Mapper Network",
           },
           {
             id: 7,
@@ -244,7 +218,7 @@ export const AvailableTracks = [
           },
           {
             id: 8,
-            criteria: "Final Project",
+            criteria: "Mappers Network Peculiarities",
           },
         ],
       },
@@ -253,45 +227,45 @@ export const AvailableTracks = [
         list: [
           {
             id: 1,
-            criteria: " Basic computer skills.",
+            criteria: "You need A mobile device (Android Version 10.0 and Above)",
           },
           {
             id: 2,
-            criteria: "Understanding of geographic concepts.",
+            criteria: "Access to internet connectivity.",
           },
           {
             id: 3,
-            criteria: "Access to a computer with internet connectivity.",
+            criteria: "Understanding of geographic concept",
           },
         ],
       },
     ],
   },
   {
-    id: "milsat-enumeration-network",
-    trackName: "Milsat Enumeration Network",
+    id: "geospatial-development-tool",
+    trackName: "Geospatial Deployment Tool",
     description:
-      "Dive into the Milsat Enumeration Network, covering project policies, Milsat Mapper Network governance, and essential peculiarities of the Mappers Network.",
-    learningTimeLine: "2 weeks",
+      "Explore geospatial software, covers open-source tools and commercial solutions like ArcMap/ArcGIS Pro. Learn project specification, data requirements, licensing, system configuration, and spatial analysis, with practical insights into procurement, infrastructure setup, deployment, testing, and license activation for both online and offline scenarios",
+    learningTimeLine: "5 weeks",
     TrackInfo: [
       {
         name: "Track-curriculum",
         list: [
           {
             id: 1,
-            criteria: "Enumerator Network",
+            criteria: "Overview of Geospatial Software and Tools",
           },
           {
             id: 2,
-            criteria: "Guidelines for the Milsat Mapper Network",
+            criteria: "Understanding Client Project Specifications",
           },
           {
             id: 3,
-            criteria: "Mappers Network Peculiarities",
+            criteria: "Deployment of Geospatial Tools",
           },
           {
             id: 4,
-            criteria: "Technology and Field Devices",
+            criteria: "Activating and licensing of software",
           }
         ],
       },
@@ -300,20 +274,16 @@ export const AvailableTracks = [
         list: [
           {
             id: 1,
-            criteria: " Basic computer skills.",
+            criteria: "You need a Personal Computer (PC) with “Configuration: 8 GB RAM, storage: 500 GB and Above” clickhere to View a complete system configuration",
           },
           {
             id: 2,
-            criteria: "Understanding of geographic concepts.",
+            criteria: "Access to internet connectivity.",
           },
           {
             id: 3,
-            criteria: "Must have completed Field Mapping and Data Collection Track",
-          },
-          {
-            id: 3,
-            criteria: "Access to a computer with internet connectivity.",
-          },
+            criteria: "Must have complete Fundamental of GIS track",
+          }
         ],
       },
     ],
@@ -377,9 +347,9 @@ export const TrackCardsInfo = [
   },
   {
     id: 3,
-    name: "Milsat Enumeration Network",
-    picture: community,
-    route: "/track/milsat-enumeration-network",
+    name: "Geospatial Deployment Tool",
+    picture: designer,
+    route: "/track/geospatial-development-tool",
   },
 ];
 
@@ -511,8 +481,8 @@ export const oppourtunity = [
 
 export const Brochure =  {
   FundamentalOfGIS: "/Fundamental_of_GIS.pdf",
-  FieldMappingAndDataCollection: "/Milsat_GIS_training_curriculum_Basic.pdf",
-  MilsatEnumerationNetwork: "/Milsat_Enumeration_Network.pdf",
+  DataCollectionAndFieldMapping: "/Data_Collection_and_Field_Mapping.pdf",
+  GeospatialDeploymentTool: "/Geospatial_Deployment_Tool.pdf",
 }
 
 export const MobileAppPlayStoreLink = "https://play.google.com/store/apps/details?id=com.milsat.apirant&pcampaignid=web_share"
@@ -563,10 +533,9 @@ export const ApplicationEmailTemplate  = `<!DOCTYPE html><html lang="en"><head><
 </head>
 <body>
   <div class="container">
-    <h1>Application Received Successfully!</h1>
-    <p>Thank you for applying to Milsat Aspirant Program. Your application has been received successfully. Please stay tuned for the review result which will be communicated via email.</p>
-    <p>Your application is now under review.</p>
-    <p>If you have any questions or concerns, feel free to email us at</p> <a href="mailto:mapSupport@gmail.com">Support</a>
+    <p>We have successfully received your application for the Milsat Aspirant Program</p>
+    <p>Your submission is currently under review and you'll be notified via email upon approval</p>
+    <p>If you have any questions or concerns, please feel free to reach out to us at</p> <a href="mailto:mapSupport@gmail.com">Support</a>
     <p>Best regards,</p>
     <p class="footer">This is an automated email, please do not reply.</p>
   </div>

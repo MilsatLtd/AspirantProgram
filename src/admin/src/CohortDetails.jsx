@@ -8,6 +8,7 @@ import Applications from "./Application";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import fetchCohortById from "./api/fetchCohortById";
 import updateCohortById from "./api/updateCohortById";
+import deleteCohortById from "./api/deleteCohortById";
 
 import Loader from "./Loader";
 
@@ -73,24 +74,33 @@ function CohortDetails () {
     });
     const results = useQuery( ['icohort'], () => fetchCohortById(cohort_id), { staleTime: 1000 * 60 * 5 })
     const newResults = useQuery( ['uncohort'], () => fetchCohortById(cohort_id), { staleTime: 1000 * 60 * 5 })
+    const deleteCohort = useMutation((track_id) => deleteCohortById(cohort_id))
 
 
     const handleCohortStatusChange = (status) => {
         const updatedCohort = { ...newResults?.data}
-        const formatedCohort = formatCohortForUpdate(updatedCohort, status)
-        updateCohortById(cohort_id, formatedCohort )
-        results.refetch()
+        const adminConfirmed = window.confirm(`Are you sure you want to change the status of this Cohort?`)
+        if(adminConfirmed){
+            const formatedCohort = formatCohortForUpdate(updatedCohort, status)
+            updateCohortById(cohort_id, formatedCohort )
+            results.refetch()
+        }
     }
 
-    const handleDeleteCoHort = (cohort_id) => {
-
-    }
+    const handleCohortDelete = () => {
+            const adminConfirmed = window.confirm("Are you sure you want to delete this Cohort?")
+            if (adminConfirmed) {
+                deleteCohort.mutate(cohort_id)
+            }
+        }
 
     useEffect(() => {
         // Refetch data when track_id changes
-        results.refetch();
-        newResults.refetch();
-        if(results.data){
+        if(!results.data || !newResults.data){
+            results.refetch();
+            newResults.refetch();
+        }
+        if(results.data){ 
             setCohort(formatCohort(results.data) ?? {
                 name: "",
                 status: "",
@@ -103,25 +113,45 @@ function CohortDetails () {
         }
        
       }, [cohort_id, results.data, newResults.data]);
+
+    useEffect(() => {
+        if(deleteCohort.isSuccess){
+            window.location.href = "#/cohorts"
+            window.location.reload();
+        }
+        if(deleteCohort.isError){
+            alert("Error deleting cohort")
+        }
+    })
     return (
     <>
     <Navbar  showLinks={true}/>
     <div className="flex">
-    <div className="flex gap-5 items-center">
+    <div className="flex gap-5 w-full items-center justify-between mr-4">
         <h1 className="text-4xl font-semibold m-7">Cohort Details</h1>
-        {
-            cohort.status === "UPCOMING" ? (
-                <button className="border-2 border-black text-black p-4 rounded-md hover:opacity-90"
-                onClick={()=>handleCohortStatusChange(Enums.COHORT_STATUS.LIVE)}
-                >Start Cohort</button>
-            ): cohort.status === "LIVE" ? (
-                <button className="border-2 border-black text-black p-4 rounded-md hover:opacity-90"
-        onClick={()=>handleCohortStatusChange(Enums.COHORT_STATUS.ENDED)}
-        >End Cohort</button>): null 
-        }
+        <div className="flex items-center gap-5">
+            {
+                cohort.status === "UPCOMING" ? (
+                    <button className="border-2 border-black text-black p-4 rounded-md hover:opacity-90"
+                    onClick={()=>handleCohortStatusChange(Enums.COHORT_STATUS.LIVE)}
+                    >Start Cohort</button>
+                ): cohort.status === "LIVE" ? (
+                    <button className="border-2 border-black text-black p-4 rounded-md hover:opacity-90"
+            onClick={()=>handleCohortStatusChange(Enums.COHORT_STATUS.ENDED)}
+            >End Cohort</button>): null 
+            }
+            <button 
+                className=" active:text-white p-5 rounded-xl text-sm 
+                text-white  hover: transition-colors duration-300
+                font-semibold shadow-2xl h-max bg-red-500"
+                    onClick={() => handleCohortDelete()}
+                >
+                Delete Cohort
+            </button>
+        </div>
     </div>
    
-    {results.isLoading ? <Loader css1={"flex justify-center items-center"} css2="w-[30px] h-[30px]" /> : null}
+    {results.isLoading || deleteCohort.isLoading ? <Loader css1={"flex justify-center items-center"} css2="w-[30px] h-[30px]" /> : null}
     </div>
     <form action="">
         <div className="pl-2">

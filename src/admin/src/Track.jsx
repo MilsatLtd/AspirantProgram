@@ -144,17 +144,13 @@ function NewTrack ({closeEdit}) {
             ...prevState,
             [name]: value,
         }));
-        console.log(trackDetails)
     }
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        console.log(trackDetails)
         const formattedCourseDetails = utils.formatCourseDetails(courseDetails)
         const allTrackDetails = {...trackDetails, courses: formattedCourseDetails}
-        console.log(allTrackDetails)
         addTrack.mutate(allTrackDetails)
-        handleClose();
     }
 
 
@@ -180,6 +176,12 @@ function NewTrack ({closeEdit}) {
     const newCourseDetails = courseDetails.filter((course) => course.id !== id)
     setCourseDetails(newCourseDetails)
 }
+
+useEffect(() => {
+    if(addTrack.isSuccess){
+        handleClose()
+    }
+})
 
     return (
         <div className="flex flex-col gap-8">
@@ -223,7 +225,28 @@ function NewTrack ({closeEdit}) {
                         + Create New Course
                     </a>
                 </div>
-                <button className="bg-black text-white p-4 rounded-md hover:opacity-90">Add Track</button>
+
+                {
+                  addNewTrack.isSuccess ?
+                  <div className="flex-1 flex flex-col items-center space-y-4">
+                     <span className="flex-1 text-center w-full bg-green-500 p-3 rounded-md font-semibold text-base text-white">
+                    Track Added Sucessfully
+                    </span>
+                    <span onClick={() => handleClose()} className="text-center w-max bg-gray-700 p-2 pl-6 pr-6 rounded-md hover:opacity-80 font-semibold text-base text-white">
+                     Close
+                     </span>
+                  </div>
+                 : addNewTrack.isError?
+                <span className="flex-1 text-center bg-red-500 p-3 rounded-md font-semibold text-base text-white"
+                onClick={()=> addNewTrack.reset()}
+                >
+                    Error Adding Track, Click to retry
+                </span> : addNewTrack.isLoading ?
+                    <div className="flex items-center justify-center">
+                            <Loader css1={"h-[20px] w-[20px]"}/>
+                    </div>
+                : <button className="bg-black text-white p-4 rounded-md hover:opacity-90">Add Track</button>
+                }
             </form> 
         </div>
     )

@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import updateTrackById from "./api/updateTrackById";
 import addNewTrack from "./api/addNewTrack";
+import deleteTrackById from "./api/deleteTrackById";
 import addNewCourseToTrack from "./api/addNewCourseToTrack";
 import utils from "./constant/common";
 import Navbar from "./Navbar";
@@ -22,6 +23,15 @@ const TrackDetails = () => {
     const { track_id } = useParams();
 
     const results = useQuery( ['itrack'], () => fetchTrackById(track_id))
+    const deleteTrack = useMutation((track_id) => deleteTrackById(track_id))
+
+
+    const handleTrackDelete = () => {
+        const userConfirmed = window.confirm("Are you sure you want to delete this track?")
+        if (userConfirmed) {
+            deleteTrack.mutate(track_id)
+        }
+    }
 
     useEffect(() => {
         // Refetch data when track_id changes
@@ -32,6 +42,13 @@ const TrackDetails = () => {
             courses: []
         });
       }, [track_id, results.data, isUpdateTrack]);
+
+    useEffect(() => {
+        if(deleteTrack.isSuccess){
+            window.location.href = "#/tracks"
+            window.location.reload();
+        }
+    })
 
   return (
         <>
@@ -47,6 +64,14 @@ const TrackDetails = () => {
                     onClick={() => setIsUpdateTrack(true)}
                 >
                 Update Track
+                </button>
+                <button 
+                className=" active:text-white p-3 pl-3 pr-3 rounded-xl text-sm 
+                text-white  hover: transition-colors duration-300
+                font-semibold shadow-2xl h-max bg-red-500"
+                    onClick={() => handleTrackDelete()}
+                >
+                Delete Track
                 </button>
         </div>
         <form action="">
@@ -102,6 +127,7 @@ const TrackDetails = () => {
 }
 
 export default TrackDetails
+
 
 
 const CoursesDetails = ({ course, courseNo }) => {
@@ -210,7 +236,7 @@ function UpdateTrack ({closeEdit, trackId}) {
     course.id ? course.id !== id: course.course_id !== id 
     )
     setCourses(newCourselist)
-    const newCourseDetails = courseDetails.filter((course) => course.id ? course.id !== id: course.course_id !== id )
+    const newCourseDetails = courseDetails.filter((course) => course.id ? course.id !== id: course.course_id !== id)
     setCourseDetails(newCourseDetails)
 }
 
