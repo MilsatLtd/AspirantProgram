@@ -139,6 +139,11 @@ class TrackSerializer(serializers.ModelSerializer):
                 edit_course.access_link = course_data.get(
                     'access_link', edit_course.access_link)
                 edit_course.save()
+
+        for course in instance.courses.all():
+            if str(course.course_id) not in [course_data.get('course_id') for course_data in courses]:
+                course.delete()
+
         return instance
 
 class TrackSerializerAnonymous(serializers.ModelSerializer):
