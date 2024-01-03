@@ -18,14 +18,14 @@ class ReportPage extends StatelessWidget {
     TextEditingController textController = TextEditingController();
     final formKey = GlobalKey<FormState>();
     return PreferredSize(
-      preferredSize: Size.fromHeight(44.h),
+      preferredSize: const Size.fromHeight(44),
       child: Scaffold(
         appBar: AppBar(
           automaticallyImplyLeading: false,
           title: Text(
             'Weekly Report',
             style: GoogleFonts.raleway(
-              fontSize: 16.sp,
+              fontSize: 16,
               fontWeight: FontWeight.w600,
               color: const Color(0xFF423B43),
             ),
@@ -42,9 +42,9 @@ class ReportPage extends StatelessWidget {
           ),
           actions: [
             Padding(
-              padding: EdgeInsets.only(right: 16.w),
+              padding: const EdgeInsets.only(right: 16),
               child: CircularPercentIndicator(
-                radius: 13.r,
+                radius: 13,
                 lineWidth: 3.0,
                 percent: 0.3,
                 backgroundColor: Colors.grey,
@@ -58,9 +58,9 @@ class ReportPage extends StatelessWidget {
         ),
         body: SingleChildScrollView(
           child: Padding(
-            padding: EdgeInsets.symmetric(
-              horizontal: 24.w,
-              vertical: 32.h,
+            padding: const EdgeInsets.symmetric(
+              horizontal: 24,
+              vertical: 32,
             ),
             child: Form(
               key: formKey,
@@ -70,13 +70,13 @@ class ReportPage extends StatelessWidget {
                   Text(
                     question1,
                     style: GoogleFonts.raleway(
-                      fontSize: 16.sp,
+                      fontSize: 16,
                       fontWeight: FontWeight.w600,
                       color: const Color(0xFF423B43),
                     ),
                   ),
-                  SizedBox(
-                    height: 16.h,
+                  const SizedBox(
+                    height: 16,
                   ),
                   TextFormField(
                     controller: textController,
@@ -85,7 +85,7 @@ class ReportPage extends StatelessWidget {
                       hintText: 'type something...',
                       hintStyle: GoogleFonts.raleway(
                         color: AppTheme.kHintTextColor,
-                        fontSize: 14.sp,
+                        fontSize: 14,
                       ),
                     ),
                     maxLines: 12,
@@ -112,8 +112,8 @@ class ReportPage extends StatelessWidget {
                           ),
                         ),
                       ),
-                      SizedBox(
-                        height: 350.h,
+                      const SizedBox(
+                        height: 350,
                       ),
                       OutlinedButton(
                         onPressed: () async {
@@ -134,17 +134,17 @@ class ReportPage extends StatelessWidget {
                               'Next',
                               style: GoogleFonts.raleway(
                                 color: AppTheme.kPurpleColor,
-                                fontSize: 14.sp,
+                                fontSize: 14,
                                 fontWeight: FontWeight.w600,
                               ),
                             ),
-                            SizedBox(
-                              width: 10.w,
+                            const SizedBox(
+                              width: 10,
                             ),
-                            Icon(
+                            const Icon(
                               Icons.arrow_forward_ios,
                               color: AppTheme.kPurpleColor,
-                              size: 14.sp,
+                              size: 14,
                             ),
                           ],
                         ),
@@ -176,7 +176,7 @@ class ReportPage1 extends StatelessWidget {
           title: Text(
             'Weekly Report',
             style: GoogleFonts.raleway(
-              fontSize: 16.sp,
+              fontSize: 16,
               fontWeight: FontWeight.w600,
               color: const Color(0xFF423B43),
             ),
@@ -193,9 +193,9 @@ class ReportPage1 extends StatelessWidget {
           ),
           actions: [
             Padding(
-              padding: EdgeInsets.only(right: 16.w),
+              padding: const EdgeInsets.only(right: 16),
               child: CircularPercentIndicator(
-                radius: 13.r,
+                radius: 13,
                 lineWidth: 3.0,
                 percent: 0.7,
                 backgroundColor: Colors.grey,
@@ -209,9 +209,9 @@ class ReportPage1 extends StatelessWidget {
         ),
         body: SingleChildScrollView(
           child: Padding(
-            padding: EdgeInsets.symmetric(
-              horizontal: 16.w,
-              vertical: 24.h,
+            padding: const EdgeInsets.symmetric(
+              horizontal: 16,
+              vertical: 24,
             ),
             child: Form(
               key: formKey,
@@ -222,13 +222,13 @@ class ReportPage1 extends StatelessWidget {
                   Text(
                     question2,
                     style: GoogleFonts.raleway(
-                      fontSize: 16.sp,
+                      fontSize: 16,
                       fontWeight: FontWeight.w600,
                       color: const Color(0xFF423B43),
                     ),
                   ),
-                  SizedBox(
-                    height: 16.h,
+                  const SizedBox(
+                    height: 16,
                   ),
                   TextField(
                     controller: textController,
@@ -237,7 +237,7 @@ class ReportPage1 extends StatelessWidget {
                       hintText: 'type something...',
                       hintStyle: GoogleFonts.raleway(
                         color: AppTheme.kHintTextColor,
-                        fontSize: 14.sp,
+                        fontSize: 14,
                       ),
                     ),
                     maxLines: 12,
@@ -258,8 +258,8 @@ class ReportPage1 extends StatelessWidget {
                           ),
                         ),
                       ),
-                      SizedBox(
-                        height: 350.h,
+                      const SizedBox(
+                        height: 350,
                       ),
                       OutlinedButton(
                         onPressed: () {
@@ -274,17 +274,17 @@ class ReportPage1 extends StatelessWidget {
                               'Next',
                               style: GoogleFonts.raleway(
                                 color: AppTheme.kPurpleColor,
-                                fontSize: 14.sp,
+                                fontSize: 14,
                                 fontWeight: FontWeight.w600,
                               ),
                             ),
-                            SizedBox(
-                              width: 10.w,
+                            const SizedBox(
+                              width: 10,
                             ),
-                            Icon(
+                            const Icon(
                               Icons.arrow_forward_ios,
                               color: AppTheme.kPurpleColor,
-                              size: 14.sp,
+                              size: 14,
                             ),
                           ],
                         ),
@@ -320,7 +320,7 @@ class ReportPage2 extends ConsumerWidget {
           title: Text(
             'Weekly Report',
             style: GoogleFonts.raleway(
-              fontSize: 16.sp,
+              fontSize: 16,
               fontWeight: FontWeight.w600,
               color: const Color(0xFF423B43),
             ),
@@ -337,9 +337,9 @@ class ReportPage2 extends ConsumerWidget {
           ),
           actions: [
             Padding(
-              padding: EdgeInsets.only(right: 16.w),
+              padding: const EdgeInsets.only(right: 16),
               child: CircularPercentIndicator(
-                radius: 13.r,
+                radius: 13,
                 lineWidth: 3.0,
                 percent: 1.0,
                 backgroundColor: Colors.grey,
@@ -352,9 +352,9 @@ class ReportPage2 extends ConsumerWidget {
         ),
         body: SingleChildScrollView(
           child: Padding(
-            padding: EdgeInsets.symmetric(
-              horizontal: 16.w,
-              vertical: 24.h,
+            padding: const EdgeInsets.symmetric(
+              horizontal: 16,
+              vertical: 24,
             ),
             child: Form(
               key: formKey,
@@ -364,13 +364,13 @@ class ReportPage2 extends ConsumerWidget {
                   Text(
                     question3,
                     style: GoogleFonts.raleway(
-                      fontSize: 16.sp,
+                      fontSize: 16,
                       fontWeight: FontWeight.w600,
                       color: const Color(0xFF423B43),
                     ),
                   ),
-                  SizedBox(
-                    height: 16.h,
+                  const SizedBox(
+                    height: 16,
                   ),
                   Consumer(
                     builder:
@@ -385,18 +385,18 @@ class ReportPage2 extends ConsumerWidget {
                           hintText: 'type something...',
                           hintStyle: GoogleFonts.raleway(
                             color: AppTheme.kHintTextColor,
-                            fontSize: 14.sp,
+                            fontSize: 14,
                           ),
                         ),
                         maxLines: 12,
                       );
                     },
                   ),
-                  SizedBox(
-                    height: 280.h,
+                  const SizedBox(
+                    height: 280,
                   ),
                   CustomButton(
-                    height: 54.h,
+                    height: 54,
                     pressed: () {
                       if (formKey.currentState!.validate()) {
                         weeklyReport['question_3'] = controller.text;
@@ -411,13 +411,13 @@ class ReportPage2 extends ConsumerWidget {
                         ? const Color(0xFF96599A)
                         : AppTheme.kPurpleColor,
                     width: double.infinity,
-                    borderRadius: BorderRadius.circular(8.r),
+                    borderRadius: BorderRadius.circular(8),
                     elevation: 0,
                     child: Text(
                       'Submit Report',
                       style: GoogleFonts.raleway(
                         color: AppTheme.kAppWhiteScheme,
-                        fontSize: 14.sp,
+                        fontSize: 14,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
@@ -441,7 +441,7 @@ Future<dynamic> popUp(BuildContext context) {
           'Report Submission',
           textAlign: TextAlign.center,
           style: GoogleFonts.raleway(
-            fontSize: 18.sp,
+            fontSize: 18,
             fontWeight: FontWeight.w600,
             color: const Color(0xFF383639),
           ),
@@ -450,7 +450,7 @@ Future<dynamic> popUp(BuildContext context) {
           'Are you sure you want to proceed with the report?',
           textAlign: TextAlign.center,
           style: GoogleFonts.raleway(
-            fontSize: 14.sp,
+            fontSize: 14,
             fontWeight: FontWeight.w600,
             color: const Color(0xFF504D51),
           ),
@@ -473,16 +473,16 @@ Future<dynamic> popUp(BuildContext context) {
               Consumer(
                 builder: (BuildContext context, WidgetRef ref, Widget? child) {
                   return CustomButton(
-                    height: 54.h,
+                    height: 54,
                     pressed: () {
                       ref.read(apiReportProvider).submitReport(weeklyReport);
                       AppNavigator.pop();
                       popUp1(context);
                     },
                     color: AppTheme.kPurpleColor,
-                    width: 137.5.w,
+                    width: 137.5,
                     elevation: 0,
-                    borderRadius: BorderRadius.circular(8.r),
+                    borderRadius: BorderRadius.circular(8),
                     child: Text(
                       'Yes!, Submit',
                       style: GoogleFonts.raleway(
@@ -509,7 +509,7 @@ Future<dynamic> popUp1(BuildContext context) {
           'Report Submission',
           textAlign: TextAlign.center,
           style: GoogleFonts.raleway(
-            fontSize: 18.sp,
+            fontSize: 18,
             fontWeight: FontWeight.w600,
             color: const Color(0xFF383639),
           ),
@@ -518,21 +518,21 @@ Future<dynamic> popUp1(BuildContext context) {
           'Well-done, report sent',
           textAlign: TextAlign.center,
           style: GoogleFonts.raleway(
-            fontSize: 14.sp,
+            fontSize: 14,
             fontWeight: FontWeight.w600,
             color: const Color(0xFF504D51),
           ),
         ),
         actions: [
           CustomButton(
-            height: 54.h,
+            height: 54,
             pressed: () {
               AppNavigator.navigateTo(homeRoute);
             },
             color: AppTheme.kPurpleColor,
-            width: 307.w,
+            width: 307,
             elevation: 0,
-            borderRadius: BorderRadius.circular(8.r),
+            borderRadius: BorderRadius.circular(8),
             child: Text(
               'Ok!',
               style: GoogleFonts.raleway(

@@ -48,9 +48,9 @@ class Pending extends StatelessWidget {
               }
             },
             child: Container(
-              padding: EdgeInsets.symmetric(
-                horizontal: 16.w,
-                vertical: 16.w,
+              padding: const EdgeInsets.symmetric(
+                horizontal: 16,
+                vertical: 16,
               ),
               color: AppTheme.kAppWhiteScheme,
               child: Column(
@@ -82,8 +82,8 @@ class Pending extends StatelessWidget {
                       ],
                     ),
                   ),
-                  SizedBox(
-                    height: 4.h,
+                  const SizedBox(
+                    height: 4,
                   ),
                   Row(
                     children: [
@@ -91,8 +91,8 @@ class Pending extends StatelessWidget {
                         pendingList[index]['user_name'],
                         style: kTrackTextStyle,
                       ),
-                      SizedBox(
-                        width: 8.w,
+                      const SizedBox(
+                        width: 8,
                       ),
                       Text(
                         '$timeAgo days ago',
@@ -100,17 +100,17 @@ class Pending extends StatelessWidget {
                       ),
                     ],
                   ),
-                  SizedBox(
-                    height: 10.h,
+                  const SizedBox(
+                    height: 10,
                   ),
                   Text(
                     'Hi everyone,\n'
                     '${pendingList[index]['description']}',
                     style: GoogleFonts.raleway(
-                        fontSize: 13.sp,
+                        fontSize: 13,
                         fontWeight: FontWeight.w500,
                         color: const Color(0xFF504D51),
-                        height: 2.h),
+                        height: 2),
                   ),
                 ],
               ),
@@ -119,8 +119,8 @@ class Pending extends StatelessWidget {
         }),
         itemCount: pendingList.length,
         separatorBuilder: (BuildContext context, int index) {
-          return SizedBox(
-            height: 6.h,
+          return const SizedBox(
+            height: 6,
           );
         },
       );

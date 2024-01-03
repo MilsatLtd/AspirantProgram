@@ -26,7 +26,7 @@ class ReportPageMentor extends ConsumerWidget {
 
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(44.h),
+        preferredSize: const Size.fromHeight(44),
         child: AppBar(
           backgroundColor: AppTheme.kAppWhiteScheme,
           elevation: 0.5,
@@ -44,7 +44,7 @@ class ReportPageMentor extends ConsumerWidget {
             style: GoogleFonts.raleway(
               color: const Color(0xFF423B43),
               fontWeight: FontWeight.w600,
-              fontSize: 16.sp,
+              fontSize: 16,
             ),
           ),
           centerTitle: true,
@@ -56,15 +56,15 @@ class ReportPageMentor extends ConsumerWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Padding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 16.w,
-                    vertical: 8.h,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 8,
                   ),
                   child: Text(
                     'This Week',
                     style: GoogleFonts.raleway(
                       color: const Color(0xFF504D51),
-                      fontSize: 13.sp,
+                      fontSize: 13,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
@@ -84,7 +84,7 @@ class ReportPageMentor extends ConsumerWidget {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               SizedBox(
-                                width: 200.w,
+                                width: 200,
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   mainAxisAlignment:
@@ -94,7 +94,7 @@ class ReportPageMentor extends ConsumerWidget {
                                       cred['reports'][index]['full_name'],
                                       style: GoogleFonts.raleway(
                                         color: const Color(0xFF504D51),
-                                        fontSize: 13.sp,
+                                        fontSize: 13,
                                         fontWeight: FontWeight.w500,
                                       ),
                                     ),
@@ -102,7 +102,7 @@ class ReportPageMentor extends ConsumerWidget {
                                       getTimeAgo(index),
                                       style: GoogleFonts.raleway(
                                         color: const Color(0xFF9A989A),
-                                        fontSize: 11.sp,
+                                        fontSize: 11,
                                         fontWeight: FontWeight.w500,
                                       ),
                                     ),
@@ -132,7 +132,7 @@ class ReportPageMentor extends ConsumerWidget {
                                   style: GoogleFonts.raleway(
                                     color: AppTheme.kPurpleColor,
                                     fontWeight: FontWeight.w500,
-                                    fontSize: 10.sp,
+                                    fontSize: 10,
                                   ),
                                 ),
                               )

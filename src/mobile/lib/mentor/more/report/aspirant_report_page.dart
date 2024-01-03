@@ -45,13 +45,13 @@ class AspirantReportPage extends StatelessWidget {
     ];
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(44.h),
+        preferredSize: const Size.fromHeight(44),
         child: AppBar(
           title: Text(
             aspirantName,
             style: GoogleFonts.raleway(
               color: const Color(0xFF423B43),
-              fontSize: 16.sp,
+              fontSize: 16,
               fontWeight: FontWeight.w600,
             ),
           ),
@@ -71,11 +71,11 @@ class AspirantReportPage extends StatelessWidget {
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: EdgeInsets.only(
-            top: 8.h,
-            left: 16.w,
-            right: 16.w,
-            bottom: 44.h,
+          padding: const EdgeInsets.only(
+            top: 8,
+            left: 16,
+            right: 16,
+            bottom: 44,
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -84,22 +84,22 @@ class AspirantReportPage extends StatelessWidget {
                 question: structure[0].question,
                 response: response1,
               ),
-              SizedBox(
-                height: 24.h,
+              const SizedBox(
+                height: 24,
               ),
               ResponseBody(
                 question: structure[1].question,
                 response: response2,
               ),
-              SizedBox(
-                height: 24.h,
+              const SizedBox(
+                height: 24,
               ),
               ResponseBody(
                 question: structure[2].question,
                 response: response3,
               ),
-              SizedBox(
-                height: 32.h,
+              const SizedBox(
+                height: 32,
               ),
               Center(
                 child: GestureDetector(
@@ -108,7 +108,7 @@ class AspirantReportPage extends StatelessWidget {
                     'Give feedback',
                     style: GoogleFonts.raleway(
                       color: AppTheme.kPurpleColor,
-                      fontSize: 13.sp,
+                      fontSize: 13,
                       fontWeight: FontWeight.w600,
                     ),
                   ),

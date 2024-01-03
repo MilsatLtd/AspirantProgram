@@ -18,39 +18,39 @@ class _BlockerPageConsumerState extends ConsumerState<BlockerPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(44.h),
+        preferredSize: const Size.fromHeight(44),
         child: AppBar(
           backgroundColor: Colors.white,
           automaticallyImplyLeading: false,
           elevation: 0.5,
           leading: GestureDetector(
             onTap: () => AppNavigator.pop(),
-            child: Icon(
+            child: const Icon(
               Icons.arrow_back,
               color: Colors.black,
-              size: 24.sp,
+              size: 24,
             ),
           ),
           title: Text(
             'Blockers',
             style: GoogleFonts.raleway(
               color: const Color(0xFF423B43),
-              fontSize: 16.sp,
+              fontSize: 16,
               fontWeight: FontWeight.w600,
             ),
           ),
           centerTitle: true,
           actions: [
             Padding(
-              padding: EdgeInsets.only(
-                right: 20.w,
+              padding: const EdgeInsets.only(
+                right: 20,
               ),
               child: InkWell(
                 onTap: () => AppNavigator.navigateTo(raiseABlocker),
                 child: SvgPicture.asset(
                   'assets/add_button.svg',
-                  height: 20.h,
-                  width: 20.w,
+                  height: 20,
+                  width: 20,
                 ),
               ),
             ),
@@ -59,15 +59,15 @@ class _BlockerPageConsumerState extends ConsumerState<BlockerPage> {
       ),
       body: Column(
         children: [
-          SizedBox(
-            height: 6.h,
+          const SizedBox(
+            height: 6,
           ),
           Card(
             child: Container(
-              height: 60.h,
-              padding: EdgeInsets.symmetric(
-                horizontal: 16.w,
-                vertical: 16.h,
+              height: 60,
+              padding: const EdgeInsets.symmetric(
+                horizontal: 16,
+                vertical: 16,
               ),
               decoration: const BoxDecoration(
                 color: Colors.white,
@@ -93,8 +93,8 @@ class _BlockerPageConsumerState extends ConsumerState<BlockerPage> {
                       });
                     },
                   ),
-                  SizedBox(
-                    width: 32.w,
+                  const SizedBox(
+                    width: 32,
                   ),
                   BlockerCards(
                     text: 'Pending',
@@ -115,8 +115,8 @@ class _BlockerPageConsumerState extends ConsumerState<BlockerPage> {
                       });
                     },
                   ),
-                  SizedBox(
-                    width: 32.w,
+                  const SizedBox(
+                    width: 32,
                   ),
                   BlockerCards(
                     text: 'Resolved',
@@ -141,8 +141,8 @@ class _BlockerPageConsumerState extends ConsumerState<BlockerPage> {
               ),
             ),
           ),
-          SizedBox(
-            height: 6.h,
+          const SizedBox(
+            height: 6,
           ),
           Expanded(
             child: currentlyTapped == 0

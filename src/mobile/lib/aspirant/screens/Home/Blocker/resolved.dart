@@ -20,9 +20,9 @@ class Resolved extends StatelessWidget {
     return ListView.separated(
       itemBuilder: ((context, index) {
         return Container(
-          padding: EdgeInsets.symmetric(
-            horizontal: 16.w,
-            vertical: 16.w,
+          padding: const EdgeInsets.symmetric(
+            horizontal: 16,
+            vertical: 16,
           ),
           color: AppTheme.kAppWhiteScheme,
           child: Column(
@@ -44,7 +44,7 @@ class Resolved extends StatelessWidget {
                           status[1]!,
                           style: GoogleFonts.raleway(
                             color: const Color(0xFF11A263),
-                            fontSize: 10.sp,
+                            fontSize: 10,
                             fontWeight: FontWeight.w600,
                           ),
                         ),
@@ -53,8 +53,8 @@ class Resolved extends StatelessWidget {
                   ],
                 ),
               ),
-              SizedBox(
-                height: 4.h,
+              const SizedBox(
+                height: 4,
               ),
               Row(
                 children: [
@@ -62,8 +62,8 @@ class Resolved extends StatelessWidget {
                     resolvedList[index]['user_name'],
                     style: kTrackTextStyle,
                   ),
-                  SizedBox(
-                    width: 8.w,
+                  const SizedBox(
+                    width: 8,
                   ),
                   Text(
                     '24 min ago',
@@ -71,17 +71,17 @@ class Resolved extends StatelessWidget {
                   ),
                 ],
               ),
-              SizedBox(
-                height: 10.h,
+              const SizedBox(
+                height: 10,
               ),
               Text(
                 'Hi everyone,\n'
                 '${resolvedList[index]['description']}',
                 style: GoogleFonts.raleway(
-                    fontSize: 13.sp,
+                    fontSize: 13,
                     fontWeight: FontWeight.w500,
                     color: const Color(0xFF504D51),
-                    height: 2.h),
+                    height: 2),
               ),
             ],
           ),
@@ -89,8 +89,8 @@ class Resolved extends StatelessWidget {
       }),
       itemCount: resolvedList.length,
       separatorBuilder: (BuildContext context, int index) {
-        return SizedBox(
-          height: 6.h,
+        return const SizedBox(
+          height: 6,
         );
       },
     );

@@ -19,7 +19,7 @@ class _CustomNavBarState extends State<CustomNavBar> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 56.h,
+      height: 56,
       decoration: BoxDecoration(
         border: Border.all(
           color: const Color(0xFFF2EBF3),
@@ -30,15 +30,15 @@ class _CustomNavBarState extends State<CustomNavBar> {
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
           Padding(
-            padding: EdgeInsets.only(top: 8.h),
+            padding: const EdgeInsets.only(top: 8),
             child: CustomButtonNavBarItem(
               image: SvgPicture.asset(
                 'assets/home_icon.svg',
                 color: firstTapped == true
                     ? AppTheme.kPurpleColor2
                     : const Color(0xFF504D51),
-                height: 16.h,
-                width: 16.w,
+                height: 16,
+                width: 16,
               ),
               label: 'Home',
               onPressed: () {
@@ -55,15 +55,15 @@ class _CustomNavBarState extends State<CustomNavBar> {
             ),
           ),
           Padding(
-            padding: EdgeInsets.only(top: 8.h),
+            padding: const EdgeInsets.only(top: 8),
             child: CustomButtonNavBarItem(
               image: SvgPicture.asset(
                 'assets/profile_icon.svg',
                 color: secondTapped == true
                     ? AppTheme.kPurpleColor2
                     : const Color(0xFF504D51),
-                height: 16.h,
-                width: 16.w,
+                height: 16,
+                width: 16,
               ),
               label: 'Profile',
               onPressed: () {
@@ -95,43 +95,43 @@ class _CustomNavBarState extends State<CustomNavBar> {
               });
               showModalBottomSheet(
                   elevation: 1,
-                  shape: RoundedRectangleBorder(
+                  shape: const RoundedRectangleBorder(
                     borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(16.r),
-                      topRight: Radius.circular(16.r),
+                      topLeft: Radius.circular(16),
+                      topRight: Radius.circular(16),
                     ),
                   ),
                   context: context,
                   builder: (context) {
                     return Container(
-                      padding: EdgeInsets.symmetric(
-                        vertical: 16.h,
-                        horizontal: 16.w,
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 16,
+                        horizontal: 16,
                       ),
-                      height: 256.h,
+                      height: 256,
                       color: AppTheme.kAppWhiteScheme,
                       child: Column(
                         children: [
                           Container(
-                            height: 4.h,
-                            width: 42.w,
+                            height: 4,
+                            width: 42,
                             decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(4.r),
+                              borderRadius: BorderRadius.circular(4),
                               color: AppTheme.kHintTextColor,
                             ),
                           ),
-                          SizedBox(
-                            height: 24.h,
+                          const SizedBox(
+                            height: 24,
                           ),
                           MorePages(
                             image: 'assets/blocker_icon.svg',
                             onTap: () {},
                             pageName: 'Blockers',
                             pageDescription: 'View and respond to all blockers',
-                            width: 19.w,
+                            width: 19,
                           ),
-                          SizedBox(
-                            height: 24.h,
+                          const SizedBox(
+                            height: 24,
                           ),
                           MorePages(
                             image: 'assets/report_icon.svg',
@@ -140,10 +140,10 @@ class _CustomNavBarState extends State<CustomNavBar> {
                             },
                             pageName: 'Report',
                             pageDescription: 'View mentee weekly report',
-                            width: 19.w,
+                            width: 19,
                           ),
-                          SizedBox(
-                            height: 24.h,
+                          const SizedBox(
+                            height: 24,
                           ),
                           MorePages(
                             image: 'assets/meet_svg.svg',
@@ -152,7 +152,7 @@ class _CustomNavBarState extends State<CustomNavBar> {
                             },
                             pageName: 'Meetup',
                             pageDescription: 'Schedule meeting with mentee',
-                            width: 17.w,
+                            width: 17,
                           ),
                         ],
                       ),
@@ -170,7 +170,7 @@ class _CustomNavBarState extends State<CustomNavBar> {
                 Text(
                   'More',
                   style: GoogleFonts.raleway(
-                    fontSize: 13.sp,
+                    fontSize: 13,
                     color: thirdTapped
                         ? AppTheme.kPurpleColor2
                         : const Color(0xFF504D51),

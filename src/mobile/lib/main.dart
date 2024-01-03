@@ -21,24 +21,17 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ScreenUtilInit(
-      designSize: const Size(375, 812),
-      minTextAdapt: true,
-      splitScreenMode: true,
-      builder: (builder, context) {
-        return MaterialApp(
-          title: 'MILSAT ASPIRANT',
-          theme: ThemeData(
-            primarySwatch: Colors.purple,
-            primaryColor: Colors.purple,
-            visualDensity: VisualDensity.adaptivePlatformDensity,
-          ),
-          debugShowCheckedModeBanner: false,
-          home: const SplashScreen(),
-          navigatorKey: AppNavigator.navKey,
-          onGenerateRoute: AppRouter.generateRoutes,
-        );
-      },
+    return MaterialApp(
+      title: 'MILSAT ASPIRANT',
+      theme: ThemeData(
+        primarySwatch: Colors.purple,
+        primaryColor: Colors.purple,
+        visualDensity: VisualDensity.adaptivePlatformDensity,
+      ),
+      debugShowCheckedModeBanner: false,
+      home: const SplashScreen(),
+      navigatorKey: AppNavigator.navKey,
+      onGenerateRoute: AppRouter.generateRoutes,
     );
   }
 }

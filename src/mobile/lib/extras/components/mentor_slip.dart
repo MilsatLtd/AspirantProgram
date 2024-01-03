@@ -18,20 +18,20 @@ class MentorSlip extends StatelessWidget {
       children: [
         if (profileUrl != null)
           CircleAvatar(
-            radius: 12.r,
+            radius: 12,
             backgroundImage: NetworkImage(
               profileUrl!,
             ),
           )
         else
-          CircleAvatar(
-            radius: 12.r,
-            backgroundImage: const AssetImage(
+          const CircleAvatar(
+            radius: 12,
+            backgroundImage: AssetImage(
               'assets/defaultImage.jpg',
             ),
           ),
-        SizedBox(
-          width: 8.w,
+        const SizedBox(
+          width: 8,
         ),
         Text(
           mentorName,

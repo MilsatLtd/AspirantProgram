@@ -51,27 +51,27 @@ class _TrackContentState extends State<TrackContent> {
       print(val);
     }
     return Container(
-      padding: EdgeInsets.symmetric(
-        horizontal: 16.w,
-        vertical: 24.h,
+      padding: const EdgeInsets.symmetric(
+        horizontal: 16,
+        vertical: 24,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SizedBox(
-            height: 56.h,
+            height: 56,
             child: Text(
               widget.d.name!,
               style: GoogleFonts.raleway(
                 color: AppTheme.kAppWhiteScheme,
-                fontSize: 16.sp,
+                fontSize: 16,
                 fontWeight: FontWeight.w600,
-                height: 1.75.h,
+                height: 1.75,
               ),
             ),
           ),
-          SizedBox(
-            height: 8.h,
+          const SizedBox(
+            height: 8,
           ),
           SizedBox(
             height: widget.height,
@@ -81,14 +81,14 @@ class _TrackContentState extends State<TrackContent> {
               overflow: widget.overflow,
               style: GoogleFonts.raleway(
                 color: AppTheme.kAppWhiteScheme,
-                fontSize: 13.sp,
+                fontSize: 13,
                 fontWeight: FontWeight.w400,
-                height: 1.75.h,
+                height: 1.75,
               ),
             ),
           ),
-          SizedBox(
-            height: 20.h,
+          const SizedBox(
+            height: 20,
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -99,7 +99,7 @@ class _TrackContentState extends State<TrackContent> {
                     'Courses: ',
                     style: GoogleFonts.raleway(
                       color: AppTheme.kAppWhiteScheme,
-                      fontSize: 12.sp,
+                      fontSize: 12,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
@@ -107,7 +107,7 @@ class _TrackContentState extends State<TrackContent> {
                     '$val/${widget.d.courses!.length}',
                     style: GoogleFonts.raleway(
                       color: const Color(0xFFCBADCD),
-                      fontSize: 15.sp,
+                      fontSize: 15,
                       fontWeight: FontWeight.w700,
                     ),
                   ),
@@ -121,9 +121,9 @@ class _TrackContentState extends State<TrackContent> {
                   overflow: TextOverflow.ellipsis,
                   style: GoogleFonts.raleway(
                     color: AppTheme.kAppWhiteScheme,
-                    fontSize: 12.sp,
+                    fontSize: 12,
                     fontWeight: FontWeight.w600,
-                    height: 1.75.h,
+                    height: 1.75,
                     decoration: TextDecoration.underline,
                   ),
                 ),

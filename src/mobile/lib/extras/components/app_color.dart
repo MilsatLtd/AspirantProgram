@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:milsat_project_app/extras/components/files.dart';
 
 class AppTheme {
   static const kAppWhiteScheme = Color(0xFFFFFFFF);
@@ -14,4 +13,4 @@ class AppTheme {
   static Color kThirdIconColor = const Color(0xFF11A263).withOpacity(0.1);
 }
 
-final appBarHeight = Size.fromHeight(44.h);
+const appBarHeight = Size.fromHeight(44);

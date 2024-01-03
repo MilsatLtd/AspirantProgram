@@ -18,64 +18,64 @@ class InternSlip extends StatelessWidget {
         children: [
           d.mentees!.elementAt(0).profilePicture != null
               ? CircleAvatar(
-                  radius: (imageDiameter / 2).r,
+                  radius: (imageDiameter / 2),
                   backgroundImage: NetworkImage(
                     d.mentees!.elementAt(0).profilePicture!,
                   ),
                 )
               : CircleAvatar(
-                  radius: (imageDiameter / 2).r,
+                  radius: (imageDiameter / 2),
                   backgroundImage: const AssetImage(
                     'assets/defaultImage.jpg',
                   ),
                 ),
           if (count > 1)
             Positioned(
-              right: -(imageDiameter / divisor).w,
+              right: -(imageDiameter / divisor),
               child: Stack(
                 clipBehavior: Clip.none,
                 children: [
                   d.mentees!.elementAt(1).profilePicture != null
                       ? CircleAvatar(
-                          radius: (imageDiameter / 2).r,
+                          radius: (imageDiameter / 2),
                           backgroundImage: NetworkImage(
                             d.mentees!.elementAt(1).profilePicture!,
                           ),
                         )
                       : CircleAvatar(
-                          radius: (imageDiameter / 2).r,
+                          radius: (imageDiameter / 2),
                           backgroundImage: const AssetImage(
                             'assets/defaultImage.jpg',
                           ),
                         ),
                   if (count > 2)
                     Positioned(
-                      right: -(imageDiameter / divisor).w,
+                      right: -(imageDiameter / divisor),
                       child: Stack(
                         clipBehavior: Clip.none,
                         children: [
                           d.mentees!.elementAt(2).profilePicture != null
                               ? CircleAvatar(
-                                  radius: (imageDiameter / radiusDivisor).r,
+                                  radius: (imageDiameter / radiusDivisor),
                                   backgroundImage: NetworkImage(
                                     d.mentees!.elementAt(2).profilePicture!,
                                   ),
                                 )
                               : CircleAvatar(
-                                  radius: (imageDiameter / radiusDivisor).r,
+                                  radius: (imageDiameter / radiusDivisor),
                                   backgroundImage: const AssetImage(
                                     'assets/defaultImage.jpg',
                                   ),
                                 ),
                           if (count > 3)
                             Positioned(
-                              right: -(imageDiameter / divisor).w,
+                              right: -(imageDiameter / divisor),
                               child: Stack(
                                 clipBehavior: Clip.none,
                                 children: [
                                   d.mentees!.elementAt(3).profilePicture != null
                                       ? CircleAvatar(
-                                          radius: (imageDiameter / 2).r,
+                                          radius: (imageDiameter / 2),
                                           backgroundImage: NetworkImage(
                                             d.mentees!
                                                 .elementAt(3)
@@ -83,20 +83,20 @@ class InternSlip extends StatelessWidget {
                                           ),
                                         )
                                       : CircleAvatar(
-                                          radius: (imageDiameter / 2).r,
+                                          radius: (imageDiameter / 2),
                                           backgroundImage: const AssetImage(
                                             'assets/defaultImage.jpg',
                                           ),
                                         ),
                                   if (count > 4)
                                     Positioned(
-                                      right: -(imageDiameter / divisor).w,
+                                      right: -(imageDiameter / divisor),
                                       child: d.mentees!
                                                   .elementAt(4)
                                                   .profilePicture !=
                                               null
                                           ? CircleAvatar(
-                                              radius: (imageDiameter / 2).r,
+                                              radius: (imageDiameter / 2),
                                               backgroundImage: NetworkImage(
                                                 d.mentees!
                                                     .elementAt(4)
@@ -104,7 +104,7 @@ class InternSlip extends StatelessWidget {
                                               ),
                                             )
                                           : CircleAvatar(
-                                              radius: (imageDiameter / 2).r,
+                                              radius: (imageDiameter / 2),
                                               backgroundImage: const AssetImage(
                                                 'assets/defaultImage.jpg',
                                               ),

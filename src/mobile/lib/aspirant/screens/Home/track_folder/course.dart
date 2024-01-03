@@ -24,8 +24,8 @@ class CourseDetails extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(
-          44.h,
+        preferredSize: const Size.fromHeight(
+          44,
         ),
         child: AppBar(
           backgroundColor: Colors.white,
@@ -47,10 +47,10 @@ class CourseDetails extends StatelessWidget {
         ),
       ),
       body: Padding(
-        padding: EdgeInsets.only(
-          left: 16.w,
-          top: 24.h,
-          right: 16.w,
+        padding: const EdgeInsets.only(
+          left: 16,
+          top: 24,
+          right: 16,
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -59,39 +59,39 @@ class CourseDetails extends StatelessWidget {
               courseTitle,
               style: kOnboardingLightTextStyle,
             ),
-            SizedBox(
-              height: 8.h,
+            const SizedBox(
+              height: 8,
             ),
             Text(
               courseDescription,
               style: GoogleFonts.raleway(
-                fontSize: 13.sp,
+                fontSize: 13,
                 fontWeight: FontWeight.w500,
                 color: const Color(0xFF504D51),
-                height: 1.75.h,
+                height: 1.75,
               ),
             ),
-            SizedBox(
-              height: 16.h,
+            const SizedBox(
+              height: 16,
             ),
             Text(
               courseRequirementTitle,
               style: kOnboardingLightTextStyle,
             ),
-            SizedBox(
-              height: 8.h,
+            const SizedBox(
+              height: 8,
             ),
             Text(
               courseRequirement,
               style: GoogleFonts.raleway(
-                fontSize: 13.sp,
+                fontSize: 13,
                 fontWeight: FontWeight.w500,
                 color: const Color(0xFF504D51),
-                height: 1.75.h,
+                height: 1.75,
               ),
             ),
-            SizedBox(
-              height: 32.h,
+            const SizedBox(
+              height: 32,
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -106,19 +106,19 @@ class CourseDetails extends StatelessWidget {
                     );
                   },
                   child: Container(
-                    width: 145.w,
-                    height: 42.h,
+                    width: 145,
+                    height: 42,
                     decoration: BoxDecoration(
                       border: Border.all(
                         color: const Color(0xFFCBADCD),
                       ),
-                      borderRadius: BorderRadius.circular(8.r),
+                      borderRadius: BorderRadius.circular(8),
                     ),
                     child: Center(
                       child: Text(
                         'Submit To-do\'s',
                         style: GoogleFonts.raleway(
-                          fontSize: 14.sp,
+                          fontSize: 14,
                           fontWeight: FontWeight.w600,
                           color: const Color(0xFF504D51),
                         ),
@@ -127,29 +127,29 @@ class CourseDetails extends StatelessWidget {
                   ),
                 ),
                 CustomButton(
-                  height: 42.h,
+                  height: 42,
                   pressed: pressed,
                   color: AppTheme.kPurpleColor,
-                  width: 145.w,
+                  width: 145,
                   elevation: 0,
-                  borderRadius: BorderRadius.circular(8.r),
+                  borderRadius: BorderRadius.circular(8),
                   child: Row(
                     children: [
                       Text(
                         'Take Course',
                         style: GoogleFonts.raleway(
-                          fontSize: 14.sp,
+                          fontSize: 14,
                           fontWeight: FontWeight.w600,
                           color: const Color(0xFFFFFFFF),
                         ),
                       ),
-                      SizedBox(
-                        width: 16.w,
+                      const SizedBox(
+                        width: 16,
                       ),
                       SvgPicture.asset(
                         'assets/take_course_arrow.svg',
-                        height: 10.2.h,
-                        width: 10.2.w,
+                        height: 10.2,
+                        width: 10.2,
                       ),
                     ],
                   ),

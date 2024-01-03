@@ -31,24 +31,24 @@ class _ReplyBlockerState extends ConsumerState<ReplyBlocker> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(44.h),
+        preferredSize: const Size.fromHeight(44),
         child: AppBar(
           backgroundColor: Colors.white,
           title: Text(
             'Blockers',
             style: GoogleFonts.raleway(
               color: const Color(0xFF423B43),
-              fontSize: 16.sp,
+              fontSize: 16,
               fontWeight: FontWeight.w600,
             ),
           ),
           centerTitle: true,
           leading: GestureDetector(
             onTap: () => AppNavigator.pop(),
-            child: Icon(
+            child: const Icon(
               Icons.arrow_back,
               color: Colors.black,
-              size: 24.sp,
+              size: 24,
             ),
           ),
           elevation: 0.5,
@@ -57,9 +57,9 @@ class _ReplyBlockerState extends ConsumerState<ReplyBlocker> {
       body: Column(
         children: [
           Container(
-            padding: EdgeInsets.symmetric(
-              horizontal: 16.w,
-              vertical: 16.w,
+            padding: const EdgeInsets.symmetric(
+              horizontal: 16,
+              vertical: 16,
             ),
             color: AppTheme.kAppWhiteScheme,
             child: Column(
@@ -68,26 +68,26 @@ class _ReplyBlockerState extends ConsumerState<ReplyBlocker> {
                 Text(
                   widget.title,
                   style: GoogleFonts.raleway(
-                    fontSize: 18.sp,
+                    fontSize: 18,
                     fontWeight: FontWeight.w500,
                     color: const Color(0xFF504D51),
                   ),
                 ),
-                SizedBox(
-                  height: 4.h,
+                const SizedBox(
+                  height: 4,
                 ),
                 Row(
                   children: [
                     Text(
                       widget.userName,
                       style: GoogleFonts.raleway(
-                          fontSize: 14.sp,
+                          fontSize: 14,
                           fontWeight: FontWeight.w600,
                           color: const Color(0xFF504D51),
-                          height: 1.5.h),
+                          height: 1.5),
                     ),
-                    SizedBox(
-                      width: 8.w,
+                    const SizedBox(
+                      width: 8,
                     ),
                     Text(
                       '5 min ago',
@@ -95,33 +95,33 @@ class _ReplyBlockerState extends ConsumerState<ReplyBlocker> {
                     ),
                   ],
                 ),
-                SizedBox(
-                  height: 10.h,
+                const SizedBox(
+                  height: 10,
                 ),
                 Text(
                   'Hi everyone,\n'
                   '${widget.description}',
                   style: GoogleFonts.raleway(
-                    fontSize: 13.sp,
+                    fontSize: 13,
                     fontWeight: FontWeight.w500,
                     color: const Color(0xFF504D51),
-                    height: 2.h,
+                    height: 2,
                   ),
                 ),
               ],
             ),
           ),
-          SizedBox(
-            height: 16.h,
+          const SizedBox(
+            height: 16,
           ),
           Expanded(
             child: personalInfo['blockerReply'] != null
                 ? Container(
                     width: double.infinity,
                     alignment: Alignment.centerRight,
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 16.w,
-                      vertical: 16.w,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 16,
                     ),
                     // color: AppTheme.kAppWhiteScheme,
                     child: Column(
@@ -130,19 +130,19 @@ class _ReplyBlockerState extends ConsumerState<ReplyBlocker> {
                         Text(
                           personalInfo['blockerReply']['sender_name'],
                           style: GoogleFonts.raleway(
-                              fontSize: 15.sp,
+                              fontSize: 15,
                               fontWeight: FontWeight.w600,
                               color: const Color(0xFF504D51),
-                              height: 1.5.h),
+                              height: 1.5),
                         ),
                         Text(
                           'Hello ${widget.userName},\n'
                           '${personalInfo['blockerReply']['message']}',
                           style: GoogleFonts.raleway(
-                            fontSize: 13.sp,
+                            fontSize: 13,
                             fontWeight: FontWeight.w500,
                             color: const Color(0xFF504D51),
-                            height: 2.h,
+                            height: 2,
                           ),
                         ),
                       ],
@@ -164,9 +164,9 @@ class _ReplyBlockerState extends ConsumerState<ReplyBlocker> {
                         return null;
                       },
                       decoration: InputDecoration(
-                        contentPadding: EdgeInsets.symmetric(
-                          horizontal: 16.w,
-                          vertical: 16.h,
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 16,
                         ),
                         border: const OutlineInputBorder(
                           borderSide: BorderSide.none,
@@ -177,13 +177,13 @@ class _ReplyBlockerState extends ConsumerState<ReplyBlocker> {
                             0xFF9A989A,
                           ),
                           fontWeight: FontWeight.w500,
-                          fontSize: 13.sp,
+                          fontSize: 13,
                         ),
                       ),
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.only(right: 16.w),
+                    padding: const EdgeInsets.only(right: 16),
                     child: InkWell(
                       onTap: () async {
                         DecodedTokenResponse? decodedToken =
@@ -198,8 +198,8 @@ class _ReplyBlockerState extends ConsumerState<ReplyBlocker> {
                       },
                       child: SvgPicture.asset(
                         'assets/send_button.svg',
-                        height: 18.h,
-                        width: 18.w,
+                        height: 18,
+                        width: 18,
                         // ignore: deprecated_member_use
                         color: AppTheme.kPurpleColor,
                       ),

@@ -9,13 +9,13 @@ class ViewAllPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(44.h),
+        preferredSize: const Size.fromHeight(44),
         child: AppBar(
           title: Text(
             'View recent activities',
             style: GoogleFonts.raleway(
               color: const Color(0xFF423B43),
-              fontSize: 16.sp,
+              fontSize: 16,
               fontWeight: FontWeight.w600,
             ),
           ),
@@ -34,12 +34,12 @@ class ViewAllPage extends StatelessWidget {
         ),
       ),
       body: Padding(
-        padding: EdgeInsets.symmetric(
-          horizontal: 16.w,
+        padding: const EdgeInsets.symmetric(
+          horizontal: 16,
         ),
         child: ListView.separated(
-          padding: EdgeInsets.symmetric(
-            vertical: 16.h,
+          padding: const EdgeInsets.symmetric(
+            vertical: 16,
           ),
           physics: const AlwaysScrollableScrollPhysics(
             parent: BouncingScrollPhysics(),
@@ -52,12 +52,12 @@ class ViewAllPage extends StatelessWidget {
             final duration = now.difference(p);
             final timeAgo = duration.inDays;
             return Container(
-              padding: EdgeInsets.symmetric(
-                horizontal: 16.w,
-                vertical: 16.w,
+              padding: const EdgeInsets.symmetric(
+                horizontal: 16,
+                vertical: 16,
               ),
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(6.r),
+                borderRadius: BorderRadius.circular(6),
                 color: AppTheme.kAppWhiteScheme,
                 border: Border.all(
                   color: const Color(0xFFCBADCD),
@@ -70,8 +70,8 @@ class ViewAllPage extends StatelessWidget {
                     '${cred['blockers'][index]['title']}',
                     style: kOnboardingLightTextStyle,
                   ),
-                  SizedBox(
-                    height: 4.h,
+                  const SizedBox(
+                    height: 4,
                   ),
                   Row(
                     children: [
@@ -79,8 +79,8 @@ class ViewAllPage extends StatelessWidget {
                         '${cred['blockers'][index]['user_name']}',
                         style: kTrackTextStyle,
                       ),
-                      SizedBox(
-                        width: 8.w,
+                      const SizedBox(
+                        width: 8,
                       ),
                       Text(
                         '$timeAgo days ago',
@@ -88,8 +88,8 @@ class ViewAllPage extends StatelessWidget {
                       ),
                     ],
                   ),
-                  SizedBox(
-                    height: 10.h,
+                  const SizedBox(
+                    height: 10,
                   ),
                   Text(
                     'Hi everyone,\n'
@@ -97,18 +97,18 @@ class ViewAllPage extends StatelessWidget {
                     overflow: TextOverflow.ellipsis,
                     maxLines: 8,
                     style: GoogleFonts.raleway(
-                      fontSize: 13.sp,
+                      fontSize: 13,
                       fontWeight: FontWeight.w500,
                       color: const Color(0xFF504D51),
-                      height: 1.75.h,
+                      height: 1.75,
                     ),
                   ),
                 ],
               ),
             );
           },
-          separatorBuilder: (BuildContext context, int index) => SizedBox(
-            height: 16.h,
+          separatorBuilder: (BuildContext context, int index) => const SizedBox(
+            height: 16,
           ),
           itemCount: cred['blockers'].length,
         ),

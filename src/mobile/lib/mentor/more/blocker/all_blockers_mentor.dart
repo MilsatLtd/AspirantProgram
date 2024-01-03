@@ -20,24 +20,24 @@ class _AllMentorBlockersState extends ConsumerState<AllMentorBlockers> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(44.h),
+        preferredSize: const Size.fromHeight(44),
         child: AppBar(
           backgroundColor: Colors.white,
           automaticallyImplyLeading: false,
           elevation: 0.5,
           leading: GestureDetector(
             onTap: () => AppNavigator.pop(),
-            child: Icon(
+            child: const Icon(
               Icons.arrow_back,
               color: Colors.black,
-              size: 24.sp,
+              size: 24,
             ),
           ),
           title: Text(
             'Blockers',
             style: GoogleFonts.raleway(
               color: const Color(0xFF423B43),
-              fontSize: 16.sp,
+              fontSize: 16,
               fontWeight: FontWeight.w600,
             ),
           ),
@@ -46,15 +46,15 @@ class _AllMentorBlockersState extends ConsumerState<AllMentorBlockers> {
       ),
       body: Column(
         children: [
-          SizedBox(
-            height: 6.h,
+          const SizedBox(
+            height: 6,
           ),
           Card(
             child: Container(
-              height: 60.h,
-              padding: EdgeInsets.symmetric(
-                horizontal: 16.w,
-                vertical: 16.h,
+              height: 60,
+              padding: const EdgeInsets.symmetric(
+                horizontal: 16,
+                vertical: 16,
               ),
               decoration: const BoxDecoration(
                 color: Colors.white,
@@ -80,8 +80,8 @@ class _AllMentorBlockersState extends ConsumerState<AllMentorBlockers> {
                       });
                     },
                   ),
-                  SizedBox(
-                    width: 32.w,
+                  const SizedBox(
+                    width: 32,
                   ),
                   BlockerCards(
                     text: 'Pending',
@@ -102,8 +102,8 @@ class _AllMentorBlockersState extends ConsumerState<AllMentorBlockers> {
                       });
                     },
                   ),
-                  SizedBox(
-                    width: 32.w,
+                  const SizedBox(
+                    width: 32,
                   ),
                   BlockerCards(
                     text: 'Resolved',
@@ -128,8 +128,8 @@ class _AllMentorBlockersState extends ConsumerState<AllMentorBlockers> {
               ),
             ),
           ),
-          SizedBox(
-            height: 6.h,
+          const SizedBox(
+            height: 6,
           ),
           Expanded(
             child: currentlyTapped == 0

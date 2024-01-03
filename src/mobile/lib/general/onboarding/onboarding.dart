@@ -28,18 +28,18 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   @override
   Widget build(BuildContext context) {
     Widget onboardButton = Padding(
-      padding: EdgeInsets.symmetric(
-        horizontal: 16..w,
+      padding: const EdgeInsets.symmetric(
+        horizontal: 16,
       ),
       child: CustomButton(
         elevation: 0,
-        height: 54.h,
+        height: 54,
         pressed: () {
           AppNavigator.navigateToAndClear(loginRoute);
         },
         color: AppTheme.kPurpleColor,
         width: double.infinity,
-        borderRadius: BorderRadius.circular(8.r),
+        borderRadius: BorderRadius.circular(8),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -47,12 +47,12 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               'Get Started',
               style: kCustomButtonTextStyle,
             ),
-            SizedBox(
-              width: 16.w,
+            const SizedBox(
+              width: 16,
             ),
-            Icon(
+            const Icon(
               Icons.arrow_forward,
-              size: 16.sp,
+              size: 16,
               color: AppTheme.kAppWhiteScheme,
             )
           ],
@@ -63,7 +63,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       body: Column(
         children: [
           SizedBox(
-            height: 660.19.h,
+            height: 660.19,
             child: PageView.builder(
               controller: _pageController,
               itemCount: contents.length,
@@ -78,22 +78,22 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 return SingleChildScrollView(
                   child: Column(
                     children: [
-                      SizedBox(
-                        height: 122.h,
+                      const SizedBox(
+                        height: 122,
                       ),
                       SvgPicture.asset(
                         contents[index].image,
-                        height: 274.19.h,
-                        width: 276.7.w,
+                        height: 274.19,
+                        width: 276.7,
                         fit: BoxFit.fill,
                       ),
-                      SizedBox(height: 96.h),
+                      const SizedBox(height: 96),
                       Container(
-                        margin: EdgeInsets.symmetric(horizontal: 16.w),
+                        margin: const EdgeInsets.symmetric(horizontal: 16),
                         child: Column(
                           children: [
                             SizedBox(
-                              height: 168.h,
+                              height: 168,
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
@@ -101,7 +101,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                                     contents[index].title,
                                     style: kOnboardingThickTextStyle,
                                   ),
-                                  SizedBox(height: 24.h),
+                                  const SizedBox(height: 24),
                                   Text(
                                     contents[index].description,
                                     style: kOnboardingLightTextStyle,
@@ -118,7 +118,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               },
             ),
           ),
-          SizedBox(height: 36.h),
+          const SizedBox(height: 36),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: List.generate(
@@ -126,7 +126,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               (index) => buildContainer(index, context),
             ),
           ),
-          SizedBox(height: 24.h),
+          const SizedBox(height: 24),
           if (currentIndex == contents.length - 1)
             onboardButton
           else
@@ -138,11 +138,11 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   Container buildContainer(int index, BuildContext context) {
     return Container(
-      width: 8.w,
-      height: 4.w,
-      margin: EdgeInsets.only(left: 8.w),
+      width: 8,
+      height: 4,
+      margin: const EdgeInsets.only(left: 8),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(8.r),
+        borderRadius: BorderRadius.circular(8),
         color: currentIndex == index
             ? AppTheme.kPurpleColor
             : AppTheme.kLightPurpleColor,

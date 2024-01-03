@@ -31,9 +31,9 @@ homeWidget(BuildContext context, WidgetRef ref,
                 elevation: 0,
                 actions: [
                   Padding(
-                    padding: EdgeInsets.only(
-                      // right: 12.w,
-                      top: 4.h,
+                    padding: const EdgeInsets.only(
+                      right: 12,
+                      top: 4,
                     ),
                     child: GestureDetector(
                       onTap: () {
@@ -41,27 +41,27 @@ homeWidget(BuildContext context, WidgetRef ref,
                       },
                       child: ref.watch(image) != null
                           ? CircleAvatar(
-                              radius: 24.r,
+                              radius: 24,
                               backgroundColor: Colors.grey,
                               child: ClipOval(
                                 child: Image.file(
                                   ref.watch(image)!,
-                                  height: 48.h,
-                                  width: 48.w,
+                                  height: 48,
+                                  width: 48,
                                   fit: BoxFit.cover,
                                 ),
                               ),
                             )
                           : profilePictureResponse?.profilePicture != null
                               ? CircleAvatar(
-                                  radius: 44.r,
+                                  radius: 44,
                                   backgroundImage: NetworkImage(
                                     profilePictureResponse!.profilePicture!,
                                   ),
                                   backgroundColor: Colors.grey,
                                 )
                               : CircleAvatar(
-                                  radius: 44.r,
+                                  radius: 44,
                                   backgroundImage: data.profilePicture == null
                                       ? const AssetImage(
                                           'assets/defaultImage.jpg',
@@ -76,10 +76,10 @@ homeWidget(BuildContext context, WidgetRef ref,
                 ],
               ),
               body: Padding(
-                padding: EdgeInsets.only(
-                  top: 24.h,
-                  left: 16.w,
-                  right: 16.w,
+                padding: const EdgeInsets.only(
+                  top: 24,
+                  left: 16,
+                  right: 16,
                 ),
                 child: SingleChildScrollView(
                   child: Column(
@@ -87,7 +87,7 @@ homeWidget(BuildContext context, WidgetRef ref,
                       Row(
                         children: [
                           Padding(
-                            padding: EdgeInsets.only(left: 24.w),
+                            padding: const EdgeInsets.only(left: 24),
                             child: CustomHolder(
                               color:
                                   AppTheme.kLightPurpleColor.withOpacity(0.4),
@@ -100,8 +100,8 @@ homeWidget(BuildContext context, WidgetRef ref,
                               },
                             ),
                           ),
-                          SizedBox(
-                            width: 68.w,
+                          const SizedBox(
+                            width: 68,
                           ),
                           CustomHolder(
                             color: AppTheme.kLightGreenColor,
@@ -118,70 +118,70 @@ homeWidget(BuildContext context, WidgetRef ref,
                                     enableDrag: false,
                                     isDismissible: false,
                                     elevation: 1,
-                                    shape: RoundedRectangleBorder(
+                                    shape: const RoundedRectangleBorder(
                                       borderRadius: BorderRadius.only(
-                                        topLeft: Radius.circular(16.r),
-                                        topRight: Radius.circular(16.r),
+                                        topLeft: Radius.circular(16),
+                                        topRight: Radius.circular(16),
                                       ),
                                     ),
                                     context: context,
                                     builder: (context) {
                                       return Container(
-                                        padding: EdgeInsets.symmetric(
-                                          vertical: 16.h,
-                                          horizontal: 16.w,
+                                        padding: const EdgeInsets.symmetric(
+                                          vertical: 16,
+                                          horizontal: 16,
                                         ),
-                                        height: 256.h,
-                                        decoration: BoxDecoration(
+                                        height: 256,
+                                        decoration: const BoxDecoration(
                                           color: AppTheme.kAppWhiteScheme,
                                           borderRadius: BorderRadius.only(
-                                            topLeft: Radius.circular(16.r),
-                                            topRight: Radius.circular(16.r),
+                                            topLeft: Radius.circular(16),
+                                            topRight: Radius.circular(16),
                                           ),
                                         ),
                                         child: Column(
                                           children: [
                                             Container(
-                                              height: 4.h,
-                                              width: 42.w,
+                                              height: 4,
+                                              width: 42,
                                               decoration: BoxDecoration(
                                                 borderRadius:
-                                                    BorderRadius.circular(4.r),
+                                                    BorderRadius.circular(4),
                                                 color: Colors.black,
                                               ),
                                             ),
-                                            SizedBox(
-                                              height: 27.h,
+                                            const SizedBox(
+                                              height: 27,
                                             ),
                                             Text(
                                               'Report submission currently\n unavailable, please check \nback later.',
                                               textAlign: TextAlign.center,
                                               style: GoogleFonts.raleway(
-                                                height: 2.h,
+                                                height: 2,
                                                 color: const Color(0xFF383639),
-                                                fontSize: 18.sp,
+                                                fontSize: 18,
                                                 fontWeight: FontWeight.w600,
                                               ),
                                             ),
-                                            SizedBox(
-                                              height: 23.h,
+                                            const SizedBox(
+                                              height: 23,
                                             ),
                                             CustomButton(
-                                              height: 54.h,
+                                              height: 54,
                                               pressed: () {
                                                 AppNavigator.pop();
                                               },
                                               color: AppTheme.kPurpleColor,
                                               width: double.infinity,
                                               borderRadius:
-                                                  BorderRadius.circular(8.r),
+                                                  BorderRadius.circular(8),
                                               child: Text(
                                                 'Got it!',
                                                 style: GoogleFonts.raleway(
                                                   color:
                                                       AppTheme.kAppWhiteScheme,
                                                   fontWeight: FontWeight.w600,
-                                                  fontSize: 14.sp,
+                                                  fontSize: 14,
                                                 ),
                                               ),
                                             )
@@ -197,18 +197,18 @@ homeWidget(BuildContext context, WidgetRef ref,
                       Stack(
                         children: [
                           CohortCard(
-                            height: 316.h,
-                            width: 343.w,
-                            radius: BorderRadius.circular(4.r),
+                            height: 316,
+                            width: 343,
+                            radius: BorderRadius.circular(4),
                             first: -15.5,
                             second_1: 0,
                             second_2: 0,
-                            third: 80.53.h,
+                            third: 80.53,
                             forth_1: 0,
                             forth_2: 0,
-                            forthHeight: 157.13.h,
-                            thirdHeight: 230.44.h,
-                            secondHeight: 135.28.h,
+                            forthHeight: 157.13,
+                            thirdHeight: 230.44,
+                            secondHeight: 135.28,
                           ),
                           CardContent(
                             contentDuration: data.cohort?.cohortDuration ?? 0,
@@ -237,26 +237,26 @@ homeWidget(BuildContext context, WidgetRef ref,
                   children: [
                     CohortCard(
                       width: double.infinity,
-                      height: 212.h,
-                      radius: BorderRadius.circular(4.r),
+                      height: 212,
+                      radius: BorderRadius.circular(4),
                       first: -15.5,
                       second_1: 0,
                       second_2: 0,
-                      third: 80.53.h,
+                      third: 80.53,
                       forth_1: 0,
                       forth_2: 0,
-                      forthHeight: 157.13.h,
-                      thirdHeight: 230.44.h,
-                      secondHeight: 135.28.h,
+                      forthHeight: 157.13,
+                      thirdHeight: 230.44,
+                      secondHeight: 135.28,
                     ),
                     Column(
                       children: [
                         SvgPicture.asset(
                           'assets/error_image.svg',
-                          height: 100.h,
-                          width: 100.w,
+                          height: 100,
+                          width: 100,
                         ),
-                        SizedBox(height: 16.h),
+                        const SizedBox(height: 16),
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Text(
@@ -290,7 +290,7 @@ Future<bool?> showWarning(BuildContext context) async {
             'Do you want to sign out of the app?',
             style: GoogleFonts.raleway(
               color: const Color(0xFF423B43),
-              fontSize: 15.sp,
+              fontSize: 15,
               fontWeight: FontWeight.w600,
             ),
           ),
@@ -304,7 +304,7 @@ Future<bool?> showWarning(BuildContext context) async {
                 style: GoogleFonts.raleway(
                   color: AppTheme.kPurpleColor,
                   fontWeight: FontWeight.w600,
-                  fontSize: 15.sp,
+                  fontSize: 15,
                 ),
               ),
             ),
@@ -318,7 +318,7 @@ Future<bool?> showWarning(BuildContext context) async {
                 style: GoogleFonts.raleway(
                   color: AppTheme.kPurpleColor,
                   fontWeight: FontWeight.w600,
-                  fontSize: 15.sp,
+                  fontSize: 15,
                 ),
               ),
             ),

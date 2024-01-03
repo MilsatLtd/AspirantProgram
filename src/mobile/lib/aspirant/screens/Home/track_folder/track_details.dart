@@ -52,7 +52,7 @@ class _TrackDetailsConsumerState extends ConsumerState<TrackDetails> {
                 data: (data) {
                   courseContent = data.description!;
                   List<String> wordCount = courseContent.split(' ');
-                  double height = ((wordCount.length * 2.075) + 1.55).h;
+                  double height = ((wordCount.length * 2.075) + 1.55);
                   Future<void> launchUrl_(int index) async {
                     final Uri url =
                         Uri.parse(data.courses!.elementAt(index).accessLink!);
@@ -69,22 +69,22 @@ class _TrackDetailsConsumerState extends ConsumerState<TrackDetails> {
                             CohortCard(
                               height: ref.watch(tapped) &&
                                       courseContent.length > 250
-                                  ? height + 150.h
-                                  : 244.h,
-                              radius: BorderRadius.only(
-                                bottomLeft: Radius.circular(24.r),
-                                bottomRight: Radius.circular(24.r),
+                                  ? height + 150
+                                  : 244,
+                              radius: const BorderRadius.only(
+                                bottomLeft: Radius.circular(24),
+                                bottomRight: Radius.circular(24),
                               ),
                               width: double.infinity,
-                              first: -10.5.h,
+                              first: -10.5,
                               second_1: 0,
-                              second_2: 22.77.h,
-                              third: 83.53.h,
+                              second_2: 22.77,
+                              third: 83.53,
                               forth_1: -18.43,
-                              forth_2: -37.95.h,
-                              forthHeight: 144.16.h,
-                              thirdHeight: 211.42.h,
-                              secondHeight: 124.11.h,
+                              forth_2: -37.95,
+                              forthHeight: 144.16,
+                              thirdHeight: 211.42,
+                              secondHeight: 124.11,
                             ),
                             TrackContent(
                               maxLines: ref.watch(tapped) ? null : 4,
@@ -96,18 +96,21 @@ class _TrackDetailsConsumerState extends ConsumerState<TrackDetails> {
                                     !ref.watch(tapped);
                               },
                               courseContent: courseContent,
-                              text:
-                                  ref.watch(tapped) ? 'Read Less' : 'Read More',
+                              text: wordCount.length <= 30
+                                  ? ''
+                                  : ref.watch(tapped)
+                                      ? 'Read Less'
+                                      : 'Read More',
                               height: wordCount.length <= 46 ||
                                       ref.watch(tapped) == false
-                                  ? 97.h
-                                  : 180.h,
+                                  ? 97
+                                  : 180,
                               d: data,
                             ),
                           ],
                         ),
-                        SizedBox(
-                          height: 40.h,
+                        const SizedBox(
+                          height: 40,
                         ),
                         Expanded(
                           child: ListView.separated(
@@ -122,18 +125,18 @@ class _TrackDetailsConsumerState extends ConsumerState<TrackDetails> {
                                         color: const Color(0xFF79717A),
                                       )
                                     : Container(
-                                        height: 24.h,
-                                        width: 24.w,
+                                        height: 24,
+                                        width: 24,
                                         decoration: BoxDecoration(
                                           color: const Color(0xFFF2EBF3),
                                           borderRadius:
-                                              BorderRadius.circular(4.r),
+                                              BorderRadius.circular(4),
                                         ),
                                         child: Center(
                                           child: Text(
                                             '${index + 1}',
                                             style: GoogleFonts.raleway(
-                                              fontSize: 13.sp,
+                                              fontSize: 13,
                                               fontWeight: FontWeight.w500,
                                               color: const Color(0xFF6E6B6F),
                                             ),
@@ -185,8 +188,8 @@ class _TrackDetailsConsumerState extends ConsumerState<TrackDetails> {
                             itemCount: data.courses!.length,
                             separatorBuilder:
                                 (BuildContext context, int index) {
-                              return SizedBox(
-                                height: 24.h,
+                              return const SizedBox(
+                                height: 24,
                               );
                             },
                           ),

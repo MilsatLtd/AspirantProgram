@@ -27,16 +27,16 @@ class CardContent extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     double progress = d.progress!.toDouble() / 100;
     return Container(
-      padding: EdgeInsets.only(
-        top: 16.h,
-        bottom: 16.w,
+      padding: const EdgeInsets.only(
+        top: 16,
+        bottom: 16,
       ),
-      width: 343.w,
+      width: 343,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16.w),
+            padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -53,37 +53,37 @@ class CardContent extends ConsumerWidget {
               ],
             ),
           ),
-          SizedBox(
-            height: 12.h,
+          const SizedBox(
+            height: 12,
           ),
           Container(
-            padding: EdgeInsets.only(left: 16.w),
-            height: 55.h,
+            padding: const EdgeInsets.only(left: 16),
+            height: 55,
             child: Text(
               trackName!,
               style: GoogleFonts.raleway(
                 color: AppTheme.kAppWhiteScheme,
-                fontSize: 16.sp,
+                fontSize: 16,
                 fontWeight: FontWeight.w800,
-                height: 1.75.h,
+                height: 1.75,
               ),
             ),
           ),
-          SizedBox(
-            height: 16.h,
+          const SizedBox(
+            height: 16,
           ),
           Padding(
-            padding: EdgeInsets.only(left: 16.w),
+            padding: const EdgeInsets.only(left: 16),
             child: Text(
               'Mentor',
               style: kSmallTextStyle2,
             ),
           ),
-          SizedBox(
-            height: 4.h,
+          const SizedBox(
+            height: 4,
           ),
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16.w),
+            padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -95,21 +95,21 @@ class CardContent extends ConsumerWidget {
                   '$numberEnrolled Enrolled',
                   style: GoogleFonts.raleway(
                     color: AppTheme.kAppWhiteScheme,
-                    fontSize: 10.sp,
+                    fontSize: 10,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
               ],
             ),
           ),
-          SizedBox(
-            height: 32.h,
+          const SizedBox(
+            height: 32,
           ),
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16.w),
+            padding: const EdgeInsets.symmetric(horizontal: 16),
             child: CustomButton(
               elevation: 0,
-              height: 44.h,
+              height: 44,
               pressed: () {
                 Navigator.push(context, MaterialPageRoute(builder: (context) {
                   return TrackDetails(d: d);
@@ -117,14 +117,14 @@ class CardContent extends ConsumerWidget {
               },
               color: const Color(0xFFB58BB8),
               width: double.infinity,
-              borderRadius: BorderRadius.circular(6.r),
+              borderRadius: BorderRadius.circular(6),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
                     'See all Courses',
                     style: GoogleFonts.raleway(
-                      fontSize: 13.sp,
+                      fontSize: 13,
                       fontWeight: FontWeight.w500,
                       color: AppTheme.kAppWhiteScheme,
                     ),
@@ -139,31 +139,31 @@ class CardContent extends ConsumerWidget {
               ),
             ),
           ),
-          SizedBox(
-            height: 20.h,
+          const SizedBox(
+            height: 20,
           ),
           const Divider(
             height: 0,
             thickness: 0.5,
             color: Color(0xFFCBADCD),
           ),
-          SizedBox(
-            height: 16.h,
+          const SizedBox(
+            height: 16,
           ),
           LinearPercentIndicator(
             addAutomaticKeepAlive: true,
-            width: 340.w,
-            lineHeight: 4.h,
+            width: 340,
+            lineHeight: 4,
             percent: progress,
             backgroundColor: const Color(0xFFCBADCD),
             progressColor: const Color(0xFF2BBDB2),
-            barRadius: Radius.circular(24.r),
+            barRadius: const Radius.circular(24),
           ),
-          SizedBox(
-            height: 4.h,
+          const SizedBox(
+            height: 4,
           ),
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: 14.5.w),
+            padding: const EdgeInsets.symmetric(horizontal: 14.5),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -171,7 +171,7 @@ class CardContent extends ConsumerWidget {
                   'Progress',
                   style: GoogleFonts.raleway(
                     color: AppTheme.kAppWhiteScheme,
-                    fontSize: 10.sp,
+                    fontSize: 10,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
@@ -179,7 +179,7 @@ class CardContent extends ConsumerWidget {
                   '${progress * 100}% completion',
                   style: GoogleFonts.raleway(
                     color: AppTheme.kAppWhiteScheme,
-                    fontSize: 10.sp,
+                    fontSize: 10,
                     fontWeight: FontWeight.w500,
                   ),
                 ),

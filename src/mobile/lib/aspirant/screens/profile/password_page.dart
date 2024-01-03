@@ -29,7 +29,7 @@ class PasswordPage extends ConsumerWidget {
           'Password',
           style: GoogleFonts.raleway(
             color: const Color(0xFF504D51),
-            fontSize: 16.sp,
+            fontSize: 16,
             fontWeight: FontWeight.w600,
           ),
         ),
@@ -38,10 +38,10 @@ class PasswordPage extends ConsumerWidget {
         backgroundColor: Colors.white,
       ),
       body: Padding(
-        padding: EdgeInsets.only(
-          left: 16.w,
-          right: 16.w,
-          top: 32.h,
+        padding: const EdgeInsets.only(
+          left: 16,
+          right: 16,
+          top: 32,
         ),
         child: SingleChildScrollView(
           child: Column(
@@ -51,76 +51,76 @@ class PasswordPage extends ConsumerWidget {
                 'Old Password',
                 style: GoogleFonts.raleway(
                   fontWeight: FontWeight.w500,
-                  fontSize: 16.sp,
+                  fontSize: 16,
                   color: const Color(0xFF504D51),
                 ),
               ),
-              SizedBox(
-                height: 8.h,
+              const SizedBox(
+                height: 8,
               ),
               TextField(
                 controller: oldPasswordController,
-                decoration: InputDecoration(
-                  border: const OutlineInputBorder(),
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(),
                   contentPadding: EdgeInsets.symmetric(
-                    horizontal: 16.w,
-                    vertical: 10.h,
+                    horizontal: 16,
+                    vertical: 10,
                   ),
                 ),
               ),
-              SizedBox(
-                height: 24.h,
+              const SizedBox(
+                height: 24,
               ),
               Text(
                 'New Password',
                 style: GoogleFonts.raleway(
                   fontWeight: FontWeight.w500,
-                  fontSize: 16.sp,
+                  fontSize: 16,
                   color: const Color(0xFF504D51),
                 ),
               ),
-              SizedBox(
-                height: 8.h,
+              const SizedBox(
+                height: 8,
               ),
               TextField(
                 controller: newPasswordController,
-                decoration: InputDecoration(
-                  border: const OutlineInputBorder(),
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(),
                   contentPadding: EdgeInsets.symmetric(
-                    horizontal: 16.w,
-                    vertical: 10.h,
+                    horizontal: 16,
+                    vertical: 10,
                   ),
                 ),
               ),
-              SizedBox(
-                height: 24.h,
+              const SizedBox(
+                height: 24,
               ),
               Text(
                 'Confirm Password',
                 style: GoogleFonts.raleway(
                   fontWeight: FontWeight.w500,
-                  fontSize: 16.sp,
+                  fontSize: 16,
                   color: const Color(0xFF504D51),
                 ),
               ),
-              SizedBox(
-                height: 8.h,
+              const SizedBox(
+                height: 8,
               ),
               TextField(
                 controller: confirmPasswordController,
-                decoration: InputDecoration(
-                  border: const OutlineInputBorder(),
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(),
                   contentPadding: EdgeInsets.symmetric(
-                    horizontal: 16.w,
-                    vertical: 10.h,
+                    horizontal: 16,
+                    vertical: 10,
                   ),
                 ),
               ),
-              SizedBox(
-                height: 48.h,
+              const SizedBox(
+                height: 48,
               ),
               CustomButton(
-                height: 54.h,
+                height: 54,
                 pressed: () async {
                   final data = {
                     "old_password": oldPasswordController.text,
@@ -133,13 +133,13 @@ class PasswordPage extends ConsumerWidget {
                 },
                 color: AppTheme.kPurpleColor,
                 width: double.infinity,
-                borderRadius: BorderRadius.circular(8.r),
+                borderRadius: BorderRadius.circular(8),
                 elevation: 0,
                 child: Text(
                   'Change Password',
                   style: GoogleFonts.raleway(
                     color: AppTheme.kAppWhiteScheme,
-                    fontSize: 14.sp,
+                    fontSize: 14,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
@@ -160,7 +160,7 @@ class PasswordPage extends ConsumerWidget {
             'Hello Aspirant!',
             textAlign: TextAlign.center,
             style: GoogleFonts.raleway(
-              fontSize: 18.sp,
+              fontSize: 18,
               fontWeight: FontWeight.w600,
               color: const Color(0xFF383639),
             ),
@@ -169,21 +169,21 @@ class PasswordPage extends ConsumerWidget {
             personalInfo["message"].toString(),
             textAlign: TextAlign.center,
             style: GoogleFonts.raleway(
-              fontSize: 14.sp,
+              fontSize: 14,
               fontWeight: FontWeight.w600,
               color: const Color(0xFF504D51),
             ),
           ),
           actions: [
             CustomButton(
-              height: 54.h,
+              height: 54,
               pressed: () {
                 AppNavigator.pop();
               },
               color: AppTheme.kPurpleColor,
-              width: 307.w,
+              width: 307,
               elevation: 0,
-              borderRadius: BorderRadius.circular(8.r),
+              borderRadius: BorderRadius.circular(8),
               child: Text(
                 'Ok!',
                 style: GoogleFonts.raleway(

@@ -66,7 +66,7 @@ class _MentorProfilePageState extends ConsumerState<MentorProfilePage> {
                 style: GoogleFonts.raleway(
                   color: const Color(0xFF383639),
                   fontWeight: FontWeight.w600,
-                  fontSize: 13.sp,
+                  fontSize: 13,
                 ),
               ),
             ),
@@ -89,14 +89,14 @@ class _MentorProfilePageState extends ConsumerState<MentorProfilePage> {
                         ClipOval(
                           child: Image.file(
                             ref.watch(mentorImage)!,
-                            height: 88.h,
-                            width: 80.w,
+                            height: 88,
+                            width: 80,
                             fit: BoxFit.cover,
                           ),
                         )
                       else if (profilePictureResponse?.profilePicture != null)
                         CircleAvatar(
-                          radius: 44.r,
+                          radius: 44,
                           backgroundImage: NetworkImage(
                             profilePictureResponse!.profilePicture!,
                           ),
@@ -104,7 +104,7 @@ class _MentorProfilePageState extends ConsumerState<MentorProfilePage> {
                         )
                       else
                         CircleAvatar(
-                          radius: 44.r,
+                          radius: 44,
                           backgroundImage: data.profilePicture == null
                               ? const AssetImage(
                                   'assets/defaultImage.jpg',
@@ -143,16 +143,16 @@ class _MentorProfilePageState extends ConsumerState<MentorProfilePage> {
                             }
                           },
                           child: Container(
-                            height: 26.07.h,
-                            width: 26.07.w,
+                            height: 26.07,
+                            width: 26.07,
                             decoration: const BoxDecoration(
                               shape: BoxShape.circle,
                               color: AppTheme.kAppWhiteScheme,
                             ),
                             child: Center(
                               child: Container(
-                                height: 22.07.h,
-                                width: 22.07.w,
+                                height: 22.07,
+                                width: 22.07,
                                 decoration: const BoxDecoration(
                                   shape: BoxShape.circle,
                                   color: AppTheme.kPurpleColor,
@@ -160,8 +160,8 @@ class _MentorProfilePageState extends ConsumerState<MentorProfilePage> {
                                 child: Center(
                                   child: SvgPicture.asset(
                                     'assets/edit_pen.svg',
-                                    height: 10.08.h,
-                                    width: 10.08.w,
+                                    height: 10.08,
+                                    width: 10.08,
                                   ),
                                 ),
                               ),
@@ -172,28 +172,28 @@ class _MentorProfilePageState extends ConsumerState<MentorProfilePage> {
                     ],
                   ),
                 ),
-                SizedBox(
-                  height: 24.h,
+                const SizedBox(
+                  height: 24,
                 ),
                 Padding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 16.w,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
                   ),
                   child: Stack(
                     children: [
                       CohortCard(
                         width: double.infinity,
-                        radius: BorderRadius.circular(4.r),
+                        radius: BorderRadius.circular(4),
                         first: -15.5,
                         second_1: 0,
                         second_2: 0,
-                        third: 80.53.h,
+                        third: 80.53,
                         forth_1: 0,
                         forth_2: 0,
-                        forthHeight: 157.13.h,
-                        thirdHeight: 230.44.h,
-                        secondHeight: 135.28.h,
-                        height: 108.h,
+                        forthHeight: 157.13,
+                        thirdHeight: 230.44,
+                        secondHeight: 135.28,
+                        height: 108,
                       ),
                       MentorProfileCardContent(
                         trackName: data.track!.name!,
@@ -201,12 +201,12 @@ class _MentorProfilePageState extends ConsumerState<MentorProfilePage> {
                     ],
                   ),
                 ),
-                SizedBox(
-                  height: 34.h,
+                const SizedBox(
+                  height: 34,
                 ),
                 Padding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 16.w,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -216,56 +216,56 @@ class _MentorProfilePageState extends ConsumerState<MentorProfilePage> {
                         style: GoogleFonts.raleway(
                           color: const Color(0xFF504D51),
                           fontWeight: FontWeight.w500,
-                          fontSize: 16.sp,
+                          fontSize: 16,
                         ),
                       ),
-                      SizedBox(
-                        height: 8.h,
+                      const SizedBox(
+                        height: 8,
                       ),
                       Container(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 16.w,
-                          vertical: 12.h,
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 12,
                         ),
-                        height: 48.h,
+                        height: 48,
                         width: double.infinity,
                         decoration: BoxDecoration(
                           border: Border.all(color: AppTheme.kHintTextColor),
-                          borderRadius: BorderRadius.circular(6.r),
+                          borderRadius: BorderRadius.circular(6),
                         ),
                         child: Text(
                           data.fullName!,
                           style: GoogleFonts.raleway(
                             color: const Color(0xFF6E6B6F),
                             fontWeight: FontWeight.w500,
-                            fontSize: 16.sp,
+                            fontSize: 16,
                           ),
                         ),
                       ),
-                      SizedBox(
-                        height: 24.h,
+                      const SizedBox(
+                        height: 24,
                       ),
                       Text(
                         'Email',
                         style: GoogleFonts.raleway(
                           color: const Color(0xFF504D51),
                           fontWeight: FontWeight.w500,
-                          fontSize: 16.sp,
+                          fontSize: 16,
                         ),
                       ),
-                      SizedBox(
-                        height: 8.h,
+                      const SizedBox(
+                        height: 8,
                       ),
                       Container(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 16.w,
-                          vertical: 12.h,
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 12,
                         ),
-                        height: 48.h,
+                        height: 48,
                         width: double.infinity,
                         decoration: BoxDecoration(
                           border: Border.all(color: AppTheme.kHintTextColor),
-                          borderRadius: BorderRadius.circular(6.r),
+                          borderRadius: BorderRadius.circular(6),
                         ),
                         child: Text(
                           data.email!,
@@ -273,34 +273,34 @@ class _MentorProfilePageState extends ConsumerState<MentorProfilePage> {
                           style: GoogleFonts.raleway(
                             color: const Color(0xFF6E6B6F),
                             fontWeight: FontWeight.w500,
-                            fontSize: 16.sp,
+                            fontSize: 16,
                           ),
                         ),
                       ),
-                      SizedBox(
-                        height: 24.h,
+                      const SizedBox(
+                        height: 24,
                       ),
                       Text(
                         'Bio',
                         style: GoogleFonts.raleway(
                           color: const Color(0xFF504D51),
                           fontWeight: FontWeight.w500,
-                          fontSize: 16.sp,
+                          fontSize: 16,
                         ),
                       ),
-                      SizedBox(
-                        height: 8.h,
+                      const SizedBox(
+                        height: 8,
                       ),
                       Container(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 16.w,
-                          vertical: 12.h,
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 12,
                         ),
-                        height: 96.h,
+                        height: 96,
                         width: double.infinity,
                         decoration: BoxDecoration(
                           border: Border.all(color: AppTheme.kHintTextColor),
-                          borderRadius: BorderRadius.circular(6.r),
+                          borderRadius: BorderRadius.circular(6),
                         ),
                         child: Text(
                           personalInfo['personalUserInfo'] != null
@@ -310,26 +310,26 @@ class _MentorProfilePageState extends ConsumerState<MentorProfilePage> {
                           style: GoogleFonts.raleway(
                             color: const Color(0xFF6E6B6F),
                             fontWeight: FontWeight.w500,
-                            fontSize: 16.sp,
+                            fontSize: 16,
                           ),
                         ),
                       ),
                     ],
                   ),
                 ),
-                SizedBox(
-                  height: 32.h,
+                const SizedBox(
+                  height: 32,
                 ),
                 GestureDetector(
                   onTap: () {
                     AppNavigator.navigateTo(mentorPasswordRoute);
                   },
                   child: Container(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 28.8.w,
-                      vertical: 11.h,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 28.8,
+                      vertical: 11,
                     ),
-                    height: 56.h,
+                    height: 56,
                     decoration: BoxDecoration(
                       border: Border.all(
                         color: const Color(0xFFEEEDEE),
@@ -346,44 +346,44 @@ class _MentorProfilePageState extends ConsumerState<MentorProfilePage> {
                               style: GoogleFonts.raleway(
                                 color: const Color(0xFF504D51),
                                 fontWeight: FontWeight.w600,
-                                fontSize: 13.sp,
+                                fontSize: 13,
                               ),
                             ),
-                            SizedBox(
-                              height: 4.h,
+                            const SizedBox(
+                              height: 4,
                             ),
                             Text(
                               'Change password',
                               style: GoogleFonts.raleway(
                                 color: const Color(0xFF6E6B6F),
                                 fontWeight: FontWeight.w500,
-                                fontSize: 10.sp,
+                                fontSize: 10,
                               ),
                             ),
                           ],
                         ),
-                        Icon(
+                        const Icon(
                           Icons.arrow_forward_ios,
-                          size: 14.sp,
-                          color: const Color(0xFF79717A),
+                          size: 14,
+                          color: Color(0xFF79717A),
                         )
                       ],
                     ),
                   ),
                 ),
-                SizedBox(
-                  height: 16.h,
+                const SizedBox(
+                  height: 16,
                 ),
                 GestureDetector(
                   onTap: () {
                     signOut();
                   },
                   child: Container(
-                    padding: EdgeInsets.only(
-                      top: 19.h,
-                      left: 29.w,
+                    padding: const EdgeInsets.only(
+                      top: 19,
+                      left: 29,
                     ),
-                    height: 56.h,
+                    height: 56,
                     width: double.infinity,
                     decoration: BoxDecoration(
                       border: Border.all(
@@ -394,14 +394,14 @@ class _MentorProfilePageState extends ConsumerState<MentorProfilePage> {
                       'Logout',
                       style: GoogleFonts.raleway(
                         fontWeight: FontWeight.w600,
-                        fontSize: 13.sp,
+                        fontSize: 13,
                         color: const Color(0xFF504D51),
                       ),
                     ),
                   ),
                 ),
-                SizedBox(
-                  height: 24.h,
+                const SizedBox(
+                  height: 24,
                 ),
               ],
             ),
@@ -416,26 +416,26 @@ class _MentorProfilePageState extends ConsumerState<MentorProfilePage> {
                     children: [
                       CohortCard(
                         width: double.infinity,
-                        height: 212.h,
-                        radius: BorderRadius.circular(4.r),
+                        height: 212,
+                        radius: BorderRadius.circular(4),
                         first: -15.5,
                         second_1: 0,
                         second_2: 0,
-                        third: 80.53.h,
+                        third: 80.53,
                         forth_1: 0,
                         forth_2: 0,
-                        forthHeight: 157.13.h,
-                        thirdHeight: 230.44.h,
-                        secondHeight: 135.28.h,
+                        forthHeight: 157.13,
+                        thirdHeight: 230.44,
+                        secondHeight: 135.28,
                       ),
                       Column(
                         children: [
                           SvgPicture.asset(
                             'assets/error_image.svg',
-                            height: 100.h,
-                            width: 100.w,
+                            height: 100,
+                            width: 100,
                           ),
-                          SizedBox(height: 16.h),
+                          const SizedBox(height: 16),
                           Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Text(

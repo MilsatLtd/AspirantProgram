@@ -58,13 +58,13 @@ class _MentorHomePageState extends ConsumerState<MentorHomePage> {
                 slivers: [
                   SliverAppBar(
                     bottom: PreferredSize(
-                      preferredSize: Size.fromHeight(-20.h),
+                      preferredSize: const Size.fromHeight(-20),
                       child: Padding(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 16.w,
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16,
                         ),
                         child: Container(
-                          height: 30.h,
+                          height: 30,
                           color: Theme.of(context).scaffoldBackgroundColor,
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -73,7 +73,7 @@ class _MentorHomePageState extends ConsumerState<MentorHomePage> {
                                 'Recent Actvities',
                                 style: GoogleFonts.raleway(
                                   color: const Color(0xFF504D51),
-                                  fontSize: 13.sp,
+                                  fontSize: 13,
                                   fontWeight: FontWeight.w600,
                                 ),
                               ),
@@ -85,7 +85,7 @@ class _MentorHomePageState extends ConsumerState<MentorHomePage> {
                                   'view all',
                                   style: GoogleFonts.raleway(
                                     color: AppTheme.kPurpleColor,
-                                    fontSize: 10.sp,
+                                    fontSize: 10,
                                     fontWeight: FontWeight.w600,
                                   ),
                                 ),
@@ -98,15 +98,15 @@ class _MentorHomePageState extends ConsumerState<MentorHomePage> {
                     pinned: true,
                     automaticallyImplyLeading: false,
                     elevation: 0,
-                    expandedHeight: 320.h,
+                    expandedHeight: 320,
                     backgroundColor: Theme.of(context).scaffoldBackgroundColor,
                     flexibleSpace: FlexibleSpaceBar(
                       background: Container(
                         color: Theme.of(context).scaffoldBackgroundColor,
-                        padding: EdgeInsets.only(
-                          left: 16.w,
-                          right: 16.w,
-                          top: 20.h,
+                        padding: const EdgeInsets.only(
+                          left: 16,
+                          right: 16,
+                          top: 20,
                         ),
                         child: Column(
                           children: [
@@ -121,18 +121,18 @@ class _MentorHomePageState extends ConsumerState<MentorHomePage> {
                                     // SvgPicture.asset(
                                     //   'assets/bell_icon.svg',
                                     // ),
-                                    SizedBox(
-                                      width: 24.w,
+                                    const SizedBox(
+                                      width: 24,
                                     ),
                                     ref.watch(mentorImage) != null
                                         ? CircleAvatar(
-                                            radius: 24.r,
+                                            radius: 24,
                                             backgroundColor: Colors.grey,
                                             child: ClipOval(
                                               child: Image.file(
                                                 ref.watch(mentorImage)!,
-                                                height: 48.h,
-                                                width: 48.w,
+                                                height: 48,
+                                                width: 48,
                                                 fit: BoxFit.cover,
                                               ),
                                             ),
@@ -141,7 +141,7 @@ class _MentorHomePageState extends ConsumerState<MentorHomePage> {
                                                     ?.profilePicture !=
                                                 null
                                             ? CircleAvatar(
-                                                radius: 24.r,
+                                                radius: 24,
                                                 backgroundImage: NetworkImage(
                                                   profilePictureResponse!
                                                       .profilePicture!,
@@ -149,7 +149,7 @@ class _MentorHomePageState extends ConsumerState<MentorHomePage> {
                                                 backgroundColor: Colors.grey,
                                               )
                                             : CircleAvatar(
-                                                radius: 24.r,
+                                                radius: 24,
                                                 backgroundImage:
                                                     data.profilePicture == null
                                                         ? const AssetImage(
@@ -165,24 +165,24 @@ class _MentorHomePageState extends ConsumerState<MentorHomePage> {
                                 )
                               ],
                             ),
-                            SizedBox(
-                              height: 36.h,
+                            const SizedBox(
+                              height: 36,
                             ),
                             Stack(
                               children: [
                                 CohortCard(
-                                  height: 180.h,
+                                  height: 180,
                                   width: double.infinity,
-                                  radius: BorderRadius.circular(4.r),
+                                  radius: BorderRadius.circular(4),
                                   first: -15.5,
                                   second_1: 0,
                                   second_2: 0,
-                                  third: 80.53.h,
+                                  third: 80.53,
                                   forth_1: 0,
                                   forth_2: 0,
-                                  forthHeight: 157.13.h,
-                                  thirdHeight: 230.44.h,
-                                  secondHeight: 135.28.h,
+                                  forthHeight: 157.13,
+                                  thirdHeight: 230.44,
+                                  secondHeight: 135.28,
                                 ),
                                 MentorCardContent(
                                   count: count,
@@ -200,16 +200,16 @@ class _MentorHomePageState extends ConsumerState<MentorHomePage> {
                   ),
                   SliverToBoxAdapter(
                     child: Padding(
-                      padding: EdgeInsets.only(
-                        left: 16.w,
-                        right: 16.w,
-                        top: 16.w,
+                      padding: const EdgeInsets.only(
+                        left: 16,
+                        right: 16,
+                        top: 16,
                       ),
                       child: allBlockersData.when(
                           data: (data) {
                             getPendngAndResolvedList();
                             return SizedBox(
-                              height: 500.h,
+                              height: 500,
                               child: ListView.separated(
                                 itemBuilder: ((context, index) {
                                   String time =
@@ -220,9 +220,9 @@ class _MentorHomePageState extends ConsumerState<MentorHomePage> {
                                   final duration = now.difference(p);
                                   final timeAgo = duration.inDays;
                                   return Container(
-                                    padding: EdgeInsets.symmetric(
-                                      horizontal: 16.w,
-                                      vertical: 16.w,
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 16,
+                                      vertical: 16,
                                     ),
                                     color: AppTheme.kAppWhiteScheme,
                                     child: Column(
@@ -257,7 +257,7 @@ class _MentorHomePageState extends ConsumerState<MentorHomePage> {
                                                     style: GoogleFonts.raleway(
                                                       color: const Color(
                                                           0xFF11A263),
-                                                      fontSize: 10.sp,
+                                                      fontSize: 10,
                                                       fontWeight:
                                                           FontWeight.w600,
                                                     ),
@@ -267,8 +267,8 @@ class _MentorHomePageState extends ConsumerState<MentorHomePage> {
                                             ],
                                           ),
                                         ),
-                                        SizedBox(
-                                          height: 4.h,
+                                        const SizedBox(
+                                          height: 4,
                                         ),
                                         Row(
                                           children: [
@@ -276,8 +276,8 @@ class _MentorHomePageState extends ConsumerState<MentorHomePage> {
                                               '${cred['blockers'][index]['user_name']}',
                                               style: kTrackTextStyle,
                                             ),
-                                            SizedBox(
-                                              width: 8.w,
+                                            const SizedBox(
+                                              width: 8,
                                             ),
                                             Text(
                                               '$timeAgo days ago',
@@ -285,17 +285,17 @@ class _MentorHomePageState extends ConsumerState<MentorHomePage> {
                                             ),
                                           ],
                                         ),
-                                        SizedBox(
-                                          height: 10.h,
+                                        const SizedBox(
+                                          height: 10,
                                         ),
                                         Text(
                                           'Hi everyone,\n'
                                           '${cred['blockers'][index]['description']}',
                                           style: GoogleFonts.raleway(
-                                            fontSize: 13.sp,
+                                            fontSize: 13,
                                             fontWeight: FontWeight.w500,
                                             color: const Color(0xFF504D51),
-                                            height: 2.h,
+                                            height: 2,
                                           ),
                                         ),
                                       ],
@@ -307,8 +307,8 @@ class _MentorHomePageState extends ConsumerState<MentorHomePage> {
                                     : cred['blockers'].length,
                                 separatorBuilder:
                                     (BuildContext context, int index) {
-                                  return SizedBox(
-                                    height: 16.h,
+                                  return const SizedBox(
+                                    height: 16,
                                   );
                                 },
                               ),
@@ -335,26 +335,26 @@ class _MentorHomePageState extends ConsumerState<MentorHomePage> {
                         children: [
                           CohortCard(
                             width: double.infinity,
-                            height: 212.h,
-                            radius: BorderRadius.circular(4.r),
+                            height: 212,
+                            radius: BorderRadius.circular(4),
                             first: -15.5,
                             second_1: 0,
                             second_2: 0,
-                            third: 80.53.h,
+                            third: 80.53,
                             forth_1: 0,
                             forth_2: 0,
-                            forthHeight: 157.13.h,
-                            thirdHeight: 230.44.h,
-                            secondHeight: 135.28.h,
+                            forthHeight: 157.13,
+                            thirdHeight: 230.44,
+                            secondHeight: 135.28,
                           ),
                           Column(
                             children: [
                               SvgPicture.asset(
                                 'assets/error_image.svg',
-                                height: 100.h,
-                                width: 100.w,
+                                height: 100,
+                                width: 100,
                               ),
-                              SizedBox(height: 16.h),
+                              const SizedBox(height: 16),
                               Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: Text(

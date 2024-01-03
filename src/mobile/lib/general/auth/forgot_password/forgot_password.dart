@@ -11,9 +11,9 @@ class ForgotPassword extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         body: Padding(
-      padding: EdgeInsets.symmetric(
-        horizontal: 16.w,
-        vertical: 100.h,
+      padding: const EdgeInsets.symmetric(
+        horizontal: 16,
+        vertical: 100,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -22,56 +22,56 @@ class ForgotPassword extends StatelessWidget {
             'Reset Password',
             style: GoogleFonts.raleway(
               fontWeight: FontWeight.w700,
-              fontSize: 24.sp,
+              fontSize: 24,
               color: const Color(0xFF383639),
             ),
           ),
-          SizedBox(
-            height: 6.h,
+          const SizedBox(
+            height: 6,
           ),
           Text(
             'Enter the mail associated with your profile and a reset \nmail will be sent',
             style: GoogleFonts.raleway(
               fontWeight: FontWeight.w500,
-              fontSize: 13.sp,
+              fontSize: 13,
               color: const Color(0xFF6E6B6F),
-              height: 1.5.h,
+              height: 1.5,
             ),
           ),
-          SizedBox(
-            height: 34.h,
+          const SizedBox(
+            height: 34,
           ),
           Text(
             'Email',
             style: GoogleFonts.raleway(
               fontWeight: FontWeight.w500,
-              fontSize: 16.sp,
+              fontSize: 16,
               color: const Color(0xFF504D51),
-              height: 1.5.h,
+              height: 1.5,
             ),
           ),
-          SizedBox(
-            height: 8.h,
+          const SizedBox(
+            height: 8,
           ),
           const CustomTextField(
             hintText: 'milsataspirant@gmail.com',
             obscureText: false,
           ),
-          SizedBox(
-            height: 56.h,
+          const SizedBox(
+            height: 56,
           ),
           CustomButton(
-            height: 54.h,
+            height: 54,
             pressed: () {
               AppNavigator.navigateTo(checkImageRoute);
             },
             color: AppTheme.kPurpleColor,
             width: double.infinity,
-            borderRadius: BorderRadius.circular(8.r),
+            borderRadius: BorderRadius.circular(8),
             child: Text(
               'Reset',
               style: GoogleFonts.raleway(
-                fontSize: 14.sp,
+                fontSize: 14,
                 fontWeight: FontWeight.w600,
                 color: AppTheme.kAppWhiteScheme,
               ),

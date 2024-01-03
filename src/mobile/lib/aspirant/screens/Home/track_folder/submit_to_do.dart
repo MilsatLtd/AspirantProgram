@@ -40,8 +40,8 @@ class _SubmitToDoPageState extends ConsumerState<SubmitToDoPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(
-          44.h,
+        preferredSize: const Size.fromHeight(
+          44,
         ),
         child: AppBar(
           backgroundColor: Colors.white,
@@ -63,10 +63,10 @@ class _SubmitToDoPageState extends ConsumerState<SubmitToDoPage> {
         ),
       ),
       body: Padding(
-        padding: EdgeInsets.only(
-          top: 47.h,
-          left: 16.w,
-          right: 16.w,
+        padding: const EdgeInsets.only(
+          top: 47,
+          left: 16,
+          right: 16,
         ),
         child: Form(
           key: textKey,
@@ -82,9 +82,9 @@ class _SubmitToDoPageState extends ConsumerState<SubmitToDoPage> {
                 },
                 maxLines: 6,
                 decoration: InputDecoration(
-                  contentPadding: EdgeInsets.symmetric(
-                    horizontal: 16.w,
-                    vertical: 16.h,
+                  contentPadding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 16,
                   ),
                   border: const OutlineInputBorder(
                     borderSide: BorderSide(
@@ -97,23 +97,23 @@ class _SubmitToDoPageState extends ConsumerState<SubmitToDoPage> {
                       0xFF9A989A,
                     ),
                     fontWeight: FontWeight.w500,
-                    fontSize: 13.sp,
+                    fontSize: 13,
                   ),
                 ),
               ),
-              SizedBox(
-                height: 32.h,
+              const SizedBox(
+                height: 32,
               ),
               DottedBorder(
                 borderType: BorderType.RRect,
-                radius: Radius.circular(6.r),
+                radius: const Radius.circular(6),
                 color: const Color(0xFFB7B6B8),
                 child: Center(
                   child: Container(
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(6.r),
+                      borderRadius: BorderRadius.circular(6),
                     ),
-                    height: 56.h,
+                    height: 56,
                     width: double.infinity,
                     child: Consumer(
                       builder:
@@ -147,8 +147,8 @@ class _SubmitToDoPageState extends ConsumerState<SubmitToDoPage> {
                               SvgPicture.asset(
                                 'assets/file-upload.svg',
                               ),
-                              SizedBox(
-                                width: 17.5.w,
+                              const SizedBox(
+                                width: 17.5,
                               ),
                               Text(
                                 ref.watch(fileName) == ''
@@ -156,7 +156,7 @@ class _SubmitToDoPageState extends ConsumerState<SubmitToDoPage> {
                                     : ref.watch(fileName)!.split('/').last,
                                 style: GoogleFonts.raleway(
                                   color: const Color(0xFF9A989A),
-                                  fontSize: 13.sp,
+                                  fontSize: 13,
                                   fontWeight: FontWeight.w500,
                                 ),
                               ),
@@ -168,11 +168,11 @@ class _SubmitToDoPageState extends ConsumerState<SubmitToDoPage> {
                   ),
                 ),
               ),
-              SizedBox(
-                height: 56.h,
+              const SizedBox(
+                height: 56,
               ),
               CustomButton(
-                height: 54.h,
+                height: 54,
                 pressed: () async {
                   if (textKey.currentState!.validate() &&
                       ref.watch(fileName) != null) {
@@ -200,7 +200,7 @@ class _SubmitToDoPageState extends ConsumerState<SubmitToDoPage> {
                             'Congratulations!',
                             textAlign: TextAlign.center,
                             style: GoogleFonts.raleway(
-                              fontSize: 18.sp,
+                              fontSize: 18,
                               fontWeight: FontWeight.w600,
                               color: const Color(0xFF383639),
                             ),
@@ -208,14 +208,14 @@ class _SubmitToDoPageState extends ConsumerState<SubmitToDoPage> {
                           content: Text(
                             'You have successfully completed a milestone',
                             style: GoogleFonts.raleway(
-                              fontSize: 14.sp,
+                              fontSize: 14,
                               fontWeight: FontWeight.w600,
                               color: const Color(0xFF504D51),
                             ),
                           ),
                           actions: [
                             CustomButton(
-                              height: 54.h,
+                              height: 54,
                               pressed: () {
                                 String trackId = d.track!.trackId!;
                                 ref.read(apiServiceProvider).getTrackCourses(
@@ -226,9 +226,9 @@ class _SubmitToDoPageState extends ConsumerState<SubmitToDoPage> {
                                 }));
                               },
                               color: AppTheme.kPurpleColor,
-                              width: 307.w,
+                              width: 307,
                               elevation: 0,
-                              borderRadius: BorderRadius.circular(8.r),
+                              borderRadius: BorderRadius.circular(8),
                               child: const Text(
                                 'Got it!',
                                 style: TextStyle(
@@ -245,14 +245,14 @@ class _SubmitToDoPageState extends ConsumerState<SubmitToDoPage> {
                 color: AppTheme.kPurpleColor,
                 width: double.infinity,
                 elevation: 0,
-                borderRadius: BorderRadius.circular(8.r),
+                borderRadius: BorderRadius.circular(8),
                 child: Center(
                   child: Text(
                     'Submit',
                     style: GoogleFonts.raleway(
                       color: AppTheme.kAppWhiteScheme,
                       fontWeight: FontWeight.w600,
-                      fontSize: 14.sp,
+                      fontSize: 14,
                     ),
                   ),
                 ),

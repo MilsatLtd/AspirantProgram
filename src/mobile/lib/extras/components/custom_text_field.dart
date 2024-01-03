@@ -30,22 +30,22 @@ class CustomTextField extends StatelessWidget {
       obscureText: obscureText,
       validator: validator,
       decoration: InputDecoration(
-        contentPadding: EdgeInsets.symmetric(
-          horizontal: 16.w,
-          vertical: 10.h,
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 16,
+          vertical: 10,
         ),
         border: OutlineInputBorder(
           borderSide: const BorderSide(
             width: 1.0,
           ),
-          borderRadius: BorderRadius.circular(6.r),
+          borderRadius: BorderRadius.circular(6),
         ),
         hintText: hintText,
         suffixIcon: icon,
         hintStyle: GoogleFonts.raleway(
           color: AppTheme.kHintTextColor,
           fontWeight: FontWeight.w400,
-          fontSize: 16.sp,
+          fontSize: 16,
         ),
       ),
       style: style,

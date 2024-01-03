@@ -10,14 +10,14 @@ class CheckEmailScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Padding(
-        padding: EdgeInsets.only(top: 175.h),
+        padding: const EdgeInsets.only(top: 175),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Center(
               child: Container(
-                height: 168.h,
-                width: 168.w,
+                height: 168,
+                width: 168,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   color: const Color(0xFFF2EBF3).withOpacity(0.5),
@@ -25,25 +25,25 @@ class CheckEmailScreen extends StatelessWidget {
                 child: Center(
                   child: SvgPicture.asset(
                     'assets/email_svg.svg',
-                    height: 54.54.h,
-                    width: 60.96.w,
+                    height: 54.54,
+                    width: 60.96,
                   ),
                 ),
               ),
             ),
-            SizedBox(
-              height: 34.h,
+            const SizedBox(
+              height: 34,
             ),
             Text(
               'Check your Email',
               style: GoogleFonts.raleway(
                 fontWeight: FontWeight.w700,
-                fontSize: 24.sp,
+                fontSize: 24,
                 color: const Color(0xFF383639),
               ),
             ),
-            SizedBox(
-              height: 6.h,
+            const SizedBox(
+              height: 6,
             ),
             Text(
               'A reset has been sent to your mail,\n'
@@ -51,13 +51,13 @@ class CheckEmailScreen extends StatelessWidget {
               textAlign: TextAlign.center,
               style: GoogleFonts.raleway(
                 fontWeight: FontWeight.w400,
-                fontSize: 16.sp,
+                fontSize: 16,
                 color: const Color(0xFF6E6B6F),
-                height: 1.75.h,
+                height: 1.75,
               ),
             ),
-            SizedBox(
-              height: 138.h,
+            const SizedBox(
+              height: 138,
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -66,12 +66,12 @@ class CheckEmailScreen extends StatelessWidget {
                   'Didn\'t receive mail:',
                   style: GoogleFonts.raleway(
                     fontWeight: FontWeight.w500,
-                    fontSize: 13.sp,
+                    fontSize: 13,
                     color: const Color(0xFF383639),
                   ),
                 ),
-                SizedBox(
-                  width: 8.w,
+                const SizedBox(
+                  width: 8,
                 ),
                 GestureDetector(
                   onTap: () {},
@@ -79,7 +79,7 @@ class CheckEmailScreen extends StatelessWidget {
                     'Resend',
                     style: GoogleFonts.raleway(
                       fontWeight: FontWeight.w600,
-                      fontSize: 13.sp,
+                      fontSize: 13,
                       color: AppTheme.kPurpleColor,
                     ),
                   ),
