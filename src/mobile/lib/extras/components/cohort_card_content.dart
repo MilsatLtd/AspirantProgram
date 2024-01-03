@@ -8,7 +8,7 @@ import 'package:percent_indicator/percent_indicator.dart';
 import '../models/aspirant_model.dart';
 import 'mentor_slip.dart';
 
-class CardContent extends ConsumerStatefulWidget {
+class CardContent extends ConsumerWidget {
   const CardContent(
       {this.numberEnrolled,
       this.contentDuration,
@@ -24,14 +24,8 @@ class CardContent extends ConsumerStatefulWidget {
   final AspirantModelClass d;
 
   @override
-  ConsumerState<CardContent> createState() => _CardContentState();
-}
-
-class _CardContentState extends ConsumerState<CardContent> {
-  double progress = d.progress!.toDouble() / 100;
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    double progress = d.progress!.toDouble() / 100;
     return Container(
       padding: EdgeInsets.only(
         top: 16.h,
@@ -51,7 +45,7 @@ class _CardContentState extends ConsumerState<CardContent> {
                   style: kSmallTextStyle,
                 ),
                 Text(
-                  'Cohort duration: ${widget.contentDuration} month(s)',
+                  'Cohort duration: $contentDuration month(s)',
                   maxLines: 2,
                   overflow: TextOverflow.fade,
                   style: kSmallTextStyle,
@@ -66,7 +60,7 @@ class _CardContentState extends ConsumerState<CardContent> {
             padding: EdgeInsets.only(left: 16.w),
             height: 55.h,
             child: Text(
-              widget.trackName!,
+              trackName!,
               style: GoogleFonts.raleway(
                 color: AppTheme.kAppWhiteScheme,
                 fontSize: 16.sp,
@@ -94,11 +88,11 @@ class _CardContentState extends ConsumerState<CardContent> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 MentorSlip(
-                  mentorName: widget.mentorName!,
+                  mentorName: mentorName!,
                   profileUrl: d.mentor?.profilePicture,
                 ),
                 Text(
-                  '${widget.numberEnrolled} Enrolled',
+                  '$numberEnrolled Enrolled',
                   style: GoogleFonts.raleway(
                     color: AppTheme.kAppWhiteScheme,
                     fontSize: 10.sp,

@@ -20,7 +20,6 @@ homeWidget(BuildContext context, WidgetRef ref,
           return WillPopScope(
             onWillPop: () async {
               final shouldPop = await showWarning(context);
-
               return shouldPop ?? false;
             },
             child: Scaffold(
@@ -212,10 +211,10 @@ homeWidget(BuildContext context, WidgetRef ref,
                             secondHeight: 135.28.h,
                           ),
                           CardContent(
-                            contentDuration: data.cohort?.cohortDuration,
-                            numberEnrolled: data.track?.enrolledCount,
-                            trackName: data.track?.name,
-                            mentorName: data.mentor?.fullName,
+                            contentDuration: data.cohort?.cohortDuration ?? 0,
+                            numberEnrolled: data.track?.enrolledCount ?? 0,
+                            trackName: data.track?.name ?? '',
+                            mentorName: data.mentor?.fullName ?? '',
                             d: data,
                           ),
                         ],
