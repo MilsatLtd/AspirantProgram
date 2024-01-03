@@ -17,7 +17,7 @@ const TrackDetails = () => {
 
   const { startDate, endDate } = applictionTimeline
 
-  const brochureDirectory = trackId === "fundamental-of-gis" ? Brochure.FundamentalOfGIS : trackId === "data-collection-and-field-mapping" ? Brochure.DataCollectionAndFieldMapping : trackId === "geospatial-development-tool" ? Brochure.GeospatialDeploymentTool : ""
+  const brochureDirectory = trackId === "fundamental-of-gis" ? Brochure.FundamentalOfGIS : trackId === "data-collection-and-field-mapping" ? Brochure.DataCollectionAndFieldMapping : trackId === "geospatial-enterprise-solution" ? Brochure.GeospatialEnterpriseSolution : ""
 
 
   return (
