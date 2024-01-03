@@ -1,9 +1,10 @@
 import instagram from "../Assets/instagram.svg";
 import linkedin from "../Assets/linkedin.svg";
 import twitter from "../Assets/twitter.svg";
-import community from "../Assets/community-picture.jpeg";
-import frontend from "../Assets/frontend-picture.jpeg";
+import dataCollectionImage from "../Assets/data_collection.jpg";
+import community from "../Assets/community-picture.jpg";
 import designer from "../Assets/designer-picture.jpeg";
+import gisEnterprise from "../Assets/gis-enterprise.png";
 import triangleBlue from "../Assets/triangleTexture-blue.svg";
 import triangleGreen from "../Assets/triangleTexture-green.svg";
 import trianglePurple from "../Assets/triangleTexture-purple.svg";
@@ -60,8 +61,8 @@ export const routes = {
     },
     {
       id: 3,
-      name: "Geospatial Deployment Tool",
-      link: "/track/geospatial-development-tool",
+      name: "Geospatial Enterprise Solution",
+      link: "/track/geospatial-enterprise-solution"
     }
   ],
 };
@@ -242,10 +243,10 @@ export const AvailableTracks = [
     ],
   },
   {
-    id: "geospatial-development-tool",
-    trackName: "Geospatial Deployment Tool",
+    id: "geospatial-enterprise-solution",
+    trackName: "Geospatial Enterprise Solution",
     description:
-      "Explore geospatial software, covers open-source tools and commercial solutions like ArcMap/ArcGIS Pro. Learn project specification, data requirements, licensing, system configuration, and spatial analysis, with practical insights into procurement, infrastructure setup, deployment, testing, and license activation for both online and offline scenarios",
+      "This course covers geospatial software, including both open-source and commercial tools. Participants will grasp the significance and advantages of using these tools for effective spatial analysis and decision-making",
     learningTimeLine: "5 weeks",
     TrackInfo: [
       {
@@ -297,9 +298,9 @@ export const applictionTimeline = {
 
 export const termsAndConditions = {
   firstTerms:
-    "I hereby declare that all information  provided are accurate and complete",
+    "I hereby declare that all information provided are accurate and complete",
   secondTerms:
-    "Lorem ipsum dolor sit amet consectetur. Faucibus volutpat imperdiet dictum lobortis nulla. Quis adipiscing pretium feugiat vulputate non",
+    "I hereby declare that I have read and understood the terms and conditions of the Milsat Aspirant Programme (MAP) and agree to abide by them.",
 };
 
 
@@ -342,14 +343,14 @@ export const TrackCardsInfo = [
   {
     id: 2,
     name: "Data Collection and Field Mapping",
-    picture: designer,
+    picture: dataCollectionImage,
     route: "/track/data-collection-and-field-mapping",
   },
   {
     id: 3,
-    name: "Geospatial Deployment Tool",
-    picture: designer,
-    route: "/track/geospatial-development-tool",
+    name: "Geospatial Enterprise Solution",
+    picture: gisEnterprise,
+    route: "/track/geospatial-enterprise-solution",
   },
 ];
 
@@ -482,63 +483,64 @@ export const oppourtunity = [
 export const Brochure =  {
   FundamentalOfGIS: "/Fundamental_of_GIS.pdf",
   DataCollectionAndFieldMapping: "/Data_Collection_and_Field_Mapping.pdf",
-  GeospatialDeploymentTool: "/Geospatial_Deployment_Tool.pdf",
+  GeospatialEnterpriseSolution: "/Geospatial_Enterprise_Solution.pdf",
 }
 
 export const MobileAppPlayStoreLink = "https://play.google.com/store/apps/details?id=com.milsat.apirant&pcampaignid=web_share"
 
 export const ApplicationEmailTemplate  = `<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Application Received</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #f4f4f4;
-      margin: 0;
-      padding: 0;
-    }
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Application Received</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+  }
 
-    .container {
-      max-width: 600px;
-      margin: 20px auto;
-      background-color: #fff;
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    }
+  .container {
+    max-width: 600px;
+    margin: 20px auto;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
 
-    h1 {
-      color: #333;
-    }
+  h1 {
+    color: #333;
+  }
 
-    p {
-      color: #666;
-    }
+  p {
+    color: #666;
+  }
 
-    .cta-button {
-      display: inline-block;
-      padding: 10px 20px;
-      background-color: #3498db;
-      color: #fff;
-      text-decoration: none;
-      border-radius: 5px;
-    }
-    
-    .footer {
-      margin-top: 20px;
-      text-align: center;
-      color: #888;
-    }
-  </style>
+  .cta-button {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #3498db;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 5px;
+  }
+  
+  .footer {
+    margin-top: 30px;
+    text-align: center;
+    color: #888;
+  }
+</style>
 </head>
 <body>
-  <div class="container">
-    <p>We have successfully received your application for the Milsat Aspirant Program</p>
-    <p>Your submission is currently under review and you'll be notified via email upon approval</p>
-    <p>If you have any questions or concerns, please feel free to reach out to us at</p> <a href="mailto:mapSupport@gmail.com">Support</a>
-    <p>Best regards,</p>
-    <p class="footer">This is an automated email, please do not reply.</p>
-  </div>
+<div class="container">
+  <h1>Application Received Successfully!</h1>
+  <p>Thank you for applying to Milsat Aspirant Program. Your application has been received successfully. Please stay tuned for the review result which will be communicated via email.</p>
+  <p>Your application is now under review.</p>
+  <p>If you have any questions or concerns, feel free to email us at <a href="mailto:map.milsat@gmail.com">support</a></p> 
+  <p>Best regards,</p>
+  <p class="footer">This is an automated email, please do not reply.</p>
+</div>
 </body>
 </html>
 `

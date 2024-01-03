@@ -7,17 +7,16 @@ import fetAllCohorts from "./api/fetchAllCohorts";
 import Enums from "./constant/enum";
 import utils from "./constant/common";
 import { Link } from "react-router-dom";
-import Loader from "./Loader";
 import fetAllTracks from "./api/fetchAllTracks";
 import addNewCohort from "./api/addNewCohort";
 
-// function Loader() {
-//     return (
-//       <div className="flex justify-center items-center">
-//         <div className="animate-spin rounded-full h-7 w-7 border-t-4 border-b-4 border-blue-500 text-sm ml-10 text-purple-900">map</div>
-//       </div>
-//     );
-//   }
+function Loader() {
+    return (
+      <div className="flex justify-center items-center">
+        <div className="animate-spin rounded-full h-7 w-7 border-t-4 border-b-4 border-blue-500 text-sm ml-10 text-purple-900">map</div>
+      </div>
+    );
+  }
   
 
 // eslint-disable-next-line react/prop-types
