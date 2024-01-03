@@ -405,10 +405,10 @@ class CreateApplicationSerializer(serializers.Serializer):
         [(gender.value, gender.name) for gender in GENDER])
     country = serializers.CharField(max_length=30)
     phone_number = serializers.CharField(max_length=30)
-    reason = serializers.CharField(max_length=100)
+    reason = serializers.CharField(max_length=350)
     referral = serializers.CharField(max_length=100)
-    skills = serializers.CharField(max_length=100)
-    purpose = serializers.CharField(max_length=100)
+    skills = serializers.CharField(max_length=350)
+    purpose = serializers.CharField(max_length=350)
     education = serializers.ChoiceField(
         [(education.value, education.name) for education in EDUCATION])
     role = serializers.ChoiceField([(role.value, role.name) for role in ROLE])
