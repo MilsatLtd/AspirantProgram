@@ -51,7 +51,7 @@ class User(AbstractUser):
     gender = models.IntegerField(choices=GENDER_CHOICES)
     country = models.CharField(max_length=30)
     phone_number = models.CharField(max_length=11)
-    bio = models.TextField(blank=True, max_length=350, default='')
+    bio = models.TextField(blank=True, max_length=370, default='')
     profile_picture = models.ImageField(
         upload_to=unique_profile_picture, blank=True, null=True)
     objects = UserManager()
@@ -62,6 +62,8 @@ class User(AbstractUser):
 
     def save(self, *args, **kwargs):
         self.username = self.email
+        self.email = self.email.lower()
+        self.username = self.username.lower()
         super(User, self).save(*args, **kwargs)
 
     def set_password2(self, raw_password):

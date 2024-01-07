@@ -151,7 +151,7 @@ function ApplicationRow ( {label, detail} ) {
             {
                 label === "file" ? (
                     <a href={detail} className="min-h-[50px] px-3 flex items-center  text-blue-500 cursor:"
-                    target="_blank" rel="noopener"   
+                    target="_blank"   
                     >{detail}</a>
                 ) : label === "submission_date" || label === "review_date" ? (
                     <p className="border-2 border-black min-h-[50px] px-3 flex items-center ">{utils.formatDate(detail)}</p>
