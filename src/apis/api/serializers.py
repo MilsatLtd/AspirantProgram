@@ -783,7 +783,7 @@ class TrackSerializer_C(serializers.ModelSerializer):
     def to_representation(self, instance):
         repr_ = super().to_representation(instance)
         repr_['courses'] = sorted(
-            repr_['courses'], key=lambda x: x['order'], reverse=True)
+            repr_['courses'], key=lambda x: x['order'])
         return repr_
 
     class Meta:
