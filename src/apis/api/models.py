@@ -163,7 +163,7 @@ class Track(models.Model):
 class Course(models.Model):
     course_id = models.UUIDField(
         primary_key=True, default=uuid.uuid4, editable=False)
-    name = models.CharField(max_length=200)
+    name = models.CharField(max_length=300)
     description = models.TextField(blank=True, default='')
     requirements = models.TextField(blank=True, default='')
     access_link = models.URLField(default='https://milsat.africa')

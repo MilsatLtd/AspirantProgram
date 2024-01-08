@@ -182,7 +182,8 @@ class CreateCohortSerializer(serializers.Serializer):
                     name=track.name, description=track.description, cohort=cohort, parent=track)
                 for course in track.courses.all():
                     Course.objects.create(
-                        name=course.name, description=course.description, track=new_track)
+                        name=course.name, description=course.description, track=new_track, order=course.order,
+                        access_link=course.access_link, requirements=course.requirements)
             return cohort
         except Exception as e:
             cohort.delete()
