@@ -779,6 +779,13 @@ class TrackSerializer_C(serializers.ModelSerializer):
 
     courses = CourseSerializer_C(many=True)
 
+    # order courses by order number
+    def to_representation(self, instance):
+        repr_ = super().to_representation(instance)
+        repr_['courses'] = sorted(
+            repr_['courses'], key=lambda x: x['order'], reverse=True)
+        return repr_
+
     class Meta:
         model = Track
         fields = ['track_id', 'name', 'description', 'courses']
