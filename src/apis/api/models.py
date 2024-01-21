@@ -235,7 +235,7 @@ class Cohort(models.Model):
     duration = models.PositiveIntegerField(default=0, editable=False)
 
     def save(self, *args, **kwargs):
-        self.duration = round((self.end_date - self.start_date).days / 30)
+        self.duration = round((self.end_date - self.start_date).days / 7)
         super(Cohort, self).save(*args, **kwargs)
 
     def __str__(self):
