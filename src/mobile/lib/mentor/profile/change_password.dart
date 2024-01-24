@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:google_fonts/google_fonts.dart';
+import 'package:milsat_project_app/extras/components/shared_prefs/keys.dart';
+import 'package:milsat_project_app/extras/components/shared_prefs/utils.dart';
 
 import '../../../extras/components/files.dart';
-import '../../extras/api/reset_password.dart';
+import '../../extras/api/change_password.dart';
 
 class MentorPasswordPage extends ConsumerWidget {
   const MentorPasswordPage({super.key});
@@ -130,7 +132,7 @@ class MentorPasswordPage extends ConsumerWidget {
                     "new_password": newPasswordController.text,
                     "new_password_confirm": confirmPasswordController.text,
                   };
-                  await ref.read(resetPasswordProvider).resetPassword(data);
+                  await ref.read(changePasswordProvider).changePassword(data);
                   // ignore: use_build_context_synchronously
                   popUp(context, ref);
                 },
@@ -182,7 +184,11 @@ class MentorPasswordPage extends ConsumerWidget {
             CustomButton(
               height: 54,
               pressed: () {
-                AppNavigator.pop();
+                AppNavigator.navigateToAndReplace(loginRoute);
+                SecureStorageUtils.deleteDataFromStorage(
+                    SharedPrefKeys.accessToken);
+                SecureStorageUtils.deleteDataFromStorage(
+                    SharedPrefKeys.profileResponse);
               },
               color: AppTheme.kPurpleColor,
               width: 307,

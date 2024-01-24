@@ -234,7 +234,7 @@ class ReportPage1 extends StatelessWidget {
                     controller: textController,
                     decoration: InputDecoration(
                       border: InputBorder.none,
-                      hintText: 'type something...',
+                      hintText: 'Type Something...',
                       hintStyle: GoogleFonts.raleway(
                         color: AppTheme.kHintTextColor,
                         fontSize: 14,
@@ -305,13 +305,19 @@ final isTappedProvider = StateProvider<bool>((ref) {
   return false;
 });
 
-class ReportPage2 extends ConsumerWidget {
+class ReportPage2 extends ConsumerStatefulWidget {
   const ReportPage2({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    TextEditingController controller = TextEditingController();
-    final formKey = GlobalKey<FormState>();
+  ConsumerState<ReportPage2> createState() => _ReportPage2State();
+}
+
+class _ReportPage2State extends ConsumerState<ReportPage2> {
+  TextEditingController controller = TextEditingController();
+  final formKey = GlobalKey<FormState>();
+  bool isEdited = false;
+  @override
+  Widget build(BuildContext context) {
     return PreferredSize(
       preferredSize: appBarHeight,
       child: Scaffold(
@@ -378,11 +384,20 @@ class ReportPage2 extends ConsumerWidget {
                       return TextField(
                         controller: controller,
                         onChanged: (value) {
-                          ref.read(isTappedProvider.notifier).state = true;
+                          if (value.isNotEmpty) {
+                            ref.read(isTappedProvider.notifier).state = true;
+                            setState(() {
+                              isEdited = true;
+                            });
+                          } else {
+                            setState(() {
+                              isEdited = false;
+                            });
+                          }
                         },
                         decoration: InputDecoration(
                           border: InputBorder.none,
-                          hintText: 'type something...',
+                          hintText: 'Type Something...',
                           hintStyle: GoogleFonts.raleway(
                             color: AppTheme.kHintTextColor,
                             fontSize: 14,

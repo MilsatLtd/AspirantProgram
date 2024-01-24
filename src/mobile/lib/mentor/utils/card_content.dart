@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:milsat_project_app/extras/components/files.dart';
@@ -20,15 +19,11 @@ class MentorCardContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (kDebugMode) {
-      print(count);
-    }
     return Container(
       padding: const EdgeInsets.only(
         top: 18,
         bottom: 16,
       ),
-      height: 180,
       width: double.infinity,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -87,24 +82,34 @@ class MentorCardContent extends StatelessWidget {
                   ),
                   Row(
                     children: [
-                      InternSlip(
-                        count: count,
-                        d: d,
+                      Row(
+                        children: [
+                          for (int i = 0; i < d.mentees!.length; i++) ...{
+                            if (i < 5) ...{
+                              Align(
+                                widthFactor: 0.5,
+                                child: CircleAvatar(
+                                  radius: 14,
+                                  backgroundColor:
+                                      Theme.of(context).primaryColor,
+                                  child: CircleAvatar(
+                                    radius: 12,
+                                    backgroundImage: NetworkImage(d.mentees!
+                                        .elementAt(i)
+                                        .profilePicture!),
+                                  ),
+                                ),
+                              ),
+                            }
+                          }
+                        ],
                       ),
-                      const SizedBox(
-                        width: 50,
-                      ),
-                      if (isLessThanOrEqualTo5 == true)
-                        const SizedBox.shrink()
-                      else
+                      if (d.mentees!.length >= 5) ...{
                         Text(
-                          '+${count - 5} more',
-                          style: GoogleFonts.raleway(
-                            color: const Color(0xFFF2EBF3),
-                            fontSize: 10,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
+                          '+${d.mentees!.length - 5} more',
+                          style: const TextStyle(color: Colors.white),
+                        )
+                      }
                     ],
                   ),
                 ],

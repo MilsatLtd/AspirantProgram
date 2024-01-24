@@ -152,8 +152,9 @@ class _SubmitToDoPageState extends ConsumerState<SubmitToDoPage> {
                               ),
                               Text(
                                 ref.watch(fileName) == ''
-                                    ? 'Upload course certificate'
+                                    ? 'upload proof of completion'
                                     : ref.watch(fileName)!.split('/').last,
+                                softWrap: true,
                                 style: GoogleFonts.raleway(
                                   color: const Color(0xFF9A989A),
                                   fontSize: 13,

@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -76,9 +75,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   builder:
                       (BuildContext context, WidgetRef ref, Widget? child) {
                     final tapped = ref.watch(boolStateProvider);
-                    if (kDebugMode) {
-                      print(tapped);
-                    }
                     return CustomTextField(
                       controller: passwordController,
                       hintText: 'Input password here',

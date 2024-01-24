@@ -1,5 +1,3 @@
-// ignore_for_file: use_build_context_synchronously
-
 import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -70,29 +68,7 @@ class _EditProfileState extends ConsumerState<EditProfile> {
                 ref
                     .read(apiUploadProvider)
                     .updateStatus(decodedToken!.userId!, bioController.text);
-                showDialog(
-                    context: context,
-                    builder: (context) {
-                      return AlertDialog(
-                        title: const Text('Congratulations!'),
-                        content: const Text('Profile updated successfully'),
-                        actions: [
-                          Padding(
-                            padding: const EdgeInsets.only(
-                              right: 16,
-                              top: 6,
-                              bottom: 16,
-                            ),
-                            child: GestureDetector(
-                                onTap: () {
-                                  AppNavigator.navigateToAndReplace(
-                                      profileRoute);
-                                },
-                                child: const Text('Ok')),
-                          )
-                        ],
-                      );
-                    });
+                dialog();
               },
               child: Text(
                 'Save Edit',
@@ -356,5 +332,30 @@ class _EditProfileState extends ConsumerState<EditProfile> {
                 child: CircularProgressIndicator(),
               );
             }));
+  }
+
+  Future<dynamic> dialog() {
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: const Text('Congratulations!'),
+            content: const Text('Profile updated successfully'),
+            actions: [
+              Padding(
+                padding: const EdgeInsets.only(
+                  right: 16,
+                  top: 6,
+                  bottom: 16,
+                ),
+                child: GestureDetector(
+                    onTap: () {
+                      AppNavigator.navigateToAndReplace(profileRoute);
+                    },
+                    child: const Text('Ok')),
+              )
+            ],
+          );
+        });
   }
 }

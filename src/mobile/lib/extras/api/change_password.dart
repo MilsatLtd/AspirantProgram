@@ -17,7 +17,7 @@ class ApiService {
 
   ApiService(this.dio);
 
-  Future<void> resetPassword(data) async {
+  Future<void> changePassword(data) async {
     try {
       String url = '${Env.apiUrl}/api/auth/password/change';
       String? token =
@@ -31,6 +31,9 @@ class ApiService {
               'Content-Type': 'application/json',
             },
           ));
+      if (kDebugMode) {
+        print(response.statusCode);
+      }
       if (response.statusCode == 200) {
         personalInfo['message'] = response.data['message'];
         if (kDebugMode) {
@@ -48,15 +51,20 @@ class ApiService {
           );
         }
       }
-    } catch (e) {
-      if (kDebugMode) {
-        print('Error resetting password: $e');
+    } on DioError catch (e) {
+      if (e.response?.statusCode == 400) {
+        personalInfo['message'] =
+            "${e.message} \n Old password is incorrect 🧐";
+      } else {
+        personalInfo['message'] = e.message;
       }
+    } catch (e) {
+      throw (e.toString());
     }
   }
 }
 
-final resetPasswordProvider = Provider<ApiService>((ref) {
+final changePasswordProvider = Provider<ApiService>((ref) {
   final dio = ref.watch(dioProvider);
   return ApiService(dio);
 });

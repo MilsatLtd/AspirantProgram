@@ -178,7 +178,7 @@ class AddBlocker extends ConsumerWidget {
             CustomButton(
               height: 54,
               pressed: () {
-                AppNavigator.pop();
+                AppNavigator.navigateToAndReplace(blockerRoute);
               },
               color: AppTheme.kPurpleColor,
               width: 307,

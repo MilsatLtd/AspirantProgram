@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:google_fonts/google_fonts.dart';
 
-import '../../../extras/api/reset_password.dart';
+import '../../../extras/api/change_password.dart';
 import '../../../extras/components/files.dart';
 
 class PasswordPage extends ConsumerWidget {
@@ -122,12 +122,13 @@ class PasswordPage extends ConsumerWidget {
               CustomButton(
                 height: 54,
                 pressed: () async {
+                  FocusManager.instance.primaryFocus?.unfocus();
                   final data = {
                     "old_password": oldPasswordController.text,
                     "new_password": newPasswordController.text,
                     "new_password_confirm": confirmPasswordController.text,
                   };
-                  await ref.read(resetPasswordProvider).resetPassword(data);
+                  await ref.read(changePasswordProvider).changePassword(data);
                   // ignore: use_build_context_synchronously
                   popUp(context, ref);
                 },
@@ -178,7 +179,9 @@ class PasswordPage extends ConsumerWidget {
             CustomButton(
               height: 54,
               pressed: () {
-                AppNavigator.pop();
+                personalInfo["message"].toString().contains('400')
+                    ? AppNavigator.pop()
+                    : AppNavigator.navigateToAndReplace(loginRoute);
               },
               color: AppTheme.kPurpleColor,
               width: 307,

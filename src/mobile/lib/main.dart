@@ -9,6 +9,11 @@ void main() async {
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown
   ]);
+  SystemChrome.setSystemUIOverlayStyle(
+    const SystemUiOverlayStyle(
+        statusBarColor: Colors.purple,
+        statusBarIconBrightness: Brightness.light),
+  );
   runApp(
     const ProviderScope(
       child: MyApp(),

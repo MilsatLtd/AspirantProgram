@@ -12,7 +12,7 @@ import '../../../../extras/models/aspirant_model.dart';
 
 String courseContent = '';
 
-final coursesDetails = FutureProvider<CourseModel>((ref) async {
+final coursesDetails = FutureProvider.autoDispose<CourseModel>((ref) async {
   DecodedTokenResponse? decodedToken =
       await SecureStorageUtils.getDataFromStorage<DecodedTokenResponse>(
           SharedPrefKeys.tokenResponse, DecodedTokenResponse.fromJsonString);

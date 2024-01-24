@@ -26,8 +26,6 @@ class Utils {
       return "Password is required";
     } else if (value.trim().length <= 5) {
       return "Password is too week";
-    } else if (!value.trim().contains(RegExp(r'[0-9]'))) {
-      return "Password must contain a number";
     }
     return null;
   }
