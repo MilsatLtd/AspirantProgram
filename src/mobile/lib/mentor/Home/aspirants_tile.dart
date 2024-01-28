@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:milsat_project_app/extras/components/files.dart';
 
 class AspirantsTile extends StatelessWidget {
   const AspirantsTile({
@@ -20,11 +19,11 @@ class AspirantsTile extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        height: 72.h,
+        height: 72,
         width: double.infinity,
-        padding: EdgeInsets.symmetric(
-          horizontal: 16.w,
-          vertical: 16.h,
+        padding: const EdgeInsets.symmetric(
+          horizontal: 16,
+          vertical: 16,
         ),
         decoration: BoxDecoration(
           border: border,
@@ -33,16 +32,16 @@ class AspirantsTile extends StatelessWidget {
           children: [
             if (image != null)
               CircleAvatar(
-                radius: 20.r,
+                radius: 20,
                 backgroundImage: NetworkImage(image!),
               )
             else
-              CircleAvatar(
-                radius: 20.r,
-                backgroundImage: const AssetImage('assets/defaultImage.jpg'),
+              const CircleAvatar(
+                radius: 20,
+                backgroundImage: AssetImage('assets/defaultImage.jpg'),
               ),
-            SizedBox(
-              width: 16.w,
+            const SizedBox(
+              width: 16,
             ),
             column!,
           ],

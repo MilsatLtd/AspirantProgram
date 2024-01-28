@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:milsat_project_app/extras/models/decoded_token.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SharedPreferencesUtil {
@@ -108,25 +107,25 @@ class SecureStorageUtils {
     return value == null ? null : List<String>.from(jsonDecode(value));
   }
 
-  static Future<void> saveTokenResponseToStorage(
-      String key, DecodedTokenResponse decodedToken) async {
+  static Future<void> saveDataToStorage<T>(
+      String key, T data, String Function(T) toJsonString) async {
     const secureStorage = FlutterSecureStorage();
-    final jsonString = decodedToken.toJsonString();
+    final jsonString = toJsonString(data);
     await secureStorage.write(key: key, value: jsonString);
   }
 
-  static Future<DecodedTokenResponse?> getTokenResponseFromStorage(
-      String key) async {
+  static Future<T?> getDataFromStorage<T>(
+      String key, T Function(String) fromJsonString) async {
     const secureStorage = FlutterSecureStorage();
     final jsonString = await secureStorage.read(key: key);
     if (jsonString != null) {
-      return DecodedTokenResponse.fromJsonString(jsonString);
+      return fromJsonString(jsonString);
     }
     return null;
   }
 
-  static Future<void> removeUserDataFromStorage(String key) async {
+  static Future<void> deleteDataFromStorage(String key) async {
     const secureStorage = FlutterSecureStorage();
-    return secureStorage.delete(key: key);
+    await secureStorage.delete(key: key);
   }
 }

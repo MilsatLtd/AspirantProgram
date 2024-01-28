@@ -3,9 +3,11 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:milsat_project_app/extras/components/shared_prefs/keys.dart';
+import 'package:milsat_project_app/extras/components/shared_prefs/utils.dart';
 import 'package:milsat_project_app/extras/env.dart';
-
-import '../components/files.dart';
+import 'package:milsat_project_app/extras/models/bio_model.dart';
+import 'package:milsat_project_app/extras/models/profile_picture_model.dart';
 
 final dioProvider = Provider<Dio>((ref) {
   final dio = Dio();
@@ -21,6 +23,8 @@ class APIService {
   final Dio dio;
 
   APIService(this.dio);
+  ProfilePictureResponse profileResponse = ProfilePictureResponse();
+  BioResponseModel bioResponse = BioResponseModel();
 
   Future<void> submitTodo(String summary, String courseId, String studentId,
       String filePath) async {
@@ -33,13 +37,16 @@ class APIService {
             filename: filePath.split('/').last),
       });
 
+      String? token =
+          await SecureStorageUtils.getString(SharedPrefKeys.accessToken);
+
       final response = await dio.post(
         '${Env.apiUrl}/api/todos/submit',
         data: formData,
         options: Options(
           headers: {
             'accept': 'application/json',
-            'Authorization': 'Bearer ${cred['access']}',
+            'Authorization': 'Bearer $token',
             'Content-Type': 'multipart/form-data',
             'X-CSRFToken':
                 'EffsmhdnfzErfUTJKut1Rw5IRLw3NJBtg6lej32zWydTj5CgzM6zrRXYd4drM2Sg',
@@ -68,7 +75,7 @@ class APIService {
     }
   }
 
-  Future<void> uploadImage(String userId, File image) async {
+  Future<ProfilePictureResponse?> uploadImage(String userId, File image) async {
     try {
       String url = '${Env.apiUrl}/api/users/update/picture/$userId';
 
@@ -79,61 +86,92 @@ class APIService {
         ),
       });
 
+      String? token =
+          await SecureStorageUtils.getString(SharedPrefKeys.accessToken);
+
       final response = await dio.put(
         url,
         data: formData,
         options: Options(
           headers: {
-            'Authorization': 'Bearer ${cred['access']}',
+            'Authorization': 'Bearer $token',
             'Content-Type': 'multipart/form-data',
           },
         ),
       );
-      if (response.statusCode == 200) {
-        personalInfo['personalUserInfo'] = response.data;
-        if (kDebugMode) {
-          print(response.data);
-        }
+
+      switch (response.statusCode) {
+        case 200:
+          ProfilePictureResponse profileResponse =
+              ProfilePictureResponse.fromJson(response.data);
+          SecureStorageUtils.saveDataToStorage(SharedPrefKeys.profileResponse,
+              profileResponse, (data) => data.toJsonString());
+          return profileResponse;
+
+        case 404:
+          throw ('Invalid userId');
+      }
+    } on DioError catch (e) {
+      if (e.response?.statusCode == 401) {
+        throw ('${e.response}');
+      } else if (e.error is SocketException) {
+        throw ('${e.response}');
+      } else if (e.type == DioErrorType.connectionTimeout ||
+          e.type == DioErrorType.receiveTimeout) {
+        throw ('${e.response}');
+      } else if (e.response?.statusCode == 404) {
+        throw ('${e.response}');
       } else {
-        // Handle error response
-        if (kDebugMode) {
-          print(
-            'Todo submission failed with status code: ${response.statusCode}',
-          );
-        }
+        throw ('${e.response}');
       }
     } catch (e) {
-      if (kDebugMode) {
-        print('Error uploading image: $e');
-      }
-      rethrow;
+      throw Exception('Error making request: ${e.toString()}');
     }
+    return profileResponse;
   }
 
-  Future<void> updateStatus(String userId, String bio) async {
+  Future<BioResponseModel?> updateStatus(String userId, String bio) async {
     final url = '${Env.apiUrl}/api/users/update/$userId';
     try {
+      String? token =
+          await SecureStorageUtils.getString(SharedPrefKeys.accessToken);
       final response = await dio.put(
         url,
         data: {'bio': bio},
         options: Options(
           headers: {
             'accept': 'application/json',
-            'Authorization': 'Bearer ${cred['access']}',
+            'Authorization': 'Bearer $token',
             'Content-Type': 'application/json',
           },
         ),
       );
 
-      personalInfo['personalUserInfo'] = response.data;
-      if (kDebugMode) {
-        print(response.data);
+      switch (response.statusCode) {
+        case 200:
+          BioResponseModel bioResponse =
+              BioResponseModel.fromJson(response.data);
+          return bioResponse;
+
+        case 404:
+          throw ('Invalid userId');
+      }
+    } on DioError catch (e) {
+      if (e.response?.statusCode == 401) {
+        throw ('${e.response}');
+      } else if (e.error is SocketException) {
+        throw ('${e.response}');
+      } else if (e.type == DioErrorType.connectionTimeout ||
+          e.type == DioErrorType.receiveTimeout) {
+        throw ('${e.response}');
+      } else if (e.response?.statusCode == 404) {
+        throw ('${e.response}');
+      } else {
+        throw ('${e.response}');
       }
     } catch (e) {
-      if (kDebugMode) {
-        print('Error uploading image: $e');
-      }
-      rethrow;
+      throw Exception('Error making request: ${e.toString()}');
     }
+    return bioResponse;
   }
 }

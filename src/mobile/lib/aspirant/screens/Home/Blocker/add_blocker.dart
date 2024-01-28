@@ -19,24 +19,24 @@ class AddBlocker extends ConsumerWidget {
     final formKey = GlobalKey<FormState>();
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(44.h),
+        preferredSize: const Size.fromHeight(44),
         child: AppBar(
           backgroundColor: Colors.white,
           automaticallyImplyLeading: false,
           elevation: 0.5,
           leading: GestureDetector(
             onTap: () => AppNavigator.pop(),
-            child: Icon(
+            child: const Icon(
               Icons.arrow_back,
               color: Colors.black,
-              size: 18.sp,
+              size: 18,
             ),
           ),
           title: Text(
             'Raise a Blocker',
             style: GoogleFonts.raleway(
               color: const Color(0xFF423B43),
-              fontSize: 16.sp,
+              fontSize: 16,
               fontWeight: FontWeight.w600,
             ),
           ),
@@ -45,10 +45,10 @@ class AddBlocker extends ConsumerWidget {
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: EdgeInsets.only(
-            top: 20.h,
-            left: 16.w,
-            right: 16.w,
+          padding: const EdgeInsets.only(
+            top: 20,
+            left: 16,
+            right: 16,
           ),
           child: Form(
             key: formKey,
@@ -59,8 +59,8 @@ class AddBlocker extends ConsumerWidget {
                   'Blocker topic',
                   style: kSmallHeadingStyle,
                 ),
-                SizedBox(
-                  height: 8.h,
+                const SizedBox(
+                  height: 8,
                 ),
                 TextFormField(
                   controller: titleController,
@@ -71,11 +71,11 @@ class AddBlocker extends ConsumerWidget {
                     return null;
                   },
                   decoration: InputDecoration(
-                    constraints: BoxConstraints(maxHeight: 54.h),
+                    constraints: const BoxConstraints(maxHeight: 54),
                     hintText: 'e.g Dashboard visualization',
                     hintStyle: GoogleFonts.raleway(
                       color: const Color(0xFFB7B6B8),
-                      fontSize: 13.sp,
+                      fontSize: 13,
                       fontWeight: FontWeight.w500,
                     ),
                     border: const OutlineInputBorder(
@@ -85,8 +85,8 @@ class AddBlocker extends ConsumerWidget {
                     ),
                   ),
                 ),
-                SizedBox(
-                  height: 32.h,
+                const SizedBox(
+                  height: 32,
                 ),
                 TextFormField(
                   controller: descriptionController,
@@ -101,10 +101,10 @@ class AddBlocker extends ConsumerWidget {
                     hintText: 'Describe your blocker in details',
                     hintStyle: GoogleFonts.raleway(
                       color: const Color(0xFFB7B6B8),
-                      fontSize: 13.sp,
+                      fontSize: 13,
                       fontWeight: FontWeight.w500,
                     ),
-                    contentPadding: EdgeInsets.only(top: 16.h, left: 16.w),
+                    contentPadding: const EdgeInsets.only(top: 16, left: 16),
                     border: const OutlineInputBorder(
                       borderSide: BorderSide(
                         color: Color(0xFFB7B6B8),
@@ -112,15 +112,16 @@ class AddBlocker extends ConsumerWidget {
                     ),
                   ),
                 ),
-                SizedBox(
-                  height: 64.h,
+                const SizedBox(
+                  height: 64,
                 ),
                 CustomButton(
-                  height: 54.h,
+                  height: 54,
                   pressed: () async {
-                    DecodedTokenResponse? response =
-                        await SecureStorageUtils.getTokenResponseFromStorage(
-                            SharedPrefKeys.tokenResponse);
+                    DecodedTokenResponse? response = await SecureStorageUtils
+                        .getDataFromStorage<DecodedTokenResponse>(
+                            SharedPrefKeys.tokenResponse,
+                            DecodedTokenResponse.fromJsonString);
                     if (formKey.currentState!.validate()) {
                       ref.read(blockerProvider).postBlocker(
                             description: descriptionController.text,
@@ -134,7 +135,7 @@ class AddBlocker extends ConsumerWidget {
                   },
                   color: AppTheme.kPurpleColor3,
                   width: double.infinity,
-                  borderRadius: BorderRadius.circular(8.r),
+                  borderRadius: BorderRadius.circular(8),
                   child: Text(
                     'Submit',
                     style: GoogleFonts.raleway(
@@ -159,7 +160,7 @@ class AddBlocker extends ConsumerWidget {
             'Blocker Submitted!',
             textAlign: TextAlign.center,
             style: GoogleFonts.raleway(
-              fontSize: 18.sp,
+              fontSize: 18,
               fontWeight: FontWeight.w600,
               color: const Color(0xFF383639),
             ),
@@ -168,21 +169,21 @@ class AddBlocker extends ConsumerWidget {
             'You will be notified once your mentor responds',
             textAlign: TextAlign.center,
             style: GoogleFonts.raleway(
-              fontSize: 14.sp,
+              fontSize: 14,
               fontWeight: FontWeight.w600,
               color: const Color(0xFF504D51),
             ),
           ),
           actions: [
             CustomButton(
-              height: 54.h,
+              height: 54,
               pressed: () {
-                AppNavigator.pop();
+                AppNavigator.navigateToAndReplace(blockerRoute);
               },
               color: AppTheme.kPurpleColor,
-              width: 307.w,
+              width: 307,
               elevation: 0,
-              borderRadius: BorderRadius.circular(8.r),
+              borderRadius: BorderRadius.circular(8),
               child: Text(
                 'Ok!',
                 style: GoogleFonts.raleway(

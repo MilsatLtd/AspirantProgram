@@ -39,7 +39,7 @@ class UserProfile extends StatelessWidget {
             if (image != 'assets/defaultImage.jpg')
               Center(
                 child: CircleAvatar(
-                  radius: 44.r,
+                  radius: 44,
                   backgroundImage: NetworkImage(
                     image,
                   ),
@@ -48,18 +48,18 @@ class UserProfile extends StatelessWidget {
             else
               Center(
                 child: CircleAvatar(
-                  radius: 44.r,
+                  radius: 44,
                   backgroundImage: AssetImage(
                     image,
                   ),
                 ),
               ),
-            SizedBox(
-              height: 34.h,
+            const SizedBox(
+              height: 34,
             ),
             Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: 16.w,
+              padding: const EdgeInsets.symmetric(
+                horizontal: 16,
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -69,56 +69,56 @@ class UserProfile extends StatelessWidget {
                     style: GoogleFonts.raleway(
                       color: const Color(0xFF504D51),
                       fontWeight: FontWeight.w500,
-                      fontSize: 16.sp,
+                      fontSize: 16,
                     ),
                   ),
-                  SizedBox(
-                    height: 8.h,
+                  const SizedBox(
+                    height: 8,
                   ),
                   Container(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 16.w,
-                      vertical: 12.h,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 12,
                     ),
-                    height: 48.h,
+                    height: 48,
                     width: double.infinity,
                     decoration: BoxDecoration(
                       border: Border.all(color: AppTheme.kHintTextColor),
-                      borderRadius: BorderRadius.circular(6.r),
+                      borderRadius: BorderRadius.circular(6),
                     ),
                     child: Text(
                       userName,
                       style: GoogleFonts.raleway(
                         color: const Color(0xFF6E6B6F),
                         fontWeight: FontWeight.w500,
-                        fontSize: 16.sp,
+                        fontSize: 16,
                       ),
                     ),
                   ),
-                  SizedBox(
-                    height: 24.h,
+                  const SizedBox(
+                    height: 24,
                   ),
                   Text(
                     'Email',
                     style: GoogleFonts.raleway(
                       color: const Color(0xFF504D51),
                       fontWeight: FontWeight.w500,
-                      fontSize: 16.sp,
+                      fontSize: 16,
                     ),
                   ),
-                  SizedBox(
-                    height: 8.h,
+                  const SizedBox(
+                    height: 8,
                   ),
                   Container(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 16.w,
-                      vertical: 12.h,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 12,
                     ),
-                    height: 48.h,
+                    height: 48,
                     width: double.infinity,
                     decoration: BoxDecoration(
                       border: Border.all(color: AppTheme.kHintTextColor),
-                      borderRadius: BorderRadius.circular(6.r),
+                      borderRadius: BorderRadius.circular(6),
                     ),
                     child: Text(
                       userEmail,
@@ -126,30 +126,30 @@ class UserProfile extends StatelessWidget {
                       style: GoogleFonts.raleway(
                         color: const Color(0xFF6E6B6F),
                         fontWeight: FontWeight.w500,
-                        fontSize: 16.sp,
+                        fontSize: 16,
                       ),
                     ),
                   ),
-                  SizedBox(
-                    height: 24.h,
+                  const SizedBox(
+                    height: 24,
                   ),
                   Text(
                     'Bio',
                     style: GoogleFonts.raleway(
                       color: const Color(0xFF504D51),
                       fontWeight: FontWeight.w500,
-                      fontSize: 16.sp,
+                      fontSize: 16,
                     ),
                   ),
-                  SizedBox(
-                    height: 8.h,
+                  const SizedBox(
+                    height: 8,
                   ),
                   Container(
                     padding: const EdgeInsets.all(8),
-                    height: 100.h,
+                    height: 100,
                     width: double.infinity,
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(6.r),
+                      borderRadius: BorderRadius.circular(6),
                       border: Border.all(
                         color: const Color(0xFF6E6B6F),
                       ),

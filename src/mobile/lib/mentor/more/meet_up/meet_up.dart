@@ -20,36 +20,36 @@ class MeetUpScreen extends StatelessWidget {
             'No meetup\'s yet!',
             style: GoogleFonts.raleway(
               color: const Color(0xFF383639),
-              fontSize: 16.sp,
+              fontSize: 16,
               fontWeight: FontWeight.w500,
             ),
           ),
-          SizedBox(
-            height: 8.h,
+          const SizedBox(
+            height: 8,
           ),
           Text(
             'Create your first meetup.',
             style: GoogleFonts.raleway(
               color: const Color(0xFF383639),
-              fontSize: 16.sp,
+              fontSize: 16,
               fontWeight: FontWeight.w500,
             ),
           ),
-          SizedBox(
-            height: 32.h,
+          const SizedBox(
+            height: 32,
           ),
           GestureDetector(
             onTap: () {
               AppNavigator.navigateTo(scheduleMeetUpRoute);
             },
             child: Container(
-              width: 88.w,
-              height: 32.h,
+              width: 88,
+              height: 32,
               decoration: BoxDecoration(
                 border: Border.all(
                   color: const Color(0xFF9A989A),
                 ),
-                borderRadius: BorderRadius.circular(6.r),
+                borderRadius: BorderRadius.circular(6),
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -57,17 +57,17 @@ class MeetUpScreen extends StatelessWidget {
                   SvgPicture.asset(
                     'assets/add_button.svg',
                     color: AppTheme.kPurpleColor,
-                    height: 15.h,
-                    width: 15.w,
+                    height: 15,
+                    width: 15,
                   ),
-                  SizedBox(
-                    width: 10.w,
+                  const SizedBox(
+                    width: 10,
                   ),
                   Text(
                     'Create',
                     style: GoogleFonts.raleway(
                       color: AppTheme.kPurpleColor,
-                      fontSize: 14.sp,
+                      fontSize: 14,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
@@ -83,13 +83,13 @@ class MeetUpScreen extends StatelessWidget {
     }
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(44.h),
+        preferredSize: const Size.fromHeight(44),
         child: AppBar(
           title: Text(
             'Meetup',
             style: GoogleFonts.raleway(
               color: const Color(0xFF423B43),
-              fontSize: 16.sp,
+              fontSize: 16,
               fontWeight: FontWeight.w600,
             ),
           ),
@@ -102,8 +102,8 @@ class MeetUpScreen extends StatelessWidget {
                 AppNavigator.navigateTo(scheduleMeetUpRoute);
               },
               child: Padding(
-                padding: EdgeInsets.only(
-                  right: 20.w,
+                padding: const EdgeInsets.only(
+                  right: 20,
                 ),
                 child: SvgPicture.asset(
                   'assets/add_button.svg',
@@ -128,17 +128,17 @@ class MeetUpScreen extends StatelessWidget {
       body: schedules.isEmpty
           ? createSchedule
           : ListView.separated(
-              padding: EdgeInsets.only(
-                top: 16.h,
-                left: 16.w,
-                right: 16.w,
+              padding: const EdgeInsets.only(
+                top: 16,
+                left: 16,
+                right: 16,
               ),
               itemBuilder: (context, index) {
                 return schedules[index];
               },
               separatorBuilder: (context, index) {
-                return SizedBox(
-                  height: 24.h,
+                return const SizedBox(
+                  height: 24,
                 );
               },
               itemCount: schedules.length,

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:milsat_project_app/extras/components/files.dart';
 
 class TrackDetailsCard extends StatelessWidget {
   const TrackDetailsCard({
@@ -27,21 +26,21 @@ class TrackDetailsCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(
-        horizontal: 16.w,
+      padding: const EdgeInsets.symmetric(
+        horizontal: 16,
       ),
       child: Container(
-        padding: EdgeInsets.symmetric(
-          vertical: 10.h,
-          horizontal: 10.w,
+        padding: const EdgeInsets.symmetric(
+          vertical: 10,
+          horizontal: 10,
         ),
-        height: 52.h,
+        height: 52,
         width: double.infinity,
         decoration: BoxDecoration(
           border: Border.all(
             color: const Color(0xFFEEEDEE),
           ),
-          borderRadius: BorderRadius.circular(8.r),
+          borderRadius: BorderRadius.circular(8),
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -49,18 +48,18 @@ class TrackDetailsCard extends StatelessWidget {
             Row(
               children: [
                 itemPosition,
-                SizedBox(
-                  width: 8.w,
+                const SizedBox(
+                  width: 8,
                 ),
                 SizedBox(
-                  width: 180.w,
+                  width: 180,
                   child: Text(
                     trackName,
                     overflow: TextOverflow.ellipsis,
                     softWrap: true,
                     textWidthBasis: TextWidthBasis.parent,
                     style: GoogleFonts.raleway(
-                      fontSize: 16.sp,
+                      fontSize: 16,
                       fontWeight: FontWeight.w500,
                       color: textColor,
                     ),
@@ -76,15 +75,15 @@ class TrackDetailsCard extends StatelessWidget {
                   color: borderColor,
                   width: 0.8,
                 ),
-                minimumSize: Size(
-                  74.w,
-                  24.h,
+                minimumSize: const Size(
+                  74,
+                  24,
                 ),
               ),
               child: Text(
                 'View course',
                 style: GoogleFonts.raleway(
-                  fontSize: 10.sp,
+                  fontSize: 10,
                   fontWeight: FontWeight.w500,
                   color: buttonTextColor,
                 ),

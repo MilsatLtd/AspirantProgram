@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:milsat_project_app/extras/components/files.dart';
@@ -14,27 +13,23 @@ class MentorCardContent extends StatelessWidget {
 
   final int count;
   final bool isLessThanOrEqualTo5;
-  final int cohortDuration;
-  final String trackName;
+  final int? cohortDuration;
+  final String? trackName;
   final MentorData d;
 
   @override
   Widget build(BuildContext context) {
-    if (kDebugMode) {
-      print(count);
-    }
     return Container(
-      padding: EdgeInsets.only(
-        top: 18.h,
-        bottom: 16.w,
+      padding: const EdgeInsets.only(
+        top: 18,
+        bottom: 16,
       ),
-      height: 180.h,
       width: double.infinity,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16.w),
+            padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -49,26 +44,26 @@ class MentorCardContent extends StatelessWidget {
               ],
             ),
           ),
-          SizedBox(
-            height: 12.h,
+          const SizedBox(
+            height: 12,
           ),
           Padding(
-            padding: EdgeInsets.only(left: 16.w),
+            padding: const EdgeInsets.only(left: 16),
             child: Text(
-              trackName,
+              trackName!,
               style: GoogleFonts.raleway(
                 color: AppTheme.kAppWhiteScheme,
-                fontSize: 16.sp,
+                fontSize: 16,
                 fontWeight: FontWeight.w800,
-                height: 1.75.h,
+                height: 1.75,
               ),
             ),
           ),
-          SizedBox(
-            height: 16.h,
+          const SizedBox(
+            height: 16,
           ),
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16.w),
+            padding: const EdgeInsets.symmetric(horizontal: 16),
             child: GestureDetector(
               onTap: () {
                 Navigator.push(context, MaterialPageRoute(builder: (context) {
@@ -82,29 +77,39 @@ class MentorCardContent extends StatelessWidget {
                     'Mentee\'s',
                     style: kSmallTextStyle2,
                   ),
-                  SizedBox(
-                    height: 6.h,
+                  const SizedBox(
+                    height: 6,
                   ),
                   Row(
                     children: [
-                      InternSlip(
-                        count: count,
-                        d: d,
+                      Row(
+                        children: [
+                          for (int i = 0; i < d.mentees!.length; i++) ...{
+                            if (i < 5) ...{
+                              Align(
+                                widthFactor: 0.5,
+                                child: CircleAvatar(
+                                  radius: 14,
+                                  backgroundColor:
+                                      Theme.of(context).primaryColor,
+                                  child: CircleAvatar(
+                                    radius: 12,
+                                    backgroundImage: NetworkImage(d.mentees!
+                                        .elementAt(i)
+                                        .profilePicture!),
+                                  ),
+                                ),
+                              ),
+                            }
+                          }
+                        ],
                       ),
-                      SizedBox(
-                        width: 50.w,
-                      ),
-                      if (isLessThanOrEqualTo5 == true)
-                        const SizedBox.shrink()
-                      else
+                      if (d.mentees!.length >= 5) ...{
                         Text(
-                          '+${count - 5} more',
-                          style: GoogleFonts.raleway(
-                            color: const Color(0xFFF2EBF3),
-                            fontSize: 10.sp,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
+                          '+${d.mentees!.length - 5} more',
+                          style: const TextStyle(color: Colors.white),
+                        )
+                      }
                     ],
                   ),
                 ],

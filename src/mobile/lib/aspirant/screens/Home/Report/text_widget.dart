@@ -16,7 +16,7 @@ class ReportPage2 extends StatelessWidget {
         title: Text(
           'Weekly Report',
           style: GoogleFonts.raleway(
-            fontSize: 16.sp,
+            fontSize: 16,
             fontWeight: FontWeight.w600,
             color: const Color(0xFF423B43),
           ),
@@ -33,9 +33,9 @@ class ReportPage2 extends StatelessWidget {
         ),
         actions: [
           Padding(
-            padding: EdgeInsets.only(right: 16.w),
+            padding: const EdgeInsets.only(right: 16),
             child: CircularPercentIndicator(
-              radius: 13.r,
+              radius: 13,
               lineWidth: 3.0,
               percent: 0.3,
               backgroundColor: Colors.grey,
@@ -49,9 +49,9 @@ class ReportPage2 extends StatelessWidget {
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal: 16.w,
-            vertical: 24.h,
+          padding: const EdgeInsets.symmetric(
+            horizontal: 16,
+            vertical: 24,
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -60,13 +60,13 @@ class ReportPage2 extends StatelessWidget {
               Text(
                 'How do you plan on applying what you learnt this week?',
                 style: GoogleFonts.raleway(
-                  fontSize: 16.sp,
+                  fontSize: 16,
                   fontWeight: FontWeight.w600,
                   color: const Color(0xFF423B43),
                 ),
               ),
-              SizedBox(
-                height: 16.h,
+              const SizedBox(
+                height: 16,
               ),
               TextField(
                 controller: controller,
@@ -103,17 +103,17 @@ class ReportPage2 extends StatelessWidget {
                           'Next',
                           style: GoogleFonts.raleway(
                             color: AppTheme.kPurpleColor,
-                            fontSize: 14.sp,
+                            fontSize: 14,
                             fontWeight: FontWeight.w600,
                           ),
                         ),
-                        SizedBox(
-                          width: 10.w,
+                        const SizedBox(
+                          width: 10,
                         ),
-                        Icon(
+                        const Icon(
                           Icons.arrow_forward_ios,
                           color: AppTheme.kPurpleColor,
-                          size: 14.sp,
+                          size: 14,
                         ),
                       ],
                     ),

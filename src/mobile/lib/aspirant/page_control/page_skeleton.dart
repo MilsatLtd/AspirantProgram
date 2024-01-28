@@ -41,7 +41,7 @@ class _PageSkeletonState extends State<PageSkeleton> {
         onTap: onTap,
         currentIndex: currentIndex,
         selectedLabelStyle: GoogleFonts.raleway(
-          fontSize: 14.sp,
+          fontSize: 14,
           color: AppTheme.kPurpleColor2,
         ),
         items: [
@@ -51,8 +51,8 @@ class _PageSkeletonState extends State<PageSkeleton> {
               color: currentIndex == 0
                   ? AppTheme.kPurpleColor2
                   : AppTheme.kLightPurpleColor,
-              height: 16.h,
-              width: 16.w,
+              height: 16,
+              width: 16,
             ),
             label: 'Home',
           ),
@@ -62,8 +62,8 @@ class _PageSkeletonState extends State<PageSkeleton> {
               color: currentIndex == 1
                   ? AppTheme.kPurpleColor2
                   : AppTheme.kLightPurpleColor,
-              height: 16.h,
-              width: 16.w,
+              height: 16,
+              width: 16,
             ),
             label: 'Forum',
           ),
@@ -73,8 +73,8 @@ class _PageSkeletonState extends State<PageSkeleton> {
               color: currentIndex == 2
                   ? AppTheme.kPurpleColor2
                   : AppTheme.kLightPurpleColor,
-              height: 16.h,
-              width: 16.w,
+              height: 16,
+              width: 16,
             ),
             label: 'Profile',
           ),

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:milsat_project_app/extras/components/files.dart';
-// import 'package:milsat_project_app/mentor/profile/user_profile.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../profile/user_profile.dart';
@@ -33,7 +32,7 @@ class AllAspirants extends ConsumerWidget {
                 text: 'Mentee ',
                 style: GoogleFonts.raleway(
                   color: const Color(0xFF423B43),
-                  fontSize: 16.sp,
+                  fontSize: 16,
                   fontWeight: FontWeight.w600,
                 ),
               ),
@@ -41,7 +40,7 @@ class AllAspirants extends ConsumerWidget {
                 text: ' Total: ${d.mentees!.length}',
                 style: GoogleFonts.raleway(
                   color: AppTheme.kHintTextColor,
-                  fontSize: 12.sp,
+                  fontSize: 12,
                   fontWeight: FontWeight.w500,
                 ),
               ),
@@ -66,7 +65,7 @@ class AllAspirants extends ConsumerWidget {
                   d.mentees!.elementAt(index).fullName!,
                   style: GoogleFonts.raleway(
                     color: const Color(0xFF504D51),
-                    fontSize: 13.sp,
+                    fontSize: 13,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
@@ -76,7 +75,7 @@ class AllAspirants extends ConsumerWidget {
                       'Learning progress: ',
                       style: GoogleFonts.raleway(
                         color: const Color(0xFF504D51),
-                        fontSize: 13.sp,
+                        fontSize: 13,
                         fontWeight: FontWeight.w500,
                       ),
                     ),
@@ -84,7 +83,7 @@ class AllAspirants extends ConsumerWidget {
                       '20% Completion',
                       style: GoogleFonts.raleway(
                         color: const Color(0xFF504D51),
-                        fontSize: 13.sp,
+                        fontSize: 13,
                         fontWeight: FontWeight.w500,
                       ),
                     ),

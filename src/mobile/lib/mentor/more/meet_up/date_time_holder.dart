@@ -26,20 +26,20 @@ class DateOrTimeHolder extends StatelessWidget {
           heading,
           style: GoogleFonts.raleway(
             color: const Color(0xFF504D51),
-            fontSize: 16.sp,
+            fontSize: 16,
             fontWeight: FontWeight.w500,
           ),
         ),
-        SizedBox(
-          height: 8.h,
+        const SizedBox(
+          height: 8,
         ),
         GestureDetector(
           onTap: onTap,
           child: Container(
-            width: 163.5.w,
-            height: 48.h,
+            width: 163.5,
+            height: 48,
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(6.r),
+              borderRadius: BorderRadius.circular(6),
               border: Border.all(
                 color: AppTheme.kHintTextColor,
               ),
@@ -49,7 +49,7 @@ class DateOrTimeHolder extends StatelessWidget {
                 dateFormat,
                 style: GoogleFonts.raleway(
                   color: textColor,
-                  fontSize: 16.sp,
+                  fontSize: 16,
                   fontWeight: FontWeight.w500,
                 ),
               ),

@@ -1,255 +1,282 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:milsat_project_app/extras/models/aspirant_model.dart';
+import 'package:milsat_project_app/extras/models/profile_picture_model.dart';
 import '../../../extras/components/files.dart';
 
 late AspirantModelClass d;
 
-homeWidget(BuildContext context, WidgetRef ref) {
+homeWidget(BuildContext context, WidgetRef ref,
+    ProfilePictureResponse? profilePictureResponse) {
   DateTime now = ref.watch(currentTimeProvider);
   String dayOfWeek = DateFormat('EEEE').format(now);
-  if (kDebugMode) {
-    print(now.day);
-    print(dayOfWeek);
-  }
   final aspirantData = ref.watch(aspirantDetails);
-  return aspirantData.when(
-      data: (data) {
-        if (data != null) {
-          String userName = data.fullName ?? 'Stranger';
-          d = data;
-          return WillPopScope(
-            onWillPop: () async {
-              final shouldPop = await showWarning(context);
-
-              return shouldPop ?? false;
-            },
-            child: Scaffold(
-              appBar: AppBar(
-                title: Text('Hi, ${userName.split(' ').elementAt(0)}',
-                    style: kAppBarTextStyle),
-                automaticallyImplyLeading: false,
-                backgroundColor: Colors.transparent,
-                elevation: 0,
-                actions: [
-                  Padding(
-                    padding: EdgeInsets.only(
-                      // right: 12.w,
-                      top: 4.h,
-                    ),
-                    child: GestureDetector(
-                      onTap: () {
-                        AppNavigator.navigateTo(profileRoute);
-                      },
-                      child: ref.watch(image) != null
-                          ? CircleAvatar(
-                              radius: 24.r,
-                              backgroundColor: Colors.grey,
-                              child: ClipOval(
-                                child: Image.file(
-                                  ref.watch(image)!,
-                                  height: 48.h,
-                                  width: 48.w,
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                            )
-                          : personalInfo['personalUserInfo'] != null &&
-                                  personalInfo['personalUserInfo']
-                                          ['profile_picture'] !=
-                                      null
-                              ? CircleAvatar(
-                                  radius: 44.r,
-                                  backgroundImage: NetworkImage(
-                                    personalInfo['personalUserInfo']
-                                        ['profile_picture'],
-                                  ),
-                                  backgroundColor: Colors.grey,
-                                )
-                              : CircleAvatar(
-                                  radius: 44.r,
-                                  backgroundImage: data.profilePicture == null
-                                      ? const AssetImage(
-                                          'assets/defaultImage.jpg',
-                                        )
-                                      : NetworkImage(
-                                          data.profilePicture,
-                                        ) as ImageProvider<Object>?,
-                                  backgroundColor: Colors.grey,
-                                ),
-                    ),
-                  )
-                ],
-              ),
-              body: Padding(
-                padding: EdgeInsets.only(
-                  top: 24.h,
-                  left: 16.w,
-                  right: 16.w,
+  return aspirantData.when(data: (data) {
+    if (data != null) {
+      String userName = data.fullName ?? 'Stranger';
+      d = data;
+      return WillPopScope(
+        onWillPop: () async {
+          final shouldPop = await showWarning(context);
+          return shouldPop ?? false;
+        },
+        child: Scaffold(
+          appBar: AppBar(
+            title: Text('Hi, ${userName.split(' ').elementAt(0)}',
+                style: kAppBarTextStyle),
+            automaticallyImplyLeading: false,
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+            actions: [
+              Padding(
+                padding: const EdgeInsets.only(
+                  right: 12,
+                  top: 4,
                 ),
-                child: SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      Row(
-                        children: [
-                          Padding(
-                            padding: EdgeInsets.only(left: 24.w),
-                            child: CustomHolder(
-                              color:
-                                  AppTheme.kLightPurpleColor.withOpacity(0.4),
-                              icon: SvgPicture.asset(
-                                'assets/blocker_icon.svg',
+                child: GestureDetector(
+                  onTap: () {
+                    AppNavigator.navigateTo(profileRoute);
+                  },
+                  child: ref.watch(image) != null
+                      ? CircleAvatar(
+                          radius: 24,
+                          backgroundColor: Colors.grey,
+                          child: ClipOval(
+                            child: Image.file(
+                              ref.watch(image)!,
+                              height: 48,
+                              width: 48,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        )
+                      : profilePictureResponse?.profilePicture != null
+                          ? CircleAvatar(
+                              radius: 44,
+                              backgroundImage: NetworkImage(
+                                profilePictureResponse!.profilePicture!,
                               ),
-                              label: 'Blocker',
-                              onTap: () {
-                                AppNavigator.navigateTo(blockerRoute);
-                              },
+                              backgroundColor: Colors.grey,
+                            )
+                          : CircleAvatar(
+                              radius: 44,
+                              backgroundImage: data.profilePicture == null
+                                  ? const AssetImage(
+                                      'assets/defaultImage.jpg',
+                                    )
+                                  : NetworkImage(
+                                      data.profilePicture,
+                                    ) as ImageProvider<Object>?,
+                              backgroundColor: Colors.grey,
                             ),
+                ),
+              )
+            ],
+          ),
+          body: Padding(
+            padding: const EdgeInsets.only(
+              top: 24,
+              left: 16,
+              right: 16,
+            ),
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  Row(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(left: 24),
+                        child: CustomHolder(
+                          color: AppTheme.kLightPurpleColor.withOpacity(0.4),
+                          icon: SvgPicture.asset(
+                            'assets/blocker_icon.svg',
                           ),
-                          SizedBox(
-                            width: 68.w,
-                          ),
-                          CustomHolder(
-                            color: AppTheme.kLightGreenColor,
-                            icon: SvgPicture.asset(
-                              'assets/report_icon.svg',
-                            ),
-                            label: 'Report',
-                            onTap: () {
-                              if (dayOfWeek != 'Saturday' ||
-                                  dayOfWeek != 'Sunday') {
-                                AppNavigator.navigateTo(reportRoute);
-                              } else {
-                                showModalBottomSheet(
-                                    enableDrag: false,
-                                    isDismissible: false,
-                                    elevation: 1,
-                                    shape: RoundedRectangleBorder(
+                          label: 'Blocker',
+                          onTap: () {
+                            AppNavigator.navigateTo(blockerRoute);
+                          },
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 68,
+                      ),
+                      CustomHolder(
+                        color: AppTheme.kLightGreenColor,
+                        icon: SvgPicture.asset(
+                          'assets/report_icon.svg',
+                        ),
+                        label: 'Report',
+                        onTap: () {
+                          if (dayOfWeek != 'Saturday' ||
+                              dayOfWeek != 'Sunday') {
+                            AppNavigator.navigateTo(reportRoute);
+                          } else {
+                            showModalBottomSheet(
+                                enableDrag: false,
+                                isDismissible: false,
+                                elevation: 1,
+                                shape: const RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(16),
+                                    topRight: Radius.circular(16),
+                                  ),
+                                ),
+                                context: context,
+                                builder: (context) {
+                                  return Container(
+                                    padding: const EdgeInsets.symmetric(
+                                      vertical: 16,
+                                      horizontal: 16,
+                                    ),
+                                    height: 256,
+                                    decoration: const BoxDecoration(
+                                      color: AppTheme.kAppWhiteScheme,
                                       borderRadius: BorderRadius.only(
-                                        topLeft: Radius.circular(16.r),
-                                        topRight: Radius.circular(16.r),
+                                        topLeft: Radius.circular(16),
+                                        topRight: Radius.circular(16),
                                       ),
                                     ),
-                                    context: context,
-                                    builder: (context) {
-                                      return Container(
-                                        padding: EdgeInsets.symmetric(
-                                          vertical: 16.h,
-                                          horizontal: 16.w,
-                                        ),
-                                        height: 256.h,
-                                        decoration: BoxDecoration(
-                                          color: AppTheme.kAppWhiteScheme,
-                                          borderRadius: BorderRadius.only(
-                                            topLeft: Radius.circular(16.r),
-                                            topRight: Radius.circular(16.r),
+                                    child: Column(
+                                      children: [
+                                        Container(
+                                          height: 4,
+                                          width: 42,
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(4),
+                                            color: Colors.black,
                                           ),
                                         ),
-                                        child: Column(
-                                          children: [
-                                            Container(
-                                              height: 4.h,
-                                              width: 42.w,
-                                              decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(4.r),
-                                                color: Colors.black,
-                                              ),
-                                            ),
-                                            SizedBox(
-                                              height: 27.h,
-                                            ),
-                                            Text(
-                                              'Report submission currently\n unavailable, please check \nback later.',
-                                              textAlign: TextAlign.center,
-                                              style: GoogleFonts.raleway(
-                                                height: 2.h,
-                                                color: const Color(0xFF383639),
-                                                fontSize: 18.sp,
-                                                fontWeight: FontWeight.w600,
-                                              ),
-                                            ),
-                                            SizedBox(
-                                              height: 23.h,
-                                            ),
-                                            CustomButton(
-                                              height: 54.h,
-                                              pressed: () {
-                                                AppNavigator.pop();
-                                              },
-                                              color: AppTheme.kPurpleColor,
-                                              width: double.infinity,
-                                              borderRadius:
-                                                  BorderRadius.circular(8.r),
-                                              child: Text(
-                                                'Got it!',
-                                                style: GoogleFonts.raleway(
-                                                  color:
-                                                      AppTheme.kAppWhiteScheme,
-                                                  fontWeight: FontWeight.w600,
-                                                  fontSize: 14.sp,
-                                                ),
-                                              ),
-                                            )
-                                          ],
+                                        const SizedBox(
+                                          height: 27,
                                         ),
-                                      );
-                                    });
-                              }
-                            },
-                          ),
-                        ],
-                      ),
-                      Stack(
-                        children: [
-                          CohortCard(
-                            height: 316.h,
-                            width: 343.w,
-                            radius: BorderRadius.circular(4.r),
-                            first: -15.5,
-                            second_1: 0,
-                            second_2: 0,
-                            third: 80.53.h,
-                            forth_1: 0,
-                            forth_2: 0,
-                            forthHeight: 157.13.h,
-                            thirdHeight: 230.44.h,
-                            secondHeight: 135.28.h,
-                          ),
-                          CardContent(
-                            contentDuration: data.cohort!.cohortDuration!,
-                            numberEnrolled: data.track!.enrolledCount!,
-                            trackName: data.track!.name!,
-                            mentorName: data.mentor!.fullName!,
-                            d: data,
-                          ),
-                        ],
+                                        Text(
+                                          'Report submission currently\n unavailable, please check \nback later.',
+                                          textAlign: TextAlign.center,
+                                          style: GoogleFonts.raleway(
+                                            height: 2,
+                                            color: const Color(0xFF383639),
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                        const SizedBox(
+                                          height: 23,
+                                        ),
+                                        CustomButton(
+                                          height: 54,
+                                          pressed: () {
+                                            AppNavigator.pop();
+                                          },
+                                          color: AppTheme.kPurpleColor,
+                                          width: double.infinity,
+                                          borderRadius:
+                                              BorderRadius.circular(8),
+                                          child: Text(
+                                            'Got it!',
+                                            style: GoogleFonts.raleway(
+                                              color: AppTheme.kAppWhiteScheme,
+                                              fontWeight: FontWeight.w600,
+                                              fontSize: 14,
+                                            ),
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  );
+                                });
+                          }
+                        },
                       ),
                     ],
                   ),
-                ),
+                  Stack(
+                    children: [
+                      CohortCard(
+                        height: 316,
+                        width: 343,
+                        radius: BorderRadius.circular(4),
+                        first: -15.5,
+                        second_1: 0,
+                        second_2: 0,
+                        third: 80.53,
+                        forth_1: 0,
+                        forth_2: 0,
+                        forthHeight: 157.13,
+                        thirdHeight: 230.44,
+                        secondHeight: 135.28,
+                      ),
+                      CardContent(
+                        contentDuration: data.cohort?.cohortDuration ?? 0,
+                        numberEnrolled: data.track?.enrolledCount ?? 0,
+                        trackName: data.track?.name ?? '',
+                        mentorName: data.mentor?.fullName ?? '',
+                        d: data,
+                      ),
+                    ],
+                  ),
+                ],
               ),
             ),
-          );
-        }
-      },
-      error: (((error, stackTrace) => Center(
-            child: Padding(
-              padding: const EdgeInsets.all(24.0),
-              child: Text(
-                error.toString(),
-                textAlign: TextAlign.center,
-                style: const TextStyle(fontSize: 20),
+          ),
+        ),
+      );
+    }
+  }, error: (((error, stackTrace) {
+    AppNavigator.navigateToAndReplace(loginRoute);
+    Padding(
+      padding: const EdgeInsets.all(24.0),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Stack(
+            children: [
+              CohortCard(
+                width: double.infinity,
+                height: 212,
+                radius: BorderRadius.circular(4),
+                first: -15.5,
+                second_1: 0,
+                second_2: 0,
+                third: 80.53,
+                forth_1: 0,
+                forth_2: 0,
+                forthHeight: 157.13,
+                thirdHeight: 230.44,
+                secondHeight: 135.28,
               ),
-            ),
-          ))),
-      loading: () {
-        return const Center(
-          child: CircularProgressIndicator(),
-        );
-      });
+              Column(
+                children: [
+                  SvgPicture.asset(
+                    'assets/error_image.svg',
+                    height: 100,
+                    width: 100,
+                  ),
+                  const SizedBox(height: 16),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      error.toString(),
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: Theme.of(context).cardColor,
+                      ),
+                    ),
+                  ),
+                ],
+              )
+            ],
+          ),
+        ],
+      ),
+    );
+  })), loading: () {
+    return const Center(
+      child: CircularProgressIndicator(),
+    );
+  });
 }
 
 Future<bool?> showWarning(BuildContext context) async {
@@ -261,7 +288,7 @@ Future<bool?> showWarning(BuildContext context) async {
             'Do you want to sign out of the app?',
             style: GoogleFonts.raleway(
               color: const Color(0xFF423B43),
-              fontSize: 15.sp,
+              fontSize: 15,
               fontWeight: FontWeight.w600,
             ),
           ),
@@ -275,21 +302,21 @@ Future<bool?> showWarning(BuildContext context) async {
                 style: GoogleFonts.raleway(
                   color: AppTheme.kPurpleColor,
                   fontWeight: FontWeight.w600,
-                  fontSize: 15.sp,
+                  fontSize: 15,
                 ),
               ),
             ),
             TextButton(
               onPressed: () {
                 Navigator.pop(context, true);
-                AppNavigator.navigateTo(loginRoute);
+                AppNavigator.navigateToAndClear(loginRoute);
               },
               child: Text(
                 'Yes',
                 style: GoogleFonts.raleway(
                   color: AppTheme.kPurpleColor,
                   fontWeight: FontWeight.w600,
-                  fontSize: 15.sp,
+                  fontSize: 15,
                 ),
               ),
             ),

@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -36,22 +35,22 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(
-                  height: 100.h,
+                const SizedBox(
+                  height: 100,
                 ),
                 Text(
                   'Welcome to your \nlearning space!',
                   style: kThickAppTextStyle,
                 ),
-                SizedBox(
-                  height: 56.h,
+                const SizedBox(
+                  height: 56,
                 ),
                 Text(
                   'Email',
                   style: kOnboardingLightTextStyle,
                 ),
-                SizedBox(
-                  height: 8.h,
+                const SizedBox(
+                  height: 8,
                 ),
                 CustomTextField(
                   controller: emailController,
@@ -62,23 +61,20 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     return Utils.validateEmail(a!);
                   },
                 ),
-                SizedBox(
-                  height: 24.h,
+                const SizedBox(
+                  height: 24,
                 ),
                 Text(
                   'Password',
                   style: kOnboardingLightTextStyle,
                 ),
-                SizedBox(
-                  height: 8.h,
+                const SizedBox(
+                  height: 8,
                 ),
                 Consumer(
                   builder:
                       (BuildContext context, WidgetRef ref, Widget? child) {
                     final tapped = ref.watch(boolStateProvider);
-                    if (kDebugMode) {
-                      print(tapped);
-                    }
                     return CustomTextField(
                       controller: passwordController,
                       hintText: 'Input password here',
@@ -86,9 +82,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         return Utils.isValidPassword(a!);
                       },
                       icon: Padding(
-                        padding: EdgeInsets.only(
-                          left: 16.w,
-                          right: 10.w,
+                        padding: const EdgeInsets.only(
+                          left: 16,
+                          right: 10,
                         ),
                         child: IconButton(
                           onPressed: () {
@@ -96,9 +92,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                 !tapped;
                           },
                           icon: tapped
-                              ? Icon(
+                              ? const Icon(
                                   Icons.remove_red_eye,
-                                  size: 18.sp,
+                                  size: 18,
                                 )
                               : SvgPicture.asset(
                                   'assets/eye_lash.svg',
@@ -110,9 +106,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     );
                   },
                 ),
-                // SizedBox(
-                //   height: 16.h,
-                // ),
                 TextButton(
                   onPressed: () {
                     AppNavigator.navigateTo(forgotPasswordRoute);
@@ -123,8 +116,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     style: kForgotPasswordStyle,
                   ),
                 ),
-                SizedBox(
-                  height: 50.h,
+                const SizedBox(
+                  height: 50,
                 ),
                 Consumer(
                   builder:
@@ -137,10 +130,14 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           onPressed: ref.watch(signInProvider).loading
                               ? null
                               : () async {
+                                  FocusManager.instance.primaryFocus?.unfocus();
                                   DecodedTokenResponse? decodedToken =
                                       await SecureStorageUtils
-                                          .getTokenResponseFromStorage(
-                                              SharedPrefKeys.tokenResponse);
+                                          .getDataFromStorage<
+                                                  DecodedTokenResponse>(
+                                              SharedPrefKeys.tokenResponse,
+                                              DecodedTokenResponse
+                                                  .fromJsonString);
                                   if (formKey.currentState?.validate() ??
                                       false) {
                                     await ref
@@ -154,14 +151,15 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                 },
                           style: ButtonStyle(
                             elevation: MaterialStateProperty.all<double?>(0),
-                            minimumSize: MaterialStateProperty.all<Size>(Size(
+                            minimumSize:
+                                MaterialStateProperty.all<Size>(const Size(
                               double.infinity,
-                              54.h,
+                              54,
                             )),
                             shape: MaterialStateProperty.all<
                                 RoundedRectangleBorder>(
                               RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8.r),
+                                borderRadius: BorderRadius.circular(8),
                               ),
                             ),
                             backgroundColor: MaterialStateProperty.all<Color>(
@@ -174,7 +172,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                               : Text(
                                   'Login',
                                   style: GoogleFonts.raleway(
-                                    fontSize: 16.sp,
+                                    fontSize: 16,
                                     fontWeight: FontWeight.w700,
                                   ),
                                 ),

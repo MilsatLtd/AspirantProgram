@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class BlockerCards extends StatelessWidget {
@@ -23,12 +22,12 @@ class BlockerCards extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: EdgeInsets.symmetric(
-          vertical: 6.h,
-          horizontal: 16.w,
+        padding: const EdgeInsets.symmetric(
+          vertical: 6,
+          horizontal: 16,
         ),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(24.r),
+          borderRadius: BorderRadius.circular(24),
           color: boxColor,
           border: border,
         ),
@@ -37,7 +36,7 @@ class BlockerCards extends StatelessWidget {
             text,
             style: GoogleFonts.raleway(
               color: textColor,
-              fontSize: 10.sp,
+              fontSize: 10,
               fontWeight: FontWeight.w600,
             ),
           ),
