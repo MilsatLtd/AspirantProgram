@@ -2,7 +2,8 @@ name: Deploy Map API
 
 on:
   workflow_dispatch:
-
+  push:
+     branches: [ "resync-action-fix" ]
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -17,8 +18,9 @@ jobs:
           REMOTE_HOST: ${{ secrets.SERVER_IP }}
           REMOTE_USER: ${{ secrets.SERVER_USER }}
           REMOTE_PORT: ${{ secrets.SERVER_PORT }}
-          ARGS: "-avzr"
+          ARGS: "-avzr --delete --exclude='.env'"
           SOURCE: "src/apis/"
+          EXCLUDE: ".env"
           TARGET: "~/AspirantProgram/src/apis/"
 
       - name: SSH and Deploy Django App
