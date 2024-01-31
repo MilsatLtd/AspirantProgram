@@ -64,7 +64,7 @@ const DropDownField = (props: dropDownFieldType) => {
       </div>
       <div className="transition-all delay-150 ease-in-out">
         <ul
-          className={`flex flex-col w-full right-0 top-[95%] z-20 gap-14 bg-N00 p-16 shadow-2xl absolute rounded-lg  ${
+          className={`flex flex-col w-full right-0 top-[95%] z-20 gap-14 bg-N00 p-16 shadow-2xl absolute rounded-lg ${props.dropDownStyle}  ${
             dropdown ? "block" : "hidden"
           }`}
         >

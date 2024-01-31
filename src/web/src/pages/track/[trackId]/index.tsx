@@ -8,17 +8,22 @@ import redirect from "../../../Assets/redirect.svg";
 import Link from "next/link";
 import InfoList from "@/components/atom/CustomInfo/InfoList";
 import { AvailableTracks, Brochure, applictionTimeline } from "@/utils/data";
-import  { downloadFile } from "@/utils/apiFunctions"
-
+import { downloadFile } from "@/utils/apiFunctions";
 
 const TrackDetails = () => {
   const router = useRouter();
   const trackId = router.query.trackId;
 
-  const { startDate, endDate } = applictionTimeline
+  const { startDate, endDate } = applictionTimeline;
 
-  const brochureDirectory = trackId === "fundamental-of-gis" ? Brochure.FundamentalOfGIS : trackId === "data-collection-and-field-mapping" ? Brochure.DataCollectionAndFieldMapping : trackId === "geospatial-enterprise-solution" ? Brochure.GeospatialEnterpriseSolution : ""
-
+  const brochureDirectory =
+    trackId === "fundamental-of-gis"
+      ? Brochure.FundamentalOfGIS
+      : trackId === "data-collection-and-field-mapping"
+      ? Brochure.DataCollectionAndFieldMapping
+      : trackId === "geospatial-enterprise-solution"
+      ? Brochure.GeospatialEnterpriseSolution
+      : "";
 
   return (
     <div>
@@ -44,20 +49,28 @@ const TrackDetails = () => {
                     </p>
                   </div>
                   <div className="lg:row-span-1 flex md:gap-24 gap-16 ">
-                    <Link
-                      href="/apply"
-                      className="md:py-[17px] md:px-32 px-16 py-10 flex items-center text-m-sm md:text-base leading-[28px] font-semibold gap-12 bg-P300 hover:bg-P200  text-N00 rounded-lg w-max h-max"
-                    >
-                      <span>Enroll</span>
-                      <Image src={redirect} alt="redirect-icon" />
-                    </Link>
+                    {Track.startDate ? (
+                      <Link
+                        href="/apply"
+                        className="md:py-[17px] md:px-32 px-16 py-10 flex items-center text-m-sm md:text-base leading-[28px] font-semibold gap-12 bg-P300 hover:bg-P200  text-N00 rounded-lg w-max h-max"
+                      >
+                        <span>Enroll</span>
+                        <Image src={redirect} alt="redirect-icon" />
+                      </Link>
+                    ) : null}
                     <div className="flex items-start">
-                    <button className="md:py-[16px] md:px-32 px-12 py-8  flex items-center leading-[28px] gap-12 font-semibold bg-white border-2 border-P300 text-P300 text-m-sm md:text-base rounded-lg h-max w-max"
-                      onClick={() => downloadFile(brochureDirectory, `${Track.trackName}.pdf`)}
-                    >
-                          Download Brochure
-                        </button>
-                  </div>
+                      <button
+                        className="md:py-[16px] md:px-32 px-12 py-8  flex items-center leading-[28px] gap-12 font-semibold bg-white border-2 border-P300 text-P300 text-m-sm md:text-base rounded-lg h-max w-max"
+                        onClick={() =>
+                          downloadFile(
+                            brochureDirectory,
+                            `${Track.trackName}.pdf`
+                          )
+                        }
+                      >
+                        Download Brochure
+                      </button>
+                    </div>
                   </div>
                 </div>
                 <div className="flex-1 flex flex-row gap-12 md:flex-col w-full">
@@ -68,7 +81,9 @@ const TrackDetails = () => {
                       </h2>
                       <hr className="w-[6rem] border-[2px] border-G200 "></hr>
                       <p className="text-N300 lg:text-base text-m-sm lg:leading-[32px] leading-[24px] font-semibold">
-                        {startDate} - {endDate}
+                        {Track.startDate
+                          ? `${Track.startDate} - ${Track.endDate}`
+                          : "Coming Soon..."}
                       </p>
                     </div>
                     <div className="pb-16 space-y-16 ">
@@ -80,7 +95,7 @@ const TrackDetails = () => {
                         {Track.learningTimeLine}
                       </p>
                     </div>
-                  </div> 
+                  </div>
                 </div>
               </section>
             </header>
