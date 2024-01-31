@@ -50,14 +50,14 @@ export const routes = {
   ],
   tracks: [
     {
-      id: 2,
-      name: "Fundamental of GIS",
-      link: "/track/fundamental-of-gis",
-    },
-    {
       id: 1,
       name: "Data Collection and Field Mapping",
       link: "/track/data-collection-and-field-mapping",
+    },
+    {
+      id: 2,
+      name: "Fundamental of GIS",
+      link: "/track/fundamental-of-gis",
     },
     {
       id: 3,
@@ -132,56 +132,6 @@ export const eligibility = [
 
 export const AvailableTracks = [
   {
-    id: "fundamental-of-gis",
-    trackName: "Fundamental of GIS",
-    description:
-      "Explore the foundational principles and essential skills of Geographic Information Systems (GIS) in this beginner-friendly track, gaining a solid understanding of the system",
-    startDate: "19th Feburary, 2024",
-    endDate: "2nd March, 2024",
-    learningTimeLine: "2 weeks",
-    TrackInfo: [
-      {
-        name: "Track-curriculum",
-        list: [
-          {
-            id: 1,
-            criteria: "Introduction to Geographic Information System (GIS)",
-          },
-          {
-            id: 2,
-            criteria: "Setting Up your GIS software",
-          },
-          {
-            id: 3,
-            criteria: "Coordinate system and Georeferencing in GIS",
-          },
-          {
-            id: 4,
-            criteria: "Basic Geoprocessing tools",
-          },
-          {
-            id: 5,
-            criteria: "Querying in GIS",
-          },
-          {
-            id: 6,
-            criteria: "Cartography and map design",
-          },
-        ],
-      },
-      {
-        name: "Track Requirement",
-        list: [
-          {
-            id: 1,
-            criteria:
-              "You will need a mouse and a computer, to install QGIS or ArcMap and a willing mind to learn!",
-          }
-        ],
-      },
-    ],
-  },
-  {
     id: "data-collection-and-field-mapping",
     trackName: "Data Collection and Field Mapping",
     description:
@@ -242,6 +192,56 @@ export const AvailableTracks = [
             id: 3,
             criteria: "Understanding of geographic concept",
           },
+        ],
+      },
+    ],
+  },
+  {
+    id: "fundamental-of-gis",
+    trackName: "Fundamental of GIS",
+    description:
+      "Explore the foundational principles and essential skills of Geographic Information Systems (GIS) in this beginner-friendly track, gaining a solid understanding of the system",
+    startDate: "19th Feburary, 2024",
+    endDate: "2nd March, 2024",
+    learningTimeLine: "2 weeks",
+    TrackInfo: [
+      {
+        name: "Track-curriculum",
+        list: [
+          {
+            id: 1,
+            criteria: "Introduction to Geographic Information System (GIS)",
+          },
+          {
+            id: 2,
+            criteria: "Setting Up your GIS software",
+          },
+          {
+            id: 3,
+            criteria: "Coordinate system and Georeferencing in GIS",
+          },
+          {
+            id: 4,
+            criteria: "Basic Geoprocessing tools",
+          },
+          {
+            id: 5,
+            criteria: "Querying in GIS",
+          },
+          {
+            id: 6,
+            criteria: "Cartography and map design",
+          },
+        ],
+      },
+      {
+        name: "Track Requirement",
+        list: [
+          {
+            id: 1,
+            criteria:
+              "You will need a mouse and a computer, to install QGIS or ArcMap and a willing mind to learn!",
+          }
         ],
       },
     ],
@@ -341,16 +341,16 @@ export const ProgrammeFeatures = {
 
 export const TrackCardsInfo = [
   {
-    id: 1,
-    name: "Fundamental of GIS",
-    picture: community,
-    route: "/track/fundamental-of-gis", 
-  },
-  {
     id: 2,
     name: "Data Collection and Field Mapping",
     picture: dataCollectionImage,
     route: "/track/data-collection-and-field-mapping",
+  },
+  {
+    id: 1,
+    name: "Fundamental of GIS",
+    picture: community,
+    route: "/track/fundamental-of-gis", 
   },
   {
     id: 3,
