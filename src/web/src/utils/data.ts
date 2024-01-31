@@ -136,6 +136,8 @@ export const AvailableTracks = [
     trackName: "Fundamental of GIS",
     description:
       "Explore the foundational principles and essential skills of Geographic Information Systems (GIS) in this beginner-friendly track, gaining a solid understanding of the system",
+    startDate: "19th Feburary, 2024",
+    endDate: "2nd March, 2024",
     learningTimeLine: "2 weeks",
     TrackInfo: [
       {
@@ -184,7 +186,9 @@ export const AvailableTracks = [
     trackName: "Data Collection and Field Mapping",
     description:
       "Designed to equip participants with the essential skills and knowledge needed for effective field data collection, spatial analysis, and utilizing cutting-edge data collection technologies",
-    learningTimeLine: "4 weeks",
+    startDate: "5th Feburary, 2024",
+    endDate: "16th Feburary, 2024",
+    learningTimeLine: "2 weeks",
     TrackInfo: [
       {
         name: "Track-curriculum",
@@ -247,6 +251,8 @@ export const AvailableTracks = [
     trackName: "Geospatial Enterprise Solution",
     description:
       "This course covers geospatial software, including both open-source and commercial tools. Participants will grasp the significance and advantages of using these tools for effective spatial analysis and decision-making",
+    startDate: "",
+    endDate: "",
     learningTimeLine: "5 weeks",
     TrackInfo: [
       {
@@ -292,8 +298,8 @@ export const AvailableTracks = [
 ];
 
 export const applictionTimeline = {
-  startDate: "1 January, 2024",
-  endDate: "31 February, 2024",
+  startDate: "5th Feburary, 2024",
+  endDate: "16th Feburary, 2024",
 };
 
 export const termsAndConditions = {
@@ -479,6 +485,62 @@ export const oppourtunity = [
   },
 ];
 
+export const africanCountries = [
+  { label: "Algeria", value: "Algeria" },
+  { label: "Angola", value: "Angola" },
+  { label: "Benin", value: "Benin" },
+  { label: "Botswana", value: "Botswana" },
+  { label: "Burkina Faso", value: "Burkina Faso" },
+  { label: "Burundi", value: "Burundi" },
+  { label: "Cabo Verde", value: "Cabo Verde" },
+  { label: "Cameroon", value: "Cameroon" },
+  { label: "Central African Republic", value: "Central African Republic" },
+  { label: "Chad", value: "Chad" },
+  { label: "Comoros", value: "Comoros" },
+  { label: "Democratic Republic of the Congo", value: "Democratic Republic of the Congo" },
+  { label: "Republic of the Congo", value: "Republic of the Congo" },
+  { label: "Djibouti", value: "Djibouti" },
+  { label: "Egypt", value: "Egypt" },
+  { label: "Equatorial Guinea", value: "Equatorial Guinea" },
+  { label: "Eritrea", value: "Eritrea" },
+  { label: "Eswatini", value: "Eswatini" },
+  { label: "Ethiopia", value: "Ethiopia" },
+  { label: "Gabon", value: "Gabon" },
+  { label: "Gambia", value: "Gambia" },
+  { label: "Ghana", value: "Ghana" },
+  { label: "Guinea", value: "Guinea" },
+  { label: "Guinea-Bissau", value: "Guinea-Bissau" },
+  { label: "Ivory Coast", value: "Ivory Coast" },
+  { label: "Kenya", value: "Kenya" },
+  { label: "Lesotho", value: "Lesotho" },
+  { label: "Liberia", value: "Liberia" },
+  { label: "Libya", value: "Libya" },
+  { label: "Madagascar", value: "Madagascar" },
+  { label: "Malawi", value: "Malawi" },
+  { label: "Mali", value: "Mali" },
+  { label: "Mauritania", value: "Mauritania" },
+  { label: "Mauritius", value: "Mauritius" },
+  { label: "Morocco", value: "Morocco" },
+  { label: "Mozambique", value: "Mozambique" },
+  { label: "Namibia", value: "Namibia" },
+  { label: "Niger", value: "Niger" },
+  { label: "Nigeria", value: "Nigeria" },
+  { label: "Rwanda", value: "Rwanda" },
+  { label: "Sao Tome and Principe", value: "Sao Tome and Principe" },
+  { label: "Senegal", value: "Senegal" },
+  { label: "Seychelles", value: "Seychelles" },
+  { label: "Sierra Leone", value: "Sierra Leone" },
+  { label: "Somalia", value: "Somalia" },
+  { label: "South Africa", value: "South Africa" },
+  { label: "South Sudan", value: "South Sudan" },
+  { label: "Sudan", value: "Sudan" },
+  { label: "Tanzania", value: "Tanzania" },
+  { label: "Togo", value: "Togo" },
+  { label: "Tunisia", value: "Tunisia" },
+  { label: "Uganda", value: "Uganda" },
+  { label: "Zambia", value: "Zambia" },
+  { label: "Zimbabwe", value: "Zimbabwe" }
+];
 
 export const Brochure =  {
   FundamentalOfGIS: "/Fundamental_of_GIS.pdf",

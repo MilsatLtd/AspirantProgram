@@ -8,6 +8,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 import { ChangeEvent } from "react";
 import MultiTextField from "@/components/atom/Customfields/MultiTextField";
+import { africanCountries } from "@/utils/data";
 
 interface formSectionType {
   changeSection: () => void;
@@ -115,7 +116,7 @@ const FormSectionA = (props: formSectionType) => {
           maxlength={30}
         />
       </div>
-      <div className="grid  lg:grid-cols-12 grid-cols-1 gap-24 w-full">
+      <div className="grid lg:grid-cols-12 grid-cols-1 gap-24 w-full">
         <TextField
           label="Email"
           placeholder="Enter email"
@@ -126,7 +127,7 @@ const FormSectionA = (props: formSectionType) => {
           error={errors.email?.message}
         />
       </div>
-      <div className="grid  lg:grid-cols-12 grid-cols-1 gap-24 w-full">
+      <div className="grid lg:grid-cols-12 grid-cols-1 gap-24 w-full">
         <DropDownField
           label="Level of Education"
           placeholder="Select level of education"
@@ -178,16 +179,16 @@ const FormSectionA = (props: formSectionType) => {
           error={errors.skills?.message}
           sendSkills={(skills: string) => handleSetValue(skills, "skills")}
         />
-        <TextField
+        <DropDownField
           label="Country"
-          onTextChange={(e) => handleSetValue(e.target.value, "country")}
+          textValue={undefined}
+          placeholder="Select Country"
+          options={africanCountries}
+          dropDownStyle="h-[20rem] overflow-auto"
+          onTextChange={(e) => handleSetValue(e, "country")}
           inputStyle=""
-          placeholder="Enter Country"
           containerStyle="lg:col-span-4 col-span-1"
-          type="text"
           error={errors.country?.message}
-          minlength={1}
-          maxlength={30}
         />
         <DropDownField
           label="Role"
