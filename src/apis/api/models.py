@@ -55,6 +55,10 @@ class User(AbstractUser):
     profile_picture = models.ImageField(
         upload_to=unique_profile_picture, blank=True, null=True)
     objects = UserManager()
+    password_reset_token = models.IntegerField(null=True, blank=True)
+    password_reset_token_expiry = models.DateTimeField(null=True, blank=True)
+    password_reset_token_used = models.BooleanField(default=False)
+    password_reset_token_profile = models.CharField(max_length=10, null=True, blank=True)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['first_name', 'last_name',
@@ -235,7 +239,7 @@ class Cohort(models.Model):
     duration = models.PositiveIntegerField(default=0, editable=False)
 
     def save(self, *args, **kwargs):
-        self.duration = round((self.end_date - self.start_date).days / 7)
+        self.duration = max( round((self.end_date - self.start_date).days / 7),  1)
         super(Cohort, self).save(*args, **kwargs)
 
     def __str__(self):
