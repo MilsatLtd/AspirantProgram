@@ -55,7 +55,7 @@ import html2text
 
 def generate_token():
     # Generate a random 6-digit token
-    return int(''.join(random.choices(string.digits, k=6)))
+    return int(''.join(random.choices(string.digits[1:], k=6)))
 
 class PasswordReset(GenericAPIView, CreateModelMixin ):
     serializer_class = PasswordResetSerializer
@@ -105,11 +105,11 @@ class PasswordResetConfirm(GenericAPIView, CreateModelMixin ):
             
             new_password = request.data.get('password')
             if user.password_reset_token_profile == 'student':
-                if user.check_password2(new_password):
+                if user.check_password2(new_password)[0]:
                     return Response({"message": "You can't use the same password for your intern and mentor profile"}, status=status.HTTP_400_BAD_REQUEST)
                 user.set_password(new_password)
             elif user.password_reset_token_profile == 'mentor':
-                if user.check_password(new_password):
+                if user.check_password(new_password)[0]:
                     return Response({"message": "You can't use the same password for your intern and mentor profile"}, status=status.HTTP_400_BAD_REQUEST)
                 user.set_password2(new_password)
             
