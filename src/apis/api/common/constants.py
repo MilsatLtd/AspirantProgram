@@ -11,13 +11,11 @@ def format_timestamp(timestamp):
 def application_message(application, password):
     if application.role == ROLE.STUDENT.value:
         role = "student"
-    elif application.role == ROLE.MENTOR.value:
-        role = "mentor"
-    return {"subject":
-            f"Welcome to the Milsat Aspirant Programme!",
+        return {"subject":
+                f"Welcome to the Milsat Aspirant Programme!",
 
-            "body":
-            f"""
+                "body":
+                f"""
 Hi {application.user.first_name},
 
 Congratulations! We have carefully reviewed your application and we are pleased to inform you that you have been admitted into the Milsat Aspirant Programme for this cohort. We are excited to welcome you to our program and can't wait for you to thrive in your learning phase.
@@ -26,6 +24,39 @@ Cohort Name: {application.track.cohort.name}
 Cohort starts on {format_timestamp(application.track.cohort.start_date)} and ends on {format_timestamp(application.track.cohort.end_date)}.
 
 To commence your journey, kindly download the Milsat Aspirant Programme application on playstore to get started. 
+
+Download Link: https://play.google.com/store/apps/details?id=com.milsat.apirant&pcampaignid=web_share
+
+Please fill this form: https://forms.gle/yttJAz4xSYGVQufp9
+
+Your login details are:
+Email: {application.user.email}
+Password: {password}
+
+You can login to the mobile app using the above credentials.
+
+If you have any questions or concerns, please don't hesitate to reach out to us at map.milsat@gmail.com.
+
+Best regards.
+MAP Admin
+
+"""}
+    
+    elif application.role == ROLE.MENTOR.value:
+        role = "mentor"
+        return {"subject":
+                f"Welcome to the Milsat Aspirant Programme!",
+
+                "body":
+                f"""
+Hi {application.user.first_name},
+
+Congratulations! We have carefully reviewed your application and we are pleased to inform you that you have been admitted into the Milsat Aspirant Programme for this cohort. We are excited to welcome you to our program and can't wait for you to thrive in your learning phase.
+
+Cohort Name: {application.track.cohort.name}
+Cohort starts on {format_timestamp(application.track.cohort.start_date)} and ends on {format_timestamp(application.track.cohort.end_date)}.
+
+To commence your journey, kindly download the Milsat Aspirant Programme application on playstore to get started.
 
 Download Link: https://play.google.com/store/apps/details?id=com.milsat.apirant&pcampaignid=web_share
 
