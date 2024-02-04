@@ -17,7 +17,7 @@ final mentorDetails = FutureProvider<MentorData>((ref) async {
 });
 
 final allBlockersMentor = FutureProvider((ref) {
-  return ref.read(blockerProvider).getRaisedBlockers();
+  return ref.read(apiBlockerServiceProvider).getRaisedBlockers();
 });
 
 class MentorHomePage extends ConsumerStatefulWidget {
@@ -118,9 +118,6 @@ class _MentorHomePageState extends ConsumerState<MentorHomePage> {
                                     style: kAppBarTextStyle),
                                 Row(
                                   children: [
-                                    // SvgPicture.asset(
-                                    //   'assets/bell_icon.svg',
-                                    // ),
                                     const SizedBox(
                                       width: 24,
                                     ),

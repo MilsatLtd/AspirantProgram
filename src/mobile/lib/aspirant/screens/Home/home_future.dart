@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:milsat_project_app/extras/components/shared_prefs/keys.dart';
+import 'package:milsat_project_app/extras/components/shared_prefs/utils.dart';
 import 'package:milsat_project_app/extras/models/aspirant_model.dart';
 import 'package:milsat_project_app/extras/models/profile_picture_model.dart';
 import '../../../extras/components/files.dart';
@@ -224,7 +226,7 @@ homeWidget(BuildContext context, WidgetRef ref,
       );
     }
   }, error: (((error, stackTrace) {
-    AppNavigator.navigateToAndReplace(loginRoute);
+    print(error.toString());
     Padding(
       padding: const EdgeInsets.all(24.0),
       child: Column(
@@ -309,6 +311,14 @@ Future<bool?> showWarning(BuildContext context) async {
             TextButton(
               onPressed: () {
                 Navigator.pop(context, true);
+                SecureStorageUtils.deleteAnyDataFromStorage(
+                    SharedPrefKeys.accessToken);
+                SecureStorageUtils.deleteAnyDataFromStorage(
+                    SharedPrefKeys.tokenResponse);
+                SecureStorageUtils.deleteAnyDataFromStorage(
+                    SharedPrefKeys.profileResponse);
+                SecureStorageUtils.deleteAnyDataFromStorage(
+                    SharedPrefKeys.refreshToken);
                 AppNavigator.navigateToAndClear(loginRoute);
               },
               child: Text(

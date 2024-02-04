@@ -111,7 +111,8 @@ class CardContent extends ConsumerWidget {
               elevation: 0,
               height: 44,
               pressed: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) {
+                Navigator.pushReplacement(context,
+                    MaterialPageRoute(builder: (context) {
                   return TrackDetails(d: d);
                 }));
               },

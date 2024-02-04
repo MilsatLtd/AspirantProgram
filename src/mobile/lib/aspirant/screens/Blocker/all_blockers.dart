@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:milsat_project_app/extras/components/files.dart';
-import '../../../../extras/api/blockers_api.dart';
+import '../../../extras/api/blockers_api.dart';
 
-final allBlockers = FutureProvider((ref) {
-  return ref.read(blockerProvider).getRaisedBlockers();
+final allBlockers = FutureProvider.autoDispose((ref) {
+  return ref.read(apiBlockerServiceProvider).getRaisedBlockers();
 });
 
 Map<int, String> status = {
@@ -17,12 +17,14 @@ List pendingList = [];
 List resolvedList = [];
 
 getPendngAndResolvedList() {
+  pendingList = [];
+  resolvedList = [];
   if (cred['blockers'] != null) {
     for (var i in cred['blockers']) {
-      if (i['status'] == 0 && !pendingList.contains(i)) {
+      if (i['status'] == 0 && !pendingList.contains(i['blocker_id'])) {
         pendingList.add(i);
-      } else if (i['status'] == 0 && pendingList.contains(i)) {
-        return;
+      } else if (i['status'] == 0 && pendingList.contains(i['blocker_id'])) {
+        return pendingList;
       } else if (i['status'] == 1 && !pendingList.contains(i)) {
         resolvedList.add(i);
       } else {

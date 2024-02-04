@@ -7,8 +7,8 @@ import 'package:milsat_project_app/extras/components/shared_prefs/utils.dart';
 import 'package:milsat_project_app/extras/models/decoded_token.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
-import '../../../../extras/api/report_api.dart';
-import '../../../../extras/components/files.dart';
+import '../../../extras/api/report_api.dart';
+import '../../../extras/components/files.dart';
 
 class ReportPage extends StatelessWidget {
   const ReportPage({super.key});
@@ -471,43 +471,47 @@ Future<dynamic> popUp(BuildContext context) {
           ),
         ),
         actions: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              TextButton(
-                onPressed: () {
-                  AppNavigator.doPop();
-                },
-                child: Text(
-                  'Cancel',
-                  style: GoogleFonts.raleway(
-                    color: AppTheme.kPurpleColor,
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                OutlinedButton(
+                  onPressed: () {
+                    AppNavigator.doPop();
+                  },
+                  child: Text(
+                    'Cancel',
+                    style: GoogleFonts.raleway(
+                      color: AppTheme.kPurpleColor,
+                    ),
                   ),
                 ),
-              ),
-              Consumer(
-                builder: (BuildContext context, WidgetRef ref, Widget? child) {
-                  return CustomButton(
-                    height: 54,
-                    pressed: () {
-                      ref.read(apiReportProvider).submitReport(weeklyReport);
-                      AppNavigator.pop();
-                      popUp1(context);
-                    },
-                    color: AppTheme.kPurpleColor,
-                    width: 137.5,
-                    elevation: 0,
-                    borderRadius: BorderRadius.circular(8),
-                    child: Text(
-                      'Yes!, Submit',
-                      style: GoogleFonts.raleway(
-                        color: AppTheme.kAppWhiteScheme,
+                Consumer(
+                  builder:
+                      (BuildContext context, WidgetRef ref, Widget? child) {
+                    return CustomButton(
+                      height: 54,
+                      pressed: () {
+                        ref.read(apiReportProvider).submitReport(weeklyReport);
+                        AppNavigator.pop();
+                        popUp1(context);
+                      },
+                      color: AppTheme.kPurpleColor,
+                      width: 137.5,
+                      elevation: 0,
+                      borderRadius: BorderRadius.circular(8),
+                      child: Text(
+                        'Yes!, Submit',
+                        style: GoogleFonts.raleway(
+                          color: AppTheme.kAppWhiteScheme,
+                        ),
                       ),
-                    ),
-                  );
-                },
-              ),
-            ],
+                    );
+                  },
+                ),
+              ],
+            ),
           ),
         ],
       );

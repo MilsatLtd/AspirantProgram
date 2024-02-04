@@ -6,42 +6,45 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:milsat_project_app/extras/components/shared_prefs/keys.dart';
 import 'package:milsat_project_app/extras/components/shared_prefs/utils.dart';
 import 'package:milsat_project_app/extras/models/decoded_token.dart';
-import '../../../../extras/api/blockers_api.dart';
-import '../../../../extras/components/files.dart';
+import '../../../extras/api/blockers_api.dart';
+import '../../../extras/components/files.dart';
 
-class AddBlocker extends ConsumerWidget {
+class AddBlocker extends ConsumerStatefulWidget {
   const AddBlocker({super.key});
 
   @override
-  Widget build(BuildContext context, ref) {
+  ConsumerState<AddBlocker> createState() => _AddBlockerState();
+}
+
+class _AddBlockerState extends ConsumerState<AddBlocker> {
+  @override
+  Widget build(BuildContext context) {
     final titleController = TextEditingController();
     final descriptionController = TextEditingController();
     final formKey = GlobalKey<FormState>();
     return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(44),
-        child: AppBar(
-          backgroundColor: Colors.white,
-          automaticallyImplyLeading: false,
-          elevation: 0.5,
-          leading: GestureDetector(
-            onTap: () => AppNavigator.pop(),
-            child: const Icon(
-              Icons.arrow_back,
-              color: Colors.black,
-              size: 18,
-            ),
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        toolbarHeight: 44,
+        automaticallyImplyLeading: false,
+        elevation: 0.5,
+        leading: GestureDetector(
+          onTap: () => AppNavigator.pop(),
+          child: const Icon(
+            Icons.arrow_back,
+            color: Colors.black,
+            size: 18,
           ),
-          title: Text(
-            'Raise a Blocker',
-            style: GoogleFonts.raleway(
-              color: const Color(0xFF423B43),
-              fontSize: 16,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-          centerTitle: true,
         ),
+        title: Text(
+          'Raise a Blocker',
+          style: GoogleFonts.raleway(
+            color: const Color(0xFF423B43),
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        centerTitle: true,
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -123,7 +126,7 @@ class AddBlocker extends ConsumerWidget {
                             SharedPrefKeys.tokenResponse,
                             DecodedTokenResponse.fromJsonString);
                     if (formKey.currentState!.validate()) {
-                      ref.read(blockerProvider).postBlocker(
+                      ref.read(apiBlockerServiceProvider).postBlocker(
                             description: descriptionController.text,
                             status: 0,
                             title: titleController.text,
@@ -178,7 +181,7 @@ class AddBlocker extends ConsumerWidget {
             CustomButton(
               height: 54,
               pressed: () {
-                AppNavigator.navigateToAndReplace(blockerRoute);
+                AppNavigator.navigateToAndClear(homeRoute);
               },
               color: AppTheme.kPurpleColor,
               width: 307,

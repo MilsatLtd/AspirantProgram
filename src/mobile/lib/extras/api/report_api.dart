@@ -56,6 +56,10 @@ class ApiService {
       rethrow;
     }
   }
+
+  // Future<void> giveReportFeedback(){
+  //   final url =
+  // }
 }
 
 final apiReportProvider = Provider<ApiService>((ref) {

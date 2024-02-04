@@ -2,6 +2,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:milsat_project_app/extras/components/shared_prefs/keys.dart';
+import 'package:milsat_project_app/extras/components/shared_prefs/utils.dart';
 import 'package:milsat_project_app/mentor/profile/profile.dart';
 
 import '../extras/components/files.dart';
@@ -251,6 +253,14 @@ class _MentorPageSkeletonState extends State<MentorPageSkeleton> {
               TextButton(
                 onPressed: () {
                   Navigator.pop(context, true);
+                  SecureStorageUtils.deleteAnyDataFromStorage(
+                      SharedPrefKeys.accessToken);
+                  SecureStorageUtils.deleteAnyDataFromStorage(
+                      SharedPrefKeys.tokenResponse);
+                  SecureStorageUtils.deleteAnyDataFromStorage(
+                      SharedPrefKeys.profileResponse);
+                  SecureStorageUtils.deleteAnyDataFromStorage(
+                      SharedPrefKeys.refreshToken);
                   AppNavigator.navigateToAndClear(loginRoute);
                 },
                 child: Text(

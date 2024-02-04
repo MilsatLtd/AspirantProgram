@@ -87,6 +87,7 @@ class SignInStateNotifier extends StateNotifier<SignInState> {
         SecureStorageUtils.saveString(SharedPrefKeys.accessToken, token);
         SecureStorageUtils.saveString(
             SharedPrefKeys.refreshToken, refreshToken);
+        print(decodedResponse.role);
 
         state = SignInState.success();
         if (state.success == true) {

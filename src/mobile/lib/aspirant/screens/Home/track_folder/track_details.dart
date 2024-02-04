@@ -20,7 +20,7 @@ final coursesDetails = FutureProvider.autoDispose<CourseModel>((ref) async {
       .read(apiServiceProvider)
       .getTrackCourses(decodedToken!.userId!, d.track!.trackId!);
 });
-final trackDetails = FutureProvider((ref) {
+final trackDetails = FutureProvider.autoDispose((ref) {
   return ref.read(trackApiProvider).getTracks(d.cohort!.cohortId!);
 });
 
@@ -117,7 +117,6 @@ class _TrackDetailsConsumerState extends ConsumerState<TrackDetails> {
                             itemBuilder: (BuildContext context, int index) {
                               bool canView =
                                   data.courses!.elementAt(index).canView!;
-
                               return TrackDetailsCard(
                                 itemPosition: !canView
                                     ? SvgPicture.asset(
@@ -151,7 +150,7 @@ class _TrackDetailsConsumerState extends ConsumerState<TrackDetails> {
                                 submittedCertificate: () {
                                   canView == false
                                       ? null
-                                      : Navigator.push(context,
+                                      : Navigator.pushReplacement(context,
                                           MaterialPageRoute(builder: (context) {
                                           return CourseDetails(
                                             courseTitle: data.courses!

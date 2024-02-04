@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../../../../extras/components/files.dart';
+import '../../../extras/components/files.dart';
 
 class BlockerPage extends ConsumerStatefulWidget {
   const BlockerPage({super.key});

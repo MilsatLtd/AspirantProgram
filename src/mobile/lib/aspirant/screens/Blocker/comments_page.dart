@@ -3,13 +3,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:milsat_project_app/extras/api/blockers_api.dart';
 
-import '../../../../extras/components/files.dart';
+import '../../../extras/components/files.dart';
 
-final mentorComment = FutureProvider((ref) {
-  return ref.read(blockerProvider).getCommentsById(blockerID);
+final mentorComment = FutureProvider.autoDispose((ref) {
+  return ref.read(apiBlockerServiceProvider).getCommentsById(blockerID);
 });
 
-class CommentsPage extends ConsumerWidget {
+class CommentsPage extends ConsumerStatefulWidget {
   const CommentsPage({
     super.key,
     required this.title,
@@ -28,7 +28,12 @@ class CommentsPage extends ConsumerWidget {
   final String blockerId;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<CommentsPage> createState() => _CommentsPageState();
+}
+
+class _CommentsPageState extends ConsumerState<CommentsPage> {
+  @override
+  Widget build(BuildContext context) {
     String status = 'Resolve';
 
     final mentorComments = ref.watch(mentorComment);
@@ -75,18 +80,24 @@ class CommentsPage extends ConsumerWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              title,
+                              widget.title,
                               style: kOnboardingLightTextStyle,
                             ),
                             GestureDetector(
                               onTap: () async {
-                                // await ref.read(blockerProvider).resolveABlocker(
-                                //     trackId: trackId,
-                                //     userId: userId,
-                                //     blockerId: blockerId,
-                                //     description: description,
-                                //     title: title,
-                                //     status: 1);
+                                await ref
+                                    .read(apiBlockerServiceProvider)
+                                    .resolveABlocker(
+                                      trackId: widget.trackId,
+                                      userId: widget.userId,
+                                      blockerId: widget.blockerId,
+                                      description: widget.description,
+                                      title: widget.title,
+                                      status: 1,
+                                    );
+                                showInSnackBar('Blocker Resolved Successfully');
+                                AppNavigator.navigateToAndReplace(
+                                    raiseABlocker);
                               },
                               child: Row(
                                 children: [
@@ -110,7 +121,7 @@ class CommentsPage extends ConsumerWidget {
                         Row(
                           children: [
                             Text(
-                              userName,
+                              widget.userName,
                               style: kTrackTextStyle,
                             ),
                             const SizedBox(
@@ -127,7 +138,7 @@ class CommentsPage extends ConsumerWidget {
                         ),
                         Text(
                           'Hi everyone,\n'
-                          '$description',
+                          '${widget.description}',
                           style: GoogleFonts.raleway(
                               fontSize: 13,
                               fontWeight: FontWeight.w500,
@@ -158,7 +169,7 @@ class CommentsPage extends ConsumerWidget {
                                       style: kTrackTextStyle,
                                     ),
                                     Text(
-                                      'Hello $userName},\n'
+                                      'Hello ${widget.userName}},\n'
                                       '${cred['blockerComments'][index]['message']}',
                                       style: GoogleFonts.raleway(
                                         fontSize: 13,
@@ -199,5 +210,15 @@ class CommentsPage extends ConsumerWidget {
                 child: CircularProgressIndicator(),
               );
             }));
+  }
+
+  void showInSnackBar(String value) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(value),
+        duration: const Duration(seconds: 5),
+        dismissDirection: DismissDirection.up,
+      ),
+    );
   }
 }

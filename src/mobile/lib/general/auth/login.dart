@@ -18,14 +18,13 @@ class LoginScreen extends ConsumerStatefulWidget {
 }
 
 class _LoginScreenState extends ConsumerState<LoginScreen> {
+  final formKey = GlobalKey<FormState>();
+
+  final emailController = TextEditingController();
+
+  final passwordController = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    final formKey = GlobalKey<FormState>();
-
-    final emailController = TextEditingController();
-
-    final passwordController = TextEditingController();
-
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(16),

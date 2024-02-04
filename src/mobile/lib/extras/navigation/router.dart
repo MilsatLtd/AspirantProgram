@@ -39,11 +39,6 @@ class AppRouter {
           settings: settings,
           view: const PasswordPage(),
         );
-      case skeletonPageRoute:
-        return getPageRoute(
-          settings: settings,
-          view: const PageSkeleton(),
-        );
       case editProfileRoute:
         return getPageRoute(
           settings: settings,
@@ -79,11 +74,6 @@ class AppRouter {
         return getPageRoute(
           settings: settings,
           view: const ReportPage2(),
-        );
-      case taskRoute:
-        return getPageRoute(
-          settings: settings,
-          view: const TaskPage(),
         );
       case raiseABlocker:
         return getPageRoute(
