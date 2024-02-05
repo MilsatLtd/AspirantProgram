@@ -54,7 +54,7 @@ urlpatterns += [
         name="listCreateComment",
     ),
     path(
-        "blockers/comments/<uuid:comment_id>",
+        "blockers/comments/update/<uuid:comment_id>",
         CommentRetrieveUpdateDestroyView.as_view(),
         name="retrieveUpdateDestroyComment",
     ),
