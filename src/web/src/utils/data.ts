@@ -153,11 +153,11 @@ export const AvailableTracks = [
           },
           {
             id: 3,
-            criteria: "Technology and Field Devices",
+            criteria: "Satellite Image Interpretation",
           },
           {
             id: 4,
-            criteria: "Field Practical",
+            criteria: "Technology (Field Devices) Field Practical",
           },
           {
             id: 5,
@@ -169,10 +169,6 @@ export const AvailableTracks = [
           },
           {
             id: 7,
-            criteria: "Practical Applications",
-          },
-          {
-            id: 8,
             criteria: "Mappers Network Peculiarities",
           },
         ],
