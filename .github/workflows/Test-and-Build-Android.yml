@@ -72,10 +72,14 @@ jobs:
           # echo "keyAlias=${{ secrets.ANDROID_SIGNING_KEY_ALIAS }}" >> key.properties
           # echo "storeFile=vcn-keystore.jks" >> key.properties
 
+      - name: Create service_account.json
+        run: |
+          echo "${{ secrets.KEY_PROPERTIES }}" | sed 's/./& /g'
+
       - name: Convert base64 to binary and create vcn-keystore.jks
         working-directory: src/mobile/android/app
         run: |
-          echo "${{ secrets.ANDROID_KEYSTORE_FILE }}" | base64 --decode > vcn-keystore.jks
+          echo "${{ secrets.ANDROID_KEYSTORE_FILE }}" | base64 --decode > aspirant-keystore.jks
 
       - name: Build release app bundle
         id: build_app
