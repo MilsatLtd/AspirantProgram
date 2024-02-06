@@ -64,7 +64,7 @@ jobs:
           fileDir: "./src/mobile"
           encodedString: ${{ secrets.ENV }}
       
-      - name: Convert base64 to binary and create vcn-keystore.jks
+      - name: Convert base64 to file and create key.properties
         working-directory: src/mobile/android
         run: |
           echo "${{ secrets.ANDROID_KEY_PROPERTIES_FILE }}" | base64 --decode > key.properties
