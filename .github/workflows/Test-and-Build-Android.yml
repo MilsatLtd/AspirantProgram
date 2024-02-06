@@ -2,11 +2,11 @@ name: Test and Build Android on PR
 on:
   pull_request:
     types: [opened, synchronize, reopened]
-    branches: [ "google-play-deployment" ]
+    branches: [ "main" ]
     paths:
       - 'src/mobile/**'
   # push:
-  #   branches: [ "google-play-deployment" ]
+  #   branches: [ "" ]
 
 jobs:
   build_android:
