@@ -11,7 +11,7 @@ on:
         required: true
         type: string
     # push:
-    #   branches: [ "google-play-deployment" ]
+    #   branches: [ "" ]
 
 jobs:
   build_android:
@@ -67,32 +67,27 @@ jobs:
           fileDir: "./src/mobile"
           encodedString: ${{ secrets.ENV }}
       
-      - name: Create key.properties and set values
+      - name: Convert base64 to file and create key.properties
         working-directory: src/mobile/android
         run: |
-          echo "storePassword=${{ secrets.ANDROID_KEYSTORE_PASSWORD }}" > key.properties
-          echo "keyPassword=${{ secrets.ANDROID_SIGNING_KEY_PASSWORD }}" >> key.properties
-          echo "keyAlias=${{ secrets.ANDROID_SIGNING_KEY_ALIAS }}" >> key.properties
-          echo "storeFile=vcn-keystore.jks" >> key.properties
+          echo "${{ secrets.ANDROID_KEY_PROPERTIES_FILE }}" | base64 --decode > key.properties
 
       - name: Convert base64 to binary and create vcn-keystore.jks
         working-directory: src/mobile/android/app
         run: |
-          echo "${{ secrets.ANDROID_KEYSTORE_FILE }}" | base64 --decode > vcn-keystore.jks
+          echo "${{ secrets.ANDROID_KEYSTORE_FILE }}" | base64 --decode > aspirant-keystore.jks
 
       - name: Build release app bundle
         id: build_app
         working-directory: src/mobile
         run: |
-          flutter build appbundle --release --dart-define-from-file=.env
-          --build-name=${{ github.event.inputs.versionName }} \
-          --build-number=${{ github.event.inputs.versionCode }}
+          flutter build appbundle --release --dart-define-from-file=.env --build-name="${{ github.event.inputs.versionName }}" --build-number="${{ github.event.inputs.versionCode }}"
 
       - name: Upload to Play Store (production)
         uses: r0adkll/upload-google-play@v1.0.18
         with:
           serviceAccountJsonPlainText: ${{ secrets.ANDROID_SERVICE_ACCOUNT_JSON }}
-          packageName: com.milsat.aspirant
+          packageName: com.milsat.apirant
           releaseFiles: src/mobile/build/app/outputs/bundle/release/app-release.aab
           track: production
 
