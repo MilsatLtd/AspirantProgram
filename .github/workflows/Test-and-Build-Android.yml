@@ -64,17 +64,10 @@ jobs:
           fileDir: "./src/mobile"
           encodedString: ${{ secrets.ENV }}
       
-      - name: Create key.properties and set values
+      - name: Convert base64 to binary and create vcn-keystore.jks
         working-directory: src/mobile/android
         run: |
-          echo "storePassword=${{ secrets.KEY_PROPERTIES }}" > key.properties
-          # echo "keyPassword=${{ secrets.ANDROID_SIGNING_KEY_PASSWORD }}" >> key.properties
-          # echo "keyAlias=${{ secrets.ANDROID_SIGNING_KEY_ALIAS }}" >> key.properties
-          # echo "storeFile=vcn-keystore.jks" >> key.properties
-
-      - name: Create service_account.json
-        run: |
-          echo "${{ secrets.KEY_PROPERTIES }}" | sed 's/./& /g'
+          echo "${{ secrets.ANDROID_KEY_PROPERTIES_FILE }}" | base64 --decode > key.properties
 
       - name: Convert base64 to binary and create vcn-keystore.jks
         working-directory: src/mobile/android/app
