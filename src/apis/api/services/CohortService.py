@@ -148,7 +148,7 @@ class DeleteCohort:
         if disable:
             return Response(
                 data={"message": "This feature is currently disabled \U0001F9D0"},
-                status=status.HTTP_400_BAD_REQUEST
+                status=status.HTTP_503_SERVICE_UNAVAILABLE
             )
         try:
             cohort = Cohort.objects.get(cohort_id=cohort_id)
