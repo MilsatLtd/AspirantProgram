@@ -144,7 +144,12 @@ class GetLatestCohort:
             return None
 
 class DeleteCohort:
-    def delete(self, cohort_id):
+    def delete(self, cohort_id, disable = False):
+        if disable:
+            return Response(
+                data={"message": "This feature is currently disabled \U0001F9D0"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
         try:
             cohort = Cohort.objects.get(cohort_id=cohort_id)
             cohort.delete()
