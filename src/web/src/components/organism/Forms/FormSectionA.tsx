@@ -26,6 +26,7 @@ const FormSectionA = (props: formSectionType) => {
     gender: Yup.number().required("Gender is required"),
     phone_number: Yup.string().required("Phone Number is required"),
     role: Yup.number().required("Role is required"),
+    purpose:Yup.string().required("Purpose is required"),
     country: Yup.string().required("Country is required"),
     skills: Yup.string().required("Skills are required"),
     terms: Yup.boolean().oneOf([true], "You must accept the Terms and Conditions"),
@@ -36,6 +37,7 @@ const FormSectionA = (props: formSectionType) => {
   const {
     handleSubmit,
     setValue,
+    getValues,
     watch,
     formState: { errors },
   } = useForm<basicInfo>({
