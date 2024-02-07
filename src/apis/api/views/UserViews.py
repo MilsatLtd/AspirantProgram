@@ -45,7 +45,7 @@ class UpdateProfilePictureView(RetrieveModelMixin,
                 status=status.HTTP_401_UNAUTHORIZED
             )
         return UpdateUserPicture().update(request, user_id)
-    
+
 
 class SendAnyEmailView(GenericAPIView, CreateModelMixin ):
     serializer_class = SendAnyEmailSerializer
