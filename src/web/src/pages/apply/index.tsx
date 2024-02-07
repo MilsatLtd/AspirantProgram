@@ -64,7 +64,7 @@ const ApplicationPage = () => {
     if(isSubmitted){
         setShow(true)
         setSubmissionStatus("Your application has been sent successfully and under review")
-        sendApplicationEmail({email: email ? email : "", subject: "Milsat Aspirant Programme Application", message: ApplicationEmailTemplate})
+        sendApplicationEmail({email: email ? email : "", subject: "Application to the Milsat Aspirant Programme", message: ApplicationEmailTemplate})
       }
       if(isSubmitting){
         setShow(false)
