@@ -23,19 +23,15 @@ Congratulations! We have carefully reviewed your application and we are pleased 
 Cohort Name: {application.track.cohort.name}
 Cohort starts on {format_timestamp(application.track.cohort.start_date)} and ends on {format_timestamp(application.track.cohort.end_date)}.
 
-To commence your journey, kindly download the Milsat Aspirant Programme application on playstore to get started. 
+To commence your journey, kindly fill this form (https://forms.gle/yttJAz4xSYGVQufp9) and proceed to download the Milsat Aspirant Programme mobile application on playstore or click the link below to download.
 
 Download Link: https://play.google.com/store/apps/details?id=com.milsat.apirant&pcampaignid=web_share
 
-Please fill this form: https://forms.gle/yttJAz4xSYGVQufp9
-
-Your login details are:
+Your login details to the application is provided below:
 Email: {application.user.email}
 Password: {password}
 
-You can login to the mobile app using the above credentials.
-
-If you have any questions or concerns, please don't hesitate to reach out to us at map.milsat@gmail.com.
+If you have any questions or concerns, kindly reach out to us at map.milsat@gmail.com.
 
 Best regards.
 MAP Admin
@@ -56,17 +52,15 @@ Congratulations! We have carefully reviewed your application and we are pleased 
 Cohort Name: {application.track.cohort.name}
 Cohort starts on {format_timestamp(application.track.cohort.start_date)} and ends on {format_timestamp(application.track.cohort.end_date)}.
 
-To commence your journey, kindly download the Milsat Aspirant Programme application on playstore to get started.
+To commence your journey, proceed to download the Milsat Aspirant Programme mobile application on playstore or click the link below to download.
 
 Download Link: https://play.google.com/store/apps/details?id=com.milsat.apirant&pcampaignid=web_share
 
-Your login details are:
+Your login details to the application is provided below:
 Email: {application.user.email}
 Password: {password}
 
-You can login to the mobile app using the above credentials.
-
-If you have any questions or concerns, please don't hesitate to reach out to us at map.milsat@gmail.com.
+If you have any questions or concerns, kindly reach out to us at map.milsat@gmail.com.
 
 Best regards.
 MAP Admin
