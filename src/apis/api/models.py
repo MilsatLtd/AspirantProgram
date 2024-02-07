@@ -130,10 +130,10 @@ class Applications(models.Model):
 
     applicant_id = models.UUIDField(
         primary_key=True, default=uuid.uuid4, editable=False)
-    reason = models.TextField(max_length=350)
+    reason = models.TextField()
     referral = models.CharField(max_length=50)
     skills = models.TextField(max_length=350)
-    purpose = models.TextField(max_length=350)
+    purpose = models.TextField()
     education = models.IntegerField(choices=EDUCATION_CHOICES)
     submission_date = models.DateTimeField(auto_now_add=True)
     review_date = models.DateTimeField(blank=True, null=True)
