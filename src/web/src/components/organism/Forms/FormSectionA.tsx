@@ -37,7 +37,6 @@ const FormSectionA = (props: formSectionType) => {
   const {
     handleSubmit,
     setValue,
-    getValues,
     watch,
     formState: { errors },
   } = useForm<basicInfo>({

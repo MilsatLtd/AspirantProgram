@@ -594,7 +594,7 @@ export const ApplicationEmailTemplate  = `<!DOCTYPE html><html lang="en"><head><
 <div class="container">
   <p>We have successfully received your application for the Milsat Aspirant Program. Your submission is currently under review and you'll be notified via email upon approval.</p>
   <p>Your application is now under review.</p>
-  <p>If you have any questions or concerns, please feel free to reach out to us at<a href="mailto:map.milsat@gmail.com">support</a></p> 
+  <p>If you have any questions or concerns, please feel free to reach out to us at <a href="mailto:map.milsat@gmail.com">support</a></p> 
   <p>Best regards,</p>
   <p class="footer">This is an automated email, please do not reply.</p>
 </div>
