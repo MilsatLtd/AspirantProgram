@@ -163,13 +163,13 @@ const FormSectionA = (props: formSectionType) => {
         <TextField
           label="Phone Number"
           onTextChange={(e) => handleSetValue(e.target.value, "phone_number")}
-          placeholder="Add phone number"
+          placeholder="Add Phone number (e.g. 081 ** *** ***)"
           inputStyle=""
           containerStyle="lg:col-span-6 col-span-1"
           type="number"
           error={errors.phone_number?.message}
           minlength={1}
-          maxlength={30}
+          maxlength={11}
         />
       </div>
       <div className="grid lg:grid-cols-12 grid-cols-1 gap-24 w-full">

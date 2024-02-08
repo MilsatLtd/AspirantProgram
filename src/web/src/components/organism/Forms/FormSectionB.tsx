@@ -125,7 +125,6 @@ useEffect(() => {
         containerStyle="col-span-12"
         error={errors.reason?.message}
         onTextChange={(e)=>  setValue("reason", e.target.value, { shouldValidate: true })}
-        maxLength={200}
         minLength={1}
        />
         <DropDownField
