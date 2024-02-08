@@ -97,7 +97,7 @@ class GetOpenCohort:
     def get(self):
         try:
             cohort = Cohort.objects.filter(
-                apply_start_date__lte=timezone.now(), apply_end_date__gte=timezone.now())
+                apply_start_date__lte=timezone.now(), apply_end_date__gte=timezone.now()).exclude(name__icontains='test')
             cohort_serializer = OpenCohortSerializer(cohort, many=True)
             return Response(cohort_serializer.data, status=status.HTTP_200_OK)
         except Cohort.DoesNotExist:
@@ -109,6 +109,7 @@ class GetOpenCohort:
             return Response(
                 data={"message": "Something went wrong \U0001F9D0"},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+ 
 
 
 class GetLatestCohort:
