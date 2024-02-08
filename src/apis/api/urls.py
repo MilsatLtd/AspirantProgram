@@ -161,4 +161,5 @@ urlpatterns += [
         name="getMentorTrack",
     ),
     path("email", SendAnyEmailView.as_view(), name="sendEmail"),
+    path("email_async_test", SendAnyEmailViewAsync.as_view(), name="sendEmailAsyncTest"),
 ]

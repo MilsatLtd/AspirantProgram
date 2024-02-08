@@ -35,6 +35,7 @@ class GetAllApplications:
             users_serializer = ApplicationSerializer2(users, many=True)
             return Response(users_serializer.data, status=status.HTTP_200_OK)
         except Exception as e:
+            logger.exception(e)
             return Response(
                 data={"message": "Something went wrong \U0001F9D0"},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR)
@@ -56,6 +57,7 @@ class GetApplicationById:
                     self.user_id)},
                 status=status.HTTP_404_NOT_FOUND)
         except Exception as e:
+            logger.exception(e)
             return Response(
                 data={"message": "Something went wrong \U0001F9D0"},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR)
@@ -90,7 +92,7 @@ class ReviewApplication:
                     applicant_id)},
                 status=status.HTTP_404_NOT_FOUND)
         except Exception as e:
-            print(e)
+            logger.exception(e)
             return Response(
                 data={"message": "Something went wrong \U0001F9D0"},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR)

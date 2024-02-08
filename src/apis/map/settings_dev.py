@@ -137,8 +137,8 @@ try:
     EMAIL_HOST = "smtp.gmail.com"
     EMAIL_PORT = 587
     EMAIL_USE_TLS = True
-    EMAIL_HOST_USER = os.environ["EMAIL_HOST_USER"]
-    EMAIL_HOST_PASSWORD = os.environ["EMAIL_HOST_PASSWORD"]
+    EMAIL_HOST_USER = "map.milsat@gmail.com" #os.environ["EMAIL_HOST_USER"]
+    EMAIL_HOST_PASSWORD = "qnrnlnbbglnscrxc" #os.environ["EMAIL_HOST_PASSWORD"]
 except:
     EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
@@ -189,13 +189,11 @@ STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 
-CELERY_BROKER_URL = "redis://default:pv5k1UZDyOSnKjV2b6Ed@containers-us-west-179.railway.app:7757"
-CELERY_RESULT_BACKEND = "redis://default:pv5k1UZDyOSnKjV2b6Ed@containers-us-west-179.railway.app:7757"
+CELERY_BROKER_URL = "redis://default:Fil5p6nejIfoalGHP52gMnMJpCCAN6IP@roundhouse.proxy.rlwy.net:55120"
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TASK_SERIALIZER = 'json'
-CELERY_ACCEPT_CONTENT = ['json']
-CELERY_ENABLE_UTC = True
+CELERY_TIMEZONE = 'Africa/Lagos'
 
 
 AUTHENTICATION_BACKENDS = [
@@ -264,9 +262,18 @@ LOGGING = {
         'console': {
             'level': 'ERROR',
             'class': 'logging.StreamHandler',
-        }
+        },
+        'file': {
+            'level': 'ERROR',
+            'class': 'logging.FileHandler',
+            'filename': 'c:\\temp\\map.log',
+        },
     },
-    'root': {
-        'level': 'ERROR',
+    'loggers': {
+        'django': {
+            'handlers': ['file'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
     },
 }
