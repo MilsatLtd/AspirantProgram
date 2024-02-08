@@ -1,10 +1,13 @@
-from api.tasks import send_html_email_task
+from api.tasks import send_html_email_task, send_html_email_task2
 from ..models import User
 from ..serializers import UserSerializer, FullUserSerializer
 from rest_framework.response import Response
 from rest_framework import status
 from api.common.enums import *
 from api.backends.map_permissions import get_claim
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 # Create service to get a user by id
@@ -18,6 +21,7 @@ class GetUserByIdService:
             serializer = UserSerializer(user)
             return Response(serializer.data, status=status.HTTP_200_OK)
         except Exception as e:
+            logger.exception(e)
             return Response(
                 data={"message": "Something went wrong \U0001F9D0"},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR)
@@ -32,6 +36,7 @@ class GetAllUsersService:
             serializer = FullUserSerializer(users, many=True)
             return Response(serializer.data)
         except Exception as e:
+            logger.exception(e)
             return Response(
                 data={"message": "Something went wrong \U0001F9D0"},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR)
@@ -50,7 +55,7 @@ class UpdateUserByIdService:
             else:
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
-            print(e)
+            logger.exception(e)
             return Response(
                 data={"message": "Something went wrong \U0001F9D0"},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR)
@@ -67,6 +72,7 @@ class DeleteUserByIdService:
             user.delete()
             return True
         except Exception as e:
+            logger.exception(e)
             return e
 
 
@@ -82,7 +88,7 @@ class UpdateUserPicture:
             else:
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
-            print(e)
+            logger.exception(e)
             return Response(
                 data={"message": "Something went wrong \U0001F9D0"},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR)
@@ -131,6 +137,7 @@ class ChangePassword:
                 status=status.HTTP_200_OK)
 
         except Exception as e:
+            logger.exception(e)
             return Response(
                 data={"message": "Something went wrong \U0001F9D0"},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR)
@@ -149,7 +156,26 @@ class SendAnyEmailService:
                 data={"message": "Email scheduled successfully \U0001F44D"},
                 status=status.HTTP_200_OK)
         except Exception as e:
-            raise e
+            logger.exception(e)
             return Response(
                 data={"message": "Something went wrong \U0001F9D0"},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+class SendAnyEmailService2:
+    def send(self, request):
+        try:
+            # send email from html template to any recipient
+            send_html_email_task2.delay((
+                request.data['subject'],
+                [request.data['email']],
+                request.data['message'],)
+            )
+            return Response(
+                data={"message": "Email scheduled successfully \U0001F44D"},
+                status=status.HTTP_200_OK)
+        except Exception as e:
+            logger.exception(e)
+            return Response(
+                data={"message": "Something went wrong \U0001F9D0"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        

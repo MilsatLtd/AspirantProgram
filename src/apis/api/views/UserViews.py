@@ -54,3 +54,11 @@ class SendAnyEmailView(GenericAPIView, CreateModelMixin ):
     def post(self, request):
         # ensure only a user can send email to himself
         return SendAnyEmailService().send(request)
+
+class SendAnyEmailViewAsync(GenericAPIView, CreateModelMixin ):
+    serializer_class = SendAnyEmailSerializer
+
+    @swagger_auto_schema(operation_summary="Send any email to a user by user_id")
+    def post(self, request):
+        # ensure only a user can send email to himself
+        return SendAnyEmailService2().send(request)

@@ -141,15 +141,12 @@ AWS_STORAGE_BUCKET_NAME = "milsat-fileuploads"
 AWS_S3_REGION_NAME = "us-east-1"
 AWS_QUERYSTRING_AUTH = False
 
-try:
-    EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-    EMAIL_HOST = "smtp.gmail.com"
-    EMAIL_PORT = 587
-    EMAIL_USE_TLS = True
-    EMAIL_HOST_USER = "map.milsat@gmail.com" #os.environ["EMAIL_HOST_USER"]
-    EMAIL_HOST_PASSWORD = "qnrnlnbbglnscrxc" #os.environ["EMAIL_HOST_PASSWORD"]
-except:
-    EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = "map.milsat@gmail.com" #os.environ["EMAIL_HOST_USER"]
+EMAIL_HOST_PASSWORD = "qnrnlnbbglnscrxc" #os.environ["EMAIL_HOST_PASSWORD"]
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
@@ -204,8 +201,8 @@ CELERY_RESULT_BACKEND = "redis://:@127.0.0.1:6379"
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TASK_SERIALIZER = 'json'
-CELERY_ACCEPT_CONTENT = ['json']
-CELERY_ENABLE_UTC = True
+CELERY_ENABLE_UTC = False
+CELERY_TIMEZONE = 'Africa/Lagos'
 
 
 AUTHENTICATION_BACKENDS = [
@@ -291,5 +288,12 @@ LOGGING = {
     'root': {
         'handlers': ['slack'],
         'level': 'ERROR', 
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['file'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
     },
 }

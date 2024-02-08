@@ -22,7 +22,7 @@ class CreateTrack:
                 return Response(track_serializer.data, status=status.HTTP_201_CREATED)
             return Response(track_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
-            print(e)
+            logger.exception(e)
             return Response(
                 data={"message": "Something went wrong \U0001F9D0"},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR)
@@ -43,6 +43,7 @@ class GetTrackById:
                     self.track_id)},
                 status=status.HTTP_404_NOT_FOUND)
         except Exception as e:
+            logger.exception(e)
             return Response(
                 data={"message": "Something went wrong \U0001F9D0"},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR)
@@ -59,6 +60,7 @@ class GetTrackByCohort:
                 track_serializer = TrackSerializer(tracks, many=True)
             return Response(track_serializer.data, status=status.HTTP_200_OK)
         except Exception as e:
+            logger.exception(e)
             return Response(
                 data={"message": "Something went wrong \U0001F9D0"},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR)
@@ -75,7 +77,7 @@ class GetAllTracks:
                 tracks_serializer = TrackSerializer(tracks, many=True)
             return Response(tracks_serializer.data, status=status.HTTP_200_OK)
         except Exception as e:
-            print(e)
+            logger.exception(e)
             return Response(
                 data={"message": "Something went wrong \U0001F9D0"},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR)
@@ -119,6 +121,7 @@ class AddCourseToTrack:
                         self.track_id)},
                 status=status.HTTP_404_NOT_FOUND)
         except Exception as e:
+            logger.exception(e)
             return Response(
                 data={"message": "Something went wrong \U0001F9D0"},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR)
@@ -143,6 +146,7 @@ class DeleteTrack:
                         self.track_id)},
                 status=status.HTTP_404_NOT_FOUND)
         except Exception as e:
+            logger.exception(e)
             return Response(
                 data={"message": "Something went wrong \U0001F9D0"},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR)

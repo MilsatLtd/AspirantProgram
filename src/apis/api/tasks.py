@@ -6,6 +6,7 @@ from .models import Cohort
 from .common.enums import *
 import logging
 
+
 logger = logging.getLogger(__name__)
 
 
@@ -33,6 +34,15 @@ def cohort_live_to_end(cohort_id):
         logger.exception(e)
 
 def send_html_email_task(subject=None, recipient=None, message=None):
+    try:
+        sender = settings.EMAIL_HOST_USER
+        plaintext = html2text.HTML2Text().handle(message)
+        send_mail(subject, plaintext, sender, recipient, html_message=message, fail_silently=False)
+    except Exception as e:
+        logger.exception(e)
+
+@shared_task()
+def send_html_email_task2(subject=None, recipient=None, message=None):
     try:
         sender = settings.EMAIL_HOST_USER
         plaintext = html2text.HTML2Text().handle(message)
