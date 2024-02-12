@@ -1,8 +1,8 @@
 name: Deploy Map API
 on:
   workflow_dispatch:
-  push:
-     branches: [ "resync-action-fix" ]
+  # push:
+  #    branches: [ "" ]
      
 jobs:
   deploy:
