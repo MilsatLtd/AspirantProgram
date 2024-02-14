@@ -1,9 +1,9 @@
 name: Deploy Web Page
 
 on:
-  workflow_dispatch:
-  push:
+  pull_request:
      branches: [ "main" ]
+     paths: ["src/web/**"]
 
 jobs:
   deploy:
