@@ -2,7 +2,7 @@ name: Deploy Web Page
 
 on:
   pull_request:
-     branches: [ "main" ]
+     branches: [ "aspirant-test-env-setup" ]
      paths: ["src/web/**"]
 
 jobs:
@@ -43,7 +43,7 @@ jobs:
         uses: mshick/add-pr-comment@v2
         with:
           message: |
-            checkout your changes to the Test environment at test-aspirant.milsat.africa
+            checkout your changes to the Test environment URL: [test-aspirant.milsat.africa](https://test-aspirant.milsat.africa)
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           repo-token-user-login: "github-actions[bot]"
           allow-repeats: true
