@@ -37,3 +37,4 @@ jobs:
             python3 manage.py migrate
             chmod +x test_restart_gunicorn.sh
             ./test_restart_gunicorn.sh
+
