@@ -8,7 +8,7 @@ BIND_ADDRESS="0.0.0.0:8001"
 echo "Restarting Gunicorn processes for $MAP_APP_NAME"
 
 # Gracefully terminate the old Gunicorn processes
-pkill -f "gunicorn.*$MAP_APP_NAME"
+# pkill -f "gunicorn.*$MAP_APP_NAME"
 
 # Wait for a moment to ensure that the resources are freed
 sleep 5
