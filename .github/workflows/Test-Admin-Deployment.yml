@@ -38,3 +38,12 @@ jobs:
             cd dist/
             tmux kill-session -t test-admin-app 2>/dev/null || true
             tmux new -d -s test-admin-app "serve -s -l 3003"
+
+      - name: Add HTTPS endpoint to PR comment
+        uses: mshick/add-pr-comment@v2
+        with:
+          message: |
+            checkout your changes to the Test environment at test-admin-asp.milsat.africa
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          repo-token-user-login: "github-actions[bot]"
+          allow-repeats: true
