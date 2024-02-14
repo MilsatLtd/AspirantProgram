@@ -38,3 +38,12 @@ jobs:
             python3 manage.py migrate
             chmod +x test_restart_gunicorn.sh
             ./test_restart_gunicorn.sh
+
+      - name: Add HTTPS endpoint to PR comment
+        uses: mshick/add-pr-comment@v2
+        with:
+          message: |
+            checkout your changes to the Test environment at test-aspirant-api.milsat.africa
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          repo-token-user-login: "github-actions[bot]"
+          allow-repeats: true
