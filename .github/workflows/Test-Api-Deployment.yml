@@ -33,7 +33,8 @@ jobs:
           script: |
             cd ~/test-aspirant-program/src/apis/
             pip install -r requirements.txt
-            export DJANGO_SETTINGS_MODULE=map.settings
+            export DJANGO_ENV = "Test"
+            export DJANGO_SETTINGS_MODULE=map.settings_test
             python3 manage.py migrate
             chmod +x test_restart_gunicorn.sh
             ./test_restart_gunicorn.sh
