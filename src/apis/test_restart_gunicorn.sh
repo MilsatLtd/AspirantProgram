@@ -19,7 +19,7 @@ gunicorn $MAP_APP_NAME --bind $BIND_ADDRESS --daemon &
 echo "Gunicorn restarted for $MAP_APP_NAME"
 
 #Set the DJANGO_SETTINGS_MODULE Environment Variable
-export DJANGO_SETTINGS_MODULE=map.settings
+export DJANGO_SETTINGS_MODULE=map.settings_test
 
 #Run Migrations
 python3 manage.py migrate
