@@ -37,4 +37,4 @@ jobs:
             npm run build
             cd dist/
             tmux kill-session -t test-admin-app 2>/dev/null || true
-            tmux new -d -s admin-app "serve -s -l 3003"
+            tmux new -d -s test-admin-app "serve -s -l 3003"
