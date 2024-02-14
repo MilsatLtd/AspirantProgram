@@ -38,3 +38,12 @@ jobs:
             # cd .next/
             tmux kill-session -t test-web-app 2>/dev/null || true
             tmux new -d -s test-web-app "PORT=3002 npm start"
+
+      - name: Add HTTPS endpoint to PR comment
+        uses: mshick/add-pr-comment@v2
+        with:
+          message: |
+            checkout your changes to the Test environment at test-aspirant.milsat.africa
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          repo-token-user-login: "github-actions[bot]"
+          allow-repeats: true
