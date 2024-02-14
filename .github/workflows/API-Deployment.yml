@@ -1,8 +1,8 @@
 name: Deploy Map API
 on:
   workflow_dispatch:
-  push:
-     branches: [ "resync-action-fix" ]
+  # push:
+  #    branches: [ "" ]
      
 jobs:
   deploy:
@@ -32,6 +32,7 @@ jobs:
           script: |
             cd ~/AspirantProgram/src/apis/
             pip install -r requirements.txt
+            export DJANGO_ENV = "Production"
             export DJANGO_SETTINGS_MODULE=map.settings
             python3 manage.py migrate
             chmod +x restart_gunicorn.sh
