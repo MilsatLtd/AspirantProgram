@@ -1,8 +1,8 @@
 name: Deploy Map API-Test
 on:
   workflow_dispatch:
-  # push:
-  #    branches: [ "" ]
+  push:
+     branches: [ "main" ]
      
 jobs:
   deploy:
