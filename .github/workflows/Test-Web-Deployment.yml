@@ -3,7 +3,7 @@ name: Deploy Web Page
 on:
   workflow_dispatch:
   push:
-     branches: [ "aspirant-test-env-setup" ]
+     branches: [ "main" ]
 
 jobs:
   deploy:
