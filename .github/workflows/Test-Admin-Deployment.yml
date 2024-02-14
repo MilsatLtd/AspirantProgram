@@ -1,9 +1,9 @@
 name: Deploy Admin Page
 
 on:
-  workflow_dispatch:
-  # push:
-  #   branches: [ "" ]
+  pull_request:
+     branches: [ "main" ]
+     paths: ["src/admin/**"]
 
 jobs:
   deploy:
