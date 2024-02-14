@@ -2,8 +2,8 @@ name: Deploy Admin Page
 
 on:
   workflow_dispatch:
-  push:
-    branches: [ "aspirant-test-env-setup" ]
+  # push:
+  #   branches: [ "" ]
 
 jobs:
   deploy:
