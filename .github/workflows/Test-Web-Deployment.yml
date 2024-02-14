@@ -1,0 +1,40 @@
+name: Deploy Web Page
+
+on:
+  workflow_dispatch:
+  push:
+     branches: [ "aspirant-test-env-setup" ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Rsync files to server
+        uses: easingthemes/ssh-deploy@main
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_KEY }}
+          REMOTE_HOST: ${{ secrets.SERVER_IP }}
+          REMOTE_USER: ${{ secrets.SERVER_USER }}
+          REMOTE_PORT: ${{ secrets.SERVER_PORT }}
+          ARGS: "-avzr --delete"
+          SOURCE: "src/web/"
+          TARGET: "~/test-aspirant-program/src/web/"
+
+      - name: SSH and Build on Server
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SERVER_IP }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+           export NVM_DIR="/home/ubuntu/.nvm"
+           [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+            cd ~/test-aspirant-program/src/web/
+            npm install
+            npm run build
+            # cd .next/
+            tmux kill-session -t test-web-app 2>/dev/null || true
+            tmux new -d -s test-web-app "PORT=3002 npm start"
