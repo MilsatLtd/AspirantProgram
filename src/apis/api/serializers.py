@@ -893,3 +893,6 @@ class SendAnyEmailSerializer(serializers.Serializer):
     email = serializers.EmailField(required=True)
     subject = serializers.CharField(required=True)
     message = serializers.CharField(required=True)
+
+class ReorderTrackCoursesSerializer(serializers.Serializer):
+    courses = serializers.ListField(child=serializers.UUIDField())

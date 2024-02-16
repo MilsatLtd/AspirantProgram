@@ -110,6 +110,12 @@ urlpatterns += [
     path(
         "tracks/delete/<uuid:track_id>", DeleteTrackView.as_view(), name="deleteTrack"
     ),
+    # add endpoint to reorder courses
+    path(
+        "tracks/reorder/<uuid:track_id>",
+        ReorderTrackCoursesView.as_view(),
+        name="reorderTrackCourses",
+    ),
     path("applications/", ListApplication.as_view(), name="createApplication"),
     path(
         "applications/<uuid:applicant_id>",
