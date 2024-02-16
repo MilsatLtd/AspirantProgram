@@ -167,7 +167,7 @@ class ReorderTrackCourses:
                     data={
                         "message": "The list of courses provided is not the same as the list of courses in the track \U0001F636"},
                     status=status.HTTP_400_BAD_REQUEST)
-            for index, course_id in enumerate(courses):
+            for index, course_id in enumerate(courses, 1):
                 course = Course.objects.get(course_id=course_id)
                 course.order = index
                 course.save()
