@@ -405,7 +405,7 @@ class CreateApplicationSerializer(serializers.Serializer):
     gender = serializers.ChoiceField(
         [(gender.value, gender.name) for gender in GENDER])
     country = serializers.CharField(max_length=30)
-    phone_number = serializers.CharField(max_length=30)
+    phone_number = serializers.CharField(max_length=11)
     reason = serializers.CharField()
     referral = serializers.CharField(max_length=100)
     skills = serializers.CharField(max_length=100)
