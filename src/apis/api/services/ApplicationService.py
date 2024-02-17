@@ -2,6 +2,8 @@ from rest_framework import status
 from rest_framework.response import Response
 from django.utils import timezone
 from api.common.constants import application_message
+from django.db.models import Count
+
 
 from api.common.enums import *
 from api.models import User, Applications, Mentors, Students
@@ -130,8 +132,7 @@ class ReviewApplication:
         sendEmail(user.email, message['subject'], message['body'])
 
     def select_mentor(self, track):
-        mentor = Mentors.objects.filter(
-            track=track).order_by('mentees').first()
+        mentor = Mentors.objects.annotate(num_mentees=Count('mentees')).filter(track=track).order_by('num_mentees').first()
         return mentor
 
     def update_track(self, track):
