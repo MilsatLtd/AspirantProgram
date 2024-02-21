@@ -105,7 +105,7 @@ class PasswordResetConfirm(GenericAPIView, CreateModelMixin ):
             
             new_password = request.data.get('password')
             if user.password_reset_token_profile == 'student':
-                if user.check_password2(new_password)[0]:
+                if user.check_password(new_password)[0]:
                     return Response({"message": "You can't use the same password for your intern and mentor profile"}, status=status.HTTP_400_BAD_REQUEST)
                 user.set_password(new_password)
             elif user.password_reset_token_profile == 'mentor':
