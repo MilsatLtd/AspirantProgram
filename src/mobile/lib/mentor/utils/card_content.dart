@@ -37,10 +37,15 @@ class MentorCardContent extends StatelessWidget {
                   'Ongoing Track:',
                   style: kSmallTextStyle,
                 ),
-                Text(
-                  'Cohort duration: $cohortDuration months',
-                  style: kSmallTextStyle,
-                ),
+                cohortDuration == 1
+                    ? Text(
+                        'Cohort duration: $cohortDuration week',
+                        style: kSmallTextStyle,
+                      )
+                    : Text(
+                        'Cohort duration: $cohortDuration weeks',
+                        style: kSmallTextStyle,
+                      ),
               ],
             ),
           ),
@@ -60,7 +65,7 @@ class MentorCardContent extends StatelessWidget {
             ),
           ),
           const SizedBox(
-            height: 16,
+            height: 32,
           ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -86,24 +91,36 @@ class MentorCardContent extends StatelessWidget {
                         children: [
                           for (int i = 0; i < d.mentees!.length; i++) ...{
                             if (i < 5) ...{
-                              Align(
-                                widthFactor: 0.5,
-                                child: CircleAvatar(
-                                  radius: 14,
-                                  backgroundColor:
-                                      Theme.of(context).primaryColor,
+                              if (d.mentees!.isNotEmpty) ...{
+                                Align(
+                                  widthFactor: 0.5,
                                   child: CircleAvatar(
-                                    radius: 12,
-                                    backgroundImage: NetworkImage(d.mentees!
-                                        .elementAt(i)
-                                        .profilePicture!),
+                                    radius: 14,
+                                    backgroundColor:
+                                        Theme.of(context).primaryColor,
+                                    child: CircleAvatar(
+                                      radius: 12,
+                                      backgroundColor: Colors.grey,
+                                      backgroundImage: d.mentees
+                                                  ?.elementAt(i)
+                                                  .profilePicture ==
+                                              null
+                                          ? const AssetImage(
+                                              'assets/placeholder-person.png',
+                                            )
+                                          : NetworkImage(d.mentees!
+                                                  .elementAt(i)
+                                                  .profilePicture!)
+                                              as ImageProvider,
+                                    ),
                                   ),
                                 ),
-                              ),
+                              }
                             }
                           }
                         ],
                       ),
+                      const SizedBox(width: 16),
                       if (d.mentees!.length >= 5) ...{
                         Text(
                           '+${d.mentees!.length - 5} more',

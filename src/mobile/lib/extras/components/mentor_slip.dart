@@ -7,37 +7,43 @@ class MentorSlip extends StatelessWidget {
     super.key,
     required this.mentorName,
     this.profileUrl,
+    this.onTap,
   });
 
   final String mentorName;
   final String? profileUrl;
+  final Function()? onTap;
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        if (profileUrl != null)
-          CircleAvatar(
-            radius: 12,
-            backgroundImage: NetworkImage(
-              profileUrl!,
+    return GestureDetector(
+      onTap: onTap,
+      child: Row(
+        children: [
+          if (profileUrl != null)
+            CircleAvatar(
+              radius: 12,
+              backgroundImage: NetworkImage(
+                profileUrl!,
+              ),
+            )
+          else
+            const CircleAvatar(
+              radius: 12,
+              backgroundColor: Colors.grey,
+              backgroundImage: AssetImage(
+                'assets/placeholder-person.png',
+              ),
             ),
-          )
-        else
-          const CircleAvatar(
-            radius: 12,
-            backgroundImage: AssetImage(
-              'assets/defaultImage.jpg',
-            ),
+          const SizedBox(
+            width: 8,
           ),
-        const SizedBox(
-          width: 8,
-        ),
-        Text(
-          mentorName,
-          style: kNameTextStyle,
-        ),
-      ],
+          Text(
+            mentorName,
+            style: kNameTextStyle,
+          ),
+        ],
+      ),
     );
   }
 }

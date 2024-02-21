@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:milsat_project_app/extras/components/shared_prefs/keys.dart';
 import 'package:milsat_project_app/extras/components/shared_prefs/utils.dart';
 import 'package:milsat_project_app/extras/models/decoded_token.dart';
+import 'package:milsat_project_app/mentor/profile/profile.dart';
 import '../../extras/components/files.dart';
 
 final boolStateProvider = StateProvider<bool>((ref) {
@@ -139,13 +140,17 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                                   .fromJsonString);
                                   if (formKey.currentState?.validate() ??
                                       false) {
+                                    ref.read(mentorImage.notifier).state = null;
+                                    ref.read(image.notifier).state = null;
                                     await ref
                                         .read(signInProvider.notifier)
                                         .signIn(emailController.text.trim(),
                                             passwordController.text.trim());
+
                                     await ref
                                         .read(apiServiceProvider)
                                         .getUserData(decodedToken!.userId);
+                                    error = [];
                                   }
                                 },
                           style: ButtonStyle(

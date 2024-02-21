@@ -113,7 +113,7 @@ class _EditProfileState extends ConsumerState<EditProfile> {
                               radius: 44,
                               backgroundImage: data?.profilePicture == null
                                   ? const AssetImage(
-                                      'assets/defaultImage.jpg',
+                                      'assets/placeholder-person.png',
                                     )
                                   : NetworkImage(
                                       data?.profilePicture,

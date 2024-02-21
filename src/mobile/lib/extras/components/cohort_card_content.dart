@@ -26,12 +26,13 @@ class CardContent extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     double progress = d.progress!.toDouble() / 100;
+    double width = MediaQuery.of(context).size.width;
     return Container(
       padding: const EdgeInsets.only(
         top: 16,
         bottom: 16,
       ),
-      width: 343,
+      width: width - 44,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -44,12 +45,19 @@ class CardContent extends ConsumerWidget {
                   'Ongoing Track:',
                   style: kSmallTextStyle,
                 ),
-                Text(
-                  'Cohort duration: $contentDuration month(s)',
-                  maxLines: 2,
-                  overflow: TextOverflow.fade,
-                  style: kSmallTextStyle,
-                ),
+                contentDuration == 1
+                    ? Text(
+                        'Cohort duration: $contentDuration week',
+                        maxLines: 2,
+                        overflow: TextOverflow.fade,
+                        style: kSmallTextStyle,
+                      )
+                    : Text(
+                        'Cohort duration: $contentDuration weeks',
+                        maxLines: 2,
+                        overflow: TextOverflow.fade,
+                        style: kSmallTextStyle,
+                      ),
               ],
             ),
           ),
@@ -90,6 +98,7 @@ class CardContent extends ConsumerWidget {
                 MentorSlip(
                   mentorName: mentorName!,
                   profileUrl: d.mentor?.profilePicture,
+                  onTap: null,
                 ),
                 Text(
                   '$numberEnrolled Enrolled',
@@ -111,10 +120,14 @@ class CardContent extends ConsumerWidget {
               elevation: 0,
               height: 44,
               pressed: () {
-                Navigator.pushReplacement(context,
-                    MaterialPageRoute(builder: (context) {
-                  return TrackDetails(d: d);
-                }));
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) {
+                      return TrackDetails(d: d);
+                    },
+                  ),
+                );
               },
               color: const Color(0xFFB58BB8),
               width: double.infinity,
@@ -153,12 +166,13 @@ class CardContent extends ConsumerWidget {
           ),
           LinearPercentIndicator(
             addAutomaticKeepAlive: true,
-            width: 340,
+            width: width - 60,
             lineHeight: 4,
             percent: progress,
             backgroundColor: const Color(0xFFCBADCD),
             progressColor: const Color(0xFF2BBDB2),
             barRadius: const Radius.circular(24),
+            alignment: MainAxisAlignment.center,
           ),
           const SizedBox(
             height: 4,
@@ -177,7 +191,7 @@ class CardContent extends ConsumerWidget {
                   ),
                 ),
                 Text(
-                  '${progress * 100}% completion',
+                  '${(progress * 100).toStringAsFixed(1)}% completion',
                   style: GoogleFonts.raleway(
                     color: AppTheme.kAppWhiteScheme,
                     fontSize: 10,

@@ -7,7 +7,6 @@ import 'package:milsat_project_app/extras/components/shared_prefs/utils.dart';
 import 'package:milsat_project_app/mentor/profile/profile.dart';
 
 import '../extras/components/files.dart';
-import 'more/blocker/all_blockers_mentor.dart';
 
 class MentorPageSkeleton extends StatefulWidget {
   const MentorPageSkeleton({super.key, required this.currentPage});
@@ -122,12 +121,6 @@ class _MentorPageSkeletonState extends State<MentorPageSkeleton> {
                   });
                   showModalBottomSheet(
                       elevation: 1,
-                      shape: const RoundedRectangleBorder(
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(16),
-                          topRight: Radius.circular(16),
-                        ),
-                      ),
                       context: context,
                       builder: (context) {
                         return Container(
@@ -135,8 +128,13 @@ class _MentorPageSkeletonState extends State<MentorPageSkeleton> {
                             vertical: 16,
                             horizontal: 16,
                           ),
+                          decoration: const BoxDecoration(
+                              color: AppTheme.kAppWhiteScheme,
+                              borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(16),
+                                topRight: Radius.circular(16),
+                              )),
                           height: 256,
-                          color: AppTheme.kAppWhiteScheme,
                           child: Column(
                             children: [
                               Container(
@@ -154,10 +152,8 @@ class _MentorPageSkeletonState extends State<MentorPageSkeleton> {
                                 image: 'assets/blocker_icon.svg',
                                 onTap: () {
                                   AppNavigator.pop();
-                                  Navigator.push(context,
-                                      MaterialPageRoute(builder: (context) {
-                                    return const AllMentorBlockers();
-                                  }));
+                                  AppNavigator.navigateToAndReplace(
+                                      allMentorBlockertRoute);
                                 },
                                 pageName: 'Blockers',
                                 pageDescription:
@@ -171,7 +167,8 @@ class _MentorPageSkeletonState extends State<MentorPageSkeleton> {
                                 image: 'assets/report_icon.svg',
                                 onTap: () {
                                   AppNavigator.pop();
-                                  AppNavigator.navigateTo(mentorReportRoute);
+                                  AppNavigator.navigateToAndReplace(
+                                      mentorReportRoute);
                                 },
                                 pageName: 'Report',
                                 pageDescription: 'View mentee weekly report',
@@ -184,7 +181,8 @@ class _MentorPageSkeletonState extends State<MentorPageSkeleton> {
                                 image: 'assets/meet_svg.svg',
                                 onTap: () {
                                   AppNavigator.pop();
-                                  AppNavigator.navigateTo(meetUpRoute);
+                                  AppNavigator.navigateToAndReplace(
+                                      meetUpRoute);
                                 },
                                 pageName: 'Meetup',
                                 pageDescription: 'Schedule meeting with mentee',

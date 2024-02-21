@@ -17,6 +17,7 @@ class ReplyBlocker extends ConsumerStatefulWidget {
     required this.blockerId,
     required this.time,
     required this.trackId,
+    required this.comments,
   });
 
   final String title;
@@ -25,6 +26,7 @@ class ReplyBlocker extends ConsumerStatefulWidget {
   final String blockerId;
   final String time;
   final String trackId;
+  final List<BlockerCommentModel> comments;
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _ReplyBlockerState();
@@ -37,16 +39,23 @@ class _ReplyBlockerState extends ConsumerState<ReplyBlocker> {
             SharedPrefKeys.blockerReply);
   }
 
+  final textController = TextEditingController();
+  final ScrollController _scrollController = ScrollController();
+
+  bool textFieldEmpty = true;
+
   @override
   void initState() {
     super.initState();
     getReplies();
+    _scrollController;
   }
 
-  final textController = TextEditingController();
-  List<BlockerCommentModel> response = [];
-
-  bool textFieldEmpty = true;
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -136,44 +145,51 @@ class _ReplyBlockerState extends ConsumerState<ReplyBlocker> {
             height: 16,
           ),
           Expanded(
-            child: response.isNotEmpty
+            child: widget.comments.isNotEmpty
                 ? ListView.builder(
-                    itemCount: response.length,
+                    controller: _scrollController,
+                    itemCount: widget.comments.length,
                     itemBuilder: (context, index) {
-                      return Padding(
-                        padding: const EdgeInsets.only(left: 100, bottom: 8),
-                        child: SizedBox(
-                          width: 250,
-                          child: Container(
-                            padding: const EdgeInsets.all(12),
-                            decoration: const BoxDecoration(
-                              color: AppTheme.kAppWhiteScheme,
-                            ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  '${response[index].senderName}',
-                                  style: GoogleFonts.raleway(
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.w600,
-                                      color: const Color(0xFF504D51),
-                                      height: 1.5),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(right: 16),
-                                  child: Text(
-                                    'Hello ${widget.userName},\n'
-                                    '${response[index].message}',
+                      return SizedBox(
+                        width: 250,
+                        child: Align(
+                          alignment: widget.comments[index].senderName ==
+                                  loginResponse?.fullName
+                              ? Alignment.centerRight
+                              : Alignment.centerLeft,
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Container(
+                              padding: const EdgeInsets.all(12),
+                              decoration: const BoxDecoration(
+                                color: AppTheme.kAppWhiteScheme,
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    '${widget.comments[index].senderName}',
                                     style: GoogleFonts.raleway(
-                                      fontSize: 13,
-                                      fontWeight: FontWeight.w500,
-                                      color: const Color(0xFF504D51),
-                                      height: 2,
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.w600,
+                                        color: const Color(0xFF504D51),
+                                        height: 1.5),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(right: 16),
+                                    child: Text(
+                                      'Hello ${widget.userName},\n'
+                                      '${widget.comments[index].message}',
+                                      style: GoogleFonts.raleway(
+                                        fontSize: 13,
+                                        fontWeight: FontWeight.w500,
+                                        color: const Color(0xFF504D51),
+                                        height: 2,
+                                      ),
                                     ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                           ),
                         ),
@@ -240,17 +256,16 @@ class _ReplyBlockerState extends ConsumerState<ReplyBlocker> {
                                       DecodedTokenResponse>(
                                   SharedPrefKeys.tokenResponse,
                                   DecodedTokenResponse.fromJsonString);
-                          final blockerResponse = await ref
+                          final reply = await ref
                               .read(apiBlockerServiceProvider)
                               .replyABlocker(
                                 message: textController.text,
                                 userId: decodedToken!.userId!,
                                 blocker: widget.blockerId,
                               );
-                          response.add(blockerResponse);
+                          widget.comments.add(reply);
                           setState(() {});
-                          SecureStorageUtils.saveStringList(
-                              SharedPrefKeys.blockerReply, response);
+                          textController.clear();
                         }
                       : null,
                   child: Container(

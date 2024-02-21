@@ -17,11 +17,15 @@ class AddBlocker extends ConsumerStatefulWidget {
 }
 
 class _AddBlockerState extends ConsumerState<AddBlocker> {
+  bool titleEmpty = true;
+  bool descriptionEmpty = true;
+
+  final titleController = TextEditingController();
+  final descriptionController = TextEditingController();
+  final formKey = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
-    final titleController = TextEditingController();
-    final descriptionController = TextEditingController();
-    final formKey = GlobalKey<FormState>();
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
@@ -73,6 +77,13 @@ class _AddBlockerState extends ConsumerState<AddBlocker> {
                     }
                     return null;
                   },
+                  onChanged: (value) {
+                    if (value.isNotEmpty) {
+                      setState(() {
+                        descriptionEmpty = false;
+                      });
+                    }
+                  },
                   decoration: InputDecoration(
                     constraints: const BoxConstraints(maxHeight: 54),
                     hintText: 'e.g Dashboard visualization',
@@ -98,6 +109,13 @@ class _AddBlockerState extends ConsumerState<AddBlocker> {
                       return 'description cannot be empty';
                     }
                     return null;
+                  },
+                  onChanged: (value) {
+                    if (value.isNotEmpty) {
+                      setState(() {
+                        descriptionEmpty = false;
+                      });
+                    }
                   },
                   maxLines: 12,
                   decoration: InputDecoration(
@@ -133,10 +151,13 @@ class _AddBlockerState extends ConsumerState<AddBlocker> {
                             trackId: d.track!.trackId!,
                             userId: response!.userId!,
                           );
+
                       popUp(context);
                     }
                   },
-                  color: AppTheme.kPurpleColor3,
+                  color: !titleEmpty && !descriptionEmpty
+                      ? AppTheme.kPurpleColor
+                      : AppTheme.kPurpleColor3,
                   width: double.infinity,
                   borderRadius: BorderRadius.circular(8),
                   child: Text(
@@ -160,7 +181,7 @@ class _AddBlockerState extends ConsumerState<AddBlocker> {
       builder: (context) {
         return AlertDialog(
           title: Text(
-            'Blocker Submitted!',
+            error.isEmpty ? 'Blocker Submitted!' : error[0],
             textAlign: TextAlign.center,
             style: GoogleFonts.raleway(
               fontSize: 18,
@@ -169,7 +190,7 @@ class _AddBlockerState extends ConsumerState<AddBlocker> {
             ),
           ),
           content: Text(
-            'You will be notified once your mentor responds',
+            error.isEmpty ? 'You will get your feed soon!' : error[1],
             textAlign: TextAlign.center,
             style: GoogleFonts.raleway(
               fontSize: 14,
@@ -181,7 +202,9 @@ class _AddBlockerState extends ConsumerState<AddBlocker> {
             CustomButton(
               height: 54,
               pressed: () {
-                AppNavigator.navigateToAndClear(homeRoute);
+                error.isEmpty
+                    ? AppNavigator.navigateToAndClear(homeRoute)
+                    : AppNavigator.pop();
               },
               color: AppTheme.kPurpleColor,
               width: 307,

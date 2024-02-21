@@ -6,12 +6,12 @@ class UserProfile extends StatelessWidget {
   const UserProfile({
     super.key,
     required this.userName,
-    required this.image,
+    this.image,
     required this.userEmail,
     this.userBio,
   });
   final String userName;
-  final String image;
+  final String? image;
   final String userEmail;
   final String? userBio;
 
@@ -36,12 +36,13 @@ class UserProfile extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            if (image != 'assets/defaultImage.jpg')
+            if (image == null)
               Center(
                 child: CircleAvatar(
                   radius: 44,
+                  backgroundColor: Colors.grey,
                   backgroundImage: NetworkImage(
-                    image,
+                    image!,
                   ),
                 ),
               )
@@ -49,8 +50,9 @@ class UserProfile extends StatelessWidget {
               Center(
                 child: CircleAvatar(
                   radius: 44,
+                  backgroundColor: Colors.grey,
                   backgroundImage: AssetImage(
-                    image,
+                    image!,
                   ),
                 ),
               ),

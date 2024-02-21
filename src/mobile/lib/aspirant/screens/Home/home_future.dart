@@ -65,7 +65,7 @@ homeWidget(BuildContext context, WidgetRef ref,
                               radius: 44,
                               backgroundImage: data.profilePicture == null
                                   ? const AssetImage(
-                                      'assets/defaultImage.jpg',
+                                      'assets/placeholder-person.png',
                                     )
                                   : NetworkImage(
                                       data.profilePicture,
@@ -82,8 +82,10 @@ homeWidget(BuildContext context, WidgetRef ref,
               left: 16,
               right: 16,
             ),
-            child: SingleChildScrollView(
-              child: Column(
+            child: RefreshIndicator(
+              onRefresh: () => ref.refresh(aspirantDetails.future),
+              child: ListView(
+                padding: const EdgeInsets.only(left: 6),
                 children: [
                   Row(
                     children: [
@@ -226,7 +228,6 @@ homeWidget(BuildContext context, WidgetRef ref,
       );
     }
   }, error: (((error, stackTrace) {
-    print(error.toString());
     Padding(
       padding: const EdgeInsets.all(24.0),
       child: Column(
@@ -268,7 +269,7 @@ homeWidget(BuildContext context, WidgetRef ref,
                     ),
                   ),
                 ],
-              )
+              ),
             ],
           ),
         ],

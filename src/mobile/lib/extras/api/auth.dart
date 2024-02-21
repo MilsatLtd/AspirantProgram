@@ -9,6 +9,7 @@ import 'package:milsat_project_app/extras/components/shared_prefs/keys.dart';
 import 'package:milsat_project_app/extras/components/shared_prefs/utils.dart';
 import 'package:milsat_project_app/extras/env.dart';
 import 'package:milsat_project_app/extras/models/decoded_token.dart';
+import 'package:milsat_project_app/extras/models/profile_picture_model.dart';
 
 final signInProvider =
     StateNotifierProvider.autoDispose<SignInStateNotifier, SignInState>(
@@ -87,8 +88,6 @@ class SignInStateNotifier extends StateNotifier<SignInState> {
         SecureStorageUtils.saveString(SharedPrefKeys.accessToken, token);
         SecureStorageUtils.saveString(
             SharedPrefKeys.refreshToken, refreshToken);
-        print(decodedResponse.role);
-
         state = SignInState.success();
         if (state.success == true) {
           if (decodedResponse.role == 2) {

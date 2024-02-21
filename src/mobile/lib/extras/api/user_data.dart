@@ -111,34 +111,6 @@ class ApiService {
     return mentorData;
   }
 
-  Future<Response> getSubmmittedReport_() async {
-    const url = '${Env.apiUrl}/api/reports/';
-    try {
-      String? token =
-          await SecureStorageUtils.getString(SharedPrefKeys.accessToken);
-      final response = await dio.get(
-        url,
-        options: Options(
-          headers: {
-            'accept': 'application/json',
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer $token'
-          },
-        ),
-      );
-      cred['reports'] = response.data;
-      return response;
-    } on DioError catch (e) {
-      if (e.response != null) {
-        return e.response!;
-      } else {
-        throw Exception('Error making request: ${e.message}');
-      }
-    } catch (e) {
-      throw Exception('Error making request: ${e.toString()}');
-    }
-  }
-
   Future<CourseModel> getTrackCourses(String id, String trackId) async {
     final url = '${Env.apiUrl}/api/students/courses/$id/$trackId';
     try {

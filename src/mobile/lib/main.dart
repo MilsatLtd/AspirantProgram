@@ -11,8 +11,9 @@ void main() async {
   ]);
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
-        statusBarColor: Colors.purple,
-        statusBarIconBrightness: Brightness.light),
+      statusBarColor: AppTheme.kPurpleColor,
+      statusBarIconBrightness: Brightness.light,
+    ),
   );
   runApp(
     const ProviderScope(

@@ -12,12 +12,12 @@ import '../../../../extras/api/file_upload.dart';
 import '../../../../extras/components/files.dart';
 import 'package:file_picker/file_picker.dart';
 
-final fileName = StateProvider<String?>((ref) {
+final fileName = StateProvider.autoDispose<String?>((ref) {
   return '';
 });
-final fileContent = StateProvider<dynamic>((ref) {
-  return;
-});
+// final fileContent = StateProvider<dynamic>((ref) {
+//   return;
+// });
 
 class SubmitToDoPage extends ConsumerStatefulWidget {
   const SubmitToDoPage({super.key, required this.courseId});

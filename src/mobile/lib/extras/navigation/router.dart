@@ -2,6 +2,8 @@ import 'dart:io' show Platform;
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:milsat_project_app/general/auth/forgot_password/input_token.dart';
+import 'package:milsat_project_app/mentor/more/blocker/all_blockers_mentor.dart';
 import 'package:milsat_project_app/mentor/more/meet_up/schedule_meetup.dart';
 import '../../mentor/profile/profile.dart';
 import '../components/files.dart';
@@ -126,6 +128,16 @@ class AppRouter {
         return getPageRoute(
           settings: settings,
           view: const ReportPageMentor(),
+        );
+      case allMentorBlockertRoute:
+        return getPageRoute(
+          settings: settings,
+          view: const AllMentorBlockers(),
+        );
+      case inputTokenPage:
+        return getPageRoute(
+          settings: settings,
+          view: const InputTokenPage(),
         );
 
       default:

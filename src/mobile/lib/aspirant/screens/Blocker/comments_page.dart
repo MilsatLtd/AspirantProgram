@@ -149,7 +149,7 @@ class _CommentsPageState extends ConsumerState<CommentsPage> {
                     ),
                   ),
                   Expanded(
-                    child: data.data.isNotEmpty
+                    child: data.isNotEmpty
                         ? ListView.separated(
                             itemBuilder: (context, index) {
                               return Container(
@@ -165,7 +165,7 @@ class _CommentsPageState extends ConsumerState<CommentsPage> {
                                       CrossAxisAlignment.stretch,
                                   children: [
                                     Text(
-                                      '${data.data[index]['sender_name']}',
+                                      '${data[index].senderName}',
                                       style: kTrackTextStyle,
                                     ),
                                     Text(
@@ -187,7 +187,7 @@ class _CommentsPageState extends ConsumerState<CommentsPage> {
                                 height: 6,
                               );
                             },
-                            itemCount: data.data.length,
+                            itemCount: data.length,
                           )
                         : Center(
                             child: Text(

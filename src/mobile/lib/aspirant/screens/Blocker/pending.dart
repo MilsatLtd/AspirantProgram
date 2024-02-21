@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:milsat_project_app/aspirant/screens/Blocker/comments_page.dart';
+import 'package:milsat_project_app/extras/api/blockers_api.dart';
 import 'package:milsat_project_app/extras/components/files.dart';
 import 'package:milsat_project_app/extras/components/shared_prefs/keys.dart';
 import 'package:milsat_project_app/extras/components/shared_prefs/utils.dart';
@@ -51,7 +52,7 @@ class _PendingState extends ConsumerState<Pending> {
                 final duration = now.difference(p);
                 final timeAgo = duration.inDays;
                 return GestureDetector(
-                  onTap: () {
+                  onTap: () async {
                     if (loginResponse?.role == 1) {
                       String time = pendingList[index]['created_at'];
                       DateTime p = DateTime.parse(time);
@@ -59,6 +60,10 @@ class _PendingState extends ConsumerState<Pending> {
 
                       final duration = now.difference(p);
                       final timeAgo = duration.inDays;
+                      final comments = await ref
+                          .read(apiBlockerServiceProvider)
+                          .getCommentsById(pendingList[index]['blocker_id']);
+                      // ignore: use_build_context_synchronously
                       Navigator.push(context,
                           MaterialPageRoute(builder: (context) {
                         return ReplyBlocker(
@@ -68,6 +73,7 @@ class _PendingState extends ConsumerState<Pending> {
                           blockerId: '${pendingList[index]['blocker_id']}',
                           time: '$timeAgo',
                           trackId: '${pendingList[index]['track']}',
+                          comments: comments,
                         );
                       }));
                     } else {

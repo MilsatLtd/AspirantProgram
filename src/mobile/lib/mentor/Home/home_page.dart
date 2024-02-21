@@ -16,7 +16,7 @@ final mentorDetails = FutureProvider<MentorData>((ref) async {
   return ref.read(apiServiceProvider).getMentorData(response?.userId);
 });
 
-final allBlockersMentor = FutureProvider((ref) {
+final allBlockersMentor = FutureProvider.autoDispose((ref) {
   return ref.read(apiBlockerServiceProvider).getRaisedBlockers();
 });
 
@@ -57,49 +57,9 @@ class _MentorHomePageState extends ConsumerState<MentorHomePage> {
               return CustomScrollView(
                 slivers: [
                   SliverAppBar(
-                    bottom: PreferredSize(
-                      preferredSize: const Size.fromHeight(-20),
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 16,
-                        ),
-                        child: Container(
-                          height: 30,
-                          color: Theme.of(context).scaffoldBackgroundColor,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                'Recent Actvities',
-                                style: GoogleFonts.raleway(
-                                  color: const Color(0xFF504D51),
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                              GestureDetector(
-                                onTap: () {
-                                  AppNavigator.navigateTo(viewAllRoute);
-                                },
-                                child: Text(
-                                  'view all',
-                                  style: GoogleFonts.raleway(
-                                    color: AppTheme.kPurpleColor,
-                                    fontSize: 10,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                    pinned: true,
-                    automaticallyImplyLeading: false,
-                    elevation: 0,
-                    expandedHeight: 320,
                     backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+                    expandedHeight: 320,
+                    automaticallyImplyLeading: false,
                     flexibleSpace: FlexibleSpaceBar(
                       background: Container(
                         color: Theme.of(context).scaffoldBackgroundColor,
@@ -114,52 +74,45 @@ class _MentorHomePageState extends ConsumerState<MentorHomePage> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
-                                    'Hi, ${mentorName.split(' ').elementAt(0)}',
-                                    style: kAppBarTextStyle),
-                                Row(
-                                  children: [
-                                    const SizedBox(
-                                      width: 24,
-                                    ),
-                                    ref.watch(mentorImage) != null
+                                  'Hi, ${mentorName.split(' ').elementAt(0)}',
+                                  style: kAppBarTextStyle,
+                                ),
+                                ref.watch(mentorImage) != null
+                                    ? CircleAvatar(
+                                        radius: 24,
+                                        backgroundColor: Colors.grey,
+                                        child: ClipOval(
+                                          child: Image.file(
+                                            ref.watch(mentorImage)!,
+                                            height: 48,
+                                            width: 48,
+                                            fit: BoxFit.cover,
+                                          ),
+                                        ),
+                                      )
+                                    : profilePictureResponse?.profilePicture !=
+                                            null
                                         ? CircleAvatar(
                                             radius: 24,
-                                            backgroundColor: Colors.grey,
-                                            child: ClipOval(
-                                              child: Image.file(
-                                                ref.watch(mentorImage)!,
-                                                height: 48,
-                                                width: 48,
-                                                fit: BoxFit.cover,
-                                              ),
+                                            backgroundImage: NetworkImage(
+                                              profilePictureResponse!
+                                                  .profilePicture!,
                                             ),
+                                            backgroundColor: Colors.grey,
                                           )
-                                        : profilePictureResponse
-                                                    ?.profilePicture !=
-                                                null
-                                            ? CircleAvatar(
-                                                radius: 24,
-                                                backgroundImage: NetworkImage(
-                                                  profilePictureResponse!
-                                                      .profilePicture!,
-                                                ),
-                                                backgroundColor: Colors.grey,
-                                              )
-                                            : CircleAvatar(
-                                                radius: 24,
-                                                backgroundImage:
-                                                    data.profilePicture == null
-                                                        ? const AssetImage(
-                                                            'assets/defaultImage.jpg',
-                                                          )
-                                                        : NetworkImage(
-                                                            data.profilePicture,
-                                                          ) as ImageProvider<
-                                                            Object>?,
-                                                backgroundColor: Colors.grey,
-                                              ),
-                                  ],
-                                )
+                                        : CircleAvatar(
+                                            radius: 24,
+                                            backgroundImage: data
+                                                        .profilePicture ==
+                                                    null
+                                                ? const AssetImage(
+                                                    'assets/placeholder-person.png',
+                                                  )
+                                                : NetworkImage(
+                                                    data.profilePicture,
+                                                  ) as ImageProvider<Object>?,
+                                            backgroundColor: Colors.grey,
+                                          ),
                               ],
                             ),
                             const SizedBox(
@@ -197,31 +150,65 @@ class _MentorHomePageState extends ConsumerState<MentorHomePage> {
                   ),
                   SliverToBoxAdapter(
                     child: Padding(
-                      padding: const EdgeInsets.only(
-                        left: 16,
-                        right: 16,
-                        top: 16,
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
                       ),
-                      child: allBlockersData.when(
-                          data: (data) {
-                            getPendngAndResolvedList();
-                            return SizedBox(
-                              height: 500,
-                              child: ListView.separated(
-                                itemBuilder: ((context, index) {
-                                  String time =
-                                      cred['blockers'][index]['created_at'];
-                                  DateTime p = DateTime.parse(time);
-                                  DateTime now = DateTime.now();
-
-                                  final duration = now.difference(p);
-                                  final timeAgo = duration.inDays;
-                                  return Container(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'Recent activities',
+                            style: GoogleFonts.raleway(
+                              color: const Color(0xFF504D51),
+                              fontSize: 13,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          InkWell(
+                            onTap: () {
+                              AppNavigator.navigateTo(viewAllRoute);
+                            },
+                            child: Text(
+                              'View all',
+                              style: GoogleFonts.raleway(
+                                color: const Color(0xFF803785),
+                                fontSize: 13,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  SliverPadding(
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 16,
+                        horizontal: 16,
+                      ),
+                      sliver: SliverList(
+                        delegate: SliverChildBuilderDelegate(
+                          (context, index) {
+                            String time = cred['blockers'][index]['created_at'];
+                            DateTime p = DateTime.parse(time);
+                            DateTime now = DateTime.now();
+                            final duration = now.difference(p);
+                            final timeAgo = duration.inDays;
+                            return allBlockersData.when(
+                              data: (data) {
+                                return Padding(
+                                  padding: const EdgeInsets.only(bottom: 24),
+                                  child: Container(
                                     padding: const EdgeInsets.symmetric(
                                       horizontal: 16,
                                       vertical: 16,
                                     ),
-                                    color: AppTheme.kAppWhiteScheme,
+                                    decoration: BoxDecoration(
+                                      border: Border.all(
+                                        color: const Color(0xFFCBADCD),
+                                      ),
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
                                     child: Column(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
@@ -234,8 +221,11 @@ class _MentorHomePageState extends ConsumerState<MentorHomePage> {
                                             children: [
                                               Text(
                                                 '${cred['blockers'][index]['title']}',
-                                                style:
-                                                    kOnboardingLightTextStyle,
+                                                style: const TextStyle(
+                                                  fontSize: 15,
+                                                  color: Color(0xFF504D51),
+                                                  fontWeight: FontWeight.w600,
+                                                ),
                                               ),
                                               Row(
                                                 children: [
@@ -297,29 +287,20 @@ class _MentorHomePageState extends ConsumerState<MentorHomePage> {
                                         ),
                                       ],
                                     ),
-                                  );
-                                }),
-                                itemCount: cred['blockers'] == null
-                                    ? 0
-                                    : cred['blockers'].length,
-                                separatorBuilder:
-                                    (BuildContext context, int index) {
-                                  return const SizedBox(
-                                    height: 16,
-                                  );
-                                },
+                                  ),
+                                );
+                              },
+                              error: ((error, stackTrace) => const Text('')),
+                              loading: () => const Center(
+                                child: CircularProgressIndicator(),
                               ),
                             );
                           },
-                          error: (((error, stackTrace) =>
-                              Text(error.toString()))),
-                          loading: () {
-                            return const Center(
-                              child: CircularProgressIndicator(),
-                            );
-                          }),
-                    ),
-                  ),
+                          childCount: cred['blockers'] == null
+                              ? 0
+                              : cred['blockers'].length,
+                        ),
+                      )),
                 ],
               );
             },

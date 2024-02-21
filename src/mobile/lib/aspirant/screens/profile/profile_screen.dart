@@ -118,7 +118,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                                 radius: 44,
                                 backgroundImage: data?.profilePicture == null
                                     ? const AssetImage(
-                                        'assets/defaultImage.jpg',
+                                        'assets/placeholder-person.png',
                                       )
                                     : NetworkImage(
                                         data?.profilePicture,
@@ -146,8 +146,10 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                                           File(ref.watch(pickedImage)!.path);
                                       ref.read(image.notifier).state =
                                           imageFile;
-                                      ref.read(apiUploadProvider).uploadImage(
-                                          decodedToken!.userId!, imageFile);
+                                      await ref
+                                          .read(apiUploadProvider)
+                                          .uploadImage(
+                                              decodedToken!.userId!, imageFile);
                                     }
                                   } on PlatformException catch (e) {
                                     if (kDebugMode) {

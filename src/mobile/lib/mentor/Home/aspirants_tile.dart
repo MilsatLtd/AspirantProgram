@@ -33,12 +33,14 @@ class AspirantsTile extends StatelessWidget {
             if (image != null)
               CircleAvatar(
                 radius: 20,
+                backgroundColor: Colors.grey,
                 backgroundImage: NetworkImage(image!),
               )
             else
               const CircleAvatar(
                 radius: 20,
-                backgroundImage: AssetImage('assets/defaultImage.jpg'),
+                backgroundColor: Colors.grey,
+                backgroundImage: AssetImage('assets/placeholder-person.png'),
               ),
             const SizedBox(
               width: 16,
