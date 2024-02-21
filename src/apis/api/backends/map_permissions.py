@@ -79,3 +79,9 @@ def get_claim(request):
             return False
     else:
         return False
+
+def get_role_from_claim(request):
+    claim = get_claim(request)
+    if claim:
+        return claim['role']
+    return None

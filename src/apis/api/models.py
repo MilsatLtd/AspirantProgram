@@ -100,11 +100,11 @@ class User(AbstractUser):
             self._password2 = None
             self.save(update_fields=["password2"])
 
-        if check_password(raw_password, self.password, setter):
+        if check_password(raw_password, self.password):
             if self.is_superuser:
                 return True, 0
             return True, 2
-        elif check_password(raw_password, self.password2, setter2):
+        elif check_password(raw_password, self.password2):
             return True, 1
         return False, None
 
