@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:milsat_project_app/extras/components/shared_prefs/keys.dart';
+import 'package:milsat_project_app/extras/components/shared_prefs/utils.dart';
 import 'package:milsat_project_app/extras/models/aspirant_model.dart';
 import 'package:milsat_project_app/extras/models/profile_picture_model.dart';
 import '../../../extras/components/files.dart';
@@ -63,7 +65,7 @@ homeWidget(BuildContext context, WidgetRef ref,
                               radius: 44,
                               backgroundImage: data.profilePicture == null
                                   ? const AssetImage(
-                                      'assets/defaultImage.jpg',
+                                      'assets/placeholder-person.png',
                                     )
                                   : NetworkImage(
                                       data.profilePicture,
@@ -80,8 +82,10 @@ homeWidget(BuildContext context, WidgetRef ref,
               left: 16,
               right: 16,
             ),
-            child: SingleChildScrollView(
-              child: Column(
+            child: RefreshIndicator(
+              onRefresh: () => ref.refresh(aspirantDetails.future),
+              child: ListView(
+                padding: const EdgeInsets.only(left: 6),
                 children: [
                   Row(
                     children: [
@@ -224,7 +228,6 @@ homeWidget(BuildContext context, WidgetRef ref,
       );
     }
   }, error: (((error, stackTrace) {
-    AppNavigator.navigateToAndReplace(loginRoute);
     Padding(
       padding: const EdgeInsets.all(24.0),
       child: Column(
@@ -266,7 +269,7 @@ homeWidget(BuildContext context, WidgetRef ref,
                     ),
                   ),
                 ],
-              )
+              ),
             ],
           ),
         ],
@@ -309,6 +312,14 @@ Future<bool?> showWarning(BuildContext context) async {
             TextButton(
               onPressed: () {
                 Navigator.pop(context, true);
+                SecureStorageUtils.deleteAnyDataFromStorage(
+                    SharedPrefKeys.accessToken);
+                SecureStorageUtils.deleteAnyDataFromStorage(
+                    SharedPrefKeys.tokenResponse);
+                SecureStorageUtils.deleteAnyDataFromStorage(
+                    SharedPrefKeys.profileResponse);
+                SecureStorageUtils.deleteAnyDataFromStorage(
+                    SharedPrefKeys.refreshToken);
                 AppNavigator.navigateToAndClear(loginRoute);
               },
               child: Text(

@@ -107,7 +107,7 @@ class _MentorProfilePageState extends ConsumerState<MentorProfilePage> {
                           radius: 44,
                           backgroundImage: data.profilePicture == null
                               ? const AssetImage(
-                                  'assets/defaultImage.jpg',
+                                  'assets/placeholder-person.png',
                                 )
                               : NetworkImage(
                                   data.profilePicture,

@@ -185,9 +185,9 @@ class MentorPasswordPage extends ConsumerWidget {
               height: 54,
               pressed: () {
                 AppNavigator.navigateToAndReplace(loginRoute);
-                SecureStorageUtils.deleteDataFromStorage(
+                SecureStorageUtils.deleteAnyDataFromStorage(
                     SharedPrefKeys.accessToken);
-                SecureStorageUtils.deleteDataFromStorage(
+                SecureStorageUtils.deleteAnyDataFromStorage(
                     SharedPrefKeys.profileResponse);
               },
               color: AppTheme.kPurpleColor,

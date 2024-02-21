@@ -10,18 +10,21 @@ import 'package:milsat_project_app/extras/models/forgot_password_model.dart';
 
 import '../../../extras/components/files.dart';
 
-class ForgotPassword extends ConsumerStatefulWidget {
-  const ForgotPassword({super.key});
+class InputTokenPage extends ConsumerStatefulWidget {
+  const InputTokenPage({super.key});
 
   @override
-  ConsumerState<ForgotPassword> createState() => _ForgotPasswordState();
+  ConsumerState<InputTokenPage> createState() => _InputTokenPageState();
 }
 
-class _ForgotPasswordState extends ConsumerState<ForgotPassword> {
+class _InputTokenPageState extends ConsumerState<InputTokenPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final TextEditingController emailController = TextEditingController();
+  final TextEditingController tokenController = TextEditingController();
 
-  final TextEditingController profileController = TextEditingController();
+  final TextEditingController newPasswordController = TextEditingController();
+
+  final TextEditingController confirmPasswordController =
+      TextEditingController();
 
   ForgotPasswordResponse message = ForgotPasswordResponse();
 
@@ -40,7 +43,7 @@ class _ForgotPasswordState extends ConsumerState<ForgotPassword> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Text(
-                'Reset Password',
+                'Input New Password',
                 style: GoogleFonts.raleway(
                   fontWeight: FontWeight.w700,
                   fontSize: 24,
@@ -51,7 +54,7 @@ class _ForgotPasswordState extends ConsumerState<ForgotPassword> {
                 height: 6,
               ),
               Text(
-                'Enter the mail associated with your profile and a reset \nmail will be sent',
+                'Enter the token sent to your mail to reset your password',
                 style: GoogleFonts.raleway(
                   fontWeight: FontWeight.w500,
                   fontSize: 13,
@@ -63,7 +66,7 @@ class _ForgotPasswordState extends ConsumerState<ForgotPassword> {
                 height: 34,
               ),
               Text(
-                'Email',
+                'Token',
                 style: GoogleFonts.raleway(
                   fontWeight: FontWeight.w500,
                   fontSize: 16,
@@ -75,16 +78,17 @@ class _ForgotPasswordState extends ConsumerState<ForgotPassword> {
                 height: 8,
               ),
               CustomTextField(
-                  controller: emailController,
-                  hintText: 'milsataspirant@gmail.com',
-                  obscureText: false,
-                  keyboardType: TextInputType.emailAddress,
-                  validator: (a) {
-                    return Utils.validateEmail(a!);
-                  }),
-              const SizedBox(height: 8),
+                controller: tokenController,
+                hintText: '234524',
+                obscureText: false,
+                keyboardType: TextInputType.number,
+                validator: (a) {
+                  return Utils.isValidToken(a!);
+                },
+              ),
+              const SizedBox(height: 24),
               Text(
-                'Profile Type',
+                'New Password',
                 style: GoogleFonts.raleway(
                   fontWeight: FontWeight.w500,
                   fontSize: 16,
@@ -96,12 +100,33 @@ class _ForgotPasswordState extends ConsumerState<ForgotPassword> {
                 height: 8,
               ),
               CustomTextField(
-                  controller: profileController,
-                  hintText: 'mentor or student',
+                  controller: newPasswordController,
+                  hintText: 'new password',
                   obscureText: false,
                   keyboardType: TextInputType.text,
                   validator: (a) {
-                    return Utils.isValidName(a, 'profile_type', 5);
+                    return Utils.isValidPassword(a!);
+                  }),
+              const SizedBox(height: 24),
+              Text(
+                'Confirm Password',
+                style: GoogleFonts.raleway(
+                  fontWeight: FontWeight.w500,
+                  fontSize: 16,
+                  color: const Color(0xFF504D51),
+                  height: 1.5,
+                ),
+              ),
+              const SizedBox(
+                height: 8,
+              ),
+              CustomTextField(
+                  controller: confirmPasswordController,
+                  hintText: 're-enter password',
+                  obscureText: false,
+                  keyboardType: TextInputType.text,
+                  validator: (a) {
+                    return Utils.isValidPassword(a!);
                   }),
               const SizedBox(
                 height: 56,
@@ -111,21 +136,22 @@ class _ForgotPasswordState extends ConsumerState<ForgotPassword> {
                 pressed: () async {
                   FocusManager.instance.primaryFocus?.unfocus();
                   if (_formKey.currentState?.validate() ?? false) {
-                    message =
-                        await ref.read(forgotPasswordProvider).forgotPassword(
-                              emailController.text,
-                              profileController.text,
-                            );
+                    message = await ref.read(forgotPasswordProvider).inputToken(
+                          int.parse(tokenController.text),
+                          newPasswordController.text,
+                          confirmPasswordController.text,
+                        );
+
                     hasError
-                        ? popUpCard(context, 'Hello!', message.profileType![0],
-                            () {
+                        ? popUpCard(context, 'Hello!',
+                            message.message ?? message.nonFieldErrors![0], () {
                             AppNavigator.pop();
                             setState(() {
                               hasError = false;
                             });
                           })
                         : popUpCard(context, 'Hello!', message.message!, () {
-                            AppNavigator.navigateTo(inputTokenPage);
+                            AppNavigator.navigateToAndClear(loginRoute);
                             hasError = false;
                           });
                   }
@@ -134,7 +160,7 @@ class _ForgotPasswordState extends ConsumerState<ForgotPassword> {
                 width: double.infinity,
                 borderRadius: BorderRadius.circular(8),
                 child: Text(
-                  'Reset',
+                  'Reset Password',
                   style: GoogleFonts.raleway(
                     fontSize: 14,
                     fontWeight: FontWeight.w600,

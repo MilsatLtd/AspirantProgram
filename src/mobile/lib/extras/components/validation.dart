@@ -20,6 +20,13 @@ class Utils {
     return null;
   }
 
+  static String? isValidToken(String value) {
+    if (value.isEmpty) {
+      return "Token is required";
+    }
+    return null;
+  }
+
   static String? isValidPassword(String value) {
     value = value.trim();
     if (value.trim().isEmpty) {

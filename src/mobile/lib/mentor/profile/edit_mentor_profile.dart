@@ -130,7 +130,7 @@ class EditMentorProfile extends ConsumerWidget {
                             radius: 44,
                             backgroundImage: data.profilePicture == null
                                 ? const AssetImage(
-                                    'assets/defaultImage.jpg',
+                                    'assets/placeholder-person.png',
                                   )
                                 : NetworkImage(
                                     data.profilePicture,

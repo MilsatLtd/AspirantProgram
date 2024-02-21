@@ -113,7 +113,7 @@ class _EditProfileState extends ConsumerState<EditProfile> {
                               radius: 44,
                               backgroundImage: data?.profilePicture == null
                                   ? const AssetImage(
-                                      'assets/defaultImage.jpg',
+                                      'assets/placeholder-person.png',
                                     )
                                   : NetworkImage(
                                       data?.profilePicture,
@@ -348,11 +348,12 @@ class _EditProfileState extends ConsumerState<EditProfile> {
                   top: 6,
                   bottom: 16,
                 ),
-                child: GestureDetector(
-                    onTap: () {
-                      AppNavigator.navigateToAndReplace(profileRoute);
-                    },
-                    child: const Text('Ok')),
+                child: ElevatedButton(
+                  onPressed: () {
+                    AppNavigator.navigateToAndReplace(profileRoute);
+                  },
+                  child: const Text('Ok'),
+                ),
               )
             ],
           );

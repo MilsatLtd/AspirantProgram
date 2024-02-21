@@ -54,9 +54,7 @@ class AllAspirants extends ConsumerWidget {
           final apiService = ref.read(apiServiceProvider);
           apiService.getUserData(d.mentees!.elementAt(index).userId!);
           return AspirantsTile(
-            image: d.mentees!.elementAt(index).profilePicture == null
-                ? 'assets/defaultImage.jpg'
-                : d.mentees!.elementAt(index).profilePicture!,
+            image: d.mentees!.elementAt(index).profilePicture,
             column: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -103,8 +101,7 @@ class AllAspirants extends ConsumerWidget {
                   builder: ((context) {
                     return UserProfile(
                       userName: d.mentees!.elementAt(index).fullName!,
-                      image: d.mentees!.elementAt(index).profilePicture ??
-                          'assets/defaultImage.jpg',
+                      image: d.mentees!.elementAt(index).profilePicture,
                       userEmail: d.mentees!.elementAt(index).email!,
                       userBio: d.mentees!.elementAt(index).bio,
                     );

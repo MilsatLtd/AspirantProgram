@@ -6,42 +6,49 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:milsat_project_app/extras/components/shared_prefs/keys.dart';
 import 'package:milsat_project_app/extras/components/shared_prefs/utils.dart';
 import 'package:milsat_project_app/extras/models/decoded_token.dart';
-import '../../../../extras/api/blockers_api.dart';
-import '../../../../extras/components/files.dart';
+import '../../../extras/api/blockers_api.dart';
+import '../../../extras/components/files.dart';
 
-class AddBlocker extends ConsumerWidget {
+class AddBlocker extends ConsumerStatefulWidget {
   const AddBlocker({super.key});
 
   @override
-  Widget build(BuildContext context, ref) {
-    final titleController = TextEditingController();
-    final descriptionController = TextEditingController();
-    final formKey = GlobalKey<FormState>();
+  ConsumerState<AddBlocker> createState() => _AddBlockerState();
+}
+
+class _AddBlockerState extends ConsumerState<AddBlocker> {
+  bool titleEmpty = true;
+  bool descriptionEmpty = true;
+
+  final titleController = TextEditingController();
+  final descriptionController = TextEditingController();
+  final formKey = GlobalKey<FormState>();
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(44),
-        child: AppBar(
-          backgroundColor: Colors.white,
-          automaticallyImplyLeading: false,
-          elevation: 0.5,
-          leading: GestureDetector(
-            onTap: () => AppNavigator.pop(),
-            child: const Icon(
-              Icons.arrow_back,
-              color: Colors.black,
-              size: 18,
-            ),
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        toolbarHeight: 44,
+        automaticallyImplyLeading: false,
+        elevation: 0.5,
+        leading: GestureDetector(
+          onTap: () => AppNavigator.pop(),
+          child: const Icon(
+            Icons.arrow_back,
+            color: Colors.black,
+            size: 18,
           ),
-          title: Text(
-            'Raise a Blocker',
-            style: GoogleFonts.raleway(
-              color: const Color(0xFF423B43),
-              fontSize: 16,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-          centerTitle: true,
         ),
+        title: Text(
+          'Raise a Blocker',
+          style: GoogleFonts.raleway(
+            color: const Color(0xFF423B43),
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        centerTitle: true,
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -70,6 +77,13 @@ class AddBlocker extends ConsumerWidget {
                     }
                     return null;
                   },
+                  onChanged: (value) {
+                    if (value.isNotEmpty) {
+                      setState(() {
+                        descriptionEmpty = false;
+                      });
+                    }
+                  },
                   decoration: InputDecoration(
                     constraints: const BoxConstraints(maxHeight: 54),
                     hintText: 'e.g Dashboard visualization',
@@ -95,6 +109,13 @@ class AddBlocker extends ConsumerWidget {
                       return 'description cannot be empty';
                     }
                     return null;
+                  },
+                  onChanged: (value) {
+                    if (value.isNotEmpty) {
+                      setState(() {
+                        descriptionEmpty = false;
+                      });
+                    }
                   },
                   maxLines: 12,
                   decoration: InputDecoration(
@@ -123,17 +144,20 @@ class AddBlocker extends ConsumerWidget {
                             SharedPrefKeys.tokenResponse,
                             DecodedTokenResponse.fromJsonString);
                     if (formKey.currentState!.validate()) {
-                      ref.read(blockerProvider).postBlocker(
+                      ref.read(apiBlockerServiceProvider).postBlocker(
                             description: descriptionController.text,
                             status: 0,
                             title: titleController.text,
                             trackId: d.track!.trackId!,
                             userId: response!.userId!,
                           );
+
                       popUp(context);
                     }
                   },
-                  color: AppTheme.kPurpleColor3,
+                  color: !titleEmpty && !descriptionEmpty
+                      ? AppTheme.kPurpleColor
+                      : AppTheme.kPurpleColor3,
                   width: double.infinity,
                   borderRadius: BorderRadius.circular(8),
                   child: Text(
@@ -157,7 +181,7 @@ class AddBlocker extends ConsumerWidget {
       builder: (context) {
         return AlertDialog(
           title: Text(
-            'Blocker Submitted!',
+            error.isEmpty ? 'Blocker Submitted!' : error[0],
             textAlign: TextAlign.center,
             style: GoogleFonts.raleway(
               fontSize: 18,
@@ -166,7 +190,7 @@ class AddBlocker extends ConsumerWidget {
             ),
           ),
           content: Text(
-            'You will be notified once your mentor responds',
+            error.isEmpty ? 'You will get your feed soon!' : error[1],
             textAlign: TextAlign.center,
             style: GoogleFonts.raleway(
               fontSize: 14,
@@ -178,7 +202,9 @@ class AddBlocker extends ConsumerWidget {
             CustomButton(
               height: 54,
               pressed: () {
-                AppNavigator.navigateToAndReplace(blockerRoute);
+                error.isEmpty
+                    ? AppNavigator.navigateToAndClear(homeRoute)
+                    : AppNavigator.pop();
               },
               color: AppTheme.kPurpleColor,
               width: 307,

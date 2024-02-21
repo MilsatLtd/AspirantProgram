@@ -6,7 +6,6 @@ import 'package:milsat_project_app/extras/components/shared_prefs/keys.dart';
 import 'package:milsat_project_app/extras/components/shared_prefs/utils.dart';
 import 'package:milsat_project_app/extras/models/decoded_token.dart';
 import 'package:url_launcher/url_launcher.dart';
-import '../../../../extras/api/track_api.dart';
 import '../../../../extras/components/files.dart';
 import '../../../../extras/models/aspirant_model.dart';
 
@@ -19,9 +18,6 @@ final coursesDetails = FutureProvider.autoDispose<CourseModel>((ref) async {
   return ref
       .read(apiServiceProvider)
       .getTrackCourses(decodedToken!.userId!, d.track!.trackId!);
-});
-final trackDetails = FutureProvider((ref) {
-  return ref.read(trackApiProvider).getTracks(d.cohort!.cohortId!);
 });
 
 final tapped = StateProvider<bool>((ref) {
@@ -109,89 +105,90 @@ class _TrackDetailsConsumerState extends ConsumerState<TrackDetails> {
                             ),
                           ],
                         ),
-                        const SizedBox(
-                          height: 40,
-                        ),
                         Expanded(
-                          child: ListView.separated(
-                            itemBuilder: (BuildContext context, int index) {
-                              bool canView =
-                                  data.courses!.elementAt(index).canView!;
-
-                              return TrackDetailsCard(
-                                itemPosition: !canView
-                                    ? SvgPicture.asset(
-                                        'assets/lock_icon.svg',
-                                        color: const Color(0xFF79717A),
-                                      )
-                                    : Container(
-                                        height: 24,
-                                        width: 24,
-                                        decoration: BoxDecoration(
-                                          color: const Color(0xFFF2EBF3),
-                                          borderRadius:
-                                              BorderRadius.circular(4),
-                                        ),
-                                        child: Center(
-                                          child: Text(
-                                            '${index + 1}',
-                                            style: GoogleFonts.raleway(
-                                              fontSize: 13,
-                                              fontWeight: FontWeight.w500,
-                                              color: const Color(0xFF6E6B6F),
+                          child: RefreshIndicator(
+                            onRefresh: () => ref.refresh(coursesDetails.future),
+                            child: ListView.separated(
+                              itemBuilder: (BuildContext context, int index) {
+                                bool canView =
+                                    data.courses!.elementAt(index).canView!;
+                                return TrackDetailsCard(
+                                  itemPosition: !canView
+                                      ? SvgPicture.asset(
+                                          'assets/lock_icon.svg',
+                                          color: const Color(0xFF79717A),
+                                        )
+                                      : Container(
+                                          height: 24,
+                                          width: 24,
+                                          decoration: BoxDecoration(
+                                            color: const Color(0xFFF2EBF3),
+                                            borderRadius:
+                                                BorderRadius.circular(4),
+                                          ),
+                                          child: Center(
+                                            child: Text(
+                                              '${index + 1}',
+                                              style: GoogleFonts.raleway(
+                                                fontSize: 13,
+                                                fontWeight: FontWeight.w500,
+                                                color: const Color(0xFF6E6B6F),
+                                              ),
                                             ),
                                           ),
                                         ),
-                                      ),
-                                trackName: data.courses!.elementAt(index).name!,
-                                color: !canView
-                                    ? AppTheme.kLightPurpleColor
-                                    : AppTheme.kPurpleColor,
-                                textColor: const Color(0xFF504D51),
-                                submittedCertificate: () {
-                                  canView == false
-                                      ? null
-                                      : Navigator.push(context,
-                                          MaterialPageRoute(builder: (context) {
-                                          return CourseDetails(
-                                            courseTitle: data.courses!
-                                                .elementAt(index)
-                                                .name!,
-                                            courseDescription: data.courses!
-                                                .elementAt(index)
-                                                .description!,
-                                            courseRequirementTitle:
-                                                'Course Requirement',
-                                            courseRequirement: data.courses!
-                                                .elementAt(index)
-                                                .requirements!,
-                                            pressed: () {
-                                              launchUrl_(index);
-                                            },
-                                            courseId: data.courses!
-                                                .elementAt(index)
-                                                .courseId!,
-                                          );
-                                        }));
-                                },
-                                borderColor: !canView
-                                    ? AppTheme.kPurpleColor.withOpacity(0.5)
-                                    : AppTheme.kPurpleColor,
-                                buttonTextColor: !canView
-                                    ? AppTheme.kPurpleColor.withOpacity(0.5)
-                                    : AppTheme.kAppWhiteScheme,
-                                backGroundColor: canView
-                                    ? AppTheme.kPurpleColor
-                                    : AppTheme.kAppWhiteScheme,
-                              );
-                            },
-                            itemCount: data.courses!.length,
-                            separatorBuilder:
-                                (BuildContext context, int index) {
-                              return const SizedBox(
-                                height: 24,
-                              );
-                            },
+                                  trackName:
+                                      data.courses!.elementAt(index).name!,
+                                  color: !canView
+                                      ? AppTheme.kLightPurpleColor
+                                      : AppTheme.kPurpleColor,
+                                  textColor: const Color(0xFF504D51),
+                                  submittedCertificate: () {
+                                    canView == false
+                                        ? null
+                                        : Navigator.pushReplacement(context,
+                                            MaterialPageRoute(
+                                                builder: (context) {
+                                            return CourseDetails(
+                                              courseTitle: data.courses!
+                                                  .elementAt(index)
+                                                  .name!,
+                                              courseDescription: data.courses!
+                                                  .elementAt(index)
+                                                  .description!,
+                                              courseRequirementTitle:
+                                                  'Course Requirement',
+                                              courseRequirement: data.courses!
+                                                  .elementAt(index)
+                                                  .requirements!,
+                                              pressed: () {
+                                                launchUrl_(index);
+                                              },
+                                              courseId: data.courses!
+                                                  .elementAt(index)
+                                                  .courseId!,
+                                            );
+                                          }));
+                                  },
+                                  borderColor: !canView
+                                      ? AppTheme.kPurpleColor.withOpacity(0.5)
+                                      : AppTheme.kPurpleColor,
+                                  buttonTextColor: !canView
+                                      ? AppTheme.kPurpleColor.withOpacity(0.5)
+                                      : AppTheme.kAppWhiteScheme,
+                                  backGroundColor: canView
+                                      ? AppTheme.kPurpleColor
+                                      : AppTheme.kAppWhiteScheme,
+                                );
+                              },
+                              itemCount: data.courses!.length,
+                              separatorBuilder:
+                                  (BuildContext context, int index) {
+                                return const SizedBox(
+                                  height: 24,
+                                );
+                              },
+                            ),
                           ),
                         ),
                       ],

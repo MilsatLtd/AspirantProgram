@@ -7,6 +7,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:milsat_project_app/extras/components/shared_prefs/keys.dart';
 import 'package:milsat_project_app/extras/components/shared_prefs/utils.dart';
+import 'package:milsat_project_app/extras/models/aspirant_model.dart';
 import 'package:milsat_project_app/extras/models/decoded_token.dart';
 import 'package:milsat_project_app/extras/models/profile_picture_model.dart';
 
@@ -20,6 +21,14 @@ final pickedImage = StateProvider<XFile?>((ref) {
 });
 final image = StateProvider<File?>((ref) {
   return;
+});
+
+final userDetails =
+    FutureProvider.autoDispose<AspirantModelClass?>((ref) async {
+  DecodedTokenResponse? response =
+      await SecureStorageUtils.getDataFromStorage<DecodedTokenResponse>(
+          SharedPrefKeys.tokenResponse, DecodedTokenResponse.fromJsonString);
+  return ref.read(apiServiceProvider).getUserData(response?.userId);
 });
 
 class ProfileScreen extends ConsumerStatefulWidget {
@@ -46,7 +55,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final aspirantData = ref.watch(aspirantDetails);
+    final aspirantData = ref.watch(userDetails);
     return WillPopScope(
       onWillPop: () async {
         final shouldPop = await popToHome(context);
@@ -63,7 +72,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
               actions: [
                 TextButton(
                   onPressed: () {
-                    AppNavigator.navigateTo(editProfileRoute);
+                    AppNavigator.navigateToAndReplace(editProfileRoute);
                   },
                   child: Text(
                     'Edit',
@@ -109,7 +118,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                                 radius: 44,
                                 backgroundImage: data?.profilePicture == null
                                     ? const AssetImage(
-                                        'assets/defaultImage.jpg',
+                                        'assets/placeholder-person.png',
                                       )
                                     : NetworkImage(
                                         data?.profilePicture,
@@ -137,8 +146,10 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                                           File(ref.watch(pickedImage)!.path);
                                       ref.read(image.notifier).state =
                                           imageFile;
-                                      ref.read(apiUploadProvider).uploadImage(
-                                          decodedToken!.userId!, imageFile);
+                                      await ref
+                                          .read(apiUploadProvider)
+                                          .uploadImage(
+                                              decodedToken!.userId!, imageFile);
                                     }
                                   } on PlatformException catch (e) {
                                     if (kDebugMode) {

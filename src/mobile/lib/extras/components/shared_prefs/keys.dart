@@ -3,4 +3,5 @@ class SharedPrefKeys {
   static const String refreshToken = 'refreshToken';
   static const String tokenResponse = 'tokenResponse';
   static const String profileResponse = 'profileResponse';
+  static const String blockerReply = 'blockerReply';
 }

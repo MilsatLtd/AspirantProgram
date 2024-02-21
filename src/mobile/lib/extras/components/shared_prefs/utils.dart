@@ -96,15 +96,15 @@ class SecureStorageUtils {
     return double.tryParse(await secureStorage.read(key: key) ?? '');
   }
 
-  static Future<void> saveStringList(String key, List<String> value) async {
+  static Future<void> saveStringList<T>(String key, List<T> value) async {
     const secureStorage = FlutterSecureStorage();
     return secureStorage.write(key: key, value: jsonEncode(value));
   }
 
-  static Future<List<String>?> getStringList(String key) async {
+  static Future<List<T>?> getStringList<T>(String key) async {
     const secureStorage = FlutterSecureStorage();
     final value = await secureStorage.read(key: key);
-    return value == null ? null : List<String>.from(jsonDecode(value));
+    return value == null ? null : List<T>.from(jsonDecode(value));
   }
 
   static Future<void> saveDataToStorage<T>(
@@ -124,7 +124,7 @@ class SecureStorageUtils {
     return null;
   }
 
-  static Future<void> deleteDataFromStorage(String key) async {
+  static Future<void> deleteAnyDataFromStorage(String key) async {
     const secureStorage = FlutterSecureStorage();
     await secureStorage.delete(key: key);
   }

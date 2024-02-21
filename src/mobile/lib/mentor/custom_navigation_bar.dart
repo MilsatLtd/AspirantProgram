@@ -125,7 +125,10 @@ class _CustomNavBarState extends State<CustomNavBar> {
                           ),
                           MorePages(
                             image: 'assets/blocker_icon.svg',
-                            onTap: () {},
+                            onTap: () {
+                              AppNavigator.navigateToAndReplace(
+                                  allMentorBlockertRoute);
+                            },
                             pageName: 'Blockers',
                             pageDescription: 'View and respond to all blockers',
                             width: 19,
@@ -136,7 +139,8 @@ class _CustomNavBarState extends State<CustomNavBar> {
                           MorePages(
                             image: 'assets/report_icon.svg',
                             onTap: () {
-                              AppNavigator.navigateTo(mentorReportRoute);
+                              AppNavigator.navigateToAndReplace(
+                                  mentorReportRoute);
                             },
                             pageName: 'Report',
                             pageDescription: 'View mentee weekly report',
@@ -148,7 +152,7 @@ class _CustomNavBarState extends State<CustomNavBar> {
                           MorePages(
                             image: 'assets/meet_svg.svg',
                             onTap: () {
-                              AppNavigator.navigateTo(meetUpRoute);
+                              AppNavigator.navigateToAndReplace(meetUpRoute);
                             },
                             pageName: 'Meetup',
                             pageDescription: 'Schedule meeting with mentee',
