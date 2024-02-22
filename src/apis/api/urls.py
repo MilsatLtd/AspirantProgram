@@ -128,6 +128,11 @@ urlpatterns += [
         name="getOpenApplications",
     ),
     path(
+        "applications/stats/<uuid:cohort_id>",
+        GetApplicationStatsView.as_view(),
+        name="getApplicationStats",
+    ),
+    path(
         "students/<uuid:user_id>/<uuid:track_id>",
         GetStudentView.as_view(),
         name="getStudent",

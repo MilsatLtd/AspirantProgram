@@ -138,3 +138,28 @@ class ReviewApplication:
     def update_track(self, track):
         track.enrolled_count += 1
         track.save()
+
+class GetApplicationStats:
+    def get(self, cohort_id):
+        try:
+            applications = Applications.objects.filter(cohort_id=cohort_id)
+            stats = {
+                "cohort_id": cohort_id,
+                "number_of_interns": applications.filter(role=ROLE.STUDENT.value).count(),
+                "number_of_mentors": applications.filter(role=ROLE.MENTOR.value).count(),
+                "number_of_male_interns": applications.filter(role=ROLE.STUDENT.value, user__gender = GENDER.MALE.value).count(),
+                "number_of_female_interns": applications.filter(role=ROLE.STUDENT.value, user__gender = GENDER.FEMALE.value).count(),
+                "number_of_male_mentors": applications.filter(role=ROLE.MENTOR.value, user__gender = GENDER.MALE.value).count(),
+                "number_of_female_mentors": applications.filter(role=ROLE.MENTOR.value, user__gender = GENDER.FEMALE.value).count()
+            }
+            return Response(stats, status=status.HTTP_200_OK)
+        except Applications.DoesNotExist:
+            return Response(
+                data={"message": "Cohort with id: {} does not exist \U0001F636".format(
+                    cohort_id)},
+                status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            logger.exception(e)
+            return Response(
+                data={"message": "Something went wrong \U0001F9D0"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR)

@@ -19,8 +19,6 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         token['role'] = user.recent_role
         return token
 
-
-
 class ChangePasswordView(mixins.UpdateModelMixin, GenericAPIView):
     serializer_class = ChangePasswordSerializer
     permission_classes = (IsAuthenticated,)
