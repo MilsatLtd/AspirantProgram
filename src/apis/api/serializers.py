@@ -896,3 +896,12 @@ class SendAnyEmailSerializer(serializers.Serializer):
 
 class ReorderTrackCoursesSerializer(serializers.Serializer):
     courses = serializers.ListField(child=serializers.UUIDField())
+
+class ApplicationStatsSerializer(serializers.Serializer):
+    cohort_id = serializers.UUIDField(required=True)
+    number_of_interns = serializers.IntegerField()
+    number_of_mentors = serializers.IntegerField()
+    number_of_male_interns = serializers.IntegerField()
+    number_of_female_interns = serializers.IntegerField()
+    number_of_male_mentors = serializers.IntegerField()
+    number_of_female_interns = serializers.IntegerField()
