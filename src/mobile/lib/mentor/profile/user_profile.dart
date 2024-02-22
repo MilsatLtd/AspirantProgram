@@ -6,14 +6,14 @@ class UserProfile extends StatelessWidget {
   const UserProfile({
     super.key,
     required this.userName,
-    this.image,
+    required this.image,
     required this.userEmail,
-    this.userBio,
+    this.userBio = '',
   });
   final String userName;
-  final String? image;
+  final String image;
   final String userEmail;
-  final String? userBio;
+  final String userBio;
 
   @override
   Widget build(BuildContext context) {
@@ -36,13 +36,13 @@ class UserProfile extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            if (image == null)
+            if (image.isEmpty)
               Center(
                 child: CircleAvatar(
                   radius: 44,
                   backgroundColor: Colors.grey,
                   backgroundImage: NetworkImage(
-                    image!,
+                    image,
                   ),
                 ),
               )
@@ -52,7 +52,7 @@ class UserProfile extends StatelessWidget {
                   radius: 44,
                   backgroundColor: Colors.grey,
                   backgroundImage: AssetImage(
-                    image!,
+                    image,
                   ),
                 ),
               ),
@@ -156,7 +156,7 @@ class UserProfile extends StatelessWidget {
                         color: const Color(0xFF6E6B6F),
                       ),
                     ),
-                    child: Text(userBio!),
+                    child: Text(userBio),
                   )
                 ],
               ),

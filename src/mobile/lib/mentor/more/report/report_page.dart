@@ -28,7 +28,9 @@ class ReportPageMentor extends ConsumerWidget {
       if (timeInHours > 24 && timeInHours < 48) {
         return '1 day ${48 - 24} hours ago';
       } else if (timeInHours >= 48) {
-        return '${timeInHours.floorToDouble()} hours ago';
+        return '${timeInHours ~/ 24} days ${timeInHours % 24} hours ago';
+      } else if (timeInHours > 1 && timeInHours < 24) {
+        return '$timeInHours hours ago';
       } else {
         return '$time minutes ago';
       }

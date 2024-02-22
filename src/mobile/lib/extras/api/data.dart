@@ -15,6 +15,7 @@ Map<String, dynamic> weeklyReport = {
 };
 
 List error = [];
+List message = [];
 
 DecodedTokenResponse? loginResponse;
 List<BlockerCommentModel>? blockerReply;

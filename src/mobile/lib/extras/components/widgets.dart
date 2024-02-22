@@ -3,14 +3,14 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:milsat_project_app/extras/components/app_color.dart';
 import 'package:milsat_project_app/extras/components/custom_button.dart';
 
-Future<dynamic> popUpCard(BuildContext context, String titleString,
-    String content, Function() onPressed) {
+Future<dynamic> popUpCard(BuildContext context, String? titleString,
+    String? content, Function() onPressed) {
   return showDialog(
     context: context,
     builder: (context) {
       return AlertDialog(
         title: Text(
-          titleString,
+          titleString ?? '',
           textAlign: TextAlign.center,
           style: GoogleFonts.raleway(
             fontSize: 18,
@@ -19,7 +19,7 @@ Future<dynamic> popUpCard(BuildContext context, String titleString,
           ),
         ),
         content: Text(
-          content,
+          content ?? '',
           textAlign: TextAlign.center,
           style: GoogleFonts.raleway(
             fontSize: 14,

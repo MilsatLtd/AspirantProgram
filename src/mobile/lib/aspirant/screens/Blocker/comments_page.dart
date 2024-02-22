@@ -85,19 +85,22 @@ class _CommentsPageState extends ConsumerState<CommentsPage> {
                             ),
                             GestureDetector(
                               onTap: () async {
-                                await ref
-                                    .read(apiBlockerServiceProvider)
-                                    .resolveABlocker(
-                                      trackId: widget.trackId,
-                                      userId: widget.userId,
-                                      blockerId: widget.blockerId,
-                                      description: widget.description,
-                                      title: widget.title,
-                                      status: 1,
-                                    );
-                                showInSnackBar('Blocker Resolved Successfully');
-                                AppNavigator.navigateToAndReplace(
-                                    raiseABlocker);
+                                try {
+                                  await ref
+                                      .read(apiBlockerServiceProvider)
+                                      .resolveABlocker(
+                                        trackId: widget.trackId,
+                                        userId: widget.userId,
+                                        blockerId: widget.blockerId,
+                                        description: widget.description,
+                                        title: widget.title,
+                                        status: 1,
+                                      );
+                                  AppNavigator.navigateToAndReplace(
+                                      raiseABlocker);
+                                } finally {
+                                  showInSnackBar(message[0]);
+                                }
                               },
                               child: Row(
                                 children: [
@@ -170,7 +173,7 @@ class _CommentsPageState extends ConsumerState<CommentsPage> {
                                     ),
                                     Text(
                                       'Hello ${widget.userName}},\n'
-                                      '${cred['blockerComments'][index]['message']}',
+                                      '${data[index].message}',
                                       style: GoogleFonts.raleway(
                                         fontSize: 13,
                                         fontWeight: FontWeight.w500,
@@ -215,8 +218,11 @@ class _CommentsPageState extends ConsumerState<CommentsPage> {
   void showInSnackBar(String value) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text(value),
-        duration: const Duration(seconds: 5),
+        content: Text(
+          value,
+          textAlign: TextAlign.center,
+        ),
+        duration: const Duration(seconds: 7),
         dismissDirection: DismissDirection.up,
       ),
     );

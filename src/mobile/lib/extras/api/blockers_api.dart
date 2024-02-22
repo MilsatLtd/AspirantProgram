@@ -56,9 +56,13 @@ class APIService {
         options: Options(headers: headers),
         data: data,
       );
+      message = [
+        'Blocker Submitted!',
+        'You will get your feed soon!',
+      ];
       return response.data;
     } on DioError catch (e) {
-      error = [
+      message = [
         '${e.response!.data['message']}',
         '${e.response!.data['errors']['message']}'
       ];
@@ -103,8 +107,11 @@ class APIService {
       if (response.statusCode == 200) {
         personalInfo['resolvedBlocker'] = response.data;
       }
-
+      message = ['Blocker Resolved Successfully'];
       return response;
+    } on DioError catch (e) {
+      message = ['${e.response?.data['message']}'];
+      throw Exception('Failed to post blocker: $e');
     } catch (error) {
       throw Exception('Failed to post blocker: $error');
     }

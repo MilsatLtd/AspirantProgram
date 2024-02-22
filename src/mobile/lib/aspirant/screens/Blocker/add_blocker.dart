@@ -181,7 +181,7 @@ class _AddBlockerState extends ConsumerState<AddBlocker> {
       builder: (context) {
         return AlertDialog(
           title: Text(
-            error.isEmpty ? 'Blocker Submitted!' : error[0],
+            message[0],
             textAlign: TextAlign.center,
             style: GoogleFonts.raleway(
               fontSize: 18,
@@ -190,7 +190,7 @@ class _AddBlockerState extends ConsumerState<AddBlocker> {
             ),
           ),
           content: Text(
-            error.isEmpty ? 'You will get your feed soon!' : error[1],
+            message[1],
             textAlign: TextAlign.center,
             style: GoogleFonts.raleway(
               fontSize: 14,

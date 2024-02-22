@@ -131,14 +131,13 @@ class ApiService {
       );
       if (kDebugMode) {
         print('Report Feedback submitted successfully');
+        message = ['Report Feedback submitted successfully'];
       }
     } on DioError catch (e) {
       if (e.response != null) {
         if (kDebugMode) {
-          print('Error status code: ${e.response?.statusCode}');
-        }
-        if (kDebugMode) {
           print('Error message: ${e.response?.data}');
+          message = ['${e.response?.data['message']}'];
         }
       } else {
         if (kDebugMode) {
