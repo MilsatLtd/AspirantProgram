@@ -6,10 +6,20 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:milsat_project_app/aspirant/screens/Blocker/comments_page.dart';
 import 'package:milsat_project_app/extras/components/files.dart';
+import 'package:milsat_project_app/extras/components/shared_prefs/keys.dart';
+import 'package:milsat_project_app/extras/components/shared_prefs/utils.dart';
+import 'package:milsat_project_app/extras/models/aspirant_model.dart';
+import 'package:milsat_project_app/extras/models/decoded_token.dart';
+import 'package:milsat_project_app/mentor/more/blocker/reply_blocker.dart';
 import '../../../extras/api/blockers_api.dart';
 
-final allBlockers = FutureProvider.autoDispose((ref) {
-  return ref.read(apiBlockerServiceProvider).getRaisedBlockers();
+final allBlockers = FutureProvider.autoDispose((ref) async {
+  AspirantModelClass? userData =
+      await SecureStorageUtils.getDataFromStorage<AspirantModelClass>(
+          SharedPrefKeys.userData, AspirantModelClass.fromJsonString);
+  return ref
+      .read(apiBlockerServiceProvider)
+      .getRaisedBlockersById(userData?.track?.trackId ?? '');
 });
 
 Map<int, String> status = {
@@ -62,19 +72,45 @@ class AllBlockers extends ConsumerWidget {
 
             final duration = now.difference(p);
             final timeAgo = duration.inDays;
+
             return GestureDetector(
-              onTap: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) {
-                  blockerID = '${cred['blockers'][index]['blocker_id']}';
-                  return CommentsPage(
-                    description: '${cred['blockers'][index]['description']}',
-                    title: '${cred['blockers'][index]['title']}',
-                    userName: '${cred['blockers'][index]['user_name']}',
-                    blockerId: '${cred['blockers'][index]['blocker_id']}',
-                    trackId: '${cred['blockers'][index]['track']}',
-                    userId: '${cred['blockers'][index]['user']}',
-                  );
-                }));
+              onTap: () async {
+                DecodedTokenResponse? decodedTokenResponse =
+                    await SecureStorageUtils.getDataFromStorage<
+                            DecodedTokenResponse>(SharedPrefKeys.tokenResponse,
+                        DecodedTokenResponse.fromJsonString);
+                final comments = await ref
+                    .read(apiBlockerServiceProvider)
+                    .getCommentsById(cred['blockers'][index]['blocker_id']);
+                if (decodedTokenResponse?.role == 1) {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) {
+                    return ReplyBlocker(
+                      description: '${cred['blockers'][index]['description']}',
+                      title: '${cred['blockers'][index]['title']}',
+                      userName: '${cred['blockers'][index]['user_name']}',
+                      blockerId: '${cred['blockers'][index]['blocker_id']}',
+                      time: '$timeAgo',
+                      trackId: '${cred['blockers'][index]['track']}',
+                      comments: comments,
+                    );
+                  }));
+                } else {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) {
+                    blockerID = '${cred['blockers'][index]['blocker_id']}';
+                    return CommentsPage(
+                      description: '${cred['blockers'][index]['description']}',
+                      title: '${cred['blockers'][index]['title']}',
+                      userName: '${cred['blockers'][index]['user_name']}',
+                      blockerId: '${cred['blockers'][index]['blocker_id']}',
+                      trackId: '${cred['blockers'][index]['track']}',
+                      userId: '${cred['blockers'][index]['user']}',
+                      status: cred['blockers'][index]['status'],
+                      currentUser: decodedTokenResponse?.userId ?? '',
+                      time: '$timeAgo',
+                      comments: comments,
+                    );
+                  }));
+                }
               },
               child: Slidable(
                 startActionPane: ActionPane(
@@ -83,7 +119,12 @@ class AllBlockers extends ConsumerWidget {
                     Consumer(
                       builder: (context, ref, child) {
                         return SlidableAction(
-                          onPressed: (context) => onDeleted(index),
+                          onPressed: (context) {
+                            onDeleted(index);
+                            showInSnackBar(
+                                'Blocker Deleted Successfully', context);
+                            return ref.refresh(allBlockers.future);
+                          },
                           backgroundColor: Colors.red,
                           icon: Icons.delete,
                           label: 'Delete',
@@ -178,6 +219,19 @@ class AllBlockers extends ConsumerWidget {
           child: CircularProgressIndicator(),
         );
       },
+    );
+  }
+
+  void showInSnackBar(String value, BuildContext context) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          value,
+          textAlign: TextAlign.center,
+        ),
+        duration: const Duration(seconds: 7),
+        dismissDirection: DismissDirection.up,
+      ),
     );
   }
 }

@@ -19,8 +19,13 @@ final mentorDetails = FutureProvider<MentorData>((ref) async {
   return ref.read(apiServiceProvider).getMentorData(response?.userId);
 });
 
-final allBlockersMentor = FutureProvider.autoDispose((ref) {
-  return ref.read(apiBlockerServiceProvider).getRaisedBlockers();
+final allBlockersMentor = FutureProvider.autoDispose((ref) async {
+  MentorData? userData =
+      await SecureStorageUtils.getDataFromStorage<MentorData>(
+          SharedPrefKeys.userData, MentorData.fromJsonString);
+  return ref
+      .read(apiBlockerServiceProvider)
+      .getRaisedBlockersById(userData?.track?.trackId ?? '');
 });
 
 class MentorHomePage extends ConsumerStatefulWidget {

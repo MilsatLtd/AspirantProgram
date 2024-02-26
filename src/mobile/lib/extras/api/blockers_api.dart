@@ -26,7 +26,7 @@ class APIService {
   List<BlockerCommentModel>? comments;
   BlockerCommentModel mentorComment = BlockerCommentModel();
 
-  Future<Response> postBlocker({
+  Future<Map<String, dynamic>> postBlocker({
     required String trackId,
     required String userId,
     required String description,
@@ -44,7 +44,7 @@ class APIService {
     };
 
     try {
-      String? token =
+      final token =
           await SecureStorageUtils.getString(SharedPrefKeys.accessToken);
       final headers = {
         'accept': 'application/json',
@@ -56,19 +56,14 @@ class APIService {
         options: Options(headers: headers),
         data: data,
       );
-      message = [
-        'Blocker Submitted!',
-        'You will get your feed soon!',
-      ];
       return response.data;
     } on DioError catch (e) {
-      message = [
-        '${e.response!.data['message']}',
-        '${e.response!.data['errors']['message']}'
-      ];
-      throw ('${e.response}');
+      // Handle Dio errors
+      final errorMessage = _parseDioError(e);
+      return {'error': errorMessage};
     } catch (error) {
-      throw Exception('Failed to post blocker: $error');
+      // Handle generic errors
+      return {'error': 'Failed to post blocker: $error'};
     }
   }
 
@@ -157,8 +152,41 @@ class APIService {
     return mentorComment;
   }
 
-  Future<Response> getRaisedBlockers() async {
-    const url = '${Env.apiUrl}/api/blockers';
+  // Future<Response> getRaisedBlockers() async {
+  //   const url = '${Env.apiUrl}/api/blockers';
+  //   try {
+  //     String? token =
+  //         await SecureStorageUtils.getString(SharedPrefKeys.accessToken);
+  //     final headers = {
+  //       'accept': 'application/json',
+  //       'Authorization': 'Bearer $token',
+  //       'Content-Type': 'application/json',
+  //     };
+  //     final response = await dio.get(
+  //       url,
+  //       options: Options(headers: headers),
+  //     );
+  //     if (kDebugMode) {
+  //       print(response.data);
+  //     }
+  //     cred['blockers'] = response.data;
+  //     if (kDebugMode) {
+  //       print(response.data);
+  //     }
+  //     return response;
+  //   } on DioError catch (e) {
+  //     if (e.response != null) {
+  //       return e.response!;
+  //     } else {
+  //       throw Exception('Error making request: ${e.message}');
+  //     }
+  //   } catch (e) {
+  //     throw Exception('Error making request: ${e.toString()}');
+  //   }
+  // }
+
+  Future<Response> getRaisedBlockersById(String trackId) async {
+    final url = '${Env.apiUrl}/api/blockers/track/$trackId';
     try {
       String? token =
           await SecureStorageUtils.getString(SharedPrefKeys.accessToken);
@@ -181,6 +209,7 @@ class APIService {
       return response;
     } on DioError catch (e) {
       if (e.response != null) {
+        print('${e.response}');
         return e.response!;
       } else {
         throw Exception('Error making request: ${e.message}');
@@ -231,13 +260,10 @@ class APIService {
         url,
         options: Options(headers: headers),
       );
-      return response;
+      print('${response.data}');
+      return response.data;
     } on DioError catch (e) {
-      if (e.response != null) {
-        return e.response!;
-      } else {
-        throw Exception('Error making request: ${e.message}');
-      }
+      throw ('${e.response}');
     } catch (e) {
       throw Exception('Error making request: ${e.toString()}');
     }
@@ -267,5 +293,16 @@ class APIService {
     } catch (e) {
       throw Exception('Error making request: ${e.toString()}');
     }
+  }
+
+  String _parseDioError(DioError e) {
+    if (e.response != null) {
+      final responseData = e.response!.data;
+      if (responseData is Map<String, dynamic> &&
+          responseData.containsKey('message')) {
+        return responseData['message'];
+      }
+    }
+    return 'An unknown error occurred';
   }
 }

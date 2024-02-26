@@ -198,8 +198,8 @@ homeWidget(BuildContext context, WidgetRef ref,
                   Stack(
                     children: [
                       CohortCard(
-                        height: 316,
-                        width: 343,
+                        height: MediaQuery.of(context).size.height * 0.393,
+                        width: MediaQuery.of(context).size.width - 41,
                         radius: BorderRadius.circular(4),
                         first: -15.5,
                         second_1: 0,

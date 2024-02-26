@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -34,7 +36,6 @@ class _PendingState extends ConsumerState<Pending> {
 
   @override
   Widget build(BuildContext context) {
-    // String status = 'Resolve';
     if (pendingList.isNotEmpty) {
       return Column(
         children: [
@@ -53,17 +54,16 @@ class _PendingState extends ConsumerState<Pending> {
                 final timeAgo = duration.inDays;
                 return GestureDetector(
                   onTap: () async {
-                    if (loginResponse?.role == 1) {
-                      String time = pendingList[index]['created_at'];
-                      DateTime p = DateTime.parse(time);
-                      DateTime now = DateTime.now();
+                    String time = pendingList[index]['created_at'];
+                    DateTime p = DateTime.parse(time);
+                    DateTime now = DateTime.now();
 
-                      final duration = now.difference(p);
-                      final timeAgo = duration.inDays;
-                      final comments = await ref
-                          .read(apiBlockerServiceProvider)
-                          .getCommentsById(pendingList[index]['blocker_id']);
-                      // ignore: use_build_context_synchronously
+                    final duration = now.difference(p);
+                    final timeAgo = duration.inDays;
+                    final comments = await ref
+                        .read(apiBlockerServiceProvider)
+                        .getCommentsById(pendingList[index]['blocker_id']);
+                    if (loginResponse?.role == 1) {
                       Navigator.push(context,
                           MaterialPageRoute(builder: (context) {
                         return ReplyBlocker(
@@ -87,6 +87,10 @@ class _PendingState extends ConsumerState<Pending> {
                           blockerId: '${pendingList[index]['blocker_id']}',
                           trackId: '${pendingList[index]['track']}',
                           userId: '${pendingList[index]['user']}',
+                          status: cred['blockers'][index]['status'],
+                          currentUser: loginResponse?.userId ?? '',
+                          time: '$timeAgo',
+                          comments: comments,
                         );
                       }));
                     }

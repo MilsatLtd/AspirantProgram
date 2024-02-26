@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 class MentorData {
   String? fullName;
   String? email;
@@ -41,6 +43,15 @@ class MentorData {
         : List<dynamic>.from(mentees!.map((x) => x.toJson()));
     data["profile_picture"] = profilePicture;
     return data;
+  }
+
+  String toJsonString() {
+    return jsonEncode(toJson());
+  }
+
+  factory MentorData.fromJsonString(String jsonString) {
+    final Map<String, dynamic> jsonMap = jsonDecode(jsonString);
+    return MentorData.fromJson(jsonMap);
   }
 }
 

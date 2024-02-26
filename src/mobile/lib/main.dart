@@ -13,6 +13,7 @@ void main() async {
     const SystemUiOverlayStyle(
       statusBarColor: AppTheme.kPurpleColor,
       statusBarIconBrightness: Brightness.light,
+      statusBarBrightness: Brightness.light,
     ),
   );
   runApp(
