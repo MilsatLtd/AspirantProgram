@@ -13,6 +13,7 @@ void main() async {
     const SystemUiOverlayStyle(
       statusBarColor: AppTheme.kPurpleColor,
       statusBarIconBrightness: Brightness.light,
+      statusBarBrightness: Brightness.light,
     ),
   );
   runApp(
@@ -33,6 +34,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.purple,
         primaryColor: Colors.purple,
         visualDensity: VisualDensity.adaptivePlatformDensity,
+        useMaterial3: false,
       ),
       debugShowCheckedModeBanner: false,
       home: const SplashScreen(),

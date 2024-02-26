@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -5,6 +7,7 @@ import 'package:milsat_project_app/extras/components/shared_prefs/keys.dart';
 import 'package:milsat_project_app/extras/components/shared_prefs/utils.dart';
 import 'package:milsat_project_app/extras/models/decoded_token.dart';
 import 'package:milsat_project_app/extras/models/profile_picture_model.dart';
+import 'package:milsat_project_app/mentor/more/blocker/reply_blocker.dart';
 import 'package:milsat_project_app/mentor/profile/profile.dart';
 import '../../../../extras/api/blockers_api.dart';
 import '../../extras/components/files.dart';
@@ -16,8 +19,13 @@ final mentorDetails = FutureProvider<MentorData>((ref) async {
   return ref.read(apiServiceProvider).getMentorData(response?.userId);
 });
 
-final allBlockersMentor = FutureProvider.autoDispose((ref) {
-  return ref.read(apiBlockerServiceProvider).getRaisedBlockers();
+final allBlockersMentor = FutureProvider.autoDispose((ref) async {
+  MentorData? userData =
+      await SecureStorageUtils.getDataFromStorage<MentorData>(
+          SharedPrefKeys.userData, MentorData.fromJsonString);
+  return ref
+      .read(apiBlockerServiceProvider)
+      .getRaisedBlockersById(userData?.track?.trackId ?? '');
 });
 
 class MentorHomePage extends ConsumerStatefulWidget {
@@ -196,96 +204,124 @@ class _MentorHomePageState extends ConsumerState<MentorHomePage> {
                             final timeAgo = duration.inDays;
                             return allBlockersData.when(
                               data: (data) {
-                                return Padding(
-                                  padding: const EdgeInsets.only(bottom: 24),
-                                  child: Container(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 16,
-                                      vertical: 16,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      border: Border.all(
-                                        color: const Color(0xFFCBADCD),
+                                return GestureDetector(
+                                  onTap: () async {
+                                    final comments = await ref
+                                        .read(apiBlockerServiceProvider)
+                                        .getCommentsById(cred['blockers'][index]
+                                            ['blocker_id']);
+                                    Navigator.push(context,
+                                        MaterialPageRoute(builder: (context) {
+                                      return ReplyBlocker(
+                                        description:
+                                            '${cred['blockers'][index]['description']}',
+                                        title:
+                                            '${cred['blockers'][index]['title']}',
+                                        userName:
+                                            '${cred['blockers'][index]['user_name']}',
+                                        blockerId:
+                                            '${cred['blockers'][index]['blocker_id']}',
+                                        time: '$timeAgo',
+                                        trackId:
+                                            '${cred['blockers'][index]['track']}',
+                                        comments: comments,
+                                      );
+                                    }));
+                                  },
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(bottom: 24),
+                                    child: Container(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 16,
+                                        vertical: 16,
                                       ),
-                                      borderRadius: BorderRadius.circular(8),
-                                    ),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        GestureDetector(
-                                          onTap: () {},
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Text(
-                                                '${cred['blockers'][index]['title']}',
-                                                style: const TextStyle(
-                                                  fontSize: 15,
-                                                  color: Color(0xFF504D51),
-                                                  fontWeight: FontWeight.w600,
+                                      decoration: BoxDecoration(
+                                        border: Border.all(
+                                          color: const Color(0xFFCBADCD),
+                                        ),
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          GestureDetector(
+                                            onTap: () {},
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Text(
+                                                  '${cred['blockers'][index]['title']}',
+                                                  style: const TextStyle(
+                                                    fontSize: 15,
+                                                    color: Color(0xFF504D51),
+                                                    fontWeight: FontWeight.w600,
+                                                  ),
                                                 ),
-                                              ),
-                                              Row(
-                                                children: [
-                                                  cred['blockers'][index]
-                                                              ['status'] ==
-                                                          0
-                                                      ? SvgPicture.asset(
-                                                          'assets/double_mark.svg')
-                                                      : const SizedBox.shrink(),
-                                                  Text(
+                                                Row(
+                                                  children: [
                                                     cred['blockers'][index]
                                                                 ['status'] ==
                                                             0
-                                                        ? status[0] as String
-                                                        : status[1] as String,
-                                                    style: GoogleFonts.raleway(
-                                                      color: const Color(
-                                                          0xFF11A263),
-                                                      fontSize: 10,
-                                                      fontWeight:
-                                                          FontWeight.w600,
+                                                        ? SvgPicture.asset(
+                                                            'assets/double_mark.svg')
+                                                        : const SizedBox
+                                                            .shrink(),
+                                                    Text(
+                                                      cred['blockers'][index]
+                                                                  ['status'] ==
+                                                              0
+                                                          ? status[0] as String
+                                                          : status[1] as String,
+                                                      style:
+                                                          GoogleFonts.raleway(
+                                                        color: const Color(
+                                                            0xFF11A263),
+                                                        fontSize: 10,
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                      ),
                                                     ),
-                                                  ),
-                                                ],
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          const SizedBox(
+                                            height: 4,
+                                          ),
+                                          Row(
+                                            children: [
+                                              Text(
+                                                '${cred['blockers'][index]['user_name']}',
+                                                style: kTrackTextStyle,
+                                              ),
+                                              const SizedBox(
+                                                width: 8,
+                                              ),
+                                              Text(
+                                                '$timeAgo days ago',
+                                                style: kTimeTextStyle,
                                               ),
                                             ],
                                           ),
-                                        ),
-                                        const SizedBox(
-                                          height: 4,
-                                        ),
-                                        Row(
-                                          children: [
-                                            Text(
-                                              '${cred['blockers'][index]['user_name']}',
-                                              style: kTrackTextStyle,
-                                            ),
-                                            const SizedBox(
-                                              width: 8,
-                                            ),
-                                            Text(
-                                              '$timeAgo days ago',
-                                              style: kTimeTextStyle,
-                                            ),
-                                          ],
-                                        ),
-                                        const SizedBox(
-                                          height: 10,
-                                        ),
-                                        Text(
-                                          'Hi everyone,\n'
-                                          '${cred['blockers'][index]['description']}',
-                                          style: GoogleFonts.raleway(
-                                            fontSize: 13,
-                                            fontWeight: FontWeight.w500,
-                                            color: const Color(0xFF504D51),
-                                            height: 2,
+                                          const SizedBox(
+                                            height: 10,
                                           ),
-                                        ),
-                                      ],
+                                          Text(
+                                            'Hi everyone,\n'
+                                            '${cred['blockers'][index]['description']}',
+                                            style: GoogleFonts.raleway(
+                                              fontSize: 13,
+                                              fontWeight: FontWeight.w500,
+                                              color: const Color(0xFF504D51),
+                                              height: 2,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 );

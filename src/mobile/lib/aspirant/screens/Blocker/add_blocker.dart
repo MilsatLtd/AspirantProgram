@@ -144,15 +144,21 @@ class _AddBlockerState extends ConsumerState<AddBlocker> {
                             SharedPrefKeys.tokenResponse,
                             DecodedTokenResponse.fromJsonString);
                     if (formKey.currentState!.validate()) {
-                      ref.read(apiBlockerServiceProvider).postBlocker(
-                            description: descriptionController.text,
-                            status: 0,
-                            title: titleController.text,
-                            trackId: d.track!.trackId!,
-                            userId: response!.userId!,
-                          );
+                      final result =
+                          await ref.read(apiBlockerServiceProvider).postBlocker(
+                                description: descriptionController.text,
+                                status: 0,
+                                title: titleController.text,
+                                trackId: d.track!.trackId!,
+                                userId: response!.userId!,
+                              );
 
-                      popUp(context);
+                      popUp(
+                        context,
+                        result['error'] ??
+                            'Blocker Submitted Successfully, you will receive your response soon',
+                        result['error'] == null ? true : false,
+                      );
                     }
                   },
                   color: !titleEmpty && !descriptionEmpty
@@ -175,13 +181,13 @@ class _AddBlockerState extends ConsumerState<AddBlocker> {
     );
   }
 
-  Future<dynamic> popUp(BuildContext context) {
+  Future<dynamic> popUp(BuildContext context, String message, bool succeeded) {
     return showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
           title: Text(
-            error.isEmpty ? 'Blocker Submitted!' : error[0],
+            'Hello!',
             textAlign: TextAlign.center,
             style: GoogleFonts.raleway(
               fontSize: 18,
@@ -190,7 +196,7 @@ class _AddBlockerState extends ConsumerState<AddBlocker> {
             ),
           ),
           content: Text(
-            error.isEmpty ? 'You will get your feed soon!' : error[1],
+            message,
             textAlign: TextAlign.center,
             style: GoogleFonts.raleway(
               fontSize: 14,
@@ -202,7 +208,7 @@ class _AddBlockerState extends ConsumerState<AddBlocker> {
             CustomButton(
               height: 54,
               pressed: () {
-                error.isEmpty
+                succeeded
                     ? AppNavigator.navigateToAndClear(homeRoute)
                     : AppNavigator.pop();
               },

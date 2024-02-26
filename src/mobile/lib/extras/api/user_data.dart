@@ -45,6 +45,8 @@ class ApiService {
         case 200:
           AspirantModelClass aspirantData =
               AspirantModelClass.fromJson(response.data);
+          SecureStorageUtils.saveDataToStorage(SharedPrefKeys.userData,
+              aspirantData, (data) => data.toJsonString());
           return aspirantData;
 
         case 404:
@@ -87,6 +89,8 @@ class ApiService {
       switch (response.statusCode) {
         case 200:
           MentorData mentorData = MentorData.fromJson(response.data);
+          SecureStorageUtils.saveDataToStorage(SharedPrefKeys.mentorUserData,
+              mentorData, (data) => data.toJsonString());
           return mentorData;
 
         case 404:

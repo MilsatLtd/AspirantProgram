@@ -37,7 +37,7 @@ class AllAspirants extends ConsumerWidget {
                 ),
               ),
               TextSpan(
-                text: ' Total: ${d.mentees!.length}',
+                text: ' Total: ${d.mentees?.length}',
                 style: GoogleFonts.raleway(
                   color: AppTheme.kHintTextColor,
                   fontSize: 12,
@@ -52,15 +52,15 @@ class AllAspirants extends ConsumerWidget {
       body: ListView.builder(
         itemBuilder: (BuildContext context, int index) {
           final apiService = ref.read(apiServiceProvider);
-          apiService.getUserData(d.mentees!.elementAt(index).userId!);
+          apiService.getUserData(d.mentees?.elementAt(index).userId!);
           return AspirantsTile(
-            image: d.mentees!.elementAt(index).profilePicture,
+            image: d.mentees?.elementAt(index).profilePicture,
             column: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  d.mentees!.elementAt(index).fullName!,
+                  d.mentees?.elementAt(index).fullName ?? '',
                   style: GoogleFonts.raleway(
                     color: const Color(0xFF504D51),
                     fontSize: 13,
@@ -100,10 +100,10 @@ class AllAspirants extends ConsumerWidget {
                 MaterialPageRoute(
                   builder: ((context) {
                     return UserProfile(
-                      userName: d.mentees!.elementAt(index).fullName!,
-                      image: d.mentees!.elementAt(index).profilePicture,
-                      userEmail: d.mentees!.elementAt(index).email!,
-                      userBio: d.mentees!.elementAt(index).bio,
+                      userName: d.mentees?.elementAt(index).fullName ?? '',
+                      image: d.mentees?.elementAt(index).profilePicture ?? '',
+                      userEmail: d.mentees?.elementAt(index).email ?? '',
+                      userBio: d.mentees?.elementAt(index).bio ?? '',
                     );
                   }),
                 ),
@@ -111,7 +111,7 @@ class AllAspirants extends ConsumerWidget {
             },
           );
         },
-        itemCount: d.mentees!.length,
+        itemCount: d.mentees?.length,
       ),
       bottomNavigationBar: const CustomNavBar(),
     );
