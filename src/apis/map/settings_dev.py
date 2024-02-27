@@ -190,10 +190,12 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 
 CELERY_BROKER_URL = "redis://default:Fil5p6nejIfoalGHP52gMnMJpCCAN6IP@roundhouse.proxy.rlwy.net:55120"
+CELERY_RESULT_BACKEND = "redis://default:Fil5p6nejIfoalGHP52gMnMJpCCAN6IP@roundhouse.proxy.rlwy.net:55120"
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_TIMEZONE = 'Africa/Lagos'
+CELERY_TASK_RESULT_EXPIRES = None
 
 
 AUTHENTICATION_BACKENDS = [

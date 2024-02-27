@@ -2,7 +2,7 @@ import os
 from celery import Celery 
 from api.logging import SlackLogHandler  
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'map.settings_dev')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'map.settings')
 
 app = Celery('map')
 app.conf.update(timezone='Africa/Lagos')
@@ -16,8 +16,8 @@ from celery.utils.log import get_task_logger
 def on_celery_setup_logging(**kwargs):
     logger = get_task_logger(__name__)
     logger.setLevel(logging.ERROR)
-    logger.addHandler(app.config.logging.handlers.slack)
-    logger.addHandler(app.config.logging.handlers.file)
+    logger.addHandler(SlackLogHandler(logging.ERROR))
+    
 app.config_from_object('django.conf:settings', namespace='CELERY')
 
 app.autodiscover_tasks()

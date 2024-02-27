@@ -18,6 +18,19 @@ gunicorn $APP_NAME --bind $BIND_ADDRESS --daemon
 
 echo "Gunicorn restarted for $APP_NAME"
 
+echo "Restarting Celery workers and Flower"
+
+# Stop previously running celery workers
+pkill -f "celery -A map worker --loglevel=info --detach"
+pkill -f "celery -A map flower --detach"
+
+# Start a new celery worker
+celery -A map worker --loglevel=info --detach
+
+# Start a new flower
+celery -A map flower --detach
+
+
 #Set the DJANGO_SETTINGS_MODULE Environment Variable
 export DJANGO_SETTINGS_MODULE=map.settings
 

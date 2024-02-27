@@ -41,11 +41,12 @@ def send_html_email_task(subject=None, recipient=None, message=None):
     except Exception as e:
         logger.exception(e)
 
-@shared_task()
-def send_html_email_task2(subject=None, recipient=None, message=None):
+@shared_task(bind=True, max_retries=1, default_retry_delay=1 )
+def send_html_email_task2(self, subject=None, recipient=None, message=None):
     try:
         sender = settings.EMAIL_HOST_USER
-        plaintext = html2text.HTML2Text().handle(message)
+        plaintext = html2text.HTML2Text().handle(message)   
         send_mail(subject, plaintext, sender, recipient, html_message=message, fail_silently=False)
     except Exception as e:
         logger.exception(e)
+        raise e
