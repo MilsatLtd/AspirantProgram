@@ -165,10 +165,10 @@ class SendAnyEmailService2:
     def send(self, request):
         try:
             # send email from html template to any recipient
-            send_html_email_task2.delay((
+            send_html_email_task2.delay(
                 request.data['subject'],
                 [request.data['email']],
-                request.data['message'],)
+                request.data['message'],
             )
             return Response(
                 data={"message": "Email scheduled successfully \U0001F44D"},
