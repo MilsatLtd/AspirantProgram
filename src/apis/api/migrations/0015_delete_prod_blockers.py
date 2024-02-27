@@ -3,22 +3,10 @@
 from django.db import migrations, models
 
 def delete_prod_blockers(apps, schema_editor):
-    Blocker = apps.get_model('api', 'Blocker')
-    for blocker in Blocker.objects.all():
-        blocker.delete()
-
-    # remove the migration record from django_migrations table
-    custom_sql = """
-    DELETE FROM django_migrations WHERE app='api' AND name='0015_delete_prod_blockers';
-    """
-
-    # Execute the SQL query
-    with schema_editor.connection.cursor() as cursor:
-        cursor.execute(custom_sql)
-
-    # delete this file itself
-    import os
-    # os.remove(__file__)
+    # Blocker = apps.get_model('api', 'Blocker')
+    # for blocker in Blocker.objects.all():
+    #     blocker.delete()
+    pass
 
 class Migration(migrations.Migration):
 
