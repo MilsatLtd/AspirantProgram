@@ -44,6 +44,8 @@ def send_html_email_task(subject=None, recipient=None, message=None):
 @shared_task(bind=True, max_retries=1, default_retry_delay=1 )
 def send_html_email_task2(self, subject=None, recipient=None, message=None):
     try:
+        import time
+        time.sleep(30)
         sender = settings.EMAIL_HOST_USER
         plaintext = html2text.HTML2Text().handle(message)   
         send_mail(subject, plaintext, sender, recipient, html_message=message, fail_silently=False)

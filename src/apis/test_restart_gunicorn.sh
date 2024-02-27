@@ -22,14 +22,14 @@ echo "Gunicorn restarted for $APP_NAME"
 echo "Restarting Celery workers and Flower"
 
 # # Stop previously running celery workers
-# pkill -f "celery -A map worker -n test-celery-worker --loglevel=info --detach"
+pkill -f "celery"
 # pkill -f "celery -A map flower --node=test-flower --detach"
 
 # Start a new celery worker
 celery -A map worker --loglevel=info --detach
 
 # Start a new flower
-celery -A map flower
+celery -A map flower --persistent=True
 
 
 #Set the DJANGO_SETTINGS_MODULE Environment Variable
