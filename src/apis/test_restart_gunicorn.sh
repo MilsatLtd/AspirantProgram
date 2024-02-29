@@ -18,7 +18,7 @@ pkill -f "celery"
 sleep 5
 
 # Start a new celery worker
-celery -A map flower --persistent=True & celery -A map worker --loglevel=info --detach
+# celery -A map flower --persistent=True & celery -A map worker --loglevel=info --detach
 
 # Start a new Gunicorn daemon
 gunicorn $APP_NAME --bind $BIND_ADDRESS --daemon

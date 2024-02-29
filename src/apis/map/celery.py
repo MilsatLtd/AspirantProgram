@@ -2,7 +2,7 @@ import os
 from celery import Celery 
 from api.logging import SlackLogHandler  
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'map.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'map.settings_dev')
 
 app = Celery('map')
 app.conf.update(timezone='Africa/Lagos')
