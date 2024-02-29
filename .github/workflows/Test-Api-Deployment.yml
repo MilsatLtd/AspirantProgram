@@ -11,8 +11,6 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-        with:
-          ref: background-email
 
       - name: Rsync files to server
         uses: easingthemes/ssh-deploy@main
