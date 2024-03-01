@@ -22,7 +22,7 @@ sleep 5
 
 # Start a new Celery worker and Flower
 echo "Starting Celery workers and Flower"
-celery -A map flower --persistent=True &
+# celery -A map flower --persistent=True &
 celery -A map worker --loglevel=info --detach
 echo "Celery workers and Flower started successfully"
 
