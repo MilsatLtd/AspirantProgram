@@ -203,6 +203,8 @@ CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_ENABLE_UTC = False
 CELERY_TIMEZONE = 'Africa/Lagos'
+CELERY_TASK_RESULT_EXPIRES = None
+
 
 
 AUTHENTICATION_BACKENDS = [
@@ -286,13 +288,13 @@ LOGGING = {
         },
     },
     'root': {
-        'handlers': ['slack'],
+        'handlers': ['slack', 'file'],
         'level': 'ERROR', 
     },
     'loggers': {
         'django': {
-            'handlers': ['file'],
-            'level': 'DEBUG',
+            'handlers': ['file', 'slack' ],
+            'level': 'ERROR',
             'propagate': True,
         },
     },

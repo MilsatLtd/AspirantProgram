@@ -33,6 +33,8 @@ gunicorn $APP_NAME --bind $BIND_ADDRESS --daemon
 
 echo "Gunicorn restarted for $APP_NAME"
 
+echo "Restarting Celery workers and Flower"
+
 #Set the DJANGO_SETTINGS_MODULE Environment Variable
 export DJANGO_SETTINGS_MODULE=map.settings_test
 

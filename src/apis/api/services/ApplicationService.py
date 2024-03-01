@@ -106,7 +106,7 @@ class ReviewApplication:
         password = self.set_mentor_password(user)
         new_mentor.save()
         message = application_message(application, password)
-        sendEmail(user.email, message['subject'], message['body'])
+        sendEmail.delay(user.email, message['subject'], message['body'])
 
     def set_mentor_password(self, user):
         password = self.generate_mentor_password()
@@ -129,7 +129,7 @@ class ReviewApplication:
         new_student.mentor = self.select_mentor(track)
         new_student.save()
         message = application_message(application, user.phone_number)
-        sendEmail(user.email, message['subject'], message['body'])
+        sendEmail.delay(user.email, message['subject'], message['body'])
 
     def select_mentor(self, track):
         mentor = Mentors.objects.annotate(num_mentees=Count('mentees')).filter(track=track).order_by('num_mentees').first()
