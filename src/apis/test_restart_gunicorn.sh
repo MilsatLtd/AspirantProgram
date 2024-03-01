@@ -14,6 +14,9 @@ pkill -f "gunicorn $APP_NAME --bind $BIND_ADDRESS --daemon"
 # Wait for a moment to ensure that the resources are freed
 sleep 5
 
+# Start redis server
+redis-server --daemonize yes
+
 # Start a new Gunicorn daemon
 gunicorn $APP_NAME --bind $BIND_ADDRESS --daemon
 
