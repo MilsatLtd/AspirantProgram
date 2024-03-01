@@ -12,13 +12,22 @@ echo "Restarting Gunicorn processes for $APP_NAME"
 pkill -f "gunicorn $APP_NAME --bind $BIND_ADDRESS --daemon"
 
 # Stop previously running celery workers
-pkill -f "celery"
+pkill -f "celery -A map worker -n test-celery --loglevel=info  --detach"
+
+echo "Old gunicorn and celery workers terminated successfully"
 
 # Wait for a moment to ensure that the resources are freed
 sleep 5
 
+# Start redis-server
+echo "Starting redis-server"
+redis-server --daemonize yes
+
 # Start a new celery worker
-celery -A map flower --persistent=True & celery -A map worker --loglevel=info --detach
+echo "Starting Celery workers"
+# celery -A map flower --persistent=True &
+celery -A map worker -n test-celery --loglevel=info  --detach
+echo "Celery workers started successfully"
 
 # Start a new Gunicorn daemon
 gunicorn $APP_NAME --bind $BIND_ADDRESS --daemon
