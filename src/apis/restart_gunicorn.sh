@@ -1,39 +1,42 @@
 #!/bin/bash
 
+# Ensure script stops on error
+set -e
+
 export PATH="/home/ubuntu/.local/bin:$PATH"
-# Gunicorn settings
 APP_NAME="map.wsgi:application"
 BIND_ADDRESS="0.0.0.0:8000"
 
 echo "Restarting Gunicorn processes for $APP_NAME"
 
 # Gracefully terminate the old Gunicorn processes
-pkill -f "gunicorn $APP_NAME --bind $BIND_ADDRESS --daemon"
+pkill -f "gunicorn $APP_NAME --bind $BIND_ADDRESS --daemon" || true
 
-# Stop previously running celery workers
-pkill -f "celery"
+# Stop previously running Celery workers
+pkill -f "celery" || true
 
-echo "Old gunicorn and celery workers terminated successfully"
+echo "Old Gunicorn and Celery workers terminated successfully"
 
-# Wait for a moment to ensure that the resources are freed
+# Wait for a moment to ensure that resources are freed
 sleep 5
 
-# # Start redis-server
-# echo "Starting redis-server"
-# redis-server --daemonize yes
-
-# Start a new celery worker
+# Start a new Celery worker and Flower
 echo "Starting Celery workers and Flower"
-celery -A map flower --persistent=True & celery -A map worker --loglevel=info --detach
+celery -A map flower --persistent=True &
+celery -A map worker --loglevel=info --detach
 echo "Celery workers and Flower started successfully"
 
 # Start a new Gunicorn daemon
+echo "Starting Gunicorn"
 gunicorn $APP_NAME --bind $BIND_ADDRESS --daemon
 
 echo "Gunicorn restarted for $APP_NAME"
 
-#Set the DJANGO_SETTINGS_MODULE Environment Variable
+# Set the DJANGO_SETTINGS_MODULE Environment Variable
 export DJANGO_SETTINGS_MODULE=map.settings
 
-#Run Migrations
+# Run Migrations
+echo "Running Django migrations"
 python3 manage.py migrate
+
+echo "Script completed successfully"
