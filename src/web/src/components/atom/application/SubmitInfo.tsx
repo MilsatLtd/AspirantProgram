@@ -7,7 +7,7 @@ import Image from "next/image";
 interface submitInfoProps {
   removePopup: (state: boolean) => void;
   info: string;
-  error?: Array<string> | undefined;
+  error?: any | undefined;
 }
 
 const SubmitInfo = (props: submitInfoProps) => {
@@ -19,6 +19,15 @@ const SubmitInfo = (props: submitInfoProps) => {
       props.removePopup(false);
     }
   };
+
+  const getMessages = (error: any) => {
+    const apiError = Object.keys(props.error?.data);
+    if(apiError){
+      const submitError = props.error?.data[apiError[0]];
+      return submitError;
+    }
+    return 
+  }
   return (
     <div className="px-26 py-42 w-[90%] flex flex-col bg-white rounded-lg">
       <div className="flex justify-end w-full">
@@ -47,10 +56,10 @@ const SubmitInfo = (props: submitInfoProps) => {
           </h4>
           )
         }
-        {props.info.length === 0 && props.error && (
+        {props.info.length === 0 && getMessages(props.error) && (
           <ul>
-            {props.error &&
-              props.error.map((error, index) => {
+            {getMessages(props.error) &&
+              getMessages(props.error).map((error, index) => {
                 return (
                   <li key={index}>
                     <p className="text-N300 text-lg leading-[36px] font-medium text-center py-20 ">
