@@ -272,12 +272,12 @@ LOGGING = {
         },
     },
     'root': {
-        'handlers': ['slack'],
+        'handlers': ['file'],
         'level': 'ERROR', 
     },
     'loggers': {
         'django': {
-            'handlers': ['file','slack' ],
+            'handlers': ['file'],
             'level': 'ERROR',
             'propagate': True,
         },
