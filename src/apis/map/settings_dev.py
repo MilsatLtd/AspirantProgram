@@ -266,14 +266,14 @@ LOGGING = {
             'class': 'logging.StreamHandler',
         },
         'file': {
-            'level': 'ERROR',
+            'level': 'INFO',
             'class': 'logging.FileHandler',
             'filename': 'c:\\temp\\map.log',
         },
     },
     'root': {
         'handlers': ['file'],
-        'level': 'ERROR', 
+        'level': 'INFO', 
     },
     'loggers': {
         'django': {

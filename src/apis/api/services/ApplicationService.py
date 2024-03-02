@@ -105,6 +105,7 @@ class ReviewApplication:
         new_mentor = Mentors.objects.create(user=user, track=track)
         password = self.set_mentor_password(user)
         new_mentor.save()
+        logger.info("Added a new mentor to the track: {track.id} with email: {user.email} and password: {password}")
         message = application_message(application, password)
         sendEmail.delay(user.email, message['subject'], message['body'])
 
@@ -128,6 +129,7 @@ class ReviewApplication:
         new_student = Students.objects.create(user=user, track=track)
         new_student.mentor = self.select_mentor(track)
         new_student.save()
+        logger.info("Added a new student to the track: {track.id} with email: {user.email} and password: {user.password}")
         message = application_message(application, user.phone_number)
         sendEmail.delay(user.email, message['subject'], message['body'])
 

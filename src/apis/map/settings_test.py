@@ -280,14 +280,14 @@ LOGGING = {
             'class': 'logging.StreamHandler',
         },
         'file': {
-            'level': 'ERROR',
+            'level': 'INFO',
             'class': 'logging.FileHandler',
             'filename': 'c:\temp\map.log',
         },
     },
     'root': {
-        'handlers': ['slack'],
-        'level': 'ERROR', 
+        'handlers': ['slack', 'file'],
+        'level': 'INFO', 
     },
     'loggers': {
         'django': {

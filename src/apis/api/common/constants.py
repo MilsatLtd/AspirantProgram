@@ -46,7 +46,7 @@ Finally, below are your login credentials for the mobile application:
 Should you have any questions or require assistance, please don't hesitate to contact us at map.milsat@gmail.com.
 
 Best regards,
-MAP Admin
+MAP Admin.
 
 """}
 
