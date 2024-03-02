@@ -33,6 +33,7 @@ const ApplicationPage = () => {
   const [SubmissionStatus, setSubmissionStatus] = useState("");
   const [email, setEmail] = useState<string | undefined>();
   const [chorts, setChorts] = useState([] as any);
+  const [applyError, setApplyError] = useState("");
 
   const { startDate, endDate } = applictionTimeline
 
@@ -72,6 +73,12 @@ const ApplicationPage = () => {
       if(isSubmitError){
         setShow(true)
         setSubmissionStatus("An Error Occured, Please Try Again")
+      }
+      if(submitError){
+        setShow(true)
+        setSubmissionStatus("")
+        const error = Object.keys(submitError.data)
+        setApplyError(submitError.data[error[0]])
       }
   }, [isSubmitted, isSubmitting, isSubmitError, submitError])
 
@@ -128,7 +135,7 @@ const ApplicationPage = () => {
         <div className={`w-screen h-screen z-40 fixed right-0 top-0 bottom-0 bg-[rgba(0,0,0,0.5)] flex items-center justify-center`}
         >
           <div className="flex z-40 flex-col  w-[90%] md:w-[35%] items-center gap-20">
-            <SubmitInfo info={SubmissionStatus} removePopup={(status)=>removePopup(status)} />
+            <SubmitInfo info={SubmissionStatus} error={applyError} removePopup={(status)=>removePopup(status)} />
           </div>
         </div>
       )}
