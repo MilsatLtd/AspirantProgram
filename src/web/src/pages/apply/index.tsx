@@ -70,15 +70,11 @@ const ApplicationPage = () => {
       if(isSubmitting){
         setShow(false)
       }
-      if(isSubmitError){
-        setShow(true)
-        setSubmissionStatus("An Error Occured, Please Try Again")
-      }
       if(submitError){
-        setShow(true)
         setSubmissionStatus("")
         const error = Object.keys(submitError.data)
         setApplyError(submitError.data[error[0]])
+        setShow(true)
       }
   }, [isSubmitted, isSubmitting, isSubmitError, submitError])
 
