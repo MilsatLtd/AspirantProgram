@@ -58,8 +58,8 @@ const SubmitInfo = (props: submitInfoProps) => {
         }
         {props.info.length === 0 && getMessages(props.error) && (
           <ul>
-            {getMessages(props.error) &&
-              getMessages(props.error).map((error, index) => {
+            {typeof getMessages(props.error) === "object" &&
+              getMessages(props.error).map((error: any, index: any) => {
                 return (
                   <li key={index}>
                     <p className="text-N300 text-lg leading-[36px] font-medium text-center py-20 ">
