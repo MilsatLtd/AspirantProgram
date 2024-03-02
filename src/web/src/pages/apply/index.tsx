@@ -33,7 +33,7 @@ const ApplicationPage = () => {
   const [SubmissionStatus, setSubmissionStatus] = useState("");
   const [email, setEmail] = useState<string | undefined>();
   const [chorts, setChorts] = useState([] as any);
-  const [applyError, setApplyError] = useState("");
+  const [applyError, setApplyError] = useState<any>("");
 
   const { startDate, endDate } = applictionTimeline
 
@@ -72,12 +72,9 @@ const ApplicationPage = () => {
       }
       if(submitError){
         setSubmissionStatus("")
-        if(submitError?.data){
-          const error = Object.keys(submitError?.data)
-          setApplyError(submitError.data[error[0]])
-          setShow(true)
+        setApplyError(submitError)
+        setShow(true)
         }
-      }
   }, [isSubmitted, isSubmitting, isSubmitError, submitError])
 
 
