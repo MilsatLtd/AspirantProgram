@@ -72,7 +72,7 @@ const ApplicationPage = () => {
       }
       if(submitError){
         setSubmissionStatus("")
-        if(submitError.data){
+        if(submitError?.data){
           const error = Object.keys(submitError?.data)
           setApplyError(submitError.data[error[0]])
           setShow(true)
