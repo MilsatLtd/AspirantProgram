@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:milsat_project_app/extras/components/shared_prefs/keys.dart';
-import 'package:milsat_project_app/extras/components/shared_prefs/utils.dart';
 import 'package:milsat_project_app/extras/models/aspirant_model.dart';
 import 'package:milsat_project_app/extras/models/profile_picture_model.dart';
+import 'package:milsat_project_app/general/log_out.dart';
 import '../../../extras/components/files.dart';
 
 late AspirantModelClass d;
@@ -312,15 +311,7 @@ Future<bool?> showWarning(BuildContext context) async {
             TextButton(
               onPressed: () {
                 Navigator.pop(context, true);
-                SecureStorageUtils.deleteAnyDataFromStorage(
-                    SharedPrefKeys.accessToken);
-                SecureStorageUtils.deleteAnyDataFromStorage(
-                    SharedPrefKeys.tokenResponse);
-                SecureStorageUtils.deleteAnyDataFromStorage(
-                    SharedPrefKeys.profileResponse);
-                SecureStorageUtils.deleteAnyDataFromStorage(
-                    SharedPrefKeys.refreshToken);
-                AppNavigator.navigateToAndClear(loginRoute);
+                logOut();
               },
               child: Text(
                 'Yes',
