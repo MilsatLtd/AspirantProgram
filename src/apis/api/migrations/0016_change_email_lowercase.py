@@ -6,9 +6,11 @@ def change_email_all_users_to_lowercase(apps, schema_editor):
     User = apps.get_model('api', 'User')
     for user in User.objects.all():
         user.email = user.email.lower()
-        user.username = user.username.lower()
-        user.save()
-
+        username = user.username.lower()
+        user.username = username
+        if not User.objects.filter(username=username).exists():
+            user.save()
+            
 class Migration(migrations.Migration):
 
     dependencies = [
