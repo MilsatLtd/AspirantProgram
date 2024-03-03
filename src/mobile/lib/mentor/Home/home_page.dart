@@ -12,7 +12,7 @@ import 'package:milsat_project_app/mentor/profile/profile.dart';
 import '../../../../extras/api/blockers_api.dart';
 import '../../extras/components/files.dart';
 
-final mentorDetails = FutureProvider<MentorData>((ref) async {
+final mentorDetails = FutureProvider.autoDispose<MentorData>((ref) async {
   DecodedTokenResponse? response =
       await SecureStorageUtils.getDataFromStorage<DecodedTokenResponse>(
           SharedPrefKeys.tokenResponse, DecodedTokenResponse.fromJsonString);
