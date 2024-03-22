@@ -32,7 +32,7 @@ class UserManager(BaseUserManager):
 
 
 def unique_profile_picture(instance, filename):
-    return 'profile_pictures/{0}_{1}'.format(instance.user_id, filename)
+    return 'MAP-Uploads/profile_pictures/{0}_{1}'.format(instance.user_id, filename)
 
 
 class User(AbstractUser):
@@ -205,7 +205,7 @@ class Course(models.Model):
 
 
 def unique_todo_filename(instance, filename):
-    return 'todo_docs/' + str(instance.todo_id) + '_' + filename
+    return 'MAP-Uploads/todo_docs/' + str(instance.todo_id) + '_' + filename
 
 
 class Todo(models.Model):
