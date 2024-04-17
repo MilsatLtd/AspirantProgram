@@ -4,6 +4,9 @@ from ..models import User, Students, Track, Mentors
 from ..serializers import TrackSerializer_C, GetStudentSerializer, GetLatestTrackSerializer
 from ..common.enums import *
 from django.utils import timezone
+import logging
+
+logger = logging.getLogger(__name__)
 
 class GetStudent:
     def get(self, user_id):
@@ -23,6 +26,7 @@ class GetStudent:
                 status=status.HTTP_404_NOT_FOUND,
             )
         except Exception as e:
+            logger.exception(e)
             return Response(
                 data={"message": "Something went wrong \U0001F9D0"},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR,
@@ -39,7 +43,7 @@ class GetStudent:
                 status=status.HTTP_404_NOT_FOUND,
             )
         except Exception as e:
-            print(e)
+            logger.exception(e)
             return Response(
                 data={"message": "Something went wrong \U0001F9D0"},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR,
@@ -67,6 +71,7 @@ class GetLatestTrack:
                 status=status.HTTP_404_NOT_FOUND,
             )
         except Exception as e:
+            logger.exception(e)
             return Response(
                 data={"message": "Something went wrong \U0001F9D0", "track": None},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR,
@@ -90,6 +95,7 @@ class GetLatestCohortForStudent:
                 status=status.HTTP_404_NOT_FOUND,
             )
         except Exception as e:
+            logger.exception(e)
             return Response(
                 data={"message": "Something went wrong \U0001F9D0"},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR,
@@ -107,6 +113,7 @@ class TrackCourseSerializer:
                 status=status.HTTP_404_NOT_FOUND,
             )
         except Exception as e:
+            logger.exception(e)
             return Response(
                 data={"message": "Something went wrong \U0001F9D0"},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR,
@@ -131,7 +138,7 @@ class GetStudentTrackCourses:
                 status=status.HTTP_404_NOT_FOUND,
             )
         except Exception as e:
-            print(e)
+            logger.exception(e)
             return Response(
                 data={"message": "Something went wrong \U0001F9D0"},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR,
@@ -162,6 +169,7 @@ class ChangeStudentMentor:
                 status=status.HTTP_404_NOT_FOUND,
             )
         except Exception as e:
+            logger.exception(e)
             return Response(
                 data={"message": "Something went wrong \U0001F9D0"},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR,

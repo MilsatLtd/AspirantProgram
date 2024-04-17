@@ -57,7 +57,7 @@ class GetAndUpdateCohortView(mixins.RetrieveModelMixin,
     
     @swagger_auto_schema(operation_summary="Delete a cohort by its cohort_id")
     def delete(self, request, cohort_id):
-        return DeleteCohort().delete(cohort_id)
+        return DeleteCohort().delete(cohort_id, disable=False)
 
 
 class ApplytoLiveCohortView(CreateAPIView):

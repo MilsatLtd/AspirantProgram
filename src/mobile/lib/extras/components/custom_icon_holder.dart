@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class CustomHolder extends StatelessWidget {
@@ -22,8 +21,8 @@ class CustomHolder extends StatelessWidget {
         GestureDetector(
           onTap: onTap,
           child: Container(
-            height: 48.h,
-            width: 48.w,
+            height: 48,
+            width: 48,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               color: color,
@@ -33,18 +32,18 @@ class CustomHolder extends StatelessWidget {
             ),
           ),
         ),
-        SizedBox(
-          height: 8.h,
+        const SizedBox(
+          height: 8,
         ),
         Text(
           label,
           style: GoogleFonts.inter(
-            fontSize: 10.sp,
+            fontSize: 10,
             fontWeight: FontWeight.w500,
           ),
         ),
-        SizedBox(
-          height: 56.h,
+        const SizedBox(
+          height: 56,
         ),
       ],
     );

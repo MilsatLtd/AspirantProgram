@@ -9,124 +9,45 @@ def format_timestamp(timestamp):
     return formatted_timestamp
 
 def application_message(application, password):
-    if application.role == ROLE.STUDENT.value:
-        role = "student"
-    elif application.role == ROLE.MENTOR.value:
-        role = "mentor"
+    cohort_name = str(application.track.cohort.name)
+    if 'cohort' not in cohort_name.lower():
+        cohort_name = f"{cohort_name} Cohort"
+        cohort_name = cohort_name.upper()
+
+    if application.role == ROLE.MENTOR.value:
+        role = "Mentor"
+    elif application.role == ROLE.STUDENT.value:
+        role = "Student"
+    
     return {"subject":
-            f"Acceptance to MAP Cohort",
+            f"Welcome to the Milsat Aspirant Programme!",
 
             "body":
             f"""
-Hi {application.user.first_name},
+Dear {application.user.first_name},
 
-Congratulations, your application to join the {application.track.name} track as a {role} has been accepted.
+We're thrilled to inform you that your application for the Milsat Aspirant Programme has been successfully reviewed, and it is with great pleasure that we extend our warmest congratulations on your admission to the {cohort_name} as a {role}.
 
-Cohort Name: {application.track.cohort.name}
-Cohort starts on {format_timestamp(application.track.cohort.start_date)} and ends on {format_timestamp(application.track.cohort.end_date)}.
+Your journey with us begins on {format_timestamp(application.track.cohort.start_date)}, and concludes on {format_timestamp(application.track.cohort.end_date)}.
 
-Your login details are:
-Email: {application.user.email}
-Password: {password}
+To ensure you make the most of your experience, we have prepared a starter pack for you:
 
-You can login to the mobile app using the above credentials.
+1. Kindly take a moment to fill out this form: https://forms.gle/yttJAz4xSYGVQufp9
 
-After logging in, change your password to something you can remember.
+2. Proceed to download the Milsat Aspirant Programme mobile application either from the Play Store or via the following link: https://play.google.com/store/apps/details?id=com.milsat.apirant&pcampaignid=web_share
 
-Regards,
-MAP Admin
+3. Additionally, make sure to download the manual for easy reference as you navigate through the app.
+Link to download the manual: https://drive.google.com/file/d/1ZxzoUM5EKpA_cDUOu5fWGtHmtDC3rXZC/view?usp=drive_link
 
-     """}
+Finally, below are your login credentials for the mobile application:
+-Email: {application.user.email}
+-Password: {password}
 
+Should you have any questions or require assistance, please don't hesitate to contact us at map.milsat@gmail.com.
 
-{
-    "name": "Geospatial Data Scientist",
-    "description": "I enjoy building spatial data science applications",
-    "courses": [
-        {
-            "name": "Introduction to Python",
-            "description": "You will learn how to use Python for data science",
-            "requirements": "Able to read and write in English",
-            "access_link": "https://milsat.africa"
-        },
-        {
-            "name": "Introduction to PostGIS",
-            "description": "You will learn how to use PostGIS for data science",
-            "requirements": "Able to read and write in English",
-            "access_link": "https://milsat.africa"
-        },
-        {
-            "name": "Introduction to QGIS",
-            "description": "You will learn how to use QGIS for data science",
-            "requirements": "Able to read and write in English",
-            "access_link": "https://milsat.africa"
-        }
-    ]
-}
+Best regards,
+MAP Admin.
 
-{
-    "name": "Geospatial Backend Engineer",
-    "description": "I enjoy building server-side spatial applications",
-    "courses": [
-        {
-            "name": "Introduction to Python",
-            "description": "Link to this course can be found in freecodecamp.com",
-            "requirements": "Able to read and write in English",
-            "access_link": "https://milsat.africa"
-        },
-        {
-            "name": "Introduction to Django",
-            "description": "Link to this course can be found in freecodecamp.com",
-            "requirements": "Able to read and write in English",
-            "access_link": "https://milsat.africa"
-        },
-        {
-            "name": "Introduction to PostGIS",
-            "description": "Link to this course can be found in freecodecamp.com",
-            "requirements": "Able to read and write in English",
-            "access_link": "https://milsat.africa"
-        }
-    ]
-}
-
-{
-    "name": "Geospatial Frontend Engineer",
-    "description": "I enjoy building client-side spatial applications",
-    "courses": [
-        {
-            "name": "Introduction to HTML/CSS",
-            "description": "Link to this course can be found in freecodecamp.com",
-            "requirements": "Able to read and write in English",
-            "access_link": "https://milsat.africa"
-        },
-        {
-            "name": "Introduction to Javascript",
-            "description": "Link to this course can be found in freecodecamp.com",
-            "requirements": "Able to read and write in English",
-            "access_link": "https://milsat.africa"
-        },
-        {
-            "name": "Introduction to React",
-            "description": "Link to this course can be found in freecodecamp.com",
-            "requirements": "Able to read and write in English",
-            "access_link": "https://milsat.africa"
-        },
-        {
-            "name": "Introduction to Mapbox",
-            "description": "Link to this course can be found in freecodecamp.com",
-            "requirements": "Able to read and write in English",
-            "access_link": "https://milsat.africa"
-        },
-        {
-            "name": "Introduction to Turf.js",
-            "description": "Link to this course can be found in freecodecamp.com",
-            "requirements": "Able to read and write in English",
-            "access_link": "https://milsat.africa"
-        }
-    ]
-}
+"""}
 
 
-# Add content to the main page
-# 
-# "fc29de0f-f23a-4d32-b1f4-77cbdf22a2ce", "3e7cec20-91b4-4810-b7bb-95c3f567439d", "35b17ae7-af0c-4d88-ad09-f317eaba8f13"

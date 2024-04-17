@@ -2,10 +2,11 @@
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:milsat_project_app/extras/components/shared_prefs/keys.dart';
+import 'package:milsat_project_app/extras/components/shared_prefs/utils.dart';
 import 'package:milsat_project_app/mentor/profile/profile.dart';
 
 import '../extras/components/files.dart';
-import 'more/blocker/all_blockers_mentor.dart';
 
 class MentorPageSkeleton extends StatefulWidget {
   const MentorPageSkeleton({super.key, required this.currentPage});
@@ -51,7 +52,7 @@ class _MentorPageSkeletonState extends State<MentorPageSkeleton> {
           children: [...pages],
         ),
         bottomNavigationBar: Container(
-          height: 56.h,
+          height: 56,
           decoration: BoxDecoration(
             border: Border.all(
               color: const Color(0xFFF2EBF3),
@@ -62,15 +63,15 @@ class _MentorPageSkeletonState extends State<MentorPageSkeleton> {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               Padding(
-                padding: EdgeInsets.only(top: 8.h),
+                padding: const EdgeInsets.only(top: 8),
                 child: CustomButtonNavBarItem(
                   image: SvgPicture.asset(
                     'assets/home_icon.svg',
                     color: firstTapped || widget.currentPage == 0
                         ? AppTheme.kPurpleColor2
                         : const Color(0xFF504D51),
-                    height: 16.h,
-                    width: 16.w,
+                    height: 16,
+                    width: 16,
                   ),
                   label: 'Home',
                   onPressed: () {
@@ -87,15 +88,15 @@ class _MentorPageSkeletonState extends State<MentorPageSkeleton> {
                 ),
               ),
               Padding(
-                padding: EdgeInsets.only(top: 8.h),
+                padding: const EdgeInsets.only(top: 8),
                 child: CustomButtonNavBarItem(
                   image: SvgPicture.asset(
                     'assets/profile_icon.svg',
                     color: secondTapped || widget.currentPage == 1
                         ? AppTheme.kPurpleColor2
                         : const Color(0xFF504D51),
-                    height: 16.h,
-                    width: 16.w,
+                    height: 16,
+                    width: 16,
                   ),
                   label: 'Profile',
                   onPressed: () {
@@ -120,73 +121,72 @@ class _MentorPageSkeletonState extends State<MentorPageSkeleton> {
                   });
                   showModalBottomSheet(
                       elevation: 1,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(16.r),
-                          topRight: Radius.circular(16.r),
-                        ),
-                      ),
                       context: context,
                       builder: (context) {
                         return Container(
-                          padding: EdgeInsets.symmetric(
-                            vertical: 16.h,
-                            horizontal: 16.w,
+                          padding: const EdgeInsets.symmetric(
+                            vertical: 16,
+                            horizontal: 16,
                           ),
-                          height: 256.h,
-                          color: AppTheme.kAppWhiteScheme,
+                          decoration: const BoxDecoration(
+                              color: AppTheme.kAppWhiteScheme,
+                              borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(16),
+                                topRight: Radius.circular(16),
+                              )),
+                          height: 256,
                           child: Column(
                             children: [
                               Container(
-                                height: 4.h,
-                                width: 42.w,
+                                height: 4,
+                                width: 42,
                                 decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(4.r),
+                                  borderRadius: BorderRadius.circular(4),
                                   color: AppTheme.kHintTextColor,
                                 ),
                               ),
-                              SizedBox(
-                                height: 24.h,
+                              const SizedBox(
+                                height: 24,
                               ),
                               MorePages(
                                 image: 'assets/blocker_icon.svg',
                                 onTap: () {
                                   AppNavigator.pop();
-                                  Navigator.push(context,
-                                      MaterialPageRoute(builder: (context) {
-                                    return const AllMentorBlockers();
-                                  }));
+                                  AppNavigator.navigateToAndReplace(
+                                      allMentorBlockertRoute);
                                 },
                                 pageName: 'Blockers',
                                 pageDescription:
                                     'View and respond to all blockers',
-                                width: 19.w,
+                                width: 19,
                               ),
-                              SizedBox(
-                                height: 24.h,
+                              const SizedBox(
+                                height: 24,
                               ),
                               MorePages(
                                 image: 'assets/report_icon.svg',
                                 onTap: () {
                                   AppNavigator.pop();
-                                  AppNavigator.navigateTo(mentorReportRoute);
+                                  AppNavigator.navigateToAndReplace(
+                                      mentorReportRoute);
                                 },
                                 pageName: 'Report',
                                 pageDescription: 'View mentee weekly report',
-                                width: 19.w,
+                                width: 19,
                               ),
-                              SizedBox(
-                                height: 24.h,
+                              const SizedBox(
+                                height: 24,
                               ),
                               MorePages(
                                 image: 'assets/meet_svg.svg',
                                 onTap: () {
                                   AppNavigator.pop();
-                                  AppNavigator.navigateTo(meetUpRoute);
+                                  AppNavigator.navigateToAndReplace(
+                                      meetUpRoute);
                                 },
                                 pageName: 'Meetup',
                                 pageDescription: 'Schedule meeting with mentee',
-                                width: 17.w,
+                                width: 17,
                               ),
                             ],
                           ),
@@ -204,7 +204,7 @@ class _MentorPageSkeletonState extends State<MentorPageSkeleton> {
                     Text(
                       'More',
                       style: GoogleFonts.raleway(
-                        fontSize: 13.sp,
+                        fontSize: 13,
                         color: moreTapped
                             ? AppTheme.kPurpleColor2
                             : const Color(0xFF504D51),
@@ -230,7 +230,7 @@ class _MentorPageSkeletonState extends State<MentorPageSkeleton> {
               'Do you want to sign out of the app?',
               style: GoogleFonts.raleway(
                 color: const Color(0xFF423B43),
-                fontSize: 15.sp,
+                fontSize: 15,
                 fontWeight: FontWeight.w600,
               ),
             ),
@@ -244,21 +244,29 @@ class _MentorPageSkeletonState extends State<MentorPageSkeleton> {
                   style: GoogleFonts.raleway(
                     color: AppTheme.kPurpleColor,
                     fontWeight: FontWeight.w600,
-                    fontSize: 15.sp,
+                    fontSize: 15,
                   ),
                 ),
               ),
               TextButton(
                 onPressed: () {
                   Navigator.pop(context, true);
-                  AppNavigator.navigateTo(loginRoute);
+                  SecureStorageUtils.deleteAnyDataFromStorage(
+                      SharedPrefKeys.accessToken);
+                  SecureStorageUtils.deleteAnyDataFromStorage(
+                      SharedPrefKeys.tokenResponse);
+                  SecureStorageUtils.deleteAnyDataFromStorage(
+                      SharedPrefKeys.profileResponse);
+                  SecureStorageUtils.deleteAnyDataFromStorage(
+                      SharedPrefKeys.refreshToken);
+                  AppNavigator.navigateToAndClear(loginRoute);
                 },
                 child: Text(
                   'Yes',
                   style: GoogleFonts.raleway(
                     color: AppTheme.kPurpleColor,
                     fontWeight: FontWeight.w600,
-                    fontSize: 15.sp,
+                    fontSize: 15,
                   ),
                 ),
               ),

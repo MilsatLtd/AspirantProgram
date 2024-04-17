@@ -14,6 +14,7 @@ class AuthModelBackend(ModelBackend):
         if username is None or password is None:
             return
         try:
+            username = username.lower()
             user = UserModel._default_manager.get_by_natural_key(username)
         except UserModel.DoesNotExist:
             # Run the default password hasher once to reduce the timing

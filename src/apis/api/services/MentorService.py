@@ -3,6 +3,9 @@ from rest_framework.response import Response
 from ..models import User, Mentors, Track
 from ..serializers import UserSerializer, MentorSerializer, GetLatestTrackSerializer, GetMentorSerializer
 from django.utils import timezone
+import logging
+
+logger = logging.getLogger(__name__)
 
 class GetMentor:
     def get(self, user_id):
@@ -22,6 +25,7 @@ class GetMentor:
                 status=status.HTTP_404_NOT_FOUND,
             )
         except Exception as e:
+            logger.exception(e)
             return Response(
                 data={"message": "Something went wrong \U0001F9D0"},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR,
@@ -38,6 +42,7 @@ class GetMentor:
                 status=status.HTTP_404_NOT_FOUND,
             )
         except Exception as e:
+            logger.exception(e)
             return Response(
                 data={"message": "Something went wrong \U0001F9D0"},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR,
@@ -65,6 +70,7 @@ class GetLatestTrack:
                 status=status.HTTP_404_NOT_FOUND,
             )
         except Exception as e:
+            logger.exception(e)
             return Response(
                 data={"message": "Something went wrong \U0001F9D0", "track": None},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR,

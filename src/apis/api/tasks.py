@@ -1,7 +1,11 @@
 from celery import shared_task
+import html2text
+from django.core.mail import send_mail
+from django.conf import settings
 from .models import Cohort
 from .common.enums import *
 import logging
+
 
 logger = logging.getLogger(__name__)
 
@@ -28,3 +32,23 @@ def cohort_live_to_end(cohort_id):
             cohort.save()
     except Exception as e:
         logger.exception(e)
+
+def send_html_email_task(subject=None, recipient=None, message=None):
+    try:
+        sender = settings.EMAIL_HOST_USER
+        plaintext = html2text.HTML2Text().handle(message)
+        send_mail(subject, plaintext, sender, recipient, html_message=message, fail_silently=False)
+    except Exception as e:
+        logger.exception(e)
+
+@shared_task(bind=True, max_retries=1, default_retry_delay=1 )
+def send_html_email_task2(self, subject=None, recipient=None, message=None):
+    try:
+        import time
+        time.sleep(30)
+        sender = settings.EMAIL_HOST_USER
+        plaintext = html2text.HTML2Text().handle(message)   
+        send_mail(subject, plaintext, sender, recipient, html_message=message, fail_silently=False)
+    except Exception as e:
+        logger.exception(e)
+        raise e

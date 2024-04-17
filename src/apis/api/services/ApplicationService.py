@@ -2,10 +2,12 @@ from rest_framework import status
 from rest_framework.response import Response
 from django.utils import timezone
 from api.common.constants import application_message
+from django.db.models import Count
+
 
 from api.common.enums import *
 from api.models import User, Applications, Mentors, Students
-from api.serializers import UserSerializer, ApplicationSerializer, CreateApplicationSerializer
+from api.serializers import UserSerializer, ApplicationSerializer, CreateApplicationSerializer, ApplicationSerializer2
 from api.common.utils import sendEmail
 import logging
 
@@ -32,9 +34,10 @@ class GetAllApplications:
     def get(self):
         try:
             users = Applications.objects.all()
-            users_serializer = ApplicationSerializer(users, many=True)
+            users_serializer = ApplicationSerializer2(users, many=True)
             return Response(users_serializer.data, status=status.HTTP_200_OK)
         except Exception as e:
+            logger.exception(e)
             return Response(
                 data={"message": "Something went wrong \U0001F9D0"},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR)
@@ -48,7 +51,7 @@ class GetApplicationById:
     def get(self):
         try:
             user = Applications.objects.get(user_id=self.user_id)
-            user_serializer = ApplicationSerializer(user)
+            user_serializer = ApplicationSerializer2(user)
             return Response(user_serializer.data, status=status.HTTP_200_OK)
         except User.DoesNotExist:
             return Response(
@@ -56,6 +59,7 @@ class GetApplicationById:
                     self.user_id)},
                 status=status.HTTP_404_NOT_FOUND)
         except Exception as e:
+            logger.exception(e)
             return Response(
                 data={"message": "Something went wrong \U0001F9D0"},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR)
@@ -90,7 +94,7 @@ class ReviewApplication:
                     applicant_id)},
                 status=status.HTTP_404_NOT_FOUND)
         except Exception as e:
-            print(e)
+            logger.exception(e)
             return Response(
                 data={"message": "Something went wrong \U0001F9D0"},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR)
@@ -101,8 +105,9 @@ class ReviewApplication:
         new_mentor = Mentors.objects.create(user=user, track=track)
         password = self.set_mentor_password(user)
         new_mentor.save()
+        logger.info(f"Added a new mentor to the track: {track.track_id} with email: {user.email} and password: {password}")
         message = application_message(application, password)
-        sendEmail(user.email, message['subject'], message['body'])
+        sendEmail.delay(user.email, message['subject'], message['body'])
 
     def set_mentor_password(self, user):
         password = self.generate_mentor_password()
@@ -124,14 +129,39 @@ class ReviewApplication:
         new_student = Students.objects.create(user=user, track=track)
         new_student.mentor = self.select_mentor(track)
         new_student.save()
+        logger.info(f"Added a new student to the track: {track.track_id} with email: {user.email} and password: {user.password}")
         message = application_message(application, user.phone_number)
-        sendEmail(user.email, message['subject'], message['body'])
+        sendEmail.delay(user.email, message['subject'], message['body'])
 
     def select_mentor(self, track):
-        mentor = Mentors.objects.filter(
-            track=track).order_by('mentees').first()
+        mentor = Mentors.objects.annotate(num_mentees=Count('mentees')).filter(track=track).order_by('num_mentees').first()
         return mentor
 
     def update_track(self, track):
         track.enrolled_count += 1
         track.save()
+
+class GetApplicationStats:
+    def get(self, cohort_id):
+        try:
+            applications = Applications.objects.filter(cohort_id=cohort_id)
+            stats = {
+                "cohort_id": cohort_id,
+                "number_of_interns": applications.filter(role=ROLE.STUDENT.value).count(),
+                "number_of_mentors": applications.filter(role=ROLE.MENTOR.value).count(),
+                "number_of_male_interns": applications.filter(role=ROLE.STUDENT.value, user__gender = GENDER.MALE.value).count(),
+                "number_of_female_interns": applications.filter(role=ROLE.STUDENT.value, user__gender = GENDER.FEMALE.value).count(),
+                "number_of_male_mentors": applications.filter(role=ROLE.MENTOR.value, user__gender = GENDER.MALE.value).count(),
+                "number_of_female_mentors": applications.filter(role=ROLE.MENTOR.value, user__gender = GENDER.FEMALE.value).count()
+            }
+            return Response(stats, status=status.HTTP_200_OK)
+        except Applications.DoesNotExist:
+            return Response(
+                data={"message": "Cohort with id: {} does not exist \U0001F636".format(
+                    cohort_id)},
+                status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            logger.exception(e)
+            return Response(
+                data={"message": "Something went wrong \U0001F9D0"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR)

@@ -74,7 +74,8 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
     "https://localhost:5173",
     "http://localhost:3000",
-    "https://localhost:3000"
+    "https://localhost:3000",
+    "http://localhost:9000"
 ]
 
 
@@ -86,7 +87,8 @@ CSRF_TRUSTED_ORIGINS = [
     "http://localhost:5173",
     "https://localhost:5173",
     "http://localhost:3000",
-    "https://localhost:3000"
+    "https://localhost:3000",
+    "http://localhost:9000"
 ]
 
 
@@ -185,8 +187,6 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = "en-us"
 
-TIME_ZONE = "Africa/Lagos"
-
 USE_I18N = True
 
 USE_TZ = True
@@ -209,9 +209,10 @@ CELERY_RESULT_BACKEND = os.environ.get("REDIS_DB", "")
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TASK_SERIALIZER = 'json'
-CELERY_ACCEPT_CONTENT = ['json']
-CELERY_TIMEZONE = 'Africa/Lagos'
 CELERY_ENABLE_UTC = False
+CELERY_TIMEZONE = 'Africa/Lagos'
+CELERY_TASK_RESULT_EXPIRES = None
+
 
 
 AUTHENTICATION_BACKENDS = [
@@ -289,13 +290,20 @@ LOGGING = {
             'class': 'logging.StreamHandler',
         },
         'file': {
-            'level': 'ERROR',
+            'level': 'INFO',
             'class': 'logging.FileHandler',
             'filename': 'c:\temp\map.log',
         },
     },
     'root': {
-        'handlers': ['slack'],
-        'level': 'ERROR', 
+        'handlers': ['slack', 'file'],
+        'level': 'INFO', 
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['file', 'slack' ],
+            'level': 'ERROR',
+            'propagate': True,
+        },
     },
 }

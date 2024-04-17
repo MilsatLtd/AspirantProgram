@@ -68,6 +68,34 @@ class CourseSerializer(serializers.Serializer):
         track = Track.objects.get(track_id=track_id)
         course = Course.objects.create(track=track, **validated_data)
         return course
+
+class CourseSerializer2(serializers.Serializer):
+    course_id = serializers.UUIDField(read_only=True)
+    name = serializers.CharField(max_length=200)
+    description = serializers.CharField(max_length=500)
+    requirements = serializers.CharField(max_length=500)
+    access_link = serializers.CharField(max_length=500)
+    
+class AddCourseToTrackSerializer(serializers.Serializer):
+    # add track_id and list of courses
+    track_id = serializers.UUIDField()
+    courses = CourseSerializer2(many=True)
+
+    def create(self, validated_data):
+        track_id = validated_data.pop('track_id')
+        track = Track.objects.get(track_id=track_id)
+        courses = validated_data.pop('courses')
+        for course in courses:
+            Course.objects.create(track=track, **course)
+        return track
+    
+    # add validation to ensure each course is unique from all other courses in the track
+    def validate(self, data):
+        courses = data.get('courses')
+        for course in courses:
+            if Course.objects.filter(name=course.get('name'), track=data.get('track_id')).exists():
+                raise serializers.ValidationError({"message":"A course with this name already exists in this track \U0001F636"})
+        return super(AddCourseToTrackSerializer, self).validate(data)
     
 class CourseUpdateSerializer(serializers.Serializer):
     course_id = serializers.UUIDField()
@@ -111,6 +139,11 @@ class TrackSerializer(serializers.ModelSerializer):
                 edit_course.access_link = course_data.get(
                     'access_link', edit_course.access_link)
                 edit_course.save()
+
+        for course in instance.courses.all():
+            if str(course.course_id) not in [course_data.get('course_id') for course_data in courses]:
+                course.delete()
+
         return instance
 
 class TrackSerializerAnonymous(serializers.ModelSerializer):
@@ -129,10 +162,10 @@ class TrackSerializerAnonymous(serializers.ModelSerializer):
 
 class CreateCohortSerializer(serializers.Serializer):
     name = serializers.CharField(max_length=30)
-    start_date = serializers.DateTimeField(format='%Y-%m-%d %H:%M:%S')
-    end_date = serializers.DateTimeField(format='%Y-%m-%d %H:%M:%S')
-    apply_start_date = serializers.DateTimeField(format='%Y-%m-%d %H:%M:%S')
-    apply_end_date = serializers.DateTimeField(format='%Y-%m-%d %H:%M:%S')
+    start_date = serializers.DateTimeField(format='%Y-%m-%d %H:%M:%S', default_timezone=pytz.utc)
+    end_date = serializers.DateTimeField(format='%Y-%m-%d %H:%M:%S', default_timezone=pytz.utc)
+    apply_start_date = serializers.DateTimeField(format='%Y-%m-%d %H:%M:%S', default_timezone=pytz.utc)
+    apply_end_date = serializers.DateTimeField(format='%Y-%m-%d %H:%M:%S', default_timezone=pytz.utc)
     tracks = serializers.PrimaryKeyRelatedField(
         many=True, queryset=Track.objects.all())
 
@@ -149,7 +182,8 @@ class CreateCohortSerializer(serializers.Serializer):
                     name=track.name, description=track.description, cohort=cohort, parent=track)
                 for course in track.courses.all():
                     Course.objects.create(
-                        name=course.name, description=course.description, track=new_track)
+                        name=course.name, description=course.description, track=new_track, order=course.order,
+                        access_link=course.access_link, requirements=course.requirements)
             return cohort
         except Exception as e:
             cohort.delete()
@@ -191,6 +225,10 @@ class CreateCohortSerializer(serializers.Serializer):
                 raise serializers.ValidationError(
                     {"message":"Cohort cannot overlap with another cohort \U0001F636"})
         return super(CreateCohortSerializer, self).validate(data)
+    
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        return format_tz_repr(instance, representation)
 
 
 class CohortSerializer(serializers.Serializer):
@@ -281,6 +319,13 @@ class CohortSerializer(serializers.Serializer):
                     {"message": "Cohort cannot overlap with another cohort \U0001F636"})
         return super(CohortSerializer, self).validate(data)
 
+def format_tz_repr(instance, representation):
+    utc_plus_one = pytz.timezone('Africa/Lagos')
+    for field in instance._meta.get_fields():
+        value = getattr(instance, field.name, None)
+        if isinstance(value, datetime) and value is not None:
+            representation[field.name] = value.astimezone(utc_plus_one).isoformat()
+    return representation
 
 class OpenCohortSerializer(serializers.ModelSerializer):
     tracks = TrackSerializer(many=True, read_only=True)
@@ -288,6 +333,23 @@ class OpenCohortSerializer(serializers.ModelSerializer):
     class Meta:
         model = Cohort
         fields = '__all__'
+    
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        return format_tz_repr(instance, representation)
+
+class TrackSerializer2(serializers.ModelSerializer):
+    class Meta:
+        model = Track
+        fields = ['track_id', 'name']
+
+class ApplicationSerializer2(serializers.ModelSerializer):
+    track = TrackSerializer2()
+    user = UserSerializer()
+    class Meta:
+        model = Applications
+        fields = ['applicant_id', 'user', 'reason', 'referral', 'skills', 'purpose',
+                  'education', 'submission_date', 'review_date', 'role', 'track', 'cohort', 'status', 'file']
 
 
 class ApplicationSerializer(serializers.ModelSerializer):
@@ -343,11 +405,11 @@ class CreateApplicationSerializer(serializers.Serializer):
     gender = serializers.ChoiceField(
         [(gender.value, gender.name) for gender in GENDER])
     country = serializers.CharField(max_length=30)
-    phone_number = serializers.CharField(max_length=30)
-    reason = serializers.CharField(max_length=100)
+    phone_number = serializers.CharField(max_length=11)
+    reason = serializers.CharField()
     referral = serializers.CharField(max_length=100)
     skills = serializers.CharField(max_length=100)
-    purpose = serializers.CharField(max_length=100)
+    purpose = serializers.CharField()
     education = serializers.ChoiceField(
         [(education.value, education.name) for education in EDUCATION])
     role = serializers.ChoiceField([(role.value, role.name) for role in ROLE])
@@ -717,6 +779,13 @@ class TrackSerializer_C(serializers.ModelSerializer):
 
     courses = CourseSerializer_C(many=True)
 
+    # order courses by order number
+    def to_representation(self, instance):
+        repr_ = super().to_representation(instance)
+        repr_['courses'] = sorted(
+            repr_['courses'], key=lambda x: x['order'])
+        return repr_
+
     class Meta:
         model = Track
         fields = ['track_id', 'name', 'description', 'courses']
@@ -819,3 +888,20 @@ class ChangeMentorSerializer(serializers.Serializer):
     student_id = serializers.UUIDField(required=True)
     mentor_id = serializers.UUIDField(required=True)
     track_id = serializers.UUIDField(required=True)
+
+class SendAnyEmailSerializer(serializers.Serializer):
+    email = serializers.EmailField(required=True)
+    subject = serializers.CharField(required=True)
+    message = serializers.CharField(required=True)
+
+class ReorderTrackCoursesSerializer(serializers.Serializer):
+    courses = serializers.ListField(child=serializers.UUIDField())
+
+class ApplicationStatsSerializer(serializers.Serializer):
+    cohort_id = serializers.UUIDField(required=True)
+    number_of_interns = serializers.IntegerField()
+    number_of_mentors = serializers.IntegerField()
+    number_of_male_interns = serializers.IntegerField()
+    number_of_female_interns = serializers.IntegerField()
+    number_of_male_mentors = serializers.IntegerField()
+    number_of_female_interns = serializers.IntegerField()

@@ -19,6 +19,8 @@ urlpatterns = [
     path("auth/login", TokenObtainPairView.as_view(), name="login"),
     path("auth/refresh", TokenRefreshView.as_view(), name="refresh"),
     path("auth/password/change", ChangePasswordView.as_view(), name="changePassword"),
+    path('auth/forgot_password', PasswordReset.as_view(), name='password_reset'),
+    path('auth/reset_password/', PasswordResetConfirm.as_view(), name='password_reset_confirm'),
 ]
 
 urlpatterns += [
@@ -52,7 +54,7 @@ urlpatterns += [
         name="listCreateComment",
     ),
     path(
-        "blockers/comments/<uuid:comment_id>",
+        "blockers/comments/update/<uuid:comment_id>",
         CommentRetrieveUpdateDestroyView.as_view(),
         name="retrieveUpdateDestroyComment",
     ),
@@ -108,6 +110,12 @@ urlpatterns += [
     path(
         "tracks/delete/<uuid:track_id>", DeleteTrackView.as_view(), name="deleteTrack"
     ),
+    # add endpoint to reorder courses
+    path(
+        "tracks/reorder/<uuid:track_id>",
+        ReorderTrackCoursesView.as_view(),
+        name="reorderTrackCourses",
+    ),
     path("applications/", ListApplication.as_view(), name="createApplication"),
     path(
         "applications/<uuid:applicant_id>",
@@ -118,6 +126,11 @@ urlpatterns += [
         "applications/cohorts/open",
         GetOpenApplyCohortView.as_view(),
         name="getOpenApplications",
+    ),
+    path(
+        "applications/stats/<uuid:cohort_id>",
+        GetApplicationStatsView.as_view(),
+        name="getApplicationStats",
     ),
     path(
         "students/<uuid:user_id>/<uuid:track_id>",
@@ -158,4 +171,6 @@ urlpatterns += [
         GetMentorLatestTrackView.as_view(),
         name="getMentorTrack",
     ),
+    path("email", SendAnyEmailView.as_view(), name="sendEmail"),
+    path("email_async_test", SendAnyEmailViewAsync.as_view(), name="sendEmailAsyncTest"),
 ]

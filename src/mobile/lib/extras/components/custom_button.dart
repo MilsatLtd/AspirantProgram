@@ -14,7 +14,7 @@ class CustomButton extends StatelessWidget {
 
   final double height;
   final double width;
-  final Function() pressed;
+  final Function()? pressed;
   final Widget child;
   final Color color;
   final double? elevation;

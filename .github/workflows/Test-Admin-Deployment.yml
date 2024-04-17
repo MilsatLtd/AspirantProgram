@@ -1,0 +1,58 @@
+name: Deploy Admin Page
+
+on:
+  pull_request:
+     branches: [ "main" ]
+     paths: ["src/admin/**"]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Rsync files to server
+        uses: easingthemes/ssh-deploy@main
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_KEY }}
+          REMOTE_HOST: ${{ secrets.SERVER_IP }}
+          REMOTE_USER: ${{ secrets.SERVER_USER }}
+          REMOTE_PORT: ${{ secrets.SERVER_PORT }}
+          ARGS: "-avzr --delete"
+          SOURCE: "src/admin/"
+          TARGET: "~/test-aspirant-program/src/admin/"
+
+      - name: SSH and Build on Server
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SERVER_IP }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+           export NVM_DIR="/home/ubuntu/.nvm"
+           [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+            cd ~/test-aspirant-program/src/admin/
+            npm install
+            npm run build
+            cd dist/
+            tmux kill-session -t test-admin-app 2>/dev/null || true
+            tmux new -d -s test-admin-app "serve -s -l 3003"
+
+      - name: Add HTTPS endpoint to PR comment
+        uses: mshick/add-pr-comment@v2
+        with:
+          message: |
+            checkout your changes to the Test environment URL: [test-admin-asp.milsat.africa](https://test-admin-asp.milsat.africa)
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          repo-token-user-login: "github-actions[bot]"
+          allow-repeats: true
+          
+      - name: Review PR file(s) with chat-gpt
+        uses: anc95/ChatGPT-CodeReview@main
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          OPENAI_API_KEY: ${{ secrets.TEMP_OPEN_AI_KEY }}
+          OPENAI_API_ENDPOINT: https://api.openai.com/v1
+          MODEL: gpt-3.5-turbo
+          LANGUAGE: English

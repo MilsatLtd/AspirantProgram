@@ -28,6 +28,7 @@ class ApiService {
     final url = '${Env.apiUrl}/api/tracks/cohort/$id';
     try {
       final response = await dio.get(url);
+      
       if (kDebugMode) {
         print(response.data);
       }
@@ -36,14 +37,11 @@ class ApiService {
       return response;
     } on DioError catch (e) {
       if (e.response != null) {
-        // Request was made and server responded with a status code
         return e.response!;
       } else {
-        // Request was made but no response received or request failed before it could complete
         throw Exception('Error making request: ${e.message}');
       }
     } catch (e) {
-      // Catch any other errors
       throw Exception('Error making request: ${e.toString()}');
     }
   }

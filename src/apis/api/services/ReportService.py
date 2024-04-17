@@ -3,23 +3,38 @@ from rest_framework.response import Response
 from ..models import Report, Mentors
 from ..serializers import ReportSerializer
 from django.utils import timezone
+import logging
 
-
+logger = logging.getLogger(__name__)
 
 class CreateReportService:
     def create_report(self, request):
-        serializer = ReportSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        try:
+            serializer = ReportSerializer(data=request.data)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            logger.exception(e)
+            return Response(
+                data={"message": "Something went wrong \U0001F9D0"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )
     
 class ListReportService:
     def get(self, request):
-        reports = Report.objects.all()
-        serializer = ReportSerializer(reports, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-    
+        try:
+            reports = Report.objects.all()
+            serializer = ReportSerializer(reports, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except Exception as e:
+            logger.exception(e)
+            return Response(
+                data={"message": "Something went wrong \U0001F9D0"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )
+        
 
 class GetReportByReportIdService:
     def get(self, request, report_id):
@@ -33,6 +48,7 @@ class GetReportByReportIdService:
                 status=status.HTTP_404_NOT_FOUND,
             )
         except Exception as e:
+            logger.exception(e)
             return Response(
                 data={"message": "Something went wrong \U0001F9D0"},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR,
@@ -52,7 +68,7 @@ class ListStudentReportService:
                 status=status.HTTP_404_NOT_FOUND,
             )
         except Exception as e:
-            print(e)
+            logger.exception(e)
             return Response(
                 data={"message": "Something went wrong \U0001F9D0"},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR,
@@ -91,7 +107,7 @@ class ReportFeedbackService:
                 status=status.HTTP_404_NOT_FOUND,
             )
         except Exception as e:
-            print(e)
+            logger.exception(e)
             return Response(
                 data={"message": "Something went wrong \U0001F9D0"},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR,
@@ -115,7 +131,7 @@ class ListMentorReportService:
                 status=status.HTTP_404_NOT_FOUND,
             )
         except Exception as e:
-            print(e)
+            logger.exception(e)
             return Response(
                 data={"message": "Something went wrong \U0001F9D0"},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR,

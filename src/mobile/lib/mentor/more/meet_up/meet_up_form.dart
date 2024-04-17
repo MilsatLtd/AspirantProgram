@@ -34,9 +34,9 @@ class MeetupFormField extends StatelessWidget {
         hintStyle: GoogleFonts.raleway(
           color: const Color(0xFFB7B6B8),
         ),
-        contentPadding: EdgeInsets.symmetric(
-          horizontal: 16.w,
-          vertical: 10.h,
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 16,
+          vertical: 10,
         ),
       ),
     );

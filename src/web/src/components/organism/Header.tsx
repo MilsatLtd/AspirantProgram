@@ -58,7 +58,7 @@ const Header = (props: headerType) => {
       }
 
       </div>
-      <div className="col-span-1 lg:hidden flex justify-end transition-all delay-150 ease-in-out">
+      <div className="col-span-1 lg:hidden flex justify-end cursor-pointer transition-all delay-150 ease-in-out">
         {
           showMenu?
           <Image src={CloseIcon} alt="close-icon" className="h-auto w-auto" 

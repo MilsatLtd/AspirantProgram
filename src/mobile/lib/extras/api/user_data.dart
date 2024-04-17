@@ -1,18 +1,15 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:milsat_project_app/extras/components/files.dart';
+import 'package:milsat_project_app/extras/components/shared_prefs/keys.dart';
+import 'package:milsat_project_app/extras/components/shared_prefs/utils.dart';
 import 'package:milsat_project_app/extras/env.dart';
 import 'package:milsat_project_app/extras/models/aspirant_model.dart';
 
 final dioProvider = Provider<Dio>((ref) {
   final dio = Dio();
-  dio.options.headers['accept'] = 'application/json';
-  dio.options.headers['Authorization'] = 'Bearer ${cred['access']}';
-  dio.options.headers['X-CSRFToken'] =
-      'ZGguWASI6mZhHePPV4OGg29PkABNDWfjBxmgTmHUNlyJLpymKmreQn15GTibCfw6';
   return dio;
 });
 
@@ -29,18 +26,27 @@ class ApiService {
   AspirantModelClass aspirantData = AspirantModelClass();
   CourseModel courses = CourseModel();
 
-  Future<AspirantModelClass?> getUserData(String id) async {
-    final url = '${Env.apiUrl}/api/students/$id';
+  Future<AspirantModelClass?> getUserData(String? id) async {
     try {
-      final response = await dio.get(url);
+      String? token =
+          await SecureStorageUtils.getString(SharedPrefKeys.accessToken);
+      final response = await Dio().get(
+        '${Env.apiUrl}/api/students/$id',
+        options: Options(
+          headers: {
+            'accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer $token'
+          },
+        ),
+      );
 
       switch (response.statusCode) {
         case 200:
-          if (kDebugMode) {
-            print('success');
-          }
           AspirantModelClass aspirantData =
               AspirantModelClass.fromJson(response.data);
+          SecureStorageUtils.saveDataToStorage(SharedPrefKeys.userData,
+              aspirantData, (data) => data.toJsonString());
           return aspirantData;
 
         case 404:
@@ -60,77 +66,94 @@ class ApiService {
         throw ('${e.response}');
       }
     } catch (e) {
-      if (kDebugMode) {
-        print(e);
-      }
+      throw Exception('Error making request: ${e.toString()}');
     }
     return aspirantData;
   }
 
-  Future<MentorData> getMentorData(String id) async {
+  Future<MentorData> getMentorData(String? id) async {
     final url = '${Env.apiUrl}/api/mentors/$id';
     try {
-      final response = await dio.get(url);
-
+      String? token =
+          await SecureStorageUtils.getString(SharedPrefKeys.accessToken);
+      final response = await dio.get(
+        url,
+        options: Options(
+          headers: {
+            'accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer $token'
+          },
+        ),
+      );
       switch (response.statusCode) {
         case 200:
-          if (kDebugMode) {
-            print('success');
-          }
           MentorData mentorData = MentorData.fromJson(response.data);
+          SecureStorageUtils.saveDataToStorage(SharedPrefKeys.mentorUserData,
+              mentorData, (data) => data.toJsonString());
           return mentorData;
 
         case 404:
           throw ('Invalid userId');
       }
-    } catch (e) {
-      if (kDebugMode) {
-        print('failed');
-      }
-    }
-    return mentorData;
-  }
-
-  Future<Response> getSubmmittedReport_() async {
-    const url = '${Env.apiUrl}/api/reports/';
-    try {
-      final response = await dio.get(url);
-      if (kDebugMode) {
-        print(response.data);
-      }
-      cred['reports'] = response.data;
-      return response;
     } on DioError catch (e) {
-      if (e.response != null) {
-        return e.response!;
+      if (e.response?.statusCode == 401) {
+        throw ('${e.response}');
+      } else if (e.error is SocketException) {
+        throw ('${e.response}');
+      } else if (e.type == DioErrorType.connectionTimeout ||
+          e.type == DioErrorType.receiveTimeout) {
+        throw ('${e.response}');
+      } else if (e.response?.statusCode == 404) {
+        throw ('${e.response}');
       } else {
-        throw Exception('Error making request: ${e.message}');
+        throw ('${e.response}');
       }
     } catch (e) {
       throw Exception('Error making request: ${e.toString()}');
     }
+    return mentorData;
   }
 
   Future<CourseModel> getTrackCourses(String id, String trackId) async {
     final url = '${Env.apiUrl}/api/students/courses/$id/$trackId';
     try {
-      final response = await dio.get(url);
+      String? token =
+          await SecureStorageUtils.getString(SharedPrefKeys.accessToken);
+      final response = await dio.get(
+        url,
+        options: Options(
+          headers: {
+            'accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer $token'
+          },
+        ),
+      );
 
       switch (response.statusCode) {
         case 200:
-          if (kDebugMode) {
-            print('success');
-          }
           CourseModel courses = CourseModel.fromJson(response.data);
           return courses;
 
         case 404:
           throw ('Invalid userId');
       }
-    } catch (e) {
-      if (kDebugMode) {
-        print('failed');
+    } on DioError catch (e) {
+      if (e.response?.statusCode == 401) {
+        throw ('${e.response}');
+      } else if (e.error is SocketException) {
+        throw ('${e.response}');
+      } else if (e.type == DioErrorType.connectionTimeout ||
+          e.type == DioErrorType.receiveTimeout) {
+        throw ('${e.response}');
+      } else if (e.response?.statusCode == 404) {
+        throw ('${e.response}');
+      } else {
+        throw ('${e.response}');
       }
+    } catch (e) {
+      throw Exception('Error making request: ${e.toString()}');
     }
     return courses;
   }

@@ -9,23 +9,17 @@ const monthNames = ["January", "February", "March", "April", "May", "June",
 
 const formatDate = (date) => {
   const d = new Date(date);
-  return `${d.getDate()}th ${monthNames[d.getMonth()]} ${d.getFullYear()}`;
+  return `${d.getDate()}th ${monthNames[d.getMonth()]} ${d.getFullYear()}, ${d.getHours()}:${d.getMinutes()} ${d.getHours() > 12 ? 'PM' : 'AM'}`;
 
 }
 
 
 const formatDateToISO = (date, time) => {
 // Combine the date and time strings into a single string in ISO 8601 format
-const dateTimeString = `${date}T${time}`;
-const localDateTime = new Date(dateTimeString);
-const options = { timeZone: 'Africa/Lagos' };
-const cetDateTimeString  = localDateTime.toLocaleString('en-US', options);
-// Create a new Date object from the combined string
-const isoDateTimeString = new Date(cetDateTimeString ).toISOString();
-console.log(isoDateTimeString)
+const dateTimeString = `${date}T${time}:00.000+01:00`;
 
 // Convert the Date object to a date-time string in ISO 8601 format
-return isoDateTimeString
+return dateTimeString
 
 }
 

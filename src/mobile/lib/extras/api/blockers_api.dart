@@ -1,21 +1,32 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:milsat_project_app/extras/components/shared_prefs/keys.dart';
+import 'package:milsat_project_app/extras/components/shared_prefs/utils.dart';
 import 'package:milsat_project_app/extras/env.dart';
+import 'package:milsat_project_app/extras/models/blocker_model.dart';
 
 import '../components/files.dart';
 
-final blockerProvider = Provider<APIService>((ref) => APIService());
+final dioBlockerProvider = Provider<Dio>((ref) {
+  final dio = Dio();
+  return dio;
+});
 
-final Dio dio = Dio();
+final apiBlockerServiceProvider = Provider.autoDispose<APIService>((ref) {
+  final dio = ref.watch(dioBlockerProvider);
+  return APIService(dio);
+});
 
 class APIService {
-  final headers = {
-    'accept': 'application/json',
-    'Authorization': 'Bearer ${cred['access']}',
-    'Content-Type': 'application/json',
-  };
-  Future<Response> postBlocker({
+  final Dio dio;
+
+  APIService(this.dio);
+
+  List<BlockerCommentModel>? comments;
+  BlockerCommentModel mentorComment = BlockerCommentModel();
+
+  Future<Map<String, dynamic>> postBlocker({
     required String trackId,
     required String userId,
     required String description,
@@ -33,17 +44,26 @@ class APIService {
     };
 
     try {
+      final token =
+          await SecureStorageUtils.getString(SharedPrefKeys.accessToken);
+      final headers = {
+        'accept': 'application/json',
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json',
+      };
       final response = await dio.post(
         url,
         options: Options(headers: headers),
         data: data,
       );
-      if (kDebugMode) {
-        print(response.data);
-      }
-      return response;
+      return response.data;
+    } on DioError catch (e) {
+      // Handle Dio errors
+      final errorMessage = _parseDioError(e);
+      return {'error': errorMessage};
     } catch (error) {
-      throw Exception('Failed to post blocker: $error');
+      // Handle generic errors
+      return {'error': 'Failed to post blocker: $error'};
     }
   }
 
@@ -66,6 +86,13 @@ class APIService {
     };
 
     try {
+      String? token =
+          await SecureStorageUtils.getString(SharedPrefKeys.accessToken);
+      final headers = {
+        'accept': 'application/json',
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json',
+      };
       final response = await dio.put(
         url,
         options: Options(headers: headers),
@@ -74,18 +101,18 @@ class APIService {
 
       if (response.statusCode == 200) {
         personalInfo['resolvedBlocker'] = response.data;
-        if (kDebugMode) {
-          print(response.data);
-        }
       }
-
+      message = ['Blocker Resolved Successfully'];
       return response;
+    } on DioError catch (e) {
+      message = ['${e.response?.data['message']}'];
+      throw Exception('Failed to post blocker: $e');
     } catch (error) {
       throw Exception('Failed to post blocker: $error');
     }
   }
 
-  Future<Response> replyABlocker({
+  Future<BlockerCommentModel> replyABlocker({
     required String message,
     required String userId,
     required String blocker,
@@ -99,24 +126,75 @@ class APIService {
     };
 
     try {
+      String? token =
+          await SecureStorageUtils.getString(SharedPrefKeys.accessToken);
+      final headers = {
+        'accept': 'application/json',
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json',
+      };
       final response = await dio.post(
         url,
         options: Options(headers: headers),
         data: data,
       );
-      if (kDebugMode) {
-        print(response.data);
-      }
-      personalInfo['blockerReply'] = response.data;
-      return response;
-    } catch (error) {
-      throw Exception('Failed to post reply: $error');
+
+      if (response.statusCode == 201) {
+        BlockerCommentModel mentorComment =
+            BlockerCommentModel.fromJson(response.data);
+        return mentorComment;
+      } else {}
+    } on DioError {
+      rethrow;
+    } catch (e) {
+      throw Exception('Error making request: ${e.toString()}');
     }
+    return mentorComment;
   }
 
-  Future<Response> getRaisedBlockers() async {
-    const url = '${Env.apiUrl}/api/blockers';
+  // Future<Response> getRaisedBlockers() async {
+  //   const url = '${Env.apiUrl}/api/blockers';
+  //   try {
+  //     String? token =
+  //         await SecureStorageUtils.getString(SharedPrefKeys.accessToken);
+  //     final headers = {
+  //       'accept': 'application/json',
+  //       'Authorization': 'Bearer $token',
+  //       'Content-Type': 'application/json',
+  //     };
+  //     final response = await dio.get(
+  //       url,
+  //       options: Options(headers: headers),
+  //     );
+  //     if (kDebugMode) {
+  //       print(response.data);
+  //     }
+  //     cred['blockers'] = response.data;
+  //     if (kDebugMode) {
+  //       print(response.data);
+  //     }
+  //     return response;
+  //   } on DioError catch (e) {
+  //     if (e.response != null) {
+  //       return e.response!;
+  //     } else {
+  //       throw Exception('Error making request: ${e.message}');
+  //     }
+  //   } catch (e) {
+  //     throw Exception('Error making request: ${e.toString()}');
+  //   }
+  // }
+
+  Future<Response> getRaisedBlockersById(String trackId) async {
+    final url = '${Env.apiUrl}/api/blockers/track/$trackId';
     try {
+      String? token =
+          await SecureStorageUtils.getString(SharedPrefKeys.accessToken);
+      final headers = {
+        'accept': 'application/json',
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json',
+      };
       final response = await dio.get(
         url,
         options: Options(headers: headers),
@@ -131,44 +209,100 @@ class APIService {
       return response;
     } on DioError catch (e) {
       if (e.response != null) {
-        // Request was made and server responded with a status code
+        print('${e.response}');
         return e.response!;
       } else {
-        // Request was made but no response received or request failed before it could complete
         throw Exception('Error making request: ${e.message}');
       }
     } catch (e) {
-      // Catch any other errors
       throw Exception('Error making request: ${e.toString()}');
     }
   }
 
-  Future<Response> getCommentsById(String blockerId) async {
+  Future<List<BlockerCommentModel>> getCommentsById(String blockerId) async {
     final url = '${Env.apiUrl}/api/blockers/comments/$blockerId';
     try {
+      String? token =
+          await SecureStorageUtils.getString(SharedPrefKeys.accessToken);
+      final headers = {
+        'accept': 'application/json',
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json',
+      };
       final response = await dio.get(
         url,
         options: Options(headers: headers),
       );
       if (response.statusCode == 200) {
-        if (kDebugMode) {
-          print(response.data);
-        }
-        cred['blockerComments'] = response.data;
+        List comments = response.data;
+        return comments.map((e) => BlockerCommentModel.fromJson(e)).toList();
+      } else {
+        throw Exception('Failed to load comments: ${response.statusCode}');
       }
+    } on DioError catch (e) {
+      throw ('${e.response}');
+    } catch (e) {
+      throw Exception('Error making request: ${e.toString()}');
+    }
+  }
 
+  Future<Response> deleteBlocker(String blockerId) async {
+    final url = '${Env.apiUrl}/api/blockers/$blockerId';
+    try {
+      String? token =
+          await SecureStorageUtils.getString(SharedPrefKeys.accessToken);
+      final headers = {
+        'accept': 'application/json',
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json',
+      };
+      final response = await dio.delete(
+        url,
+        options: Options(headers: headers),
+      );
+      print('${response.data}');
+      return response.data;
+    } on DioError catch (e) {
+      throw ('${e.response}');
+    } catch (e) {
+      throw Exception('Error making request: ${e.toString()}');
+    }
+  }
+
+  Future<Response> deleteBlockerComment(String commentId) async {
+    final url = '${Env.apiUrl}/api/blockers/comments/update/$commentId';
+    try {
+      String? token =
+          await SecureStorageUtils.getString(SharedPrefKeys.accessToken);
+      final headers = {
+        'accept': 'application/json',
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json',
+      };
+      final response = await dio.delete(
+        url,
+        options: Options(headers: headers),
+      );
       return response;
     } on DioError catch (e) {
       if (e.response != null) {
-        // Request was made and server responded with a status code
         return e.response!;
       } else {
-        // Request was made but no response received or request failed before it could complete
         throw Exception('Error making request: ${e.message}');
       }
     } catch (e) {
-      // Catch any other errors
       throw Exception('Error making request: ${e.toString()}');
     }
+  }
+
+  String _parseDioError(DioError e) {
+    if (e.response != null) {
+      final responseData = e.response!.data;
+      if (responseData is Map<String, dynamic> &&
+          responseData.containsKey('message')) {
+        return responseData['message'];
+      }
+    }
+    return 'An unknown error occurred';
   }
 }

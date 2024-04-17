@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:milsat_project_app/extras/components/files.dart';
 
 class CustomButtonNavBarItem extends StatelessWidget {
   const CustomButtonNavBarItem({
@@ -23,13 +22,13 @@ class CustomButtonNavBarItem extends StatelessWidget {
       child: Column(
         children: [
           image,
-          SizedBox(
-            height: 3.h,
+          const SizedBox(
+            height: 3,
           ),
           Text(
             label,
             style: GoogleFonts.raleway(
-              fontSize: 13.sp,
+              fontSize: 13,
               color: textColor,
               fontWeight: FontWeight.w600,
             ),

@@ -1,9 +1,10 @@
 import instagram from "../Assets/instagram.svg";
 import linkedin from "../Assets/linkedin.svg";
 import twitter from "../Assets/twitter.svg";
-import community from "../Assets/community-picture.jpeg";
-import frontend from "../Assets/frontend-picture.jpeg";
+import dataCollectionImage from "../Assets/data_collection.jpg";
+import community from "../Assets/community-picture.jpg";
 import designer from "../Assets/designer-picture.jpeg";
+import gisEnterprise from "../Assets/gis-enterprise.png";
 import triangleBlue from "../Assets/triangleTexture-blue.svg";
 import triangleGreen from "../Assets/triangleTexture-green.svg";
 import trianglePurple from "../Assets/triangleTexture-purple.svg";
@@ -49,36 +50,20 @@ export const routes = {
   ],
   tracks: [
     {
+      id: 1,
+      name: "Data Collection and Field Mapping",
+      link: "/track/data-collection-and-field-mapping",
+    },
+    {
       id: 2,
       name: "Fundamental of GIS",
       link: "/track/fundamental-of-gis",
     },
     {
-      id: 1,
-      name: "Field Mapping and Data Collection",
-      link: "/track/field-mapping-and-data-collection",
-    },
-
-    // {
-    //     id:3,
-    //     name: 'Geospatial Front-end',
-    //     link: '/track/3'
-    // },
-    // {
-    //     id:4,
-    //     name: 'Geospatial Analyst',
-    //     link: '/track/4'
-    // },
-    // {
-    //     id:5,
-    //     name: 'Geospatial Back-end',
-    //     link: '/track/5'
-    // },
-    // {
-    //     id:6,
-    //     name: 'Geospatial Mobile Developer',
-    //     link: '/track/6'
-    // }
+      id: 3,
+      name: "Geospatial Enterprise Solution",
+      link: "/track/geospatial-enterprise-solution"
+    }
   ],
 };
 
@@ -147,10 +132,73 @@ export const eligibility = [
 
 export const AvailableTracks = [
   {
+    id: "data-collection-and-field-mapping",
+    trackName: "Data Collection and Field Mapping",
+    description:
+      "Designed to equip participants with the essential skills and knowledge needed for effective field data collection, spatial analysis, and utilizing cutting-edge data collection technologies",
+    startDate: "5th Feburary, 2024",
+    endDate: "16th Feburary, 2024",
+    learningTimeLine: "2 weeks",
+    TrackInfo: [
+      {
+        name: "Track-curriculum",
+        list: [
+          {
+            id: 1,
+            criteria: "Introduction to Data Collection and Field Mapping",
+          },
+          {
+            id: 2,
+            criteria: "Guide to Field Data Collection",
+          },
+          {
+            id: 3,
+            criteria: "Satellite Image Interpretation",
+          },
+          {
+            id: 4,
+            criteria: "Technology (Field Devices) Field Practical",
+          },
+          {
+            id: 5,
+            criteria: "Milsat Enumeration Network",
+          },
+          {
+            id: 6,
+            criteria: "Guidelines for the Milsat Mapper Network",
+          },
+          {
+            id: 7,
+            criteria: "Mappers Network Peculiarities",
+          },
+        ],
+      },
+      {
+        name: "Track Requirement",
+        list: [
+          {
+            id: 1,
+            criteria: "You need A mobile device (Android Version 10.0 and Above)",
+          },
+          {
+            id: 2,
+            criteria: "Access to internet connectivity.",
+          },
+          {
+            id: 3,
+            criteria: "Understanding of geographic concept",
+          },
+        ],
+      },
+    ],
+  },
+  {
     id: "fundamental-of-gis",
     trackName: "Fundamental of GIS",
     description:
       "Explore the foundational principles and essential skills of Geographic Information Systems (GIS) in this beginner-friendly track, gaining a solid understanding of the system",
+    startDate: "19th Feburary, 2024",
+    endDate: "2nd March, 2024",
     learningTimeLine: "2 weeks",
     TrackInfo: [
       {
@@ -176,6 +224,10 @@ export const AvailableTracks = [
             id: 5,
             criteria: "Querying in GIS",
           },
+          {
+            id: 6,
+            criteria: "Cartography and map design",
+          },
         ],
       },
       {
@@ -184,26 +236,19 @@ export const AvailableTracks = [
           {
             id: 1,
             criteria:
-              "Completed the Milsat Field Mapping and Data Collection Certification Courses",
-          },
-          {
-            id: 2,
-            criteria: "Completed and passed the Basic Gis Courses",
-          },
-          {
-            id: 3,
-            criteria:
-              "Proficient Understanding of GIS and the Practical Procedure of Data Collection",
-          },
+              "You will need a mouse and a computer, to install QGIS or ArcMap and a willing mind to learn!",
+          }
         ],
       },
     ],
   },
   {
-    id: "field-mapping-and-data-collection",
-    trackName: "Field Mapping and Data Collection",
+    id: "geospatial-enterprise-solution",
+    trackName: "Geospatial Enterprise Solution",
     description:
-      "Dive into fundamental topics such as GIS basics, data collection techniques, technology integration, mapping best practices, data analysis, and practical applications",
+      "This course covers geospatial software, including both open-source and commercial tools. Participants will grasp the significance and advantages of using these tools for effective spatial analysis and decision-making",
+    startDate: "",
+    endDate: "",
     learningTimeLine: "5 weeks",
     TrackInfo: [
       {
@@ -211,53 +256,37 @@ export const AvailableTracks = [
         list: [
           {
             id: 1,
-            criteria: "Introduction to Field Mapping and Data Collection",
+            criteria: "Overview of Geospatial Software and Tools",
           },
           {
             id: 2,
-            criteria: "Geographic Information Systems (GIS) Basics",
+            criteria: "Understanding Client Project Specifications",
           },
           {
             id: 3,
-            criteria: "Data Collection Techniques",
+            criteria: "Deployment of Geospatial Tools",
           },
           {
             id: 4,
-            criteria: "Technology and Field Devices",
-          },
-          {
-            id: 5,
-            criteria: "Field Mapping Best Practices",
-          },
-          {
-            id: 6,
-            criteria: "Data Analysis and Visualization",
-          },
-          {
-            id: 7,
-            criteria: "Practical Applications",
-          },
-          {
-            id: 8,
-            criteria: "Final Project",
-          },
+            criteria: "Activating and licensing of software",
+          }
         ],
       },
-      {
+      { 
         name: "Track Requirement",
         list: [
           {
             id: 1,
-            criteria: " Basic computer skills.",
+            criteria: "You need a Personal Computer (PC) with “Configuration: 8 GB RAM, storage: 500 GB and Above” clickhere to View a complete system configuration",
           },
           {
             id: 2,
-            criteria: "Understanding of geographic concepts.",
+            criteria: "Access to internet connectivity.",
           },
           {
             id: 3,
-            criteria: "Access to a computer with internet connectivity.",
-          },
+            criteria: "Must have complete Fundamental of GIS track",
+          }
         ],
       },
     ],
@@ -265,15 +294,15 @@ export const AvailableTracks = [
 ];
 
 export const applictionTimeline = {
-  statDate: "12 November, 2023",
-  endDate: "31 December, 2023",
+  startDate: "5th Feburary, 2024",
+  endDate: "16th Feburary, 2024",
 };
 
 export const termsAndConditions = {
   firstTerms:
-    "I hereby declare that all information  provided are accurate and complete",
+    "I hereby declare that all information provided are accurate and complete",
   secondTerms:
-    "Lorem ipsum dolor sit amet consectetur. Faucibus volutpat imperdiet dictum lobortis nulla. Quis adipiscing pretium feugiat vulputate non",
+    "I hereby declare that I have read and understood the terms and conditions of the Milsat Aspirant Programme (MAP) and agree to abide by them.",
 };
 
 
@@ -308,18 +337,23 @@ export const ProgrammeFeatures = {
 
 export const TrackCardsInfo = [
   {
+    id: 2,
+    name: "Data Collection and Field Mapping",
+    picture: dataCollectionImage,
+    route: "/track/data-collection-and-field-mapping",
+  },
+  {
     id: 1,
     name: "Fundamental of GIS",
     picture: community,
     route: "/track/fundamental-of-gis", 
   },
   {
-    id: 2,
-    name: "Field Mapping and Data Collection",
-    picture: designer,
-    route: "/track/field-mapping-and-data-collection",
+    id: 3,
+    name: "Geospatial Enterprise Solution",
+    picture: gisEnterprise,
+    route: "/track/geospatial-enterprise-solution",
   },
-  
 ];
 
 export const knowledgeInfo = {
@@ -394,48 +428,24 @@ export const Faqs = [
     faqList: [
       {
         id: 1,
-        question: "What is M.A.P",
+        question: "What is M.A.P?",
         answer:
-          "Lorem ipsum dolor sit amet consectetur. Faucibus volutpat imperdiet dictum lobortis nulla. Quis adipiscing pretium feugiat vulputate non egestas elementum sagittis bibendum. Sagittis leo magna rhoncus pellentesque vitae quis volutpat vitae suscipit. Magnis platea diam.",
+          "The Milsat Aspirant Programme (MAP) is crafted to enable individuals with aspirations to acquire knowledge, foster personal development, and excel in the ever-evolving geospatial industry.",
       },
       {
         id: 2,
-        question: "Lorem ipsum dolor sit amet consectetur. ",
+        question: "What background knowledge is necessary?",
         answer:
-          "Lorem ipsum dolor sit amet consectetur. Faucibus volutpat imperdiet dictum lobortis nulla. Quis adipiscing pretium feugiat vulputate non egestas elementum sagittis bibendum. Sagittis leo magna rhoncus pellentesque vitae quis volutpat vitae suscipit. Magnis platea diam.",
+          "No particular prior experience is necessary; this Specialization is well-suited for individuals with a focus on GIS or anyone looking to gain a competitive advantage in the evolving field of GIS.",
       },
       {
         id: 3,
-        question: "Lorem ipsum dolor sit amet consectetur. ",
+        question: "Is this course really 100% online, do I need to attend any classes in person?",
         answer:
-          "Lorem ipsum dolor sit amet consectetur. Faucibus volutpat imperdiet dictum lobortis nulla. Quis adipiscing pretium feugiat vulputate non egestas elementum sagittis bibendum. Sagittis leo magna rhoncus pellentesque vitae quis volutpat vitae suscipit. Magnis platea diam.",
+          "This course is completely online, so there’s no need to show up to a classroom in person. You have the flexibility to reach your lectures, readings, and assignments at your convenience, whether through the web or on your mobile device, from any location.",
       },
     ],
-  },
-  {
-    id: 2,
-    faqTitle: "Programme Scope",
-    faqList: [
-      {
-        id: 1,
-        question: "What is M.A.P",
-        answer:
-          "Lorem ipsum dolor sit amet consectetur. Faucibus volutpat imperdiet dictum lobortis nulla. Quis adipiscing pretium feugiat vulputate non egestas elementum sagittis bibendum. Sagittis leo magna rhoncus pellentesque vitae quis volutpat vitae suscipit. Magnis platea diam.",
-      },
-      {
-        id: 2,
-        question: "Lorem ipsum dolor sit amet consectetur. ",
-        answer:
-          "Lorem ipsum dolor sit amet consectetur. Faucibus volutpat imperdiet dictum lobortis nulla. Quis adipiscing pretium feugiat vulputate non egestas elementum sagittis bibendum. Sagittis leo magna rhoncus pellentesque vitae quis volutpat vitae suscipit. Magnis platea diam.",
-      },
-      {
-        id: 3,
-        question: "Lorem ipsum dolor sit amet consectetur. ",
-        answer:
-          "Lorem ipsum dolor sit amet consectetur. Faucibus volutpat imperdiet dictum lobortis nulla. Quis adipiscing pretium feugiat vulputate non egestas elementum sagittis bibendum. Sagittis leo magna rhoncus pellentesque vitae quis volutpat vitae suscipit. Magnis platea diam.",
-      },
-    ],
-  },
+  }
 ];
 
 export const MobileFeatures = [
@@ -471,8 +481,123 @@ export const oppourtunity = [
   },
 ];
 
+export const africanCountries = [
+  { label: "Algeria", value: "Algeria" },
+  { label: "Angola", value: "Angola" },
+  { label: "Benin", value: "Benin" },
+  { label: "Botswana", value: "Botswana" },
+  { label: "Burkina Faso", value: "Burkina Faso" },
+  { label: "Burundi", value: "Burundi" },
+  { label: "Cabo Verde", value: "Cabo Verde" },
+  { label: "Cameroon", value: "Cameroon" },
+  { label: "Central African Republic", value: "Central African Republic" },
+  { label: "Chad", value: "Chad" },
+  { label: "Comoros", value: "Comoros" },
+  { label: "Democratic Republic of the Congo", value: "Democratic Republic of the Congo" },
+  { label: "Republic of the Congo", value: "Republic of the Congo" },
+  { label: "Djibouti", value: "Djibouti" },
+  { label: "Egypt", value: "Egypt" },
+  { label: "Equatorial Guinea", value: "Equatorial Guinea" },
+  { label: "Eritrea", value: "Eritrea" },
+  { label: "Eswatini", value: "Eswatini" },
+  { label: "Ethiopia", value: "Ethiopia" },
+  { label: "Gabon", value: "Gabon" },
+  { label: "Gambia", value: "Gambia" },
+  { label: "Ghana", value: "Ghana" },
+  { label: "Guinea", value: "Guinea" },
+  { label: "Guinea-Bissau", value: "Guinea-Bissau" },
+  { label: "Ivory Coast", value: "Ivory Coast" },
+  { label: "Kenya", value: "Kenya" },
+  { label: "Lesotho", value: "Lesotho" },
+  { label: "Liberia", value: "Liberia" },
+  { label: "Libya", value: "Libya" },
+  { label: "Madagascar", value: "Madagascar" },
+  { label: "Malawi", value: "Malawi" },
+  { label: "Mali", value: "Mali" },
+  { label: "Mauritania", value: "Mauritania" },
+  { label: "Mauritius", value: "Mauritius" },
+  { label: "Morocco", value: "Morocco" },
+  { label: "Mozambique", value: "Mozambique" },
+  { label: "Namibia", value: "Namibia" },
+  { label: "Niger", value: "Niger" },
+  { label: "Nigeria", value: "Nigeria" },
+  { label: "Rwanda", value: "Rwanda" },
+  { label: "Sao Tome and Principe", value: "Sao Tome and Principe" },
+  { label: "Senegal", value: "Senegal" },
+  { label: "Seychelles", value: "Seychelles" },
+  { label: "Sierra Leone", value: "Sierra Leone" },
+  { label: "Somalia", value: "Somalia" },
+  { label: "South Africa", value: "South Africa" },
+  { label: "South Sudan", value: "South Sudan" },
+  { label: "Sudan", value: "Sudan" },
+  { label: "Tanzania", value: "Tanzania" },
+  { label: "Togo", value: "Togo" },
+  { label: "Tunisia", value: "Tunisia" },
+  { label: "Uganda", value: "Uganda" },
+  { label: "Zambia", value: "Zambia" },
+  { label: "Zimbabwe", value: "Zimbabwe" }
+];
 
 export const Brochure =  {
   FundamentalOfGIS: "/Fundamental_of_GIS.pdf",
-  FieldMappingAndDataCollection: "/Milsat_GIS_training_curriculum_Basic.pdf",
+  DataCollectionAndFieldMapping: "/Data_Collection_and_Field_Mapping.pdf",
+  GeospatialEnterpriseSolution: "/Geospatial_Enterprise_Solution.pdf",
 }
+
+export const MobileAppPlayStoreLink = "https://play.google.com/store/apps/details?id=com.milsat.apirant&pcampaignid=web_share"
+
+export const ApplicationEmailTemplate  = `<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Application Received</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+  }
+
+  .container {
+    max-width: 600px;
+    margin: 20px auto;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+
+  h1 {
+    color: #333;
+  }
+
+  p {
+    color: #666;
+  }
+
+  .cta-button {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #3498db;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 5px;
+  }
+  
+  .footer {
+    margin-top: 30px;
+    text-align: center;
+    color: #888;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <p>We have successfully received your application for the Milsat Aspirant Program. Your submission is currently under review and you'll be notified via email upon approval.</p>
+  <p>Your application is now under review.</p>
+  <p>If you have any questions or concerns, please feel free to reach out to us at <a href="mailto:map.milsat@gmail.com">support</a></p> 
+  <p>Best regards,</p>
+  <p class="footer">This is an automated email, please do not reply.</p>
+</div>
+</body>
+</html>
+`

@@ -12,7 +12,7 @@ from ..backends.map_permissions import IsMentor, IsMentee, IsAdmin
 
 
 class ListApplication(ListAPIView):
-    serializer_class = CreateApplicationSerializer
+    serializer_class = ApplicationSerializer2
     permission_classes = (IsAuthenticated, IsAdmin,)
 
     @swagger_auto_schema( operation_summary="List all applications")
@@ -33,3 +33,11 @@ class GetOpenApplyCohortView(RetrieveAPIView):
     @swagger_auto_schema( operation_summary="Get the cohorts that are receiving applications")
     def get(self, request):
         return GetOpenCohort().get()
+    
+class GetApplicationStatsView(RetrieveAPIView):
+    serializer_class = ApplicationStatsSerializer
+    permission_classes = (IsAuthenticated, IsAdmin,)
+
+    @swagger_auto_schema( operation_summary="Get application statistics")
+    def get(self, request, cohort_id):
+        return GetApplicationStats().get(cohort_id)

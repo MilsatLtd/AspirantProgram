@@ -30,13 +30,13 @@ class MorePages extends StatelessWidget {
             color: Colors.white,
           ),
         ),
-        height: 40.h,
+        height: 40,
         child: Row(
           children: [
             SvgPicture.asset(
               image,
-              height: 18.h,
-              width: 18.w,
+              height: 18,
+              width: 18,
               color: AppTheme.kPurpleColor,
             ),
             SizedBox(
@@ -50,7 +50,7 @@ class MorePages extends StatelessWidget {
                   pageName,
                   style: GoogleFonts.raleway(
                     color: const Color(0xFF504D51),
-                    fontSize: 13.sp,
+                    fontSize: 13,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
@@ -58,7 +58,7 @@ class MorePages extends StatelessWidget {
                   pageDescription,
                   style: GoogleFonts.raleway(
                     color: const Color(0xFF504D51),
-                    fontSize: 10.sp,
+                    fontSize: 10,
                     fontWeight: FontWeight.w500,
                   ),
                 )

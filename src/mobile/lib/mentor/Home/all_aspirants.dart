@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:milsat_project_app/extras/components/files.dart';
-// import 'package:milsat_project_app/mentor/profile/user_profile.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../profile/user_profile.dart';
@@ -33,15 +32,15 @@ class AllAspirants extends ConsumerWidget {
                 text: 'Mentee ',
                 style: GoogleFonts.raleway(
                   color: const Color(0xFF423B43),
-                  fontSize: 16.sp,
+                  fontSize: 16,
                   fontWeight: FontWeight.w600,
                 ),
               ),
               TextSpan(
-                text: ' Total: ${d.mentees!.length}',
+                text: ' Total: ${d.mentees?.length}',
                 style: GoogleFonts.raleway(
                   color: AppTheme.kHintTextColor,
-                  fontSize: 12.sp,
+                  fontSize: 12,
                   fontWeight: FontWeight.w500,
                 ),
               ),
@@ -53,20 +52,18 @@ class AllAspirants extends ConsumerWidget {
       body: ListView.builder(
         itemBuilder: (BuildContext context, int index) {
           final apiService = ref.read(apiServiceProvider);
-          apiService.getUserData(d.mentees!.elementAt(index).userId!);
+          apiService.getUserData(d.mentees?.elementAt(index).userId!);
           return AspirantsTile(
-            image: d.mentees!.elementAt(index).profilePicture == null
-                ? 'assets/defaultImage.jpg'
-                : d.mentees!.elementAt(index).profilePicture!,
+            image: d.mentees?.elementAt(index).profilePicture,
             column: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  d.mentees!.elementAt(index).fullName!,
+                  d.mentees?.elementAt(index).fullName ?? '',
                   style: GoogleFonts.raleway(
                     color: const Color(0xFF504D51),
-                    fontSize: 13.sp,
+                    fontSize: 13,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
@@ -76,7 +73,7 @@ class AllAspirants extends ConsumerWidget {
                       'Learning progress: ',
                       style: GoogleFonts.raleway(
                         color: const Color(0xFF504D51),
-                        fontSize: 13.sp,
+                        fontSize: 13,
                         fontWeight: FontWeight.w500,
                       ),
                     ),
@@ -84,7 +81,7 @@ class AllAspirants extends ConsumerWidget {
                       '20% Completion',
                       style: GoogleFonts.raleway(
                         color: const Color(0xFF504D51),
-                        fontSize: 13.sp,
+                        fontSize: 13,
                         fontWeight: FontWeight.w500,
                       ),
                     ),
@@ -103,11 +100,10 @@ class AllAspirants extends ConsumerWidget {
                 MaterialPageRoute(
                   builder: ((context) {
                     return UserProfile(
-                      userName: d.mentees!.elementAt(index).fullName!,
-                      image: d.mentees!.elementAt(index).profilePicture ??
-                          'assets/defaultImage.jpg',
-                      userEmail: d.mentees!.elementAt(index).email!,
-                      userBio: d.mentees!.elementAt(index).bio,
+                      userName: d.mentees?.elementAt(index).fullName ?? '',
+                      image: d.mentees?.elementAt(index).profilePicture ?? '',
+                      userEmail: d.mentees?.elementAt(index).email ?? '',
+                      userBio: d.mentees?.elementAt(index).bio ?? '',
                     );
                   }),
                 ),
@@ -115,7 +111,7 @@ class AllAspirants extends ConsumerWidget {
             },
           );
         },
-        itemCount: d.mentees!.length,
+        itemCount: d.mentees?.length,
       ),
       bottomNavigationBar: const CustomNavBar(),
     );

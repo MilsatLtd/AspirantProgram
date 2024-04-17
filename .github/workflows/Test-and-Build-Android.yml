@@ -1,0 +1,104 @@
+name: Test and Build Android on PR
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches: [ "main" ]
+    paths:
+      - 'src/mobile/**'
+  # push:
+  #   branches: [ "" ]
+
+jobs:
+  build_android:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        java-version: [18]
+        flutter-version: ["3.16.0"]
+    defaults:
+      run:
+        working-directory: src/mobile
+        
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 18
+        uses: actions/setup-java@v3
+        with:
+          java-version: ${{ matrix.java-version }}
+          distribution: "temurin"
+
+      - name: Install Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ matrix.flutter-version }}
+      - run: |
+          git config --global --add safe.directory /opt/hostedtoolcache/flutter/stable-${{ matrix.flutter-version }}-x64
+
+      - name: Cache Flutter dependencies
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.pub-cache
+            src/mobile/.dart_tool
+          key: ${{ runner.os }}-flutter-${{ hashFiles('**/pubspec.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-flutter-
+
+      - name: Get dependencies
+        run: flutter pub get
+
+    #   - name: Run tests
+    #     run: flutter test
+
+      - name: Set versionCode and versionName
+        run: |
+          echo "VERSION_CODE=1" >> $GITHUB_ENV
+          echo "VERSION_NAME=1.0.0" >> $GITHUB_ENV
+
+      - name: Get env from secrets
+        uses: timheuer/base64-to-file@v1.2
+        with:
+          fileName: ".env"
+          fileDir: "./src/mobile"
+          encodedString: ${{ secrets.ENV }}
+      
+      - name: Convert base64 to file and create key.properties
+        working-directory: src/mobile/android
+        run: |
+          echo "${{ secrets.ANDROID_KEY_PROPERTIES_FILE }}" | base64 --decode > key.properties
+
+      - name: Convert base64 to binary and create vcn-keystore.jks
+        working-directory: src/mobile/android/app
+        run: |
+          echo "${{ secrets.ANDROID_KEYSTORE_FILE }}" | base64 --decode > aspirant-keystore.jks
+
+      - name: Build release app bundle
+        id: build_app
+        working-directory: src/mobile
+        run: flutter build appbundle --release --dart-define-from-file=.env --build-name="1.0.0" --build-number="1"
+
+      - name: Upload to Play Store Internal App Sharing
+        id: upload_build
+        uses: r0adkll/upload-google-play@fix/internal-errors
+        with:
+          serviceAccountJsonPlainText: ${{ secrets.ANDROID_SERVICE_ACCOUNT_JSON }}
+          packageName: com.milsat.apirant
+          releaseFiles: src/mobile/build/app/outputs/bundle/release/app-release.aab
+          track: internalsharing
+
+      - name: Comment deployment URL
+        uses: thollander/actions-comment-pull-request@v2
+        with:
+          message: |
+            You can access artifacts from this build here: ${{ steps.upload_build.outputs.internalSharingDownloadUrl }}
+
+      - name: Review PR file(s) with chat-gpt
+        uses: anc95/ChatGPT-CodeReview@main
+        env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            OPENAI_API_KEY: ${{ secrets.TEMP_OPEN_AI_KEY }}
+            OPENAI_API_ENDPOINT: https://api.openai.com/v1
+            MODEL: gpt-4
+            LANGUAGE: English

@@ -1,5 +1,5 @@
 from rest_framework.generics import GenericAPIView
-from rest_framework.mixins import UpdateModelMixin, RetrieveModelMixin
+from rest_framework.mixins import UpdateModelMixin, RetrieveModelMixin, CreateModelMixin
 from drf_yasg.utils import swagger_auto_schema
 from ..services.UserService import *
 from ..serializers import *
@@ -45,3 +45,20 @@ class UpdateProfilePictureView(RetrieveModelMixin,
                 status=status.HTTP_401_UNAUTHORIZED
             )
         return UpdateUserPicture().update(request, user_id)
+
+
+class SendAnyEmailView(GenericAPIView, CreateModelMixin ):
+    serializer_class = SendAnyEmailSerializer
+
+    @swagger_auto_schema(operation_summary="Send any email to a user by user_id")
+    def post(self, request):
+        # ensure only a user can send email to himself
+        return SendAnyEmailService().send(request)
+
+class SendAnyEmailViewAsync(GenericAPIView, CreateModelMixin ):
+    serializer_class = SendAnyEmailSerializer
+
+    @swagger_auto_schema(operation_summary="Send any email to a user by user_id")
+    def post(self, request):
+        # ensure only a user can send email to himself
+        return SendAnyEmailService2().send(request)

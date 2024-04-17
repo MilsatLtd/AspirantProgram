@@ -7,24 +7,47 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:milsat_project_app/extras/components/files.dart';
+import 'package:milsat_project_app/extras/components/shared_prefs/keys.dart';
+import 'package:milsat_project_app/extras/components/shared_prefs/utils.dart';
+import 'package:milsat_project_app/extras/models/decoded_token.dart';
+import 'package:milsat_project_app/extras/models/profile_picture_model.dart';
 import 'package:milsat_project_app/mentor/profile/mentor_profile_card.dart';
 
 import '../../extras/api/file_upload.dart';
 
 final ImagePicker _imagePicker = ImagePicker();
 
-final pickedImage = StateProvider<XFile?>((ref) {
+final pickedMentorImage = StateProvider<XFile?>((ref) {
   return;
 });
-final image = StateProvider<File?>((ref) {
+final mentorImage = StateProvider<File?>((ref) {
   return;
 });
 
-class MentorProfilePage extends ConsumerWidget {
+class MentorProfilePage extends ConsumerStatefulWidget {
   const MentorProfilePage({super.key});
 
   @override
-  Widget build(BuildContext context, ref) {
+  ConsumerState<MentorProfilePage> createState() => _MentorProfilePageState();
+}
+
+class _MentorProfilePageState extends ConsumerState<MentorProfilePage> {
+  ProfilePictureResponse? profilePictureResponse;
+  void getUserProfile() async {
+    profilePictureResponse =
+        await SecureStorageUtils.getDataFromStorage<ProfilePictureResponse>(
+            SharedPrefKeys.profileResponse,
+            ProfilePictureResponse.fromJsonString);
+  }
+
+  @override
+  void initState() {
+    getUserProfile();
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final mentorData = ref.watch(mentorDetails);
     return Scaffold(
       appBar: PreferredSize(
@@ -43,7 +66,7 @@ class MentorProfilePage extends ConsumerWidget {
                 style: GoogleFonts.raleway(
                   color: const Color(0xFF383639),
                   fontWeight: FontWeight.w600,
-                  fontSize: 13.sp,
+                  fontSize: 13,
                 ),
               ),
             ),
@@ -62,31 +85,29 @@ class MentorProfilePage extends ConsumerWidget {
                 Center(
                   child: Stack(
                     children: [
-                      if (ref.watch(image) != null)
+                      if (ref.watch(mentorImage) != null)
                         ClipOval(
                           child: Image.file(
-                            ref.watch(image)!,
-                            height: 88.h,
-                            width: 80.w,
+                            ref.watch(mentorImage)!,
+                            height: 88,
+                            width: 80,
                             fit: BoxFit.cover,
                           ),
                         )
-                      else if (personalInfo['personalUserInfo'] != null &&
-                          personalInfo['personalUserInfo']['profile_picture'] !=
-                              null)
+                      else if (profilePictureResponse?.profilePicture != null)
                         CircleAvatar(
-                          radius: 44.r,
+                          radius: 44,
                           backgroundImage: NetworkImage(
-                            personalInfo['personalUserInfo']['profile_picture'],
+                            profilePictureResponse!.profilePicture!,
                           ),
                           backgroundColor: Colors.grey,
                         )
                       else
                         CircleAvatar(
-                          radius: 44.r,
+                          radius: 44,
                           backgroundImage: data.profilePicture == null
                               ? const AssetImage(
-                                  'assets/defaultImage.jpg',
+                                  'assets/placeholder-person.png',
                                 )
                               : NetworkImage(
                                   data.profilePicture,
@@ -99,16 +120,21 @@ class MentorProfilePage extends ConsumerWidget {
                         child: GestureDetector(
                           onTap: () async {
                             try {
+                              DecodedTokenResponse? decodedToken =
+                                  await SecureStorageUtils.getDataFromStorage<
+                                          DecodedTokenResponse>(
+                                      SharedPrefKeys.tokenResponse,
+                                      DecodedTokenResponse.fromJsonString);
                               ref.read(pickedImage.notifier).state =
                                   await _imagePicker.pickImage(
                                       source: ImageSource.gallery);
                               if (ref.watch(pickedImage) != null) {
                                 File imageFile =
                                     File(ref.watch(pickedImage)!.path);
-                                ref.read(image.notifier).state = imageFile;
-                                ref
-                                    .read(apiUploadProvider)
-                                    .uploadImage(cred['Id'], imageFile);
+                                ref.read(mentorImage.notifier).state =
+                                    imageFile;
+                                ref.read(apiUploadProvider).uploadImage(
+                                    decodedToken!.userId!, imageFile);
                               }
                             } on PlatformException catch (e) {
                               if (kDebugMode) {
@@ -117,16 +143,16 @@ class MentorProfilePage extends ConsumerWidget {
                             }
                           },
                           child: Container(
-                            height: 26.07.h,
-                            width: 26.07.w,
+                            height: 26.07,
+                            width: 26.07,
                             decoration: const BoxDecoration(
                               shape: BoxShape.circle,
                               color: AppTheme.kAppWhiteScheme,
                             ),
                             child: Center(
                               child: Container(
-                                height: 22.07.h,
-                                width: 22.07.w,
+                                height: 22.07,
+                                width: 22.07,
                                 decoration: const BoxDecoration(
                                   shape: BoxShape.circle,
                                   color: AppTheme.kPurpleColor,
@@ -134,8 +160,8 @@ class MentorProfilePage extends ConsumerWidget {
                                 child: Center(
                                   child: SvgPicture.asset(
                                     'assets/edit_pen.svg',
-                                    height: 10.08.h,
-                                    width: 10.08.w,
+                                    height: 10.08,
+                                    width: 10.08,
                                   ),
                                 ),
                               ),
@@ -146,28 +172,28 @@ class MentorProfilePage extends ConsumerWidget {
                     ],
                   ),
                 ),
-                SizedBox(
-                  height: 24.h,
+                const SizedBox(
+                  height: 24,
                 ),
                 Padding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 16.w,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
                   ),
                   child: Stack(
                     children: [
                       CohortCard(
                         width: double.infinity,
-                        radius: BorderRadius.circular(4.r),
+                        radius: BorderRadius.circular(4),
                         first: -15.5,
                         second_1: 0,
                         second_2: 0,
-                        third: 80.53.h,
+                        third: 80.53,
                         forth_1: 0,
                         forth_2: 0,
-                        forthHeight: 157.13.h,
-                        thirdHeight: 230.44.h,
-                        secondHeight: 135.28.h,
-                        height: 108.h,
+                        forthHeight: 157.13,
+                        thirdHeight: 230.44,
+                        secondHeight: 135.28,
+                        height: 108,
                       ),
                       MentorProfileCardContent(
                         trackName: data.track!.name!,
@@ -175,12 +201,12 @@ class MentorProfilePage extends ConsumerWidget {
                     ],
                   ),
                 ),
-                SizedBox(
-                  height: 34.h,
+                const SizedBox(
+                  height: 34,
                 ),
                 Padding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 16.w,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -190,56 +216,56 @@ class MentorProfilePage extends ConsumerWidget {
                         style: GoogleFonts.raleway(
                           color: const Color(0xFF504D51),
                           fontWeight: FontWeight.w500,
-                          fontSize: 16.sp,
+                          fontSize: 16,
                         ),
                       ),
-                      SizedBox(
-                        height: 8.h,
+                      const SizedBox(
+                        height: 8,
                       ),
                       Container(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 16.w,
-                          vertical: 12.h,
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 12,
                         ),
-                        height: 48.h,
+                        height: 48,
                         width: double.infinity,
                         decoration: BoxDecoration(
                           border: Border.all(color: AppTheme.kHintTextColor),
-                          borderRadius: BorderRadius.circular(6.r),
+                          borderRadius: BorderRadius.circular(6),
                         ),
                         child: Text(
                           data.fullName!,
                           style: GoogleFonts.raleway(
                             color: const Color(0xFF6E6B6F),
                             fontWeight: FontWeight.w500,
-                            fontSize: 16.sp,
+                            fontSize: 16,
                           ),
                         ),
                       ),
-                      SizedBox(
-                        height: 24.h,
+                      const SizedBox(
+                        height: 24,
                       ),
                       Text(
                         'Email',
                         style: GoogleFonts.raleway(
                           color: const Color(0xFF504D51),
                           fontWeight: FontWeight.w500,
-                          fontSize: 16.sp,
+                          fontSize: 16,
                         ),
                       ),
-                      SizedBox(
-                        height: 8.h,
+                      const SizedBox(
+                        height: 8,
                       ),
                       Container(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 16.w,
-                          vertical: 12.h,
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 12,
                         ),
-                        height: 48.h,
+                        height: 48,
                         width: double.infinity,
                         decoration: BoxDecoration(
                           border: Border.all(color: AppTheme.kHintTextColor),
-                          borderRadius: BorderRadius.circular(6.r),
+                          borderRadius: BorderRadius.circular(6),
                         ),
                         child: Text(
                           data.email!,
@@ -247,34 +273,34 @@ class MentorProfilePage extends ConsumerWidget {
                           style: GoogleFonts.raleway(
                             color: const Color(0xFF6E6B6F),
                             fontWeight: FontWeight.w500,
-                            fontSize: 16.sp,
+                            fontSize: 16,
                           ),
                         ),
                       ),
-                      SizedBox(
-                        height: 24.h,
+                      const SizedBox(
+                        height: 24,
                       ),
                       Text(
                         'Bio',
                         style: GoogleFonts.raleway(
                           color: const Color(0xFF504D51),
                           fontWeight: FontWeight.w500,
-                          fontSize: 16.sp,
+                          fontSize: 16,
                         ),
                       ),
-                      SizedBox(
-                        height: 8.h,
+                      const SizedBox(
+                        height: 8,
                       ),
                       Container(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 16.w,
-                          vertical: 12.h,
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 12,
                         ),
-                        height: 96.h,
+                        height: 96,
                         width: double.infinity,
                         decoration: BoxDecoration(
                           border: Border.all(color: AppTheme.kHintTextColor),
-                          borderRadius: BorderRadius.circular(6.r),
+                          borderRadius: BorderRadius.circular(6),
                         ),
                         child: Text(
                           personalInfo['personalUserInfo'] != null
@@ -284,26 +310,26 @@ class MentorProfilePage extends ConsumerWidget {
                           style: GoogleFonts.raleway(
                             color: const Color(0xFF6E6B6F),
                             fontWeight: FontWeight.w500,
-                            fontSize: 16.sp,
+                            fontSize: 16,
                           ),
                         ),
                       ),
                     ],
                   ),
                 ),
-                SizedBox(
-                  height: 32.h,
+                const SizedBox(
+                  height: 32,
                 ),
                 GestureDetector(
                   onTap: () {
                     AppNavigator.navigateTo(mentorPasswordRoute);
                   },
                   child: Container(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 28.8.w,
-                      vertical: 11.h,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 28.8,
+                      vertical: 11,
                     ),
-                    height: 56.h,
+                    height: 56,
                     decoration: BoxDecoration(
                       border: Border.all(
                         color: const Color(0xFFEEEDEE),
@@ -320,44 +346,44 @@ class MentorProfilePage extends ConsumerWidget {
                               style: GoogleFonts.raleway(
                                 color: const Color(0xFF504D51),
                                 fontWeight: FontWeight.w600,
-                                fontSize: 13.sp,
+                                fontSize: 13,
                               ),
                             ),
-                            SizedBox(
-                              height: 4.h,
+                            const SizedBox(
+                              height: 4,
                             ),
                             Text(
                               'Change password',
                               style: GoogleFonts.raleway(
                                 color: const Color(0xFF6E6B6F),
                                 fontWeight: FontWeight.w500,
-                                fontSize: 10.sp,
+                                fontSize: 10,
                               ),
                             ),
                           ],
                         ),
-                        Icon(
+                        const Icon(
                           Icons.arrow_forward_ios,
-                          size: 14.sp,
-                          color: const Color(0xFF79717A),
+                          size: 14,
+                          color: Color(0xFF79717A),
                         )
                       ],
                     ),
                   ),
                 ),
-                SizedBox(
-                  height: 16.h,
+                const SizedBox(
+                  height: 16,
                 ),
                 GestureDetector(
                   onTap: () {
                     signOut();
                   },
                   child: Container(
-                    padding: EdgeInsets.only(
-                      top: 19.h,
-                      left: 29.w,
+                    padding: const EdgeInsets.only(
+                      top: 19,
+                      left: 29,
                     ),
-                    height: 56.h,
+                    height: 56,
                     width: double.infinity,
                     decoration: BoxDecoration(
                       border: Border.all(
@@ -368,20 +394,65 @@ class MentorProfilePage extends ConsumerWidget {
                       'Logout',
                       style: GoogleFonts.raleway(
                         fontWeight: FontWeight.w600,
-                        fontSize: 13.sp,
+                        fontSize: 13,
                         color: const Color(0xFF504D51),
                       ),
                     ),
                   ),
                 ),
-                SizedBox(
-                  height: 24.h,
+                const SizedBox(
+                  height: 24,
                 ),
               ],
             ),
           );
         },
-        error: (((error, stackTrace) => Text(error.toString()))),
+        error: (((error, stackTrace) => Padding(
+              padding: const EdgeInsets.all(24.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Stack(
+                    children: [
+                      CohortCard(
+                        width: double.infinity,
+                        height: 212,
+                        radius: BorderRadius.circular(4),
+                        first: -15.5,
+                        second_1: 0,
+                        second_2: 0,
+                        third: 80.53,
+                        forth_1: 0,
+                        forth_2: 0,
+                        forthHeight: 157.13,
+                        thirdHeight: 230.44,
+                        secondHeight: 135.28,
+                      ),
+                      Column(
+                        children: [
+                          SvgPicture.asset(
+                            'assets/error_image.svg',
+                            height: 100,
+                            width: 100,
+                          ),
+                          const SizedBox(height: 16),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              'Try again Later',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                color: Theme.of(context).cardColor,
+                              ),
+                            ),
+                          ),
+                        ],
+                      )
+                    ],
+                  ),
+                ],
+              ),
+            ))),
         loading: () {
           return const Center(
             child: CircularProgressIndicator(),

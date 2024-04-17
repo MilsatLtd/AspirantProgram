@@ -32,7 +32,7 @@ class UserManager(BaseUserManager):
 
 
 def unique_profile_picture(instance, filename):
-    return 'profile_pictures/{0}_{1}'.format(instance.user_id, filename)
+    return 'MAP-Uploads/profile_pictures/{0}_{1}'.format(instance.user_id, filename)
 
 
 class User(AbstractUser):
@@ -51,10 +51,14 @@ class User(AbstractUser):
     gender = models.IntegerField(choices=GENDER_CHOICES)
     country = models.CharField(max_length=30)
     phone_number = models.CharField(max_length=11)
-    bio = models.TextField(blank=True, max_length=350, default='')
+    bio = models.TextField(blank=True, max_length=370, default='')
     profile_picture = models.ImageField(
         upload_to=unique_profile_picture, blank=True, null=True)
     objects = UserManager()
+    password_reset_token = models.IntegerField(null=True, blank=True)
+    password_reset_token_expiry = models.DateTimeField(null=True, blank=True)
+    password_reset_token_used = models.BooleanField(default=False)
+    password_reset_token_profile = models.CharField(max_length=10, null=True, blank=True)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['first_name', 'last_name',
@@ -62,6 +66,8 @@ class User(AbstractUser):
 
     def save(self, *args, **kwargs):
         self.username = self.email
+        self.email = self.email.lower()
+        self.username = self.username.lower()
         super(User, self).save(*args, **kwargs)
 
     def set_password2(self, raw_password):
@@ -94,11 +100,11 @@ class User(AbstractUser):
             self._password2 = None
             self.save(update_fields=["password2"])
 
-        if check_password(raw_password, self.password, setter):
+        if check_password(raw_password, self.password):
             if self.is_superuser:
                 return True, 0
             return True, 2
-        elif check_password(raw_password, self.password2, setter2):
+        elif check_password(raw_password, self.password2):
             return True, 1
         return False, None
 
@@ -124,10 +130,10 @@ class Applications(models.Model):
 
     applicant_id = models.UUIDField(
         primary_key=True, default=uuid.uuid4, editable=False)
-    reason = models.TextField(max_length=350)
+    reason = models.TextField()
     referral = models.CharField(max_length=50)
     skills = models.TextField(max_length=350)
-    purpose = models.TextField(max_length=350)
+    purpose = models.TextField()
     education = models.IntegerField(choices=EDUCATION_CHOICES)
     submission_date = models.DateTimeField(auto_now_add=True)
     review_date = models.DateTimeField(blank=True, null=True)
@@ -161,7 +167,7 @@ class Track(models.Model):
 class Course(models.Model):
     course_id = models.UUIDField(
         primary_key=True, default=uuid.uuid4, editable=False)
-    name = models.CharField(max_length=200)
+    name = models.CharField(max_length=300)
     description = models.TextField(blank=True, default='')
     requirements = models.TextField(blank=True, default='')
     access_link = models.URLField(default='https://milsat.africa')
@@ -199,7 +205,7 @@ class Course(models.Model):
 
 
 def unique_todo_filename(instance, filename):
-    return 'todo_docs/' + str(instance.todo_id) + '_' + filename
+    return 'MAP-Uploads/todo_docs/' + str(instance.todo_id) + '_' + filename
 
 
 class Todo(models.Model):
@@ -233,7 +239,7 @@ class Cohort(models.Model):
     duration = models.PositiveIntegerField(default=0, editable=False)
 
     def save(self, *args, **kwargs):
-        self.duration = round((self.end_date - self.start_date).days / 30)
+        self.duration = max( round((self.end_date - self.start_date).days / 7),  1)
         super(Cohort, self).save(*args, **kwargs)
 
     def __str__(self):

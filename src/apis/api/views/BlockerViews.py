@@ -1,4 +1,6 @@
 from rest_framework import generics
+from rest_framework.response import Response
+from rest_framework import status
 from rest_framework.generics import RetrieveAPIView
 from ..serializers import Blocker, Comment
 from ..serializers import BlockerSerializer, CommentSerializer
@@ -45,9 +47,13 @@ class BlockerRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
 
     # ensure that only the student that created the blocker can update or delete it
     def perform_destroy(self, instance):
-        if self.request.user != instance.user:
-            raise PermissionDenied( detail="You are not authorized to delete this blocker. Only the student that created it can delete it.")
-        instance.delete()
+        try:
+            if self.request.user != instance.user:
+                raise PermissionDenied( detail="You are not authorized to delete this blocker. Only the student that created it can delete it.")
+            instance.delete()
+            return Response("message: Blocker deleted successfully", status=status.HTTP_204_NO_CONTENT)
+        except Exception as e:
+            return Response("message: Something went wrong", status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 class CommentListCreateView(generics.ListCreateAPIView):
     queryset = Comment.objects.all()
@@ -69,8 +75,9 @@ class CommentRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
     permission_classes = (IsAuthenticated,)
+    lookup_field = 'comment_id'
 
-    http_method_names = ['get', 'put', 'delete']
+    http_method_names = ['put', 'delete']
     
     # ensure that only the student that created the comment can update or delete it
     def perform_update(self, serializer):
@@ -80,6 +87,7 @@ class CommentRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
 
     # ensure that only the student that created the comment can update or delete it
     def perform_destroy(self, instance):
-        if self.request.user != instance.user:
+        if self.request.user != instance.user and not self.request.user.is_superuser:
             raise PermissionDenied( detail="You are not authorized to delete this comment. Only the student that created it can delete it.")
         instance.delete()
+        return Response("message: Comment deleted successfully", status=status.HTTP_204_NO_CONTENT)

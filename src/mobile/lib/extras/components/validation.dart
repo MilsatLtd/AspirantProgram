@@ -20,14 +20,19 @@ class Utils {
     return null;
   }
 
+  static String? isValidToken(String value) {
+    if (value.isEmpty) {
+      return "Token is required";
+    }
+    return null;
+  }
+
   static String? isValidPassword(String value) {
     value = value.trim();
     if (value.trim().isEmpty) {
       return "Password is required";
     } else if (value.trim().length <= 5) {
       return "Password is too week";
-    } else if (!value.trim().contains(RegExp(r'[0-9]'))) {
-      return "Password must contain a number";
     }
     return null;
   }

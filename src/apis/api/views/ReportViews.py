@@ -18,7 +18,7 @@ class GetReportView(RetrieveAPIView):
 
 class CreateReportView(CreateAPIView):
     serializer_class = ReportSubmitSerializer
-    permission_classes = (IsAuthenticated, IsMentee,)
+    permission_classes = (IsMentee | IsAdmin, IsAuthenticated)
 
     @swagger_auto_schema( operation_summary="Submit a report by student_id")
     def post(self, request):
@@ -26,7 +26,7 @@ class CreateReportView(CreateAPIView):
 
 class SubmitReportView(mixins.UpdateModelMixin, GenericAPIView):
     serializer_class = ReportFeedbackSerializer
-    permission_classes = (IsAuthenticated, IsMentor,)
+    permission_classes = (IsMentor | IsAdmin, IsAuthenticated)
 
     @swagger_auto_schema( operation_summary="Submit a feedback for a report")
     def put(self, request, report_id):
@@ -51,7 +51,7 @@ class ListStudentReportView(ListAPIView):
 
 class ListMentorReportView(ListAPIView):
     serializer_class = ReportSerializer
-    permission_classes = (IsAuthenticated, IsMentor, IsAdmin)
+    permission_classes = (IsMentor | IsAdmin, IsAuthenticated)
 
     @swagger_auto_schema( operation_summary="List all reports submitted to a mentor")
     def get(self, request, mentor_id):

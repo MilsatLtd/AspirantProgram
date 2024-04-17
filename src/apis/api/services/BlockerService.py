@@ -18,6 +18,7 @@ class GetBlockerByTrack:
             blockers_serializer = BlockerSerializer(blockers, many=True)
             return Response(blockers_serializer.data, status=status.HTTP_200_OK)
         except Exception as e:
+            logger.exception(e)
             return Response(
                 data={"message": "Something went wrong \U0001F9D0"},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR)

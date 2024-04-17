@@ -42,6 +42,16 @@ export const applyApi = createApi({
             providesTags: ['Apply']
           };
         },
+      }),
+    sendEmail: builder.mutation({
+      query: (body: { email:string, subject:string, message:string}) => {
+          return {
+            url: "/email_async_test",
+            method: "post",
+            body,
+            providesTags: ['apply-email']
+          };
+        },
       })
   }),
 })
@@ -49,5 +59,6 @@ export const applyApi = createApi({
 export const {
    useGetCurrentCohortQuery, 
    useGetAllApplicationsQuery,
-   useApplyMutation
+   useApplyMutation,
+   useSendEmailMutation
   } = applyApi

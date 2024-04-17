@@ -8,10 +8,12 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 import { ChangeEvent } from "react";
 import MultiTextField from "@/components/atom/Customfields/MultiTextField";
+import { africanCountries } from "@/utils/data";
 
 interface formSectionType {
   changeSection: () => void;
   passData: (data: basicInfo) => void;
+  passEmail: (email:basicInfo["email"]) => void;
 }
 
 const FormSectionA = (props: formSectionType) => {
@@ -24,6 +26,7 @@ const FormSectionA = (props: formSectionType) => {
     gender: Yup.number().required("Gender is required"),
     phone_number: Yup.string().required("Phone Number is required"),
     role: Yup.number().required("Role is required"),
+    purpose:Yup.string().required("Purpose is required"),
     country: Yup.string().required("Country is required"),
     skills: Yup.string().required("Skills are required"),
     terms: Yup.boolean().oneOf([true], "You must accept the Terms and Conditions"),
@@ -50,10 +53,12 @@ const FormSectionA = (props: formSectionType) => {
     if (data.purpose) {
      const formatedData = removeTerms(data);
       props.passData(formatedData);
+      props.passEmail(data?.email)
     } else {
       data.purpose = "";
      const formatedData = removeTerms(data);
      props.passData(formatedData);
+     props.passEmail(data?.email)
     }
     props.changeSection();
   };
@@ -93,7 +98,7 @@ const FormSectionA = (props: formSectionType) => {
           label="First Name"
           onTextChange={(e) => handleSetValue(e.target.value, "first_name")}
           inputStyle=""
-          placeholder=""
+          placeholder="First Name"
           containerStyle="lg:col-span-6 col-span-1"
           type="text"
           error={errors.first_name?.message}
@@ -104,7 +109,7 @@ const FormSectionA = (props: formSectionType) => {
           label="Last Name"
           onTextChange={(e) => handleSetValue(e.target.value, "last_name")}
           inputStyle=""
-          placeholder=""
+          placeholder="Last name"
           containerStyle="lg:col-span-6 col-span-1"
           type="text"
           error={errors.last_name?.message}
@@ -112,7 +117,7 @@ const FormSectionA = (props: formSectionType) => {
           maxlength={30}
         />
       </div>
-      <div className="grid  lg:grid-cols-12 grid-cols-1 gap-24 w-full">
+      <div className="grid lg:grid-cols-12 grid-cols-1 gap-24 w-full">
         <TextField
           label="Email"
           placeholder="Enter email"
@@ -123,7 +128,7 @@ const FormSectionA = (props: formSectionType) => {
           error={errors.email?.message}
         />
       </div>
-      <div className="grid  lg:grid-cols-12 grid-cols-1 gap-24 w-full">
+      <div className="grid lg:grid-cols-12 grid-cols-1 gap-24 w-full">
         <DropDownField
           label="Level of Education"
           placeholder="Select level of education"
@@ -158,13 +163,13 @@ const FormSectionA = (props: formSectionType) => {
         <TextField
           label="Phone Number"
           onTextChange={(e) => handleSetValue(e.target.value, "phone_number")}
-          placeholder="Add phone number"
+          placeholder="Add Phone number (e.g. 081 ** *** ***)"
           inputStyle=""
           containerStyle="lg:col-span-6 col-span-1"
           type="number"
           error={errors.phone_number?.message}
           minlength={1}
-          maxlength={30}
+          maxlength={11}
         />
       </div>
       <div className="grid lg:grid-cols-12 grid-cols-1 gap-24 w-full">
@@ -175,16 +180,16 @@ const FormSectionA = (props: formSectionType) => {
           error={errors.skills?.message}
           sendSkills={(skills: string) => handleSetValue(skills, "skills")}
         />
-        <TextField
+        <DropDownField
           label="Country"
-          onTextChange={(e) => handleSetValue(e.target.value, "country")}
+          textValue={undefined}
+          placeholder="Select Country"
+          options={africanCountries}
+          dropDownStyle="h-[20rem] overflow-auto"
+          onTextChange={(e) => handleSetValue(e, "country")}
           inputStyle=""
-          placeholder="Enter Country"
           containerStyle="lg:col-span-4 col-span-1"
-          type="text"
           error={errors.country?.message}
-          minlength={1}
-          maxlength={30}
         />
         <DropDownField
           label="Role"

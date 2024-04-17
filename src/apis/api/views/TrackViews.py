@@ -57,7 +57,7 @@ class GetAndUpdateTrackView(mixins.RetrieveModelMixin,
         return UpdateTrack().update(track_id, request.data)
     
 class AddCourseToTrackView(CreateAPIView):
-    serializer_class = CourseSerializer
+    serializer_class = AddCourseToTrackSerializer
     permission_classes = (IsAuthenticated, IsAdmin)
 
     @swagger_auto_schema( operation_summary="Add a course to a track")
@@ -70,3 +70,11 @@ class DeleteTrackView(DestroyAPIView):
     @swagger_auto_schema( operation_summary="Delete a track by its id")
     def delete(self, request, track_id):
         return DeleteTrack(track_id).delete()
+    
+class ReorderTrackCoursesView(mixins.UpdateModelMixin, GenericAPIView):
+    serializer_class = ReorderTrackCoursesSerializer
+    permission_classes = (IsAuthenticated, IsAdmin)    
+
+    @swagger_auto_schema( operation_summary="Reorder the courses in a track")
+    def put(self, request, track_id):
+        return ReorderTrackCourses(track_id, request.data).reorder()

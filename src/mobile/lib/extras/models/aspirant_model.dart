@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 class AspirantModelClass {
   String? fullName;
   String? email;
@@ -41,6 +43,15 @@ class AspirantModelClass {
         "profile_picture": profilePicture,
         "progress": progress,
       };
+
+  String toJsonString() {
+    return jsonEncode(toJson());
+  }
+
+  factory AspirantModelClass.fromJsonString(String jsonString) {
+    final Map<String, dynamic> jsonMap = jsonDecode(jsonString);
+    return AspirantModelClass.fromJson(jsonMap);
+  }
 }
 
 class Cohort {

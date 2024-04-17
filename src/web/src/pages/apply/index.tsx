@@ -2,9 +2,10 @@ import ApplicantInfo from "@/components/atom/application/ApplicationInfo";
 import Footer from "@/components/organism/Footer";
 import ApplicationForm from "@/components/organism/Forms/ApplicationForm";
 import Header from "@/components/organism/Header";
-import { useApplyMutation, useGetCurrentCohortQuery } from "@/store/apiSlice/applyApi";
+import { useApplyMutation, useGetCurrentCohortQuery, useSendEmailMutation } from "@/store/apiSlice/applyApi";
 import { useAppDispatch } from "@/store/hooks";
 import { setAllTracks } from "@/store/slice/AllTracks";
+import { ApplicationEmailTemplate, applictionTimeline } from "@/utils/data";
 import {getAllTracksDetails}  from "@/utils/apiFunctions"
 import SubmitInfo from "@/components/atom/application/SubmitInfo";
 import blurEffectTop from "../../Assets/blur-effect-top.svg";
@@ -22,10 +23,19 @@ const ApplicationPage = () => {
     submitApplication,
     { isSuccess: isSubmitted, isLoading: isSubmitting, isError: isSubmitError, error: submitError },
   ] = useApplyMutation();
+
+  const [
+    sendApplicationEmail,
+    {}
+  ] =  useSendEmailMutation();
   const dispatch = useAppDispatch();
   const [show, setShow] = useState(false);
   const [SubmissionStatus, setSubmissionStatus] = useState("");
+  const [email, setEmail] = useState<string | undefined>();
   const [chorts, setChorts] = useState([] as any);
+  const [applyError, setApplyError] = useState<any>("");
+
+  const { startDate, endDate } = applictionTimeline
 
 
 
@@ -53,16 +63,18 @@ const ApplicationPage = () => {
   // Checks if the application is submitted or not
   useEffect(() => {
     if(isSubmitted){
-      setShow(true)
-      setSubmissionStatus("Your application has been sent successfully and under review")
+        setShow(true)
+        setSubmissionStatus("Your application has been sent successfully and under review")
+        sendApplicationEmail({email: email ? email : "", subject: "Application to the Milsat Aspirant Programme", message: ApplicationEmailTemplate})
       }
       if(isSubmitting){
         setShow(false)
       }
-      if(isSubmitError){
+      if(submitError){
+        setSubmissionStatus("")
+        setApplyError(submitError)
         setShow(true)
-        setSubmissionStatus("Your application was not successfull. Email already exist")
-      }
+        }
   }, [isSubmitted, isSubmitting, isSubmitError, submitError])
 
 
@@ -117,8 +129,8 @@ const ApplicationPage = () => {
       {show && (
         <div className={`w-screen h-screen z-40 fixed right-0 top-0 bottom-0 bg-[rgba(0,0,0,0.5)] flex items-center justify-center`}
         >
-          <div className="flex z-40 flex-col w-[35%] items-center gap-20">
-            <SubmitInfo info={SubmissionStatus} removePopup={(status)=>removePopup(status)} />
+          <div className="flex z-40 flex-col  w-[90%] md:w-[35%] items-center gap-20">
+            <SubmitInfo info={SubmissionStatus} error={applyError} removePopup={(status)=>removePopup(status)} />
           </div>
         </div>
       )}
@@ -130,8 +142,8 @@ const ApplicationPage = () => {
       >
         <Header showNavLinks={true} showApplyButton={false} />
         <section className="grid lg:grid-cols-12 grid-cols-1 lg:px-96 md:px-48 px-16 mt-[3rem] mb-[200px]">
-          <ApplicantInfo applicationTimeline={{start_date: "12 November, 2023", end_date: "31 December, 2023"}} />
-          <ApplicationForm  postResponse={(form)=> handleSubmitApplication(form)}/>
+          <ApplicantInfo applicationTimeline={{start_date: startDate, end_date: endDate}} />
+          <ApplicationForm  postResponse={(form)=> handleSubmitApplication(form)} passEmail={(email)=>setEmail(email)}/>
         </section>
       </div>
       <Footer />

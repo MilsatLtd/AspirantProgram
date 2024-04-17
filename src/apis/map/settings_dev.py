@@ -137,8 +137,8 @@ try:
     EMAIL_HOST = "smtp.gmail.com"
     EMAIL_PORT = 587
     EMAIL_USE_TLS = True
-    EMAIL_HOST_USER = os.environ["EMAIL_HOST_USER"]
-    EMAIL_HOST_PASSWORD = os.environ["EMAIL_HOST_PASSWORD"]
+    EMAIL_HOST_USER = "map.milsat@gmail.com" #os.environ["EMAIL_HOST_USER"]
+    EMAIL_HOST_PASSWORD = "qnrnlnbbglnscrxc" #os.environ["EMAIL_HOST_PASSWORD"]
 except:
     EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
@@ -146,10 +146,6 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
-    # 'DEFAULT_RENDERER_CLASSES': (
-    #     'api.common.generic_response.CustomJsonRenderer',
-    #     'rest_framework.renderers.BrowsableAPIRenderer',
-    # ),
     'EXCEPTION_HANDLER': 'api.exceptions.custom_exception_handler',
 }
 
@@ -177,12 +173,9 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = "en-us"
 
-TIME_ZONE = "Africa/Lagos"
-
 USE_I18N = True
 
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
@@ -196,14 +189,13 @@ STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 
-CELERY_BROKER_URL = "redis://default:pv5k1UZDyOSnKjV2b6Ed@containers-us-west-179.railway.app:7757"
-CELERY_RESULT_BACKEND = "redis://default:pv5k1UZDyOSnKjV2b6Ed@containers-us-west-179.railway.app:7757"
+CELERY_BROKER_URL = "redis://default:Fil5p6nejIfoalGHP52gMnMJpCCAN6IP@roundhouse.proxy.rlwy.net:55120"
+CELERY_RESULT_BACKEND = "redis://default:Fil5p6nejIfoalGHP52gMnMJpCCAN6IP@roundhouse.proxy.rlwy.net:55120"
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TASK_SERIALIZER = 'json'
-CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TIMEZONE = 'Africa/Lagos'
-CELERY_ENABLE_UTC = False
+CELERY_TASK_RESULT_EXPIRES = None
 
 
 AUTHENTICATION_BACKENDS = [
@@ -269,24 +261,25 @@ LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
     'handlers': {
-        'slack': {
-            'level': 'ERROR',
-            'class': 'api.logging.SlackLogHandler',
-            'logging_url': 'https://hooks.slack.com/services/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',
-            'stack_trace': True
-        },
         'console': {
             'level': 'ERROR',
             'class': 'logging.StreamHandler',
         },
         'file': {
-            'level': 'ERROR',
+            'level': 'INFO',
             'class': 'logging.FileHandler',
-            'filename': 'c:\temp\map.log',
+            'filename': 'c:\\temp\\map.log',
         },
     },
     'root': {
-        'handlers': ['slack'],
-        'level': 'ERROR',  # Adjust the log level as needed
+        'handlers': ['file'],
+        'level': 'INFO', 
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['file'],
+            'level': 'ERROR',
+            'propagate': True,
+        },
     },
 }
