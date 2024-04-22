@@ -40,4 +40,4 @@ echo "Restarting Celery workers and Flower"
 export DJANGO_SETTINGS_MODULE=map.settings_test
 
 #Run Migrations
-python3 manage.py migrate
+python3 manage.py migrate --settings=map.settings_test

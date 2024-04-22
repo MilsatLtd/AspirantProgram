@@ -13,7 +13,10 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 from celery.schedules import crontab, schedule
 from datetime import timedelta
 from pathlib import Path
+from dotenv import load_dotenv
 import os
+
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -22,7 +25,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-0qomica5!fmu8@l9_gr7ny7&h$v2es4r-0&)x$z&ig9otop2#h"
+SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY", "demo-key-sdssndskjnakdnkanffd")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
@@ -126,17 +129,17 @@ WSGI_APPLICATION = "map.wsgi.application"
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'map.milsat',
-        'USER': 'postgres',
-        'PASSWORD': 'Milsat123',
-        'HOST': 'map-api-db.cnmcuwnludvg.us-east-1.rds.amazonaws.com',
-        'PORT': '5432',
+        'NAME': os.environ.get("PGDATABASE", ""),
+        'USER': os.environ.get("PGUSER", ""),
+        'PASSWORD': os.environ.get("PGPASSWORD", ""),
+        'HOST': os.environ.get("PGHOST", ""),
+        'PORT': os.environ.get("PGPORT", ""),
     }
 }
 
 
-AWS_ACCESS_KEY_ID = "AKIAUDQNBNMGGCC6ZB5V" #os.environ.get("AWS_ACCESS_KEY_ID")
-AWS_SECRET_ACCESS_KEY = "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" #os.environ.get("AWS_SECRET_ACCESS_KEY")
+AWS_ACCESS_KEY_ID = os.environ.get("AWS_ACCESS_KEY_ID")
+AWS_SECRET_ACCESS_KEY = os.environ.get("AWS_SECRET_ACCESS_KEY")
 DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 AWS_STORAGE_BUCKET_NAME = "milsat-fileuploads"
 AWS_S3_REGION_NAME = "us-east-1"
@@ -146,8 +149,8 @@ EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_HOST = "smtp.gmail.com"
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = "map.milsat@gmail.com" #os.environ["EMAIL_HOST_USER"]
-EMAIL_HOST_PASSWORD = "qnrnlnbbglnscrxc" #os.environ["EMAIL_HOST_PASSWORD"]
+EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER", "")
+EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD", "")
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
@@ -274,7 +277,7 @@ LOGGING = {
         'slack': {
             'level': 'ERROR',
             'class': 'api.logging.SlackLogHandler',
-            'logging_url': 'https://hooks.slack.com/services/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',
+            'logging_url': 'https://hooks.slack.com/services/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',
             'stack_trace': True
         },
         'console': {

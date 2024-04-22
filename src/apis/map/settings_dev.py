@@ -13,7 +13,10 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 from celery.schedules import crontab, schedule
 from datetime import timedelta
 from pathlib import Path
+from dotenv import load_dotenv
 import os
+
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -23,7 +26,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-0qomica5!fmu8@l9_gr7ny7&h$v2es4r-0&)x$z&ig9otop2#h"
+SECRET_KEY = "django-insecure-devsecret1234567890"
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -137,8 +140,8 @@ try:
     EMAIL_HOST = "smtp.gmail.com"
     EMAIL_PORT = 587
     EMAIL_USE_TLS = True
-    EMAIL_HOST_USER = "map.milsat@gmail.com" #os.environ["EMAIL_HOST_USER"]
-    EMAIL_HOST_PASSWORD = "qnrnlnbbglnscrxc" #os.environ["EMAIL_HOST_PASSWORD"]
+    EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER", "")
+    EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD", "")
 except:
     EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
@@ -189,8 +192,8 @@ STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 
-CELERY_BROKER_URL = "redis://default:Fil5p6nejIfoalGHP52gMnMJpCCAN6IP@roundhouse.proxy.rlwy.net:55120"
-CELERY_RESULT_BACKEND = "redis://default:Fil5p6nejIfoalGHP52gMnMJpCCAN6IP@roundhouse.proxy.rlwy.net:55120"
+CELERY_BROKER_URL = ""
+CELERY_RESULT_BACKEND = ""
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TASK_SERIALIZER = 'json'
