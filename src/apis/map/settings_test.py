@@ -129,17 +129,17 @@ WSGI_APPLICATION = "map.wsgi.application"
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.environ.get("PGDATABASE", ""),
-        'USER': os.environ.get("PGUSER", ""),
-        'PASSWORD': os.environ.get("PGPASSWORD", ""),
-        'HOST': os.environ.get("PGHOST", ""),
-        'PORT': os.environ.get("PGPORT", ""),
+        'NAME': os.environ.get("PGDATABASE", "map.milsat"),
+        'USER': os.environ.get("PGUSER", "postgres"),
+        'PASSWORD': os.environ.get("PGPASSWORD", "password"),
+        'HOST': os.environ.get("PGHOST", "local.host"),
+        'PORT': os.environ.get("PGPORT", "5432"),
     }
 }
 
 
-AWS_ACCESS_KEY_ID = os.environ.get("AWS_ACCESS_KEY_ID")
-AWS_SECRET_ACCESS_KEY = os.environ.get("AWS_SECRET_ACCESS_KEY")
+AWS_ACCESS_KEY_ID = os.environ.get("AWS_ACCESS_KEY_ID", "aws-access-key-id")
+AWS_SECRET_ACCESS_KEY = os.environ.get("AWS_SECRET_ACCESS_KEY", "aws-secret")
 DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 AWS_STORAGE_BUCKET_NAME = "milsat-fileuploads"
 AWS_S3_REGION_NAME = "us-east-1"
