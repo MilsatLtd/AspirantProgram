@@ -11,7 +11,7 @@ import os
 
 from django.core.wsgi import get_wsgi_application
 
-if os.environ.get("DJANGO_ENV") == "Test": 
+if os.environ.get("DJANGO_SETTINGS_MODULE") == "map.settings_test": 
     settings_module = "map.settings_test"
 else:
     settings_module = "map.settings"
