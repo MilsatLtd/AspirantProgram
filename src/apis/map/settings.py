@@ -282,7 +282,7 @@ LOGGING = {
         'slack': {
             'level': 'ERROR',
             'class': 'api.logging.SlackLogHandler',
-            'logging_url': 'https://hooks.slack.com/services/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',
+            'logging_url': os.path.join("SLACK_URL", ""),
             'stack_trace': True
         },
         'console': {
