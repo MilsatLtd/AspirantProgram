@@ -19,7 +19,7 @@ jobs:
     strategy:
       matrix:
         java-version: [18]
-        flutter-version: ["3.16.0"]
+        flutter-version: ["3.19.2"]
 
     defaults:
       run:
