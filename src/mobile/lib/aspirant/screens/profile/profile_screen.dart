@@ -56,6 +56,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     final aspirantData = ref.watch(userDetails);
+    // ignore: deprecated_member_use
     return WillPopScope(
       onWillPop: () async {
         final shouldPop = await popToHome(context);

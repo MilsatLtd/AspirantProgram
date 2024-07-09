@@ -57,9 +57,9 @@ class APIService {
         data: data,
       );
       return response.data;
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       // Handle Dio errors
-      final errorMessage = _parseDioError(e);
+      final errorMessage = _parseDioException(e);
       return {'error': errorMessage};
     } catch (error) {
       // Handle generic errors
@@ -104,7 +104,7 @@ class APIService {
       }
       message = ['Blocker Resolved Successfully'];
       return response;
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       message = ['${e.response?.data['message']}'];
       throw Exception('Failed to post blocker: $e');
     } catch (error) {
@@ -144,7 +144,7 @@ class APIService {
             BlockerCommentModel.fromJson(response.data);
         return mentorComment;
       } else {}
-    } on DioError {
+    } on DioException {
       rethrow;
     } catch (e) {
       throw Exception('Error making request: ${e.toString()}');
@@ -174,7 +174,7 @@ class APIService {
   //       print(response.data);
   //     }
   //     return response;
-  //   } on DioError catch (e) {
+  //   } on DioException catch (e) {
   //     if (e.response != null) {
   //       return e.response!;
   //     } else {
@@ -207,9 +207,8 @@ class APIService {
         print(response.data);
       }
       return response;
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       if (e.response != null) {
-        print('${e.response}');
         return e.response!;
       } else {
         throw Exception('Error making request: ${e.message}');
@@ -239,7 +238,7 @@ class APIService {
       } else {
         throw Exception('Failed to load comments: ${response.statusCode}');
       }
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       throw ('${e.response}');
     } catch (e) {
       throw Exception('Error making request: ${e.toString()}');
@@ -260,9 +259,8 @@ class APIService {
         url,
         options: Options(headers: headers),
       );
-      print('${response.data}');
       return response.data;
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       throw ('${e.response}');
     } catch (e) {
       throw Exception('Error making request: ${e.toString()}');
@@ -284,7 +282,7 @@ class APIService {
         options: Options(headers: headers),
       );
       return response;
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       if (e.response != null) {
         return e.response!;
       } else {
@@ -295,7 +293,7 @@ class APIService {
     }
   }
 
-  String _parseDioError(DioError e) {
+  String _parseDioException(DioException e) {
     if (e.response != null) {
       final responseData = e.response!.data;
       if (responseData is Map<String, dynamic> &&

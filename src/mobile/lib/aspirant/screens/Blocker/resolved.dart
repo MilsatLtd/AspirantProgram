@@ -43,7 +43,7 @@ class Resolved extends StatelessWidget {
                 status: resolvedList[index]['status'],
                 currentUser: decodedTokenResponse?.userId ?? '',
                 time: '',
-                comments: [],
+                comments: const [],
               );
             }));
           },
