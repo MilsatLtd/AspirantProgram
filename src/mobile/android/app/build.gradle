@@ -49,6 +49,7 @@ android {
     }
 
     defaultConfig {
+        multiDexEnabled true
         applicationId "com.milsat.apirant"
         minSdkVersion 19
         targetSdkVersion 34
@@ -77,4 +78,5 @@ flutter {
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation 'androidx.multidex:multidex:2.0.1'
 }
