@@ -38,6 +38,7 @@ class ReportPageMentor extends ConsumerWidget {
 
     final reports = ref.watch(submittedReport);
 
+    // ignore: deprecated_member_use
     return WillPopScope(
       onWillPop: () async {
         final shouldPop = await goToMentorHomePage();

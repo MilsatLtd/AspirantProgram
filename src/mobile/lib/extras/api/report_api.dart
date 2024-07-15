@@ -37,7 +37,7 @@ class ApiService {
       if (kDebugMode) {
         print('Report submitted successfully');
       }
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       if (e.response != null) {
         if (kDebugMode) {
           print('Error status code: ${e.response?.statusCode}');
@@ -75,7 +75,7 @@ class ApiService {
       );
       cred['reports'] = response.data;
       return response;
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       if (e.response != null) {
         return e.response!;
       } else {
@@ -103,7 +103,7 @@ class ApiService {
       );
       cred['mentorReports'] = response.data;
       return response;
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       if (e.response != null) {
         return e.response!;
       } else {
@@ -133,7 +133,7 @@ class ApiService {
         print('Report Feedback submitted successfully');
         message = ['Report Feedback submitted successfully'];
       }
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       if (e.response != null) {
         if (kDebugMode) {
           print('Error message: ${e.response?.data}');

@@ -51,7 +51,7 @@ class ApiService {
           );
         }
       }
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       if (e.response?.statusCode == 400) {
         personalInfo['message'] =
             "${e.message} \n Old password is incorrect 🧐";

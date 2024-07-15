@@ -45,15 +45,13 @@ class ForgotPasswordService {
         case 200:
           ForgotPasswordResponse message =
               ForgotPasswordResponse.fromJson(response.data);
-          print(message.message);
-          print(message.profileType);
           return message;
 
         case 404:
           throw (response.data['message']);
         default:
       }
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       message = ForgotPasswordResponse.fromJson(e.response!.data);
       hasError = true;
       return message;
@@ -91,7 +89,7 @@ class ForgotPasswordService {
           throw (response.data['message']);
         default:
       }
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       message = ForgotPasswordResponse.fromJson(e.response!.data);
       hasError = true;
       return message;
