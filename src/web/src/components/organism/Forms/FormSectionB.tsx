@@ -102,6 +102,7 @@ useEffect(() => {
           dropDownStyle=""
           onTextChange={(e)=> {handleSetValue(e, "cohort"); filterTracks(e, allChorts)}}
           inputStyle=""
+          emptyOptionsMessage="No Live Cohorts Available"
           containerStyle="col-span-12"
           error={errors.cohort?.message}
         />
@@ -110,6 +111,7 @@ useEffect(() => {
           placeholder="Select Track"
           textValue={undefined}
           options={tracks}
+          disabled={tracks.length === 0}
           dropDownStyle=""
           onTextChange={(e)=> handleSetValue(e, "track_id")}
           inputStyle=""

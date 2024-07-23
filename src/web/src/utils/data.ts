@@ -136,8 +136,8 @@ export const AvailableTracks = [
     trackName: "Data Collection and Field Mapping",
     description:
       "Designed to equip participants with the essential skills and knowledge needed for effective field data collection, spatial analysis, and utilizing cutting-edge data collection technologies",
-    startDate: "5th Feburary, 2024",
-    endDate: "16th Feburary, 2024",
+      startDate: "24th July, 2024",
+      endDate: "14th August, 2024",
     learningTimeLine: "2 weeks",
     TrackInfo: [
       {
@@ -197,8 +197,8 @@ export const AvailableTracks = [
     trackName: "Fundamental of GIS",
     description:
       "Explore the foundational principles and essential skills of Geographic Information Systems (GIS) in this beginner-friendly track, gaining a solid understanding of the system",
-    startDate: "19th Feburary, 2024",
-    endDate: "2nd March, 2024",
+      startDate: "24th July, 2024",
+      endDate: "14th August , 2024",
     learningTimeLine: "2 weeks",
     TrackInfo: [
       {
@@ -294,8 +294,8 @@ export const AvailableTracks = [
 ];
 
 export const applictionTimeline = {
-  startDate: "5th Feburary, 2024",
-  endDate: "16th Feburary, 2024",
+  startDate: "24th July, 2024",
+  endDate: "14th August , 2024",
 };
 
 export const termsAndConditions = {
