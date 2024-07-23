@@ -27,11 +27,11 @@ const TrackCards = () => {
                   key={trackcard.id}
                   className={`lg:p-24 p-16  ${
                     trackcard.id === activeCard ? "" : null
-                  } transition-all lg:w-auto lg:h-auto  w-[253px] h-full delay-100 ease-in-out shadow-card border-[0.5px] flex flex-col lg:gap-28 md:gap-28 gap-10 border-P50 bg-N00  col-span-1 rounded-[24px]`}
+                  } transition-all lg:w-auto lg:h-[25rem] md:h-[18rem] w-[253px] delay-100 ease-in-out shadow-card border-[0.5px] flex flex-col lg:gap-28 md:gap-28 gap-10 border-P50 bg-N00  col-span-1 rounded-[24px]`}
                   onMouseEnter={() => setActiveCard(trackcard.id)}
                   onMouseLeave={() => setActiveCard(2)}
                 >
-                  <div className="w-full rounded-[16px] lg:h-[180px] md:h-[140px] h-[115px] ">
+                  <div className="w-full rounded-[16px] lg:min-h-[180px] md:min-h-[140px] h-[115px] ">
                     <Image
                       src={trackcard.picture}
                       alt={trackcard.name}
@@ -39,7 +39,7 @@ const TrackCards = () => {
                       priority
                     />
                   </div>
-                  <div className="flex flex-col lg:gap-24 gap-10">
+                  <div className="flex flex-col h-full justify-between ">
                     <h2 className="font-semibold lg:text-lg text-m-sm text-start lg:leading-[36px] leading-[24px] text-N400">
                       {trackcard.name}
                     </h2>

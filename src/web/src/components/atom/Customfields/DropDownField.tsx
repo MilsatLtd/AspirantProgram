@@ -5,13 +5,15 @@ interface dropDownFieldType {
   label: string;
   error: string | undefined;
   dropDownStyle: string;
+  emptyOptionsMessage?: string;
+  disabled?: boolean;
   placeholder: string;
   inputStyle: string;
   containerStyle: string;
   textValue: { label: string; value: string | number } | undefined;
   onTextChange: (data: string | number) => void;
   options: Array<{
-    label: string | null ;
+    label: string | null;
     value: string | number | null;
   }>;
 }
@@ -30,10 +32,11 @@ const DropDownField = (props: dropDownFieldType) => {
       setValue({ valueText: props.textValue.label });
       props.onTextChange(props.textValue.value);
     }
+    console.log(props.disabled)
   }, [props, props.textValue]);
 
   return (
-    <div className={`flex flex-col gap-8 relative ${props.containerStyle}`}>
+    <div className={`flex flex-col gap-8 relative ${props.containerStyle} `}>
       <div className="flex flex-col gap-4">
         <label className="text-[16px] leading-[28px] text-N400 lg:font-semibold font-medium">
           {props.label}
@@ -42,7 +45,7 @@ const DropDownField = (props: dropDownFieldType) => {
       <div
         className={`py-10 px-16 flex justify-between text-[16px] leading-[28px] font-medium rounded-md border-[1px] cursor-pointer ${
           props.error ? "border-R200" : dropdown ? "border-P300" : "border-N75"
-        } ${props.inputStyle}`}
+        } ${props.disabled ? "cursor-not-allowed pointer-events-none opacity-70": ""}  ${props.inputStyle}`}
         onClick={() => showDropdown(!dropdown)}
       >
         <p
@@ -64,27 +67,33 @@ const DropDownField = (props: dropDownFieldType) => {
       </div>
       <div className="transition-all delay-150 ease-in-out">
         <ul
-          className={`flex flex-col w-full right-0 top-[95%] z-20 gap-14 bg-N00 p-16 shadow-2xl absolute rounded-lg ${props.dropDownStyle}  ${
-            dropdown ? "block" : "hidden"
-          }`}
+          className={`flex flex-col w-full right-0 top-[95%] z-20 gap-14 bg-N00 p-16 shadow-2xl absolute rounded-lg ${
+            props.dropDownStyle
+          } ${props.disabled ? "cursor-not-allowed": ""}  ${dropdown ? "block" : "hidden"}`}
         >
-          {props.options && props.options.map((option, id) => {
-            return (
-              <li
-                key={id}
-                className="flex w-full items-center text-[16px] text-N200 font-semibold py-8 px-16 gap-16 rounded-lg hover:bg-P50"
-                onClick={() => {
-                  if(option.value !== null){
-                    props.onTextChange(option.value);
-                    setValue({ valueText: option.label });
-                    showDropdown(!dropdown);
-                  }
-                }}
-              >
-                <span>{option.label}</span>
-              </li>
-            );
-          })}
+          {props.options && props.options.length > 0 ? (
+            props.options.map((option, id) => {
+              return (
+                <li
+                  key={id}
+                  className="flex w-full items-center text-[16px] text-N200 font-semibold py-8 px-16 gap-16 rounded-lg hover:bg-P50"
+                  onClick={() => {
+                    if (option.value !== null) {
+                      props.onTextChange(option.value);
+                      setValue({ valueText: option.label });
+                      showDropdown(!dropdown);
+                    }
+                  }}
+                >
+                  <span>{option.label}</span>
+                </li>
+              );
+            })
+          ) : props.options && props.options.length === 0 ? (
+            <li className="flex w-full items-center justify-center text-[16px] text-N200 font-semibold py-8 px-16">
+             {props.emptyOptionsMessage}
+            </li>
+          ) : null}
         </ul>
         <span className="h-[2px] text-R300 text-sm">{props.error}</span>
       </div>
