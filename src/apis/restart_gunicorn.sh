@@ -19,7 +19,7 @@ sleep 5
 
 # Start a new Celery worker and Flower
 echo "Starting Celery workers"
-# celery -A map flower --persistent=True --port=5454 --loglevel=info --basic_auth=admin@milsat.com:Password123?_
+# celery -A map flower --persistent=True --port=5454 --loglevel=info --basic_auth=admin@milsat.com:https://github.com/MilsatLtd/MilsatAPI/pull/917
 celery -A map worker -n prod-celery --loglevel=info --detach
 echo "Celery workers started successfully"
 
