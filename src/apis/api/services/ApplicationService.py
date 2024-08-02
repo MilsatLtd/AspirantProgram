@@ -68,21 +68,28 @@ class GetApplicationById:
 class ReviewApplication:
     def review(self, data, applicant_id):
         try:
-            application = Applications.objects.select_related(
-                'user').get(applicant_id=applicant_id)
+            application = Applications.objects.select_related('user').get(applicant_id=applicant_id)
+
             if application.status != APPLICATION_STATUS.PENDING.value:
                 return Response(
                     data={"message": "Application with id: {} has already been reviewed \U0001F9D0".format(
                         applicant_id)},
                     status=status.HTTP_400_BAD_REQUEST)
+            
             application.status = data["status"]
             application.review_date = timezone.now()
+
             if data["status"] == APPLICATION_STATUS.ACCEPTED.value:
                 user = application.user
                 if application.role == ROLE.MENTOR.value:
                     self.create_mentor(application)
                 elif application.role == ROLE.STUDENT.value:
+                    if Applications.objects.filter(role=ROLE.MENTOR.value, status=APPLICATION_STATUS.PENDING.value).exists():
+                        return Response(
+                            data={"message": "All mentor applications must be reviewed before student applications \U0001F9D0"},
+                            status=status.HTTP_400_BAD_REQUEST)
                     self.create_student(application)
+
             application.save()
             self.update_track(application.track)
             return Response(
@@ -103,10 +110,14 @@ class ReviewApplication:
         user = application.user
         track = application.track
         new_mentor = Mentors.objects.create(user=user, track=track)
-        password = self.set_mentor_password(user)
         new_mentor.save()
+
+        isPreviousMentor =  Mentors.objects.filter(user=user).exists()
+        if not isPreviousMentor:
+            password = self.set_mentor_password(user)
+
         logger.info(f"Added a new mentor to the track: {track.track_id} with email: {user.email} and password: {password}")
-        message = application_message(application, password)
+        message = application_message(application, password, isPreviousMentor)
         sendEmail.delay(user.email, message['subject'], message['body'])
 
     def set_mentor_password(self, user):
@@ -129,8 +140,10 @@ class ReviewApplication:
         new_student = Students.objects.create(user=user, track=track)
         new_student.mentor = self.select_mentor(track)
         new_student.save()
+
+        isPreviouslyAccepted = Students.objects.filter(user=user).exists()
         logger.info(f"Added a new student to the track: {track.track_id} with email: {user.email} and password: {user.password}")
-        message = application_message(application, user.phone_number)
+        message = application_message(application, user.phone_number, isPreviouslyAccepted)
         sendEmail.delay(user.email, message['subject'], message['body'])
 
     def select_mentor(self, track):
