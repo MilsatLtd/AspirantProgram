@@ -4,7 +4,7 @@ import { useParams } from "react-router-dom";
 import Enums from "./constant/enum";
 import utils from "./constant/common";
 import { useQuery } from "@tanstack/react-query";
-import fetAllApplications from "./api/fetchAllApplications";
+import fetchApplicationByCohortId from "./api/fetchApplicationByCohortId";
 import Modal from "./Modal";
 import reviewApplication from "./api/reviewApplication";
 import { useMutation } from "@tanstack/react-query";
@@ -85,11 +85,9 @@ function Applications() {
     const [documentLink, setDocumentLink] = useState("");
 
     const { cohort_id } = useParams();
-    const results = useQuery(["applications"], fetAllApplications);
+    const results = useQuery(["cohort_applications"], fetchApplicationByCohortId(cohort_id));
 
-    const applications = results?.data ?? [];
-
-    const cohort_applications = applications.filter(application => application.cohort === cohort_id)
+    const cohort_applications = results?.data ?? [];
     const interns = cohort_applications.filter(application => application.role === Enums.ROLE.STUDENT);
     const mentors = cohort_applications.filter(application => application.role === Enums.ROLE.MENTOR);
 
