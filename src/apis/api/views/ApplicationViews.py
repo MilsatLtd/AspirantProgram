@@ -15,9 +15,9 @@ class ListApplication(ListAPIView):
     serializer_class = ApplicationSerializer2
     permission_classes = (IsAuthenticated, IsAdmin,)
 
-    @swagger_auto_schema( operation_summary="List all applications")
-    def get(self, request):
-        return GetAllApplications().get()
+    @swagger_auto_schema( operation_summary="List all applications for a cohort")
+    def get(self, request, cohort_id):
+        return GetAllApplications().get(cohort_id)
             
 class ReviewApplicationView(CreateAPIView):
     serializer_class = ReviewApplicationSerializer

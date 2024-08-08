@@ -31,9 +31,9 @@ class ApplytoLiveCohort:
 
 
 class GetAllApplications:
-    def get(self):
+    def get(self, cohort_id):
         try:
-            users = Applications.objects.all()
+            users = Applications.objects.filter(cohort_id = cohort_id)
             users_serializer = ApplicationSerializer2(users, many=True)
             return Response(users_serializer.data, status=status.HTTP_200_OK)
         except Exception as e:
