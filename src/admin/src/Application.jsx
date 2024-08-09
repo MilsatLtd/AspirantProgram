@@ -85,7 +85,7 @@ function Applications() {
     const [documentLink, setDocumentLink] = useState("");
 
     const { cohort_id } = useParams();
-    const results = useQuery(["cohort_applications"], fetchApplicationByCohortId(cohort_id));
+    const results = useQuery(["cohort_applications", cohort_id], () => fetchApplicationByCohortId(cohort_id));
 
     const cohort_applications = results?.data ?? [];
     const interns = cohort_applications.filter(application => application.role === Enums.ROLE.STUDENT);

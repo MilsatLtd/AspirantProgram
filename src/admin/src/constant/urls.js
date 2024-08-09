@@ -1,9 +1,12 @@
+
+const API_ENDPOINT = import.meta.env.VITE_APP_API_BASE_URL;
+
 const urls = {
-    getAllCohorts: "https://aspirant-api.milsat.africa/api/cohorts/",
-    getAllApplications: "https://aspirant-api.milsat.africa/api/applications/",
-    getAllTracks: "https://aspirant-api.milsat.africa/api/tracks/",
-    login: "https://aspirant-api.milsat.africa/api/auth/login",
-    reviewApplication: "https://aspirant-api.milsat.africa/api/applications/",
+    getAllCohorts: `${API_ENDPOINT}cohorts/`,
+    getAllApplications: `${API_ENDPOINT}applications/`,
+    getAllTracks: `${API_ENDPOINT}tracks/`,
+    login: `${API_ENDPOINT}auth/login`,
+    reviewApplication: `${API_ENDPOINT}applications/`,
 
 }
 
