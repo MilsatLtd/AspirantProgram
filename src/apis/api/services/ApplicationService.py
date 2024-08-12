@@ -116,7 +116,7 @@ class ReviewApplication:
         if not isPreviousMentor:
             password = self.set_mentor_password(user)
 
-        logger.info(f"Added a new mentor to the track: {track.track_id} with email: {user.email} and password: {password}")
+        logger.info(f"Added a new mentor to the track: {track.track_id} with email: {user.email}")
         message = application_message(application, password, isPreviousMentor)
         sendEmail.delay(user.email, message['subject'], message['body'])
 
@@ -142,7 +142,7 @@ class ReviewApplication:
         new_student.save()
 
         isPreviouslyAccepted = Students.objects.filter(user=user).exists()
-        logger.info(f"Added a new student to the track: {track.track_id} with email: {user.email} and password: {user.password}")
+        logger.info(f"Added a new student to the track: {track.track_id} with email: {user.email}")
         message = application_message(application, user.phone_number, isPreviouslyAccepted)
         sendEmail.delay(user.email, message['subject'], message['body'])
 
