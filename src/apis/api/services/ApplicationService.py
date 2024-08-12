@@ -109,10 +109,12 @@ class ReviewApplication:
     def create_mentor(self, application):
         user = application.user
         track = application.track
+        isPreviousMentor =  Mentors.objects.filter(user=user).exists()
+
         new_mentor = Mentors.objects.create(user=user, track=track)
         new_mentor.save()
+        
         password = None
-        isPreviousMentor =  Mentors.objects.filter(user=user).exists()
         if not isPreviousMentor:
             password = self.set_mentor_password(user)
 
