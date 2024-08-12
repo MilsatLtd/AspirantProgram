@@ -111,7 +111,7 @@ class ReviewApplication:
         track = application.track
         new_mentor = Mentors.objects.create(user=user, track=track)
         new_mentor.save()
-
+        password = None
         isPreviousMentor =  Mentors.objects.filter(user=user).exists()
         if not isPreviousMentor:
             password = self.set_mentor_password(user)
