@@ -118,7 +118,7 @@ urlpatterns += [
     ),
     path("applications/<uuid:cohort_id>", ListApplication.as_view(), name="ListApplications"),
     path(
-        "applications/<uuid:applicant_id>",
+        "applications/review/<uuid:applicant_id>",
         ReviewApplicationView.as_view(),
         name="reviewApplication",
     ),
