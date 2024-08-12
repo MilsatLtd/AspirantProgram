@@ -6,7 +6,7 @@ const urls = {
     getAllApplications: `${API_ENDPOINT}applications/`,
     getAllTracks: `${API_ENDPOINT}tracks/`,
     login: `${API_ENDPOINT}auth/login`,
-    reviewApplication: `${API_ENDPOINT}applications/`,
+    reviewApplication: `${API_ENDPOINT}applications/review/`,
 
 }
 
