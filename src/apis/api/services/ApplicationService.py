@@ -84,7 +84,7 @@ class ReviewApplication:
                 if application.role == ROLE.MENTOR.value:
                     self.create_mentor(application)
                 elif application.role == ROLE.STUDENT.value:
-                    if Applications.objects.filter(role=ROLE.MENTOR.value, status=APPLICATION_STATUS.PENDING.value).exists():
+                    if Applications.objects.filter(role=ROLE.MENTOR.value, status=APPLICATION_STATUS.PENDING.value, track = application.track ).exists():
                         return Response(
                             data={"message": "All mentor applications must be reviewed before student applications \U0001F9D0"},
                             status=status.HTTP_400_BAD_REQUEST)
@@ -137,11 +137,12 @@ class ReviewApplication:
     def create_student(self, application):
         user = application.user
         track = application.track
+        isPreviouslyAccepted = Students.objects.filter(user=user).exists()
+
         new_student = Students.objects.create(user=user, track=track)
         new_student.mentor = self.select_mentor(track)
         new_student.save()
 
-        isPreviouslyAccepted = Students.objects.filter(user=user).exists()
         logger.info(f"Added a new student to the track: {track.track_id} with email: {user.email}")
         message = application_message(application, user.phone_number, isPreviouslyAccepted)
         sendEmail.delay(user.email, message['subject'], message['body'])
