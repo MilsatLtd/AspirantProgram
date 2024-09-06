@@ -23,11 +23,16 @@ void main() async {
   );
 }
 
+late double screenWidth;
+late double screenHeight;
+
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
+    screenWidth = MediaQuery.sizeOf(context).width;
+    screenHeight = MediaQuery.sizeOf(context).height;
     return MaterialApp(
       title: 'MILSAT ASPIRANT',
       theme: ThemeData(

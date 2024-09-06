@@ -31,8 +31,8 @@ class _SplashScreenState extends State<SplashScreen> {
     } else {
       setState(() {
         _showOnboarding = true;
-        prefs.setBool('onboardingShown', true);
       });
+      await prefs.setBool('onboardingShown', true);
     }
   }
 

@@ -155,9 +155,6 @@ class AppRouter {
   static PageRoute<dynamic> getPageRoute({
     required RouteSettings settings,
     required Widget view,
-  }) {
-    return Platform.isIOS
-        ? CupertinoPageRoute(settings: settings, builder: (_) => view)
-        : MaterialPageRoute(settings: settings, builder: (_) => view);
-  }
+  }) =>
+      CupertinoPageRoute(settings: settings, builder: (_) => view);
 }
