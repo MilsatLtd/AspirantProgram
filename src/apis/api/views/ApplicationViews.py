@@ -41,3 +41,71 @@ class GetApplicationStatsView(RetrieveAPIView):
     @swagger_auto_schema( operation_summary="Get application statistics")
     def get(self, request, cohort_id):
         return GetApplicationStats().get(cohort_id)
+    
+
+from django.http import HttpResponse
+from django.shortcuts import get_object_or_404
+from openpyxl import Workbook
+from api.models import Applications
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
+from django.views import View
+
+logger = logging.getLogger(__name__)
+
+class ExportApplicationsView(RetrieveAPIView):
+    permission_classes = (IsAuthenticated, IsAdmin,)
+
+    # @method_decorator(login_required)
+    @swagger_auto_schema( operation_summary="Export applications for a cohort")
+    def get(self, request, cohort_id, role):
+        try:
+            role = role.lower()
+            if role not in ['mentor', 'aspirant']:
+                return HttpResponse("Invalid role. Must be 'mentor' or 'aspirant'.", status=400)
+
+            cohort = get_object_or_404(Cohort, cohort_id=cohort_id)
+            role_value = 1 if role == 'mentor' else 2  # 1 for Mentor, 2 for Student (aspirant)
+
+            applications = Applications.objects.filter(cohort=cohort, role=role_value).select_related('user')
+
+            wb = Workbook()
+            ws = wb.active
+            ws.title = f"{role.capitalize()} Applications"
+
+            # Write headers
+            headers = [
+                "User ID", "First Name", "Last Name", "Email", "Gender", "Role", "Country", "Phone Number",
+                "Application ID", "Reason", "Referral", "Skills", "Purpose", "Education",
+                "Submission Date", "Review Date", "Status"
+            ]
+            ws.append(headers)
+
+            # Write data
+            for app in applications:
+                user = app.user
+                
+                 # Convert datetime fields to timezone-naive objects
+                submission_date = app.submission_date.astimezone(timezone.utc).replace(tzinfo=None) if app.submission_date else None
+                review_date = app.review_date.astimezone(timezone.utc).replace(tzinfo=None) if app.review_date else None
+                
+                row = [
+                    str(user.user_id), user.first_name, user.last_name, user.email,
+                    user.get_gender_display(), app.get_role_display(), user.country, user.phone_number,
+                    str(app.applicant_id), app.reason, app.referral, app.skills, app.purpose,
+                    app.get_education_display(), submission_date, review_date,
+                    app.get_status_display()
+                ]
+                ws.append(row)
+
+            # Create response
+            response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+            response['Content-Disposition'] = f'attachment; filename={cohort.name}_{role}_applications.xlsx'
+            wb.save(response)
+
+        except Exception as e:
+            logger.exception(e)
+            print(e)
+            response = HttpResponse("An error occurred while exporting the applications.", status=500)
+
+        return response

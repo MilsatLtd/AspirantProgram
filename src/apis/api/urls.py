@@ -132,6 +132,9 @@ urlpatterns += [
         GetApplicationStatsView.as_view(),
         name="getApplicationStats",
     ),
+    path("applications/export/<uuid:cohort_id>/<str:role>",
+          ExportApplicationsView.as_view(),
+          name='exportApplications'),
     path(
         "students/<uuid:user_id>/<uuid:track_id>",
         GetStudentView.as_view(),
