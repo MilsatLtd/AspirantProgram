@@ -105,7 +105,8 @@ class ExportApplicationsView(RetrieveAPIView):
 
         except Exception as e:
             logger.exception(e)
-            print(e)
-            response = HttpResponse("An error occurred while exporting the applications.", status=500)
+            return Response(
+                data={"message": "Something went wrong \U0001F9D0"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
         return response
