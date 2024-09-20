@@ -29,17 +29,13 @@ def application_message(application, password, isPreviouslyAccepted):
             f"""
 Dear {application.user.first_name},
 
-We're thrilled to inform you that your application for the Milsat Aspirant Programme has been successfully reviewed, and it is with great pleasure that we extend our warmest congratulations on your admission to the {cohort_name} as a {role}.
+We're thrilled to inform you that your application for the Milsat Aspirant Programme has been successfully reviewed, and it is with great pleasure that we extend our warmest congratulations on your admission to the {cohort_name} cohort as a {role}.
 
 Your journey with us begins on {format_timestamp(application.track.cohort.start_date)}, and concludes on {format_timestamp(application.track.cohort.end_date)}.
 
-To ensure you make the most of your experience, we have prepared a starter pack for you.
-
-Kindly take a moment to fill out this form: https://forms.gle/yttJAz4xSYGVQufp9
-
-Finally, below are your login credentials for the mobile application:
--Email: {application.user.email}
--Password: {password}
+To ensure you make the most of your experience, we have prepared a starter pack for you;
+    - Kindly take a moment to download the curriculum. [Data Collection Curriculum.pdf](https://drive.google.com/file/d/1KIim28hV4skwWjuioM4zVWaGe-do7zYF/view?usp=sharing)
+    - To facilitate effective communication and collaboration, we invite you to join our WhatsApp group by clicking on this link [MAP Second Cohort](https://chat.whatsapp.com/GRgsY8bSjU412CmHor26UN).
 
 Should you have any questions or require assistance, please don't hesitate to contact us at map.milsat@gmail.com.
 
@@ -67,15 +63,17 @@ def application_message_previously_accepted(application):
             f"""
 Dear {application.user.first_name},
 
-We're thrilled to inform you that your application for the Milsat Aspirant Programme has been successfully reviewed, and it is with great pleasure that we extend our warmest congratulations on your readmission to the {cohort_name} as a {role}.
+We're thrilled to inform you that your application for the Milsat Aspirant Programme has been successfully reviewed, and it is with great pleasure that we extend our warmest congratulations on your readmission to the {cohort_name} cohort as a {role}.
 
 Your journey with us begins on {format_timestamp(application.track.cohort.start_date)}, and concludes on {format_timestamp(application.track.cohort.end_date)}.
 
 To ensure you make the most of your experience, we have prepared a starter pack for you.
 
-Kindly take a moment to fill out this form: https://forms.gle/yttJAz4xSYGVQufp9
+To ensure you make the most of your experience, we have prepared a starter pack for you;
+    - Kindly take a moment to download the curriculum. [Data Collection Curriculum.pdf](https://drive.google.com/file/d/1KIim28hV4skwWjuioM4zVWaGe-do7zYF/view?usp=sharing)
+    - To facilitate effective communication and collaboration, we invite you to join our WhatsApp group by clicking on this link [MAP Second Cohort](https://chat.whatsapp.com/GRgsY8bSjU412CmHor26UN).
 
-Should you have any questions or require assistance, please don't hesitate to contact us at
+Should you have any questions or require assistance, please don't hesitate to contact us at map.milsat@gmail.com.
 
 Best regards,
 MAP Admin.
