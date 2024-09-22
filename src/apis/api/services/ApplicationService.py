@@ -40,6 +40,21 @@ class GetAllApplications:
             logger.exception(e)
             return Response(
                 data={"message": "Something went wrong \U0001F9D0"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR) 
+
+# Get All Appplication with pagination, accept page number and page size and return current page and total pages
+class GetAllApplicationsWithPagination:
+    def get(self, cohort_id, page_number=1, page_size=40):
+        try:
+            users = Applications.objects.filter(cohort_id = cohort_id)
+            total_pages = (users.count() + page_size - 1) // page_size
+            users = users[(page_number - 1) * page_size: page_number * page_size]
+            users_serializer = ApplicationSerializer2(users, many=True)
+            return Response({"current_page": page_number, "total_pages": total_pages, "data": users_serializer.data}, status=status.HTTP_200_OK)
+        except Exception as e:
+            logger.exception(e)
+            return Response(
+                data={"message": "Something went wrong \U0001F9D0"},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
