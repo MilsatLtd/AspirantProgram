@@ -2,13 +2,13 @@ from rest_framework import status
 from rest_framework.response import Response
 from django.utils import timezone
 from api.common.constants import application_message
-from django.db.models import Count
+from django.db.models import Count, Q
 
 
 from api.common.enums import *
 from api.models import User, Applications, Mentors, Students
 from api.serializers import UserSerializer, ApplicationSerializer, CreateApplicationSerializer, ApplicationSerializer2
-from api.common.utils import sendEmail
+from api.common.utils import *
 import logging
 
 logger = logging.getLogger(__name__)
@@ -46,11 +46,16 @@ class GetAllApplications:
 class GetAllApplicationsWithPagination:
     def get(self, cohort_id, page_number=1, page_size=40):
         try:
-            users = Applications.objects.filter(cohort_id = cohort_id)
-            total_pages = (users.count() + page_size - 1) // page_size
-            users = users[(page_number - 1) * page_size: page_number * page_size]
+            mentors_count = Applications.objects.filter(cohort_id=cohort_id, role=ROLE.MENTOR.value).count()
+            students_count = Applications.objects.filter(cohort_id=cohort_id, role=ROLE.STUDENT.value).count()
+            mentors_page_size = (page_size + 1) // 2 if mentors_count >= students_count else page_size // 2
+            students_page_size = page_size - mentors_page_size
+            mentors = Applications.objects.filter(cohort_id=cohort_id, role=ROLE.MENTOR.value)[(page_number - 1) * mentors_page_size: page_number * mentors_page_size]
+            students = Applications.objects.filter(cohort_id=cohort_id, role=ROLE.STUDENT.value)[(page_number - 1) * students_page_size: page_number * students_page_size]
+            users = list(mentors) + list(students)
             users_serializer = ApplicationSerializer2(users, many=True)
-            return Response({"current_page": page_number, "total_pages": total_pages, "data": users_serializer.data}, status=status.HTTP_200_OK)
+            total_pages = (mentors_count + students_count + page_size - 1) // page_size
+            return Response({ "current_page": page_number, "total_pages": total_pages, "data": users_serializer.data}, status=status.HTTP_200_OK)
         except Exception as e:
             logger.exception(e)
             return Response(
@@ -127,6 +132,7 @@ class ReviewApplication:
         new_mentor = Mentors.objects.create(user=user, track=track)
         new_mentor.save()
 
+        password = None
         isPreviousMentor =  Mentors.objects.filter(user=user).exists()
         if not isPreviousMentor:
             password = self.set_mentor_password(user)

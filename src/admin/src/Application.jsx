@@ -8,6 +8,7 @@ import fetchApplicationByCohortId from "./api/fetchApplicationByCohortId";
 import Modal from "./Modal";
 import reviewApplication from "./api/reviewApplication";
 import { useMutation } from "@tanstack/react-query";
+import Loader from "./Loader";
 
 function StudentColumn ( { student, passApplicantId }) {
     if (!student) {
@@ -83,11 +84,13 @@ function Applications() {
     const [isShowDetails, setIsShowDetails] = useState(false);
     const [isPreviewDoc, setIsPreviewDoc] = useState(false);
     const [documentLink, setDocumentLink] = useState("");
+    const [page, setPage] = useState(1);
 
     const { cohort_id } = useParams();
-    const results = useQuery(["cohort_applications", cohort_id], () => fetchApplicationByCohortId(cohort_id));
+    const results = useQuery(["cohort_applications", cohort_id, page], () => fetchApplicationByCohortId(cohort_id, page), { keepPreviousData: true });
 
-    const cohort_applications = results?.data ?? [];
+    const data = results?.data ?? {"data": []};
+    const cohort_applications = data?.data ?? [];
     const interns = cohort_applications.filter(application => application.role === Enums.ROLE.STUDENT);
     const mentors = cohort_applications.filter(application => application.role === Enums.ROLE.MENTOR);
 
@@ -95,8 +98,19 @@ function Applications() {
     for (let i = 0; i < Math.max(interns.length, mentors.length); i++) {
         pairs.push([interns[i], mentors[i]]);
     }
+
+    const handlePageChange = (pageNumber) => {
+        if (pageNumber < 1) {
+            return;
+        }
+        if (pageNumber > data.total_pages) {
+            return;
+        }
+        setPage(pageNumber)
+    }
     return (
         <>
+        {results.isLoading ? <Loader css1={"flex justify-center items-center"} css2="w-[30px] h-[30px]" /> : null}
         <div className="grid grid-cols-3 m-10">
 
         <table className="col-start-1 col-span-3 w-full border-separate border-spacing-x-2 border-spacing-y-1">
@@ -153,6 +167,23 @@ function Applications() {
                 </Modal>
             ): null
         }
+        <div className="flex justify-center gap-5 m-10 justify-center items-center w-full">
+            <button 
+                onClick={() => handlePageChange(page - 1)} 
+                className={`bg-gray-300 p-3 rounded-md hover:opacity-50 font-semibold text-base text-white ${page <= 1 ? 'invisible' : ''}`}
+            > Previous </button>
+            {
+                results.data?.total_pages ? Array.from({length: results.data.total_pages}, (_, i) => i + 1).map((pageNumber) => {
+                    return (
+                        <button key={pageNumber} onClick={() => setPage(pageNumber)} className={`bg-gray-300 p-4 rounded-md hover:opacity-50 font-semibold text-base text-white ${pageNumber === page ? 'bg-gray-500' : ''}`}>{pageNumber}</button>
+                    )
+                }) : null
+            }
+            <button 
+                onClick={() => handlePageChange(page - 1)} 
+                className={`bg-gray-300 p-3 rounded-md hover:opacity-50 font-semibold text-base text-white ${page >= data?.total_pages ? 'invisible' : ''}`}
+            > Next </button>
+        </div>
         </>
     )
 }
