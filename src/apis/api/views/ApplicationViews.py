@@ -17,7 +17,15 @@ class ListApplication(ListAPIView):
 
     @swagger_auto_schema( operation_summary="List all applications for a cohort")
     def get(self, request, cohort_id):
-        return GetAllApplications().get(cohort_id)
+        try:
+            page_number = int( request.query_params.get('page_number', 1) )
+            page_size = int( request.query_params.get('page_size', 30) )
+            return GetAllApplicationsWithPagination().get(cohort_id, page_number, page_size)
+        except Exception as e:
+            logger.exception(e)
+            return Response(
+                data={"message": "Something went wrong \U0001F9D0"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR)
             
 class ReviewApplicationView(CreateAPIView):
     serializer_class = ReviewApplicationSerializer
@@ -47,9 +55,6 @@ from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from openpyxl import Workbook
 from api.models import Applications
-from django.contrib.auth.decorators import login_required
-from django.utils.decorators import method_decorator
-from django.views import View
 
 logger = logging.getLogger(__name__)
 

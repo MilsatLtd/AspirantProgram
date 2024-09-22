@@ -116,7 +116,7 @@ urlpatterns += [
         ReorderTrackCoursesView.as_view(),
         name="reorderTrackCourses",
     ),
-    path("applications/<uuid:cohort_id>", ListApplication.as_view(), name="ListApplications"),
+    path("applications/<uuid:cohort_id>/", ListApplication.as_view(), name="ListApplications"),
     path(
         "applications/review/<uuid:applicant_id>",
         ReviewApplicationView.as_view(),
