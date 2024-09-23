@@ -1,7 +1,7 @@
 import  urls  from "../constant/urls"
 
 async function fetchApplicationByCohortId(cohortId, page){
-    const url = urls.getAllApplications + cohortId+`/?page_number=${page}&page_size=2`;
+    const url = urls.getAllApplications + cohortId+`/?page_number=${page}&page_size=40`;
     const res = await fetch(url, {
         method: 'GET',
         headers: {
