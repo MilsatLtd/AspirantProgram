@@ -81,7 +81,7 @@ class PasswordReset(GenericAPIView, CreateModelMixin ):
                 send_mail(
                     'Password Reset for Your Account',
                      html2text.HTML2Text().handle(f'Please use this 6 digit token to reset your password: {token}'),
-                    settings.EMAIL_HOST_USER,
+                    settings.AWS_DEFAULT_FROM_EMAIL,
                     [email],
                     fail_silently=False,
                 )
