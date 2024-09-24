@@ -9,6 +9,8 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+sender = settings.DEFAULT_FROM_EMAIL
+
 
 @shared_task()
 def cohort_apply_to_live(cohort_id):
@@ -35,7 +37,6 @@ def cohort_live_to_end(cohort_id):
 
 def send_html_email_task(subject=None, recipient=None, message=None):
     try:
-        sender = settings.AWS_DEFAULT_FROM_EMAIL
         plaintext = html2text.HTML2Text().handle(message)
         send_mail(subject, plaintext, sender, recipient, html_message=message, fail_silently=False)
     except Exception as e:
@@ -46,7 +47,6 @@ def send_html_email_task2(self, subject=None, recipient=None, message=None):
     try:
         import time
         time.sleep(30)
-        sender = settings.AWS_DEFAULT_FROM_EMAIL
         plaintext = html2text.HTML2Text().handle(message)   
         send_mail(subject, plaintext, sender, recipient, html_message=message, fail_silently=False)
     except Exception as e:
