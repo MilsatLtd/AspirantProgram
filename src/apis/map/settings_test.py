@@ -149,10 +149,9 @@ AWS_STORAGE_BUCKET_NAME = "milsat-fileuploads"
 AWS_S3_REGION_NAME = "us-east-1"
 AWS_QUERYSTRING_AUTH = False
 
-AWS_SES_REGION_NAME = 'us-east-1'  # Your SES region
-AWS_SES_REGION_ENDPOINT = 'email.us-east-1.amazonaws.com'  # SES endpoint
-AWS_DEFAULT_FROM_EMAIL = 'your_verified_email@domain.com'
-
+AWS_SES_REGION_NAME = os.environ.get("AWS_SES_REGION_NAME")
+AWS_SES_REGION_ENDPOINT = os.environ.get("AWS_SES_REGION_ENDPOINT", "email.us-east-1.amazonaws.com")
+AWS_DEFAULT_FROM_EMAIL = os.environ.get("AWS_DEFAULT_FROM_EMAIL", "your_verified_email@domain.com")
 
 EMAIL_BACKEND = 'django_ses.SESBackend'
 
