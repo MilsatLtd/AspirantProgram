@@ -2,7 +2,7 @@ from rest_framework import status
 from rest_framework.response import Response
 from django.utils import timezone
 from api.common.constants import application_message
-from django.db.models import Count, Case, When, IntegerField, Count
+from django.db.models import Count, Case, When, IntegerField, Count, Q, Value
 from django.db.models.functions import Coalesce
 
 
@@ -45,9 +45,7 @@ class GetAllApplications:
 
 class GetAllApplicationsWithPagination:
     def get(self, cohort_id, page_number=1, page_size=40):
-        start_time = timezone.now()
         try:
-            # Get total count for mentors and students in a single query
             counts = Applications.objects.filter(cohort_id=cohort_id).aggregate(
                 mentors_count=Coalesce(Count(Case(
                     When(role=ROLE.MENTOR.value, then=1),
@@ -62,27 +60,35 @@ class GetAllApplicationsWithPagination:
             mentors_count = counts['mentors_count']
             students_count = counts['students_count']
 
-            # Calculate how to split the page between mentors and students
             mentors_page_size = (page_size + 1) // 2 if mentors_count >= students_count else page_size // 2
             students_page_size = page_size - mentors_page_size
 
-            # Fetch only the necessary mentors and students based on pagination
-            mentors = Applications.objects.filter(cohort_id=cohort_id, role=ROLE.MENTOR.value).order_by('applicant_id')[
+            combined_query = Applications.objects.filter(
+                Q(cohort_id=cohort_id) & (Q(role=ROLE.MENTOR.value) | Q(role=ROLE.STUDENT.value))
+            ).annotate(
+                is_mentor=Case(
+                    When(role=ROLE.MENTOR.value, then=Value(1)),
+                    default=Value(0),
+                    output_field=IntegerField()
+                )
+            ).order_by('applicant_id')
+
+            mentors = combined_query.filter(is_mentor=1)[
                 (page_number - 1) * mentors_page_size: page_number * mentors_page_size
             ]
-            students = Applications.objects.filter(cohort_id=cohort_id, role=ROLE.STUDENT.value).order_by('applicant_id')[
+            students = combined_query.filter(is_mentor=0)[
                 (page_number - 1) * students_page_size: page_number * students_page_size
             ]
 
-            # Combine the results
             users = list(mentors) + list(students)
 
-            # Serialize the data
             users_serializer = ApplicationSerializer2(users, many=True)
 
-            # Calculate total pages
-            total_items = mentors_count + students_count
-            total_pages = (total_items + page_size - 1) // page_size
+            total_mentors_pages = (mentors_count // mentors_page_size) + (1 if mentors_count % mentors_page_size != 0 else 0)
+
+            total_students_pages = (students_count // students_page_size) + (1 if students_count % students_page_size != 0 else 0)
+
+            total_pages = max(total_mentors_pages, total_students_pages)
 
             return Response({
                 "current_page": page_number,
@@ -95,6 +101,7 @@ class GetAllApplicationsWithPagination:
                 data={"message": "Something went wrong 🤔"},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
+
 
 
 class GetApplicationById:
