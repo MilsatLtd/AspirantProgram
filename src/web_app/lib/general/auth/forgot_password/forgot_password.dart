@@ -45,6 +45,18 @@ class _ForgotPasswordState extends ConsumerState<ForgotPassword> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        appBar: AppBar(
+          elevation: 0,
+          backgroundColor: Colors.transparent,
+          automaticallyImplyLeading: true,
+          leading: InkWell(
+            onTap: context.pop,
+            child: const Icon(
+              Icons.arrow_back_outlined,
+              color: Colors.black,
+            ),
+          ),
+        ),
         body: screenWidthPercentage == null
             ? const Center(child: CircularProgressIndicator())
             : SingleChildScrollView(

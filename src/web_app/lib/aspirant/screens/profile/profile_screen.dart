@@ -73,7 +73,14 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
             child: AppBar(
               elevation: 0,
               backgroundColor: Colors.transparent,
-              automaticallyImplyLeading: false,
+              automaticallyImplyLeading: true,
+              leading: InkWell(
+                onTap: () async => await popToHome(context),
+                child: const Icon(
+                  Icons.arrow_back_outlined,
+                  color: Colors.black,
+                ),
+              ),
               actions: [
                 TextButton(
                   onPressed: () {

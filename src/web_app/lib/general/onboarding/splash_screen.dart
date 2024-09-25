@@ -21,7 +21,7 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    _onboardScreen();
+
     _checkOnboardingStatus();
   }
 
@@ -39,6 +39,7 @@ class _SplashScreenState extends State<SplashScreen> {
         prefs.setBool('onboardingShown', true);
       });
     }
+    _onboardScreen();
   }
 
   _onboardScreen() async {

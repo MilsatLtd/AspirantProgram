@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:milsat_project_app/main.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../extras/components/files.dart';
 
@@ -17,10 +19,15 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   int currentIndex = 0;
 
   bool _isHovering = false;
+// Variable to store the calculated width
+  double? onboardingWidth;
 
   @override
   void initState() {
     super.initState();
+    onboardingWidth = screenWidth > 800
+        ? screenWidth * 0.25 // Desktop view (25% of screen width)
+        : screenWidth * 0.9; // Mobile view (90% of screen width)
     _pageController = PageController(initialPage: 0);
   }
 
@@ -36,31 +43,36 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       padding: const EdgeInsets.symmetric(
         horizontal: 16,
       ),
-      child: CustomButton(
-        elevation: 0,
-        height: 54,
-        pressed: () {
-          context.go(LoginScreen.route);
-        },
-        color: AppTheme.kPurpleColor,
-        width: double.infinity,
-        borderRadius: BorderRadius.circular(8),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              'Get Started',
-              style: kCustomButtonTextStyle,
-            ),
-            const SizedBox(
-              width: 16,
-            ),
-            const Icon(
-              Icons.arrow_forward,
-              size: 16,
-              color: AppTheme.kAppWhiteScheme,
-            )
-          ],
+      child: SizedBox(
+        width: onboardingWidth,
+        child: CustomButton(
+          elevation: 0,
+          height: 54,
+          pressed: () async {
+            SharedPreferences prefs = await SharedPreferences.getInstance();
+            await prefs.setBool('onboardingShown', true);
+            if (context.mounted) context.go(LoginScreen.route);
+          },
+          color: AppTheme.kPurpleColor,
+          width: onboardingWidth!,
+          borderRadius: BorderRadius.circular(8),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                'Get Started',
+                style: kCustomButtonTextStyle,
+              ),
+              const SizedBox(
+                width: 16,
+              ),
+              const Icon(
+                Icons.arrow_forward,
+                size: 16,
+                color: AppTheme.kAppWhiteScheme,
+              )
+            ],
+          ),
         ),
       ),
     );
