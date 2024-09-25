@@ -196,7 +196,6 @@ function CohortDetails () {
 
             <div className=" col-start-2 col-span-2 pt-5 mt-5">
                 <div className="">
-                <h1 className="flex text-4xl font-semibold justify-center">Applications</h1>
                 <Applications />
                 </div>
             </div>

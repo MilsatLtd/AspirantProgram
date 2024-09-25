@@ -2,12 +2,13 @@ from rest_framework import status
 from rest_framework.response import Response
 from django.utils import timezone
 from api.common.constants import application_message
-from django.db.models import Count, Q
+from django.db.models import Count, Case, When, IntegerField, Count
+from django.db.models.functions import Coalesce
 
 
 from api.common.enums import *
 from api.models import User, Applications, Mentors, Students
-from api.serializers import UserSerializer, ApplicationSerializer, CreateApplicationSerializer, ApplicationSerializer2
+from api.serializers import CreateApplicationSerializer, ApplicationSerializer2
 from api.common.utils import *
 import logging
 
@@ -42,25 +43,58 @@ class GetAllApplications:
                 data={"message": "Something went wrong \U0001F9D0"},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR) 
 
-# Get All Appplication with pagination, accept page number and page size and return current page and total pages
 class GetAllApplicationsWithPagination:
     def get(self, cohort_id, page_number=1, page_size=40):
+        start_time = timezone.now()
         try:
-            mentors_count = Applications.objects.filter(cohort_id=cohort_id, role=ROLE.MENTOR.value).count()
-            students_count = Applications.objects.filter(cohort_id=cohort_id, role=ROLE.STUDENT.value).count()
+            # Get total count for mentors and students in a single query
+            counts = Applications.objects.filter(cohort_id=cohort_id).aggregate(
+                mentors_count=Coalesce(Count(Case(
+                    When(role=ROLE.MENTOR.value, then=1),
+                    output_field=IntegerField(),
+                )), 0),
+                students_count=Coalesce(Count(Case(
+                    When(role=ROLE.STUDENT.value, then=1),
+                    output_field=IntegerField(),
+                )), 0),
+            )
+
+            mentors_count = counts['mentors_count']
+            students_count = counts['students_count']
+
+            # Calculate how to split the page between mentors and students
             mentors_page_size = (page_size + 1) // 2 if mentors_count >= students_count else page_size // 2
             students_page_size = page_size - mentors_page_size
-            mentors = Applications.objects.filter(cohort_id=cohort_id, role=ROLE.MENTOR.value)[(page_number - 1) * mentors_page_size: page_number * mentors_page_size]
-            students = Applications.objects.filter(cohort_id=cohort_id, role=ROLE.STUDENT.value)[(page_number - 1) * students_page_size: page_number * students_page_size]
+
+            # Fetch only the necessary mentors and students based on pagination
+            mentors = Applications.objects.filter(cohort_id=cohort_id, role=ROLE.MENTOR.value).order_by('applicant_id')[
+                (page_number - 1) * mentors_page_size: page_number * mentors_page_size
+            ]
+            students = Applications.objects.filter(cohort_id=cohort_id, role=ROLE.STUDENT.value).order_by('applicant_id')[
+                (page_number - 1) * students_page_size: page_number * students_page_size
+            ]
+
+            # Combine the results
             users = list(mentors) + list(students)
+
+            # Serialize the data
             users_serializer = ApplicationSerializer2(users, many=True)
-            total_pages = (mentors_count + students_count + page_size - 1) // page_size
-            return Response({ "current_page": page_number, "total_pages": total_pages, "data": users_serializer.data}, status=status.HTTP_200_OK)
+
+            # Calculate total pages
+            total_items = mentors_count + students_count
+            total_pages = (total_items + page_size - 1) // page_size
+
+            return Response({
+                "current_page": page_number,
+                "total_pages": total_pages,
+                "data": users_serializer.data
+            }, status=status.HTTP_200_OK)
         except Exception as e:
             logger.exception(e)
             return Response(
-                data={"message": "Something went wrong \U0001F9D0"},
-                status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+                data={"message": "Something went wrong 🤔"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
 
 
 class GetApplicationById:

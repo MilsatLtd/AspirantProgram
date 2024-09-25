@@ -110,44 +110,51 @@ function Applications() {
     }
     return (
         <>
-        {results.isLoading ? <Loader css1={"flex justify-center items-center"} css2="w-[30px] h-[30px]" /> : null}
-        <div className="grid grid-cols-3 m-10">
+        <h1 className="flex text-4xl font-semibold justify-center">Applications</h1>
+        <div className="grid grid-cols-3 m-10 relative"> {/* Set relative positioning for the table container */}
 
-        <table className="col-start-1 col-span-3 w-full border-separate border-spacing-x-2 border-spacing-y-1">
-            <thead className="bg-gray-300">
-                <tr className="">
-                    <th className="text-xl font-bold">STUDENTS</th>
-                    <th className="text-xl font-bold">MENTORS</th>
-                </tr>
-            </thead>
-            <tbody className="bg-gray-100">
-                {
-                    pairs.map((pair, index) => {
-                        return (
-                           <tr key={index}> 
+            {/* Table starts here */}
+            <table className={`col-start-1 col-span-3 w-full border-separate border-spacing-x-2 border-spacing-y-1 ${results.isFetching ? 'blur-sm' : ''}`}> {/* Apply blur when loading */}
+                <thead className="bg-gray-300">
+                    <tr className="">
+                        <th className="text-xl font-bold w-1/2">STUDENTS</th>
+                        <th className="text-xl font-bold w-1/2">MENTORS</th>
+                    </tr>
+                </thead>
+                <tbody className="bg-gray-100">
+                    {
+                        pairs.map((pair, index) => {
+                            return (
+                            <tr key={index}> 
                                 <StudentColumn passApplicantId={(id) => {
                                     setDetails(id);
                                     setIsShowDetails(true);
-                                    
                                 }} student={pair[0]} />
                                 <MentorColumn passApplicantId={(id) => {
                                     setDetails(id);
                                     setIsShowDetails(true);
-                                    }} mentor={pair[1]} />
+                                }} mentor={pair[1]} />
                             </tr>
-                        )
-                    })
-                }                
-            </tbody>
-        </table>
+                            )
+                        })
+                    }                
+                </tbody>
+            </table>
+            {results.isFetching && (
+                    <div className="flex flex-col absolute inset-0 flex justify-center items-center bg-white bg-opacity-50">
+                        <Loader big={true}/>
+                        <span className="">Loading...</span>
+                    </div>
+            )}
+
+            
         </div>
         {
             isShowDetails ? (
             <Modal>
                 <ApplicationDetails details={details} close={() => {
                     setIsShowDetails(false)
-                    results.refetch()
-                } } 
+                } } refresh = {() => { results.refetch() }} 
                     showPreviewDoc={(link)=>{
                         setDocumentLink(link)
                         setIsPreviewDoc(true)
@@ -180,8 +187,8 @@ function Applications() {
                 }) : null
             }
             <button 
-                onClick={() => handlePageChange(page - 1)} 
-                className={`bg-gray-300 p-3 rounded-md hover:opacity-50 font-semibold text-base text-white ${page >= data?.total_pages ? 'invisible' : ''}`}
+                onClick={() => handlePageChange(page + 1)} 
+                className={`bg-gray-300 p-3 rounded-md hover:opacity-50 font-semibold text-base text-white ${page >= data?.total_pages && page < 2 ? 'invisible' : ''}`}
             > Next </button>
         </div>
         </>
@@ -239,7 +246,7 @@ function PreviewDocument ({link, close}){
     )
 }
 
-function ApplicationDetails ( {details, close, showPreviewDoc} ) { 
+function ApplicationDetails ( {details, close, showPreviewDoc, refresh} ) { 
     const user = details.user
     const [status, setStatus] = useState(details.status)
 
@@ -251,6 +258,12 @@ function ApplicationDetails ( {details, close, showPreviewDoc} ) {
 
     const handlePreviewDoc = (documentLink) => {
         showPreviewDoc(documentLink)
+    }
+
+    const handleReview = (status) => {
+        setStatus(status)
+        review.mutate()
+        refresh()
     }
 
     return (
@@ -284,17 +297,11 @@ function ApplicationDetails ( {details, close, showPreviewDoc} ) {
         {
             status === 0 ? 
         <div className="w-full flex gap-16">
-            <button onClick={() => {
-                setStatus(2)
-                review.mutate()
-                }} className="flex-1 bg-red-500 p-2 rounded-md hover:opacity-80 font-semibold text-base text-white">
+            <button onClick={() => handleReview(2)} className="flex-1 bg-red-500 p-2 rounded-md hover:opacity-80 font-semibold text-base text-white">
                 Decline
             </button>
             <button onClick={
-                () => {
-                    setStatus(1)
-                    review.mutate()
-                }
+                () => handleReview(1)
                 } 
                 className="flex-1 bg-blue-500 p-2 rounded-md hover:opacity-80 font-semibold text-base text-white">
                 Accept
