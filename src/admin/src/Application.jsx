@@ -139,13 +139,13 @@ function Applications() {
                         })
                     }                
                 </tbody>
-                {results.isFetching && (
+            </table>
+            {results.isFetching && (
                     <div className="flex flex-col absolute inset-0 flex justify-center items-center bg-white bg-opacity-50">
                         <Loader big={true}/>
                         <span className="">Loading...</span>
                     </div>
-                )}
-            </table>
+            )}
 
             
         </div>
@@ -154,8 +154,7 @@ function Applications() {
             <Modal>
                 <ApplicationDetails details={details} close={() => {
                     setIsShowDetails(false)
-                    results.refetch()
-                } } 
+                } } refresh = {() => { results.refetch() }} 
                     showPreviewDoc={(link)=>{
                         setDocumentLink(link)
                         setIsPreviewDoc(true)
@@ -247,7 +246,7 @@ function PreviewDocument ({link, close}){
     )
 }
 
-function ApplicationDetails ( {details, close, showPreviewDoc} ) { 
+function ApplicationDetails ( {details, close, showPreviewDoc, refresh} ) { 
     const user = details.user
     const [status, setStatus] = useState(details.status)
 
@@ -259,6 +258,12 @@ function ApplicationDetails ( {details, close, showPreviewDoc} ) {
 
     const handlePreviewDoc = (documentLink) => {
         showPreviewDoc(documentLink)
+    }
+
+    const handleReview = (status) => {
+        setStatus(status)
+        review.mutate()
+        refresh()
     }
 
     return (
@@ -292,17 +297,11 @@ function ApplicationDetails ( {details, close, showPreviewDoc} ) {
         {
             status === 0 ? 
         <div className="w-full flex gap-16">
-            <button onClick={() => {
-                setStatus(2)
-                review.mutate()
-                }} className="flex-1 bg-red-500 p-2 rounded-md hover:opacity-80 font-semibold text-base text-white">
+            <button onClick={() => handleReview(2)} className="flex-1 bg-red-500 p-2 rounded-md hover:opacity-80 font-semibold text-base text-white">
                 Decline
             </button>
             <button onClick={
-                () => {
-                    setStatus(1)
-                    review.mutate()
-                }
+                () => handleReview(1)
                 } 
                 className="flex-1 bg-blue-500 p-2 rounded-md hover:opacity-80 font-semibold text-base text-white">
                 Accept
