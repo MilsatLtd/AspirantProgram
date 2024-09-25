@@ -188,7 +188,7 @@ function Applications() {
             }
             <button 
                 onClick={() => handlePageChange(page + 1)} 
-                className={`bg-gray-300 p-3 rounded-md hover:opacity-50 font-semibold text-base text-white ${page >= data?.total_pages && page < 2 ? 'invisible' : ''}`}
+                className={`bg-gray-300 p-3 rounded-md hover:opacity-50 font-semibold text-base text-white ${page >= data?.total_pages ? 'invisible' : ''}`}
             > Next </button>
         </div>
         </>
