@@ -2,12 +2,13 @@ from rest_framework import status
 from rest_framework.response import Response
 from django.utils import timezone
 from api.common.constants import application_message
-from django.db.models import Count, Q
+from django.db.models import Count, Case, When, IntegerField, Count
+from django.db.models.functions import Coalesce
 
 
 from api.common.enums import *
 from api.models import User, Applications, Mentors, Students
-from api.serializers import UserSerializer, ApplicationSerializer, CreateApplicationSerializer, ApplicationSerializer2
+from api.serializers import CreateApplicationSerializer, ApplicationSerializer2
 from api.common.utils import *
 import logging
 
@@ -42,60 +43,58 @@ class GetAllApplications:
                 data={"message": "Something went wrong \U0001F9D0"},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR) 
 
-from asgiref.sync import sync_to_async
 class GetAllApplicationsWithPagination:
-    async def get(self, cohort_id, page_number=1, page_size=40):
+    def get(self, cohort_id, page_number=1, page_size=40):
+        start_time = timezone.now()
         try:
-            # Async count for mentors and students
-            mentors_count = await sync_to_async(Applications.objects.filter(cohort_id=cohort_id, role=ROLE.MENTOR.value).count)()
-            students_count = await sync_to_async(Applications.objects.filter(cohort_id=cohort_id, role=ROLE.STUDENT.value).count)()
-            
-            # Calculate total records and pages
-            total_count = mentors_count + students_count
-            total_pages = (total_count + page_size - 1) // page_size
+            # Get total count for mentors and students in a single query
+            counts = Applications.objects.filter(cohort_id=cohort_id).aggregate(
+                mentors_count=Coalesce(Count(Case(
+                    When(role=ROLE.MENTOR.value, then=1),
+                    output_field=IntegerField(),
+                )), 0),
+                students_count=Coalesce(Count(Case(
+                    When(role=ROLE.STUDENT.value, then=1),
+                    output_field=IntegerField(),
+                )), 0),
+            )
 
-            # If requested page number exceeds total pages, return an empty result
-            if page_number > total_pages:
-                return Response({
-                    "current_page": page_number,
-                    "total_pages": total_pages,
-                    "data": []
-                }, status=status.HTTP_200_OK)
+            mentors_count = counts['mentors_count']
+            students_count = counts['students_count']
 
-            # Calculate how many mentors and students to fetch for the current page
+            # Calculate how to split the page between mentors and students
             mentors_page_size = (page_size + 1) // 2 if mentors_count >= students_count else page_size // 2
             students_page_size = page_size - mentors_page_size
 
-            # Calculate the offset for mentors and students
-            mentors_offset = (page_number - 1) * mentors_page_size
-            students_offset = (page_number - 1) * students_page_size
+            # Fetch only the necessary mentors and students based on pagination
+            mentors = Applications.objects.filter(cohort_id=cohort_id, role=ROLE.MENTOR.value).order_by('applicant_id')[
+                (page_number - 1) * mentors_page_size: page_number * mentors_page_size
+            ]
+            students = Applications.objects.filter(cohort_id=cohort_id, role=ROLE.STUDENT.value).order_by('applicant_id')[
+                (page_number - 1) * students_page_size: page_number * students_page_size
+            ]
 
-            # Fetch only the records for the current page, asynchronously
-            mentors_query = sync_to_async(Applications.objects.filter(cohort_id=cohort_id, role=ROLE.MENTOR.value)[mentors_offset:mentors_offset + mentors_page_size])()
-            students_query = sync_to_async(Applications.objects.filter(cohort_id=cohort_id, role=ROLE.STUDENT.value)[students_offset:students_offset + students_page_size])()
-
-            # Await both queries concurrently
-            mentors_list, students_list = await mentors_query, await students_query
-            
             # Combine the results
-            applications = list(mentors_list) + list(students_list)
+            users = list(mentors) + list(students)
 
-            # Serialize the combined result
-            users_serializer = ApplicationSerializer2(applications, many=True)
+            # Serialize the data
+            users_serializer = ApplicationSerializer2(users, many=True)
+
+            # Calculate total pages
+            total_items = mentors_count + students_count
+            total_pages = (total_items + page_size - 1) // page_size
 
             return Response({
                 "current_page": page_number,
                 "total_pages": total_pages,
                 "data": users_serializer.data
             }, status=status.HTTP_200_OK)
-
         except Exception as e:
             logger.exception(e)
             return Response(
-                data={"message": "Something went wrong \U0001F9D0"},
+                data={"message": "Something went wrong 🤔"},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
-
 
 
 class GetApplicationById:
