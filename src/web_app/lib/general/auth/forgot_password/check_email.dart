@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../../extras/components/files.dart';
@@ -29,6 +30,18 @@ class _CheckEmailScreenState extends State<CheckEmailScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        elevation: 0,
+        backgroundColor: Colors.transparent,
+        automaticallyImplyLeading: true,
+        leading: InkWell(
+          onTap: context.pop,
+          child: const Icon(
+            Icons.arrow_back_outlined,
+            color: Colors.black,
+          ),
+        ),
+      ),
       body: screenWidthPercentage == null
           ? const Center(child: CircularProgressIndicator())
           : Center(
