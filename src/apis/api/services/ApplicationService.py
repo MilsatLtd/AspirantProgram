@@ -42,25 +42,60 @@ class GetAllApplications:
                 data={"message": "Something went wrong \U0001F9D0"},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR) 
 
-# Get All Appplication with pagination, accept page number and page size and return current page and total pages
+from asgiref.sync import sync_to_async
 class GetAllApplicationsWithPagination:
-    def get(self, cohort_id, page_number=1, page_size=40):
+    async def get(self, cohort_id, page_number=1, page_size=40):
         try:
-            mentors_count = Applications.objects.filter(cohort_id=cohort_id, role=ROLE.MENTOR.value).count()
-            students_count = Applications.objects.filter(cohort_id=cohort_id, role=ROLE.STUDENT.value).count()
+            # Async count for mentors and students
+            mentors_count = await sync_to_async(Applications.objects.filter(cohort_id=cohort_id, role=ROLE.MENTOR.value).count)()
+            students_count = await sync_to_async(Applications.objects.filter(cohort_id=cohort_id, role=ROLE.STUDENT.value).count)()
+            
+            # Calculate total records and pages
+            total_count = mentors_count + students_count
+            total_pages = (total_count + page_size - 1) // page_size
+
+            # If requested page number exceeds total pages, return an empty result
+            if page_number > total_pages:
+                return Response({
+                    "current_page": page_number,
+                    "total_pages": total_pages,
+                    "data": []
+                }, status=status.HTTP_200_OK)
+
+            # Calculate how many mentors and students to fetch for the current page
             mentors_page_size = (page_size + 1) // 2 if mentors_count >= students_count else page_size // 2
             students_page_size = page_size - mentors_page_size
-            mentors = Applications.objects.filter(cohort_id=cohort_id, role=ROLE.MENTOR.value)[(page_number - 1) * mentors_page_size: page_number * mentors_page_size]
-            students = Applications.objects.filter(cohort_id=cohort_id, role=ROLE.STUDENT.value)[(page_number - 1) * students_page_size: page_number * students_page_size]
-            users = list(mentors) + list(students)
-            users_serializer = ApplicationSerializer2(users, many=True)
-            total_pages = (mentors_count + students_count + page_size - 1) // page_size
-            return Response({ "current_page": page_number, "total_pages": total_pages, "data": users_serializer.data}, status=status.HTTP_200_OK)
+
+            # Calculate the offset for mentors and students
+            mentors_offset = (page_number - 1) * mentors_page_size
+            students_offset = (page_number - 1) * students_page_size
+
+            # Fetch only the records for the current page, asynchronously
+            mentors_query = sync_to_async(Applications.objects.filter(cohort_id=cohort_id, role=ROLE.MENTOR.value)[mentors_offset:mentors_offset + mentors_page_size])()
+            students_query = sync_to_async(Applications.objects.filter(cohort_id=cohort_id, role=ROLE.STUDENT.value)[students_offset:students_offset + students_page_size])()
+
+            # Await both queries concurrently
+            mentors_list, students_list = await mentors_query, await students_query
+            
+            # Combine the results
+            applications = list(mentors_list) + list(students_list)
+
+            # Serialize the combined result
+            users_serializer = ApplicationSerializer2(applications, many=True)
+
+            return Response({
+                "current_page": page_number,
+                "total_pages": total_pages,
+                "data": users_serializer.data
+            }, status=status.HTTP_200_OK)
+
         except Exception as e:
             logger.exception(e)
             return Response(
                 data={"message": "Something went wrong \U0001F9D0"},
-                status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
 
 
 class GetApplicationById:

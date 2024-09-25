@@ -1,5 +1,5 @@
 
-const API_ENDPOINT = import.meta.env.VITE_APP_API_BASE_URL;
+const API_ENDPOINT = "https://aspirant-api.milsat.africa/api/";
 
 const urls = {
     getAllCohorts: `${API_ENDPOINT}cohorts/`,
