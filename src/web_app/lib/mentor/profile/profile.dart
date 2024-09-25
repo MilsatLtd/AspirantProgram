@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:milsat_project_app/extras/components/files.dart';
@@ -25,6 +26,8 @@ final mentorImage = StateProvider<File?>((ref) {
 });
 
 class MentorProfilePage extends ConsumerStatefulWidget {
+  static const String name = 'mentor_profile';
+  static const String route = '/mentor_profile';
   const MentorProfilePage({super.key});
 
   @override
@@ -35,9 +38,9 @@ class _MentorProfilePageState extends ConsumerState<MentorProfilePage> {
   ProfilePictureResponse? profilePictureResponse;
   void getUserProfile() async {
     profilePictureResponse =
-        await SecureStorageUtils.getDataFromStorage<ProfilePictureResponse>(
+        await SharedPreferencesUtil.getModel<ProfilePictureResponse>(
             SharedPrefKeys.profileResponse,
-            ProfilePictureResponse.fromJsonString);
+            (json) => ProfilePictureResponse.fromJson(json));
   }
 
   @override
@@ -59,7 +62,7 @@ class _MentorProfilePageState extends ConsumerState<MentorProfilePage> {
           actions: [
             TextButton(
               onPressed: () {
-                AppNavigator.navigateTo(editMentorsProfileRoute);
+                context.push(EditMentorProfile.route);
               },
               child: Text(
                 'Edit',
@@ -121,10 +124,11 @@ class _MentorProfilePageState extends ConsumerState<MentorProfilePage> {
                           onTap: () async {
                             try {
                               DecodedTokenResponse? decodedToken =
-                                  await SecureStorageUtils.getDataFromStorage<
+                                  await SharedPreferencesUtil.getModel<
                                           DecodedTokenResponse>(
                                       SharedPrefKeys.tokenResponse,
-                                      DecodedTokenResponse.fromJsonString);
+                                      (json) =>
+                                          DecodedTokenResponse.fromJson(json));
                               ref.read(pickedImage.notifier).state =
                                   await _imagePicker.pickImage(
                                       source: ImageSource.gallery);
@@ -322,7 +326,7 @@ class _MentorProfilePageState extends ConsumerState<MentorProfilePage> {
                 ),
                 GestureDetector(
                   onTap: () {
-                    AppNavigator.navigateTo(mentorPasswordRoute);
+                    context.push(MentorPasswordPage.route);
                   },
                   child: Container(
                     padding: const EdgeInsets.symmetric(
@@ -376,7 +380,7 @@ class _MentorProfilePageState extends ConsumerState<MentorProfilePage> {
                 ),
                 GestureDetector(
                   onTap: () {
-                    signOut();
+                    signOut(context);
                   },
                   child: Container(
                     padding: const EdgeInsets.only(

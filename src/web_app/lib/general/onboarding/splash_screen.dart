@@ -1,9 +1,14 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../extras/components/files.dart';
 
 class SplashScreen extends StatefulWidget {
+  static const String name = 'splash-screen';
+  static const String route = '/splash-screen';
   const SplashScreen({super.key});
 
   @override
@@ -31,8 +36,8 @@ class _SplashScreenState extends State<SplashScreen> {
     } else {
       setState(() {
         _showOnboarding = true;
+        prefs.setBool('onboardingShown', true);
       });
-      await prefs.setBool('onboardingShown', true);
     }
   }
 
@@ -40,8 +45,8 @@ class _SplashScreenState extends State<SplashScreen> {
     await Future.delayed(const Duration(milliseconds: 3000), () {});
 
     _showOnboarding
-        ? AppNavigator.navigateToAndReplace(onboardRoute)
-        : AppNavigator.navigateToAndReplace(loginRoute);
+        ? context.go(LoginScreen.route)
+        : context.go(OnboardingScreen.route);
   }
 
   @override

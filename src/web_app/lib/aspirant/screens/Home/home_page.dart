@@ -10,8 +10,9 @@ import '../../../extras/models/aspirant_model.dart';
 final aspirantDetails =
     FutureProvider.autoDispose<AspirantModelClass?>((ref) async {
   DecodedTokenResponse? response =
-      await SecureStorageUtils.getDataFromStorage<DecodedTokenResponse>(
-          SharedPrefKeys.tokenResponse, DecodedTokenResponse.fromJsonString);
+      await SharedPreferencesUtil.getModel<DecodedTokenResponse>(
+          SharedPrefKeys.tokenResponse,
+          (json) => DecodedTokenResponse.fromJson(json));
   return ref.read(apiServiceProvider).getUserData(response?.userId);
 });
 
@@ -20,6 +21,8 @@ final currentTimeProvider = StateProvider<DateTime>((ref) {
 });
 
 class HomeScreen extends ConsumerStatefulWidget {
+  static const String name = 'home';
+  static const String route = '/home';
   const HomeScreen({super.key});
 
   @override
@@ -30,9 +33,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   ProfilePictureResponse? profilePictureResponse;
   void getUserProfile() async {
     profilePictureResponse =
-        await SecureStorageUtils.getDataFromStorage<ProfilePictureResponse>(
+        await SharedPreferencesUtil.getModel<ProfilePictureResponse>(
             SharedPrefKeys.profileResponse,
-            ProfilePictureResponse.fromJsonString);
+            (json) => ProfilePictureResponse.fromJson(json));
   }
 
   @override

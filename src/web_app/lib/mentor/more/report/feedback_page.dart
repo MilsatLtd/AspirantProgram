@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:milsat_project_app/extras/api/data.dart';
 import 'package:milsat_project_app/extras/api/report_api.dart';
@@ -12,7 +13,6 @@ import 'package:milsat_project_app/extras/components/shared_prefs/keys.dart';
 import 'package:milsat_project_app/extras/components/shared_prefs/utils.dart';
 import 'package:milsat_project_app/extras/components/widgets.dart';
 import 'package:milsat_project_app/extras/models/decoded_token.dart';
-import 'package:milsat_project_app/extras/navigation/navigator.dart';
 
 class FeedbackPage extends ConsumerStatefulWidget {
   final String reportId;
@@ -45,7 +45,7 @@ class _FeedbackPageState extends ConsumerState<FeedbackPage> {
           ),
           leading: GestureDetector(
             onTap: () {
-              AppNavigator.doPop();
+              context.pop();
             },
             child: const Icon(
               Icons.arrow_back,
@@ -98,10 +98,10 @@ class _FeedbackPageState extends ConsumerState<FeedbackPage> {
               height: 54,
               pressed: () async {
                 if (textKey.currentState!.validate()) {
-                  DecodedTokenResponse? response = await SecureStorageUtils
-                      .getDataFromStorage<DecodedTokenResponse>(
+                  DecodedTokenResponse? response = await SharedPreferencesUtil
+                      .getModel<DecodedTokenResponse>(
                           SharedPrefKeys.tokenResponse,
-                          DecodedTokenResponse.fromJsonString);
+                          (json) => DecodedTokenResponse.fromJson(json));
                   ref
                       .read(apiReportProvider)
                       .giveReportFeedback(widget.reportId, {
@@ -109,8 +109,7 @@ class _FeedbackPageState extends ConsumerState<FeedbackPage> {
                     "mentor_feedback": textController.text,
                   });
 
-                  popUpCard(
-                      context, 'Hello!', error[0], () => AppNavigator.pop());
+                  popUpCard(context, 'Hello!', error[0], () => context.pop());
                 }
               },
               color: AppTheme.kPurpleColor,

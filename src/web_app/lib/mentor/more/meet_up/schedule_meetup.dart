@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../extras/components/files.dart';
 
 class ScheduleMeetUp extends StatefulWidget {
+  static const String name = 'schedule-meetup';
+  static const String route = '/schedule-meetup';
   const ScheduleMeetUp({super.key});
 
   @override
@@ -29,7 +32,7 @@ class _ScheduleMeetUpState extends State<ScheduleMeetUp> {
     // ignore: deprecated_member_use
     return WillPopScope(
       onWillPop: () async {
-        final shouldPop = await goToMentorHomePage();
+        final shouldPop = await goToMentorHomePage(context);
         return shouldPop ?? false;
       },
       child: Scaffold(
@@ -49,7 +52,7 @@ class _ScheduleMeetUpState extends State<ScheduleMeetUp> {
             elevation: 0.5,
             leading: IconButton(
               onPressed: () {
-                AppNavigator.pop();
+                context.pop();
               },
               icon: const Icon(
                 Icons.arrow_back,
@@ -245,8 +248,8 @@ class _ScheduleMeetUpState extends State<ScheduleMeetUp> {
   }
 }
 
-Future<bool?> goToMentorHomePage() async {
-  AppNavigator.navigateToAndClear(mentorSkeletonRoute);
+Future<bool?> goToMentorHomePage(context) async {
+  context.go(MentorPageSkeleton.route);
   return null;
 }
 
@@ -268,7 +271,7 @@ Future<dynamic> popUp(BuildContext demoContext) {
           CustomButton(
             height: 54,
             pressed: () {
-              AppNavigator.navigateTo(meetUpRoute);
+              context.push(MeetUpScreen.route);
             },
             color: AppTheme.kPurpleColor,
             width: 307,

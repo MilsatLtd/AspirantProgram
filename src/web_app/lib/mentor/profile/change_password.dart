@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:milsat_project_app/extras/components/shared_prefs/keys.dart';
-import 'package:milsat_project_app/extras/components/shared_prefs/utils.dart';
-
+import 'package:milsat_project_app/general/log_out.dart';
 import '../../../extras/components/files.dart';
 import '../../extras/api/change_password.dart';
 
 class MentorPasswordPage extends ConsumerWidget {
+  static const String name = 'mentor-password';
+  static const String route = '/mentor-password';
   const MentorPasswordPage({super.key});
 
   @override
@@ -22,7 +22,7 @@ class MentorPasswordPage extends ConsumerWidget {
         child: AppBar(
           leading: GestureDetector(
             onTap: () {
-              AppNavigator.pop();
+              context.pop();
             },
             child: const Icon(
               Icons.arrow_back,
@@ -184,11 +184,7 @@ class MentorPasswordPage extends ConsumerWidget {
             CustomButton(
               height: 54,
               pressed: () {
-                AppNavigator.navigateToAndReplace(loginRoute);
-                SecureStorageUtils.deleteAnyDataFromStorage(
-                    SharedPrefKeys.accessToken);
-                SecureStorageUtils.deleteAnyDataFromStorage(
-                    SharedPrefKeys.profileResponse);
+                logOut(context);
               },
               color: AppTheme.kPurpleColor,
               width: 307,

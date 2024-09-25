@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../../extras/components/files.dart';
 
 class BlockerPage extends ConsumerStatefulWidget {
+  static const String name = 'blocker';
+  static const String route = '/blocker';
   const BlockerPage({super.key});
 
   @override
@@ -24,7 +27,7 @@ class _BlockerPageConsumerState extends ConsumerState<BlockerPage> {
           automaticallyImplyLeading: false,
           elevation: 0.5,
           leading: GestureDetector(
-            onTap: () => AppNavigator.pop(),
+            onTap: () => context.pop(),
             child: const Icon(
               Icons.arrow_back,
               color: Colors.black,
@@ -46,7 +49,7 @@ class _BlockerPageConsumerState extends ConsumerState<BlockerPage> {
                 right: 20,
               ),
               child: InkWell(
-                onTap: () => AppNavigator.navigateTo(raiseABlocker),
+                onTap: () => context.push(AddBlocker.route),
                 child: SvgPicture.asset(
                   'assets/add_button.svg',
                   height: 20,

@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:milsat_project_app/extras/components/shared_prefs/keys.dart';
@@ -15,6 +16,8 @@ import '../../../extras/components/files.dart';
 final ImagePicker _imagePicker = ImagePicker();
 
 class EditProfile extends ConsumerStatefulWidget {
+  static const String name = 'edit-profile';
+  static const String route = '/edit-profile';
   const EditProfile({super.key});
 
   @override
@@ -25,9 +28,9 @@ class _EditProfileState extends ConsumerState<EditProfile> {
   ProfilePictureResponse? profilePictureResponse;
   void getUserProfile() async {
     profilePictureResponse =
-        await SecureStorageUtils.getDataFromStorage<ProfilePictureResponse>(
+        await SharedPreferencesUtil.getModel<ProfilePictureResponse>(
             SharedPrefKeys.profileResponse,
-            ProfilePictureResponse.fromJsonString);
+            (json) => ProfilePictureResponse.fromJson(json));
   }
 
   @override
@@ -47,7 +50,7 @@ class _EditProfileState extends ConsumerState<EditProfile> {
           automaticallyImplyLeading: false,
           leading: TextButton(
             onPressed: () {
-              AppNavigator.pop();
+              context.pop();
             },
             child: Text(
               'Back',
@@ -61,10 +64,10 @@ class _EditProfileState extends ConsumerState<EditProfile> {
           actions: [
             TextButton(
               onPressed: () async {
-                DecodedTokenResponse? decodedToken = await SecureStorageUtils
-                    .getDataFromStorage<DecodedTokenResponse>(
+                DecodedTokenResponse? decodedToken =
+                    await SharedPreferencesUtil.getModel<DecodedTokenResponse>(
                         SharedPrefKeys.tokenResponse,
-                        DecodedTokenResponse.fromJsonString);
+                        (json) => DecodedTokenResponse.fromJson(json));
                 ref
                     .read(apiUploadProvider)
                     .updateStatus(decodedToken!.userId!, bioController.text);
@@ -135,12 +138,12 @@ class _EditProfileState extends ConsumerState<EditProfile> {
                                 child: GestureDetector(
                                   onTap: () async {
                                     DecodedTokenResponse? decodedToken =
-                                        await SecureStorageUtils
-                                            .getDataFromStorage<
-                                                    DecodedTokenResponse>(
-                                                SharedPrefKeys.tokenResponse,
-                                                DecodedTokenResponse
-                                                    .fromJsonString);
+                                        await SharedPreferencesUtil.getModel<
+                                                DecodedTokenResponse>(
+                                            SharedPrefKeys.tokenResponse,
+                                            (json) =>
+                                                DecodedTokenResponse.fromJson(
+                                                    json));
                                     try {
                                       ref.read(pickedImage.notifier).state =
                                           await _imagePicker.pickImage(
@@ -350,7 +353,7 @@ class _EditProfileState extends ConsumerState<EditProfile> {
                 ),
                 child: ElevatedButton(
                   onPressed: () {
-                    AppNavigator.navigateToAndReplace(profileRoute);
+                    context.go(ProfileScreen.route);
                   },
                   child: const Text('Ok'),
                 ),

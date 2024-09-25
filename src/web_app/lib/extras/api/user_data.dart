@@ -29,7 +29,7 @@ class ApiService {
   Future<AspirantModelClass?> getUserData(String? id) async {
     try {
       String? token =
-          await SecureStorageUtils.getString(SharedPrefKeys.accessToken);
+          await SharedPreferencesUtil.getString(SharedPrefKeys.accessToken);
       final response = await Dio().get(
         '${Env.apiUrl}/api/students/$id',
         options: Options(
@@ -45,8 +45,8 @@ class ApiService {
         case 200:
           AspirantModelClass aspirantData =
               AspirantModelClass.fromJson(response.data);
-          SecureStorageUtils.saveDataToStorage(SharedPrefKeys.userData,
-              aspirantData, (data) => data.toJsonString());
+          SharedPreferencesUtil.saveModel(
+              SharedPrefKeys.userData, aspirantData);
           return aspirantData;
 
         case 404:
@@ -75,7 +75,7 @@ class ApiService {
     final url = '${Env.apiUrl}/api/mentors/$id';
     try {
       String? token =
-          await SecureStorageUtils.getString(SharedPrefKeys.accessToken);
+          await SharedPreferencesUtil.getString(SharedPrefKeys.accessToken);
       final response = await dio.get(
         url,
         options: Options(
@@ -89,8 +89,8 @@ class ApiService {
       switch (response.statusCode) {
         case 200:
           MentorData mentorData = MentorData.fromJson(response.data);
-          SecureStorageUtils.saveDataToStorage(SharedPrefKeys.mentorUserData,
-              mentorData, (data) => data.toJsonString());
+          SharedPreferencesUtil.saveModel(
+              SharedPrefKeys.mentorUserData, mentorData);
           return mentorData;
 
         case 404:
@@ -119,7 +119,7 @@ class ApiService {
     final url = '${Env.apiUrl}/api/students/courses/$id/$trackId';
     try {
       String? token =
-          await SecureStorageUtils.getString(SharedPrefKeys.accessToken);
+          await SharedPreferencesUtil.getString(SharedPrefKeys.accessToken);
       final response = await dio.get(
         url,
         options: Options(

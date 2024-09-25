@@ -45,7 +45,7 @@ class APIService {
 
     try {
       final token =
-          await SecureStorageUtils.getString(SharedPrefKeys.accessToken);
+          await SharedPreferencesUtil.getString(SharedPrefKeys.accessToken);
       final headers = {
         'accept': 'application/json',
         'Authorization': 'Bearer $token',
@@ -87,7 +87,7 @@ class APIService {
 
     try {
       String? token =
-          await SecureStorageUtils.getString(SharedPrefKeys.accessToken);
+          await SharedPreferencesUtil.getString(SharedPrefKeys.accessToken);
       final headers = {
         'accept': 'application/json',
         'Authorization': 'Bearer $token',
@@ -127,7 +127,7 @@ class APIService {
 
     try {
       String? token =
-          await SecureStorageUtils.getString(SharedPrefKeys.accessToken);
+          await SharedPreferencesUtil.getString(SharedPrefKeys.accessToken);
       final headers = {
         'accept': 'application/json',
         'Authorization': 'Bearer $token',
@@ -156,7 +156,7 @@ class APIService {
   //   const url = '${Env.apiUrl}/api/blockers';
   //   try {
   //     String? token =
-  //         await SecureStorageUtils.getString(SharedPrefKeys.accessToken);
+  //         await SharedPreferencesUtil.getString(SharedPrefKeys.accessToken);
   //     final headers = {
   //       'accept': 'application/json',
   //       'Authorization': 'Bearer $token',
@@ -189,7 +189,7 @@ class APIService {
     final url = '${Env.apiUrl}/api/blockers/track/$trackId';
     try {
       String? token =
-          await SecureStorageUtils.getString(SharedPrefKeys.accessToken);
+          await SharedPreferencesUtil.getString(SharedPrefKeys.accessToken);
       final headers = {
         'accept': 'application/json',
         'Authorization': 'Bearer $token',
@@ -222,7 +222,7 @@ class APIService {
     final url = '${Env.apiUrl}/api/blockers/comments/$blockerId';
     try {
       String? token =
-          await SecureStorageUtils.getString(SharedPrefKeys.accessToken);
+          await SharedPreferencesUtil.getString(SharedPrefKeys.accessToken);
       final headers = {
         'accept': 'application/json',
         'Authorization': 'Bearer $token',
@@ -249,7 +249,7 @@ class APIService {
     final url = '${Env.apiUrl}/api/blockers/$blockerId';
     try {
       String? token =
-          await SecureStorageUtils.getString(SharedPrefKeys.accessToken);
+          await SharedPreferencesUtil.getString(SharedPrefKeys.accessToken);
       final headers = {
         'accept': 'application/json',
         'Authorization': 'Bearer $token',
@@ -271,7 +271,7 @@ class APIService {
     final url = '${Env.apiUrl}/api/blockers/comments/update/$commentId';
     try {
       String? token =
-          await SecureStorageUtils.getString(SharedPrefKeys.accessToken);
+          await SharedPreferencesUtil.getString(SharedPrefKeys.accessToken);
       final headers = {
         'accept': 'application/json',
         'Authorization': 'Bearer $token',

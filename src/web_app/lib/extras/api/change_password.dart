@@ -21,7 +21,7 @@ class ApiService {
     try {
       String url = '${Env.apiUrl}/api/auth/password/change';
       String? token =
-          await SecureStorageUtils.getString(SharedPrefKeys.accessToken);
+          await SharedPreferencesUtil.getString(SharedPrefKeys.accessToken);
       final response = await dio.put(url,
           data: data,
           options: Options(

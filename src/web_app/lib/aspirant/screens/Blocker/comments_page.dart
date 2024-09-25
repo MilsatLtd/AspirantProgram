@@ -1,5 +1,8 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:milsat_project_app/extras/api/blockers_api.dart';
 import 'package:milsat_project_app/extras/components/shared_prefs/keys.dart';
@@ -14,6 +17,8 @@ final mentorComment = FutureProvider.autoDispose((ref) {
 });
 
 class CommentsPage extends ConsumerStatefulWidget {
+  static const String name = 'comments-page';
+  static const String route = '/comments-page';
   const CommentsPage({
     super.key,
     required this.title,
@@ -70,7 +75,7 @@ class _CommentsPageState extends ConsumerState<CommentsPage> {
             centerTitle: true,
             elevation: 0.5,
             leading: GestureDetector(
-              onTap: () => AppNavigator.pop(),
+              onTap: () => context.pop(),
               child: const Icon(
                 Icons.arrow_back,
                 color: Colors.black,
@@ -114,8 +119,7 @@ class _CommentsPageState extends ConsumerState<CommentsPage> {
                                           title: widget.title,
                                           status: 1,
                                         );
-                                    AppNavigator.navigateToAndReplace(
-                                        raiseABlocker);
+                                    context.go(AddBlocker.route);
                                   } finally {
                                     showInSnackBar(message[0]);
                                   }
@@ -340,12 +344,12 @@ class _CommentsPageState extends ConsumerState<CommentsPage> {
                             onTap: !textFieldEmpty
                                 ? () async {
                                     DecodedTokenResponse? decodedToken =
-                                        await SecureStorageUtils
-                                            .getDataFromStorage<
-                                                    DecodedTokenResponse>(
-                                                SharedPrefKeys.tokenResponse,
-                                                DecodedTokenResponse
-                                                    .fromJsonString);
+                                        await SharedPreferencesUtil.getModel<
+                                                DecodedTokenResponse>(
+                                            SharedPrefKeys.tokenResponse,
+                                            (json) =>
+                                                DecodedTokenResponse.fromJson(
+                                                    json));
                                     final reply = await ref
                                         .read(apiBlockerServiceProvider)
                                         .replyABlocker(

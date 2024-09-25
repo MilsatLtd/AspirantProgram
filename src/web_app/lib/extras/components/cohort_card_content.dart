@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import 'package:google_fonts/google_fonts.dart';
 import 'package:milsat_project_app/extras/components/files.dart';
@@ -34,7 +35,7 @@ class CardContent extends ConsumerWidget {
       ),
       width: width * 0.885,
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Column(
@@ -124,14 +125,7 @@ class CardContent extends ConsumerWidget {
                   elevation: 0,
                   height: 44,
                   pressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) {
-                          return TrackDetails(d: d);
-                        },
-                      ),
-                    );
+                    context.push(TrackDetails.route, extra: d);
                   },
                   color: const Color(0xFFB58BB8),
                   width: double.infinity,
@@ -174,7 +168,7 @@ class CardContent extends ConsumerWidget {
               ),
               LinearPercentIndicator(
                 addAutomaticKeepAlive: true,
-                width: width - 60,
+                width: width / 1.2,
                 lineHeight: 4,
                 percent: progress,
                 backgroundColor: const Color(0xFFCBADCD),

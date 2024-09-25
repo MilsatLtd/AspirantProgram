@@ -28,9 +28,9 @@ class Resolved extends StatelessWidget {
         return GestureDetector(
           onTap: () async {
             DecodedTokenResponse? decodedTokenResponse =
-                await SecureStorageUtils.getDataFromStorage<
-                        DecodedTokenResponse>(SharedPrefKeys.tokenResponse,
-                    DecodedTokenResponse.fromJsonString);
+                await SharedPreferencesUtil.getModel<DecodedTokenResponse>(
+                    SharedPrefKeys.tokenResponse,
+                    (json) => DecodedTokenResponse.fromJson(json));
             Navigator.push(context, MaterialPageRoute(builder: (context) {
               blockerID = '${cred['blockers'][index]['blocker_id']}';
               return CommentsPage(

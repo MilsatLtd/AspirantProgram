@@ -23,9 +23,9 @@ class Pending extends ConsumerStatefulWidget {
 
 class _PendingState extends ConsumerState<Pending> {
   getUserData() async {
-    loginResponse =
-        await SecureStorageUtils.getDataFromStorage<DecodedTokenResponse>(
-            SharedPrefKeys.tokenResponse, DecodedTokenResponse.fromJsonString);
+    loginResponse = await SharedPreferencesUtil.getModel<DecodedTokenResponse>(
+        SharedPrefKeys.tokenResponse,
+        (json) => DecodedTokenResponse.fromJson(json));
   }
 
   @override

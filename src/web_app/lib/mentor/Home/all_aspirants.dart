@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:milsat_project_app/extras/components/files.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -16,7 +17,7 @@ class AllAspirants extends ConsumerWidget {
       appBar: AppBar(
         leading: GestureDetector(
           onTap: () {
-            AppNavigator.pop();
+            context.pop();
           },
           child: const Icon(
             Icons.arrow_back,

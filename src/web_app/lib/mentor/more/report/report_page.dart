@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:milsat_project_app/extras/api/report_api.dart';
 import 'package:milsat_project_app/extras/components/files.dart';
@@ -10,14 +11,17 @@ import 'package:milsat_project_app/extras/models/decoded_token.dart';
 
 final submittedReport = FutureProvider.autoDispose((ref) async {
   DecodedTokenResponse? response =
-      await SecureStorageUtils.getDataFromStorage<DecodedTokenResponse>(
-          SharedPrefKeys.tokenResponse, DecodedTokenResponse.fromJsonString);
+      await SharedPreferencesUtil.getModel<DecodedTokenResponse>(
+          SharedPrefKeys.tokenResponse,
+          (json) => DecodedTokenResponse.fromJson(json));
   return ref
       .read(apiReportProvider)
       .getReportSubmmittedToMentor(response?.userId);
 });
 
 class ReportPageMentor extends ConsumerWidget {
+  static const String name = 'report-page-mentor';
+  static const String route = '/report-page-mentor';
   const ReportPageMentor({super.key});
 
   @override
@@ -41,7 +45,7 @@ class ReportPageMentor extends ConsumerWidget {
     // ignore: deprecated_member_use
     return WillPopScope(
       onWillPop: () async {
-        final shouldPop = await goToMentorHomePage();
+        final shouldPop = await goToMentorHomePage(context);
         return shouldPop ?? false;
       },
       child: Scaffold(
@@ -52,7 +56,7 @@ class ReportPageMentor extends ConsumerWidget {
             elevation: 0.5,
             leading: IconButton(
               onPressed: () {
-                AppNavigator.navigateTo(mentorSkeletonRoute);
+                context.push(MentorPageSkeleton.route);
               },
               icon: const Icon(
                 Icons.arrow_back,
@@ -205,8 +209,8 @@ class ReportPageMentor extends ConsumerWidget {
     );
   }
 
-  Future<bool?> goToMentorHomePage() async {
-    AppNavigator.navigateToAndClear(mentorSkeletonRoute);
+  Future<bool?> goToMentorHomePage(context) async {
+    context.go(MentorPageSkeleton.route);
     return null;
   }
 }

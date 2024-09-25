@@ -6,6 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:milsat_project_app/extras/components/shared_prefs/keys.dart';
@@ -19,6 +20,8 @@ import 'mentor_profile_card.dart';
 final ImagePicker _imagePicker = ImagePicker();
 
 class EditMentorProfile extends ConsumerWidget {
+  static const String name = 'edit-mentor-profile';
+  static const String route = '/edit-mentor-profile';
   const EditMentorProfile({super.key});
 
   @override
@@ -34,7 +37,7 @@ class EditMentorProfile extends ConsumerWidget {
           automaticallyImplyLeading: false,
           leading: TextButton(
             onPressed: () {
-              AppNavigator.pop();
+              context.pop();
             },
             child: Text(
               'Back',
@@ -48,10 +51,10 @@ class EditMentorProfile extends ConsumerWidget {
           actions: [
             TextButton(
               onPressed: () async {
-                DecodedTokenResponse? decodedToken = await SecureStorageUtils
-                    .getDataFromStorage<DecodedTokenResponse>(
+                DecodedTokenResponse? decodedToken =
+                    await SharedPreferencesUtil.getModel<DecodedTokenResponse>(
                         SharedPrefKeys.tokenResponse,
-                        DecodedTokenResponse.fromJsonString);
+                        (json) => DecodedTokenResponse.fromJson(json));
                 ref
                     .read(apiUploadProvider)
                     .updateStatus(decodedToken!.userId!, bioController.text);
@@ -143,10 +146,11 @@ class EditMentorProfile extends ConsumerWidget {
                           child: GestureDetector(
                             onTap: () async {
                               DecodedTokenResponse? decodedToken =
-                                  await SecureStorageUtils.getDataFromStorage<
+                                  await SharedPreferencesUtil.getModel<
                                           DecodedTokenResponse>(
                                       SharedPrefKeys.tokenResponse,
-                                      DecodedTokenResponse.fromJsonString);
+                                      (json) =>
+                                          DecodedTokenResponse.fromJson(json));
                               try {
                                 ref.read(pickedImage.notifier).state =
                                     await _imagePicker.pickImage(

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:milsat_project_app/extras/models/aspirant_model.dart';
 import 'package:milsat_project_app/extras/models/profile_picture_model.dart';
@@ -38,7 +39,7 @@ homeWidget(BuildContext context, WidgetRef ref,
                 ),
                 child: GestureDetector(
                   onTap: () {
-                    AppNavigator.navigateTo(profileRoute);
+                    context.push(ProfileScreen.route);
                   },
                   child: ref.watch(image) != null
                       ? CircleAvatar(
@@ -98,7 +99,7 @@ homeWidget(BuildContext context, WidgetRef ref,
                           ),
                           label: 'Blocker',
                           onTap: () {
-                            AppNavigator.navigateTo(blockerRoute);
+                            context.push(BlockerPage.route);
                           },
                         ),
                       ),
@@ -114,7 +115,7 @@ homeWidget(BuildContext context, WidgetRef ref,
                         onTap: () {
                           if (dayOfWeek != 'Saturday' ||
                               dayOfWeek != 'Sunday') {
-                            AppNavigator.navigateTo(reportRoute);
+                            context.push(ReportPage.route);
                           } else {
                             showModalBottomSheet(
                                 enableDrag: false,
@@ -171,7 +172,7 @@ homeWidget(BuildContext context, WidgetRef ref,
                                         CustomButton(
                                           height: 54,
                                           pressed: () {
-                                            AppNavigator.pop();
+                                            context.pop();
                                           },
                                           color: AppTheme.kPurpleColor,
                                           width: double.infinity,
@@ -195,30 +196,32 @@ homeWidget(BuildContext context, WidgetRef ref,
                       ),
                     ],
                   ),
-                  Stack(
-                    children: [
-                      CohortCard(
-                        height: MediaQuery.of(context).size.height * 0.393,
-                        width: MediaQuery.of(context).size.width - 41,
-                        radius: BorderRadius.circular(4),
-                        first: -15.5,
-                        second_1: 0,
-                        second_2: 0,
-                        third: 80.53,
-                        forth_1: 0,
-                        forth_2: 0,
-                        forthHeight: 157.13,
-                        thirdHeight: 230.44,
-                        secondHeight: 135.28,
-                      ),
-                      CardContent(
-                        contentDuration: data.cohort?.cohortDuration ?? 0,
-                        numberEnrolled: data.track?.enrolledCount ?? 0,
-                        trackName: data.track?.name ?? '',
-                        mentorName: data.mentor?.fullName ?? '',
-                        d: data,
-                      ),
-                    ],
+                  Center(
+                    child: Stack(
+                      children: [
+                        CohortCard(
+                          height: MediaQuery.of(context).size.height * 0.428,
+                          width: MediaQuery.of(context).size.width / 1.1,
+                          radius: BorderRadius.circular(4),
+                          first: -15.5,
+                          second_1: 0,
+                          second_2: 0,
+                          third: 80.53,
+                          forth_1: 0,
+                          forth_2: 0,
+                          forthHeight: 157.13,
+                          thirdHeight: 230.44,
+                          secondHeight: 135.28,
+                        ),
+                        CardContent(
+                          contentDuration: data.cohort?.cohortDuration ?? 0,
+                          numberEnrolled: data.track?.enrolledCount ?? 0,
+                          trackName: data.track?.name ?? '',
+                          mentorName: data.mentor?.fullName ?? '',
+                          d: data,
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),
@@ -312,7 +315,7 @@ Future<bool?> showWarning(BuildContext context) async {
             TextButton(
               onPressed: () {
                 Navigator.pop(context, true);
-                logOut();
+                logOut(context);
               },
               child: Text(
                 'Yes',

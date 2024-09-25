@@ -22,7 +22,7 @@ class ApiService {
   Future<void> submitReport(data) async {
     try {
       String? token =
-          await SecureStorageUtils.getString(SharedPrefKeys.accessToken);
+          await SharedPreferencesUtil.getString(SharedPrefKeys.accessToken);
       await dio.post(
         '/reports/create',
         data: data,
@@ -62,7 +62,7 @@ class ApiService {
     const url = '${Env.apiUrl}/api/reports/';
     try {
       String? token =
-          await SecureStorageUtils.getString(SharedPrefKeys.accessToken);
+          await SharedPreferencesUtil.getString(SharedPrefKeys.accessToken);
       final response = await dio.get(
         url,
         options: Options(
@@ -90,7 +90,7 @@ class ApiService {
     final url = '${Env.apiUrl}/api/reports/mentor/$mentorId';
     try {
       String? token =
-          await SecureStorageUtils.getString(SharedPrefKeys.accessToken);
+          await SharedPreferencesUtil.getString(SharedPrefKeys.accessToken);
       final response = await dio.get(
         url,
         options: Options(
@@ -117,7 +117,7 @@ class ApiService {
   Future<void> giveReportFeedback(String reportId, data) async {
     try {
       String? token =
-          await SecureStorageUtils.getString(SharedPrefKeys.accessToken);
+          await SharedPreferencesUtil.getString(SharedPrefKeys.accessToken);
       await dio.put(
         '/reports/feedback/$reportId',
         data: data,

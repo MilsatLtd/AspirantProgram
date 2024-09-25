@@ -1,11 +1,13 @@
+import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:milsat_project_app/extras/components/files.dart';
 import 'package:milsat_project_app/extras/components/shared_prefs/keys.dart';
 import 'package:milsat_project_app/extras/components/shared_prefs/utils.dart';
-import 'package:milsat_project_app/extras/navigation/navigator.dart';
 
-logOut() {
-  SecureStorageUtils.deleteAnyDataFromStorage(SharedPrefKeys.accessToken);
-  SecureStorageUtils.deleteAnyDataFromStorage(SharedPrefKeys.tokenResponse);
-  SecureStorageUtils.deleteAnyDataFromStorage(SharedPrefKeys.profileResponse);
-  SecureStorageUtils.deleteAnyDataFromStorage(SharedPrefKeys.refreshToken);
-  AppNavigator.navigateToAndClear(loginRoute);
+logOut(BuildContext context) {
+  SharedPreferencesUtil.removeString(SharedPrefKeys.accessToken);
+  SharedPreferencesUtil.removeString(SharedPrefKeys.tokenResponse);
+  SharedPreferencesUtil.removeString(SharedPrefKeys.profileResponse);
+  SharedPreferencesUtil.removeString(SharedPrefKeys.refreshToken);
+  context.go(LoginScreen.route);
 }

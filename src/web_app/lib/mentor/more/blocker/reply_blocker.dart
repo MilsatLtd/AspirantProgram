@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:milsat_project_app/extras/components/shared_prefs/keys.dart';
 import 'package:milsat_project_app/extras/components/shared_prefs/utils.dart';
@@ -35,8 +36,11 @@ class ReplyBlocker extends ConsumerStatefulWidget {
 class _ReplyBlockerState extends ConsumerState<ReplyBlocker> {
   getReplies() async {
     blockerReply ??=
-        await SecureStorageUtils.getStringList<BlockerCommentModel>(
-            SharedPrefKeys.blockerReply);
+        await SharedPreferencesUtil.getModel<List<BlockerCommentModel>>(
+      SharedPrefKeys.blockerReply,
+      (json) =>
+          (json as List).map((e) => BlockerCommentModel.fromJson(e)).toList(),
+    );
   }
 
   final textController = TextEditingController();
@@ -74,7 +78,7 @@ class _ReplyBlockerState extends ConsumerState<ReplyBlocker> {
           ),
           centerTitle: true,
           leading: GestureDetector(
-            onTap: () => AppNavigator.pop(),
+            onTap: () => context.pop(),
             child: const Icon(
               Icons.arrow_back,
               color: Colors.black,
@@ -252,10 +256,11 @@ class _ReplyBlockerState extends ConsumerState<ReplyBlocker> {
                   onTap: !textFieldEmpty
                       ? () async {
                           DecodedTokenResponse? decodedToken =
-                              await SecureStorageUtils.getDataFromStorage<
+                              await SharedPreferencesUtil.getModel<
                                       DecodedTokenResponse>(
                                   SharedPrefKeys.tokenResponse,
-                                  DecodedTokenResponse.fromJsonString);
+                                  (json) =>
+                                      DecodedTokenResponse.fromJson(json));
                           final reply = await ref
                               .read(apiBlockerServiceProvider)
                               .replyABlocker(

@@ -1,14 +1,17 @@
 // ignore_for_file: deprecated_member_use
 
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:milsat_project_app/extras/components/shared_prefs/keys.dart';
-import 'package:milsat_project_app/extras/components/shared_prefs/utils.dart';
+import 'package:milsat_project_app/general/log_out.dart';
+import 'package:milsat_project_app/mentor/more/blocker/all_blockers_mentor.dart';
 import 'package:milsat_project_app/mentor/profile/profile.dart';
 
 import '../extras/components/files.dart';
 
 class MentorPageSkeleton extends StatefulWidget {
+  static const String name = 'mentor-skeleton';
+  static const String route = '/mentor-skeleton';
   const MentorPageSkeleton({super.key, required this.currentPage});
 
   final int currentPage;
@@ -151,9 +154,8 @@ class _MentorPageSkeletonState extends State<MentorPageSkeleton> {
                               MorePages(
                                 image: 'assets/blocker_icon.svg',
                                 onTap: () {
-                                  AppNavigator.pop();
-                                  AppNavigator.navigateToAndReplace(
-                                      allMentorBlockertRoute);
+                                  context.pop();
+                                  context.go(AllMentorBlockers.route);
                                 },
                                 pageName: 'Blockers',
                                 pageDescription:
@@ -166,9 +168,8 @@ class _MentorPageSkeletonState extends State<MentorPageSkeleton> {
                               MorePages(
                                 image: 'assets/report_icon.svg',
                                 onTap: () {
-                                  AppNavigator.pop();
-                                  AppNavigator.navigateToAndReplace(
-                                      mentorReportRoute);
+                                  context.pop();
+                                  context.go(ReportPageMentor.route);
                                 },
                                 pageName: 'Report',
                                 pageDescription: 'View mentee weekly report',
@@ -180,9 +181,8 @@ class _MentorPageSkeletonState extends State<MentorPageSkeleton> {
                               MorePages(
                                 image: 'assets/meet_svg.svg',
                                 onTap: () {
-                                  AppNavigator.pop();
-                                  AppNavigator.navigateToAndReplace(
-                                      meetUpRoute);
+                                  context.pop();
+                                  context.go(MeetUpScreen.route);
                                 },
                                 pageName: 'Meetup',
                                 pageDescription: 'Schedule meeting with mentee',
@@ -251,15 +251,7 @@ class _MentorPageSkeletonState extends State<MentorPageSkeleton> {
               TextButton(
                 onPressed: () {
                   Navigator.pop(context, true);
-                  SecureStorageUtils.deleteAnyDataFromStorage(
-                      SharedPrefKeys.accessToken);
-                  SecureStorageUtils.deleteAnyDataFromStorage(
-                      SharedPrefKeys.tokenResponse);
-                  SecureStorageUtils.deleteAnyDataFromStorage(
-                      SharedPrefKeys.profileResponse);
-                  SecureStorageUtils.deleteAnyDataFromStorage(
-                      SharedPrefKeys.refreshToken);
-                  AppNavigator.navigateToAndClear(loginRoute);
+                  logOut(context);
                 },
                 child: Text(
                   'Yes',

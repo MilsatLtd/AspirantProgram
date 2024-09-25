@@ -1,7 +1,9 @@
 // ignore_for_file: deprecated_member_use
 
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:milsat_project_app/mentor/more/blocker/all_blockers_mentor.dart';
 
 import '../extras/components/files.dart';
 
@@ -47,7 +49,7 @@ class _CustomNavBarState extends State<CustomNavBar> {
                   secondTapped = false;
                   thirdTapped = false;
                 });
-                AppNavigator.navigateTo(mentorSkeletonRoute);
+                context.push(MentorPageSkeleton.route);
               },
               textColor: firstTapped == true
                   ? AppTheme.kPurpleColor2
@@ -126,8 +128,7 @@ class _CustomNavBarState extends State<CustomNavBar> {
                           MorePages(
                             image: 'assets/blocker_icon.svg',
                             onTap: () {
-                              AppNavigator.navigateToAndReplace(
-                                  allMentorBlockertRoute);
+                              context.go(AllMentorBlockers.route);
                             },
                             pageName: 'Blockers',
                             pageDescription: 'View and respond to all blockers',
@@ -139,8 +140,7 @@ class _CustomNavBarState extends State<CustomNavBar> {
                           MorePages(
                             image: 'assets/report_icon.svg',
                             onTap: () {
-                              AppNavigator.navigateToAndReplace(
-                                  mentorReportRoute);
+                              context.go(ReportPageMentor.route);
                             },
                             pageName: 'Report',
                             pageDescription: 'View mentee weekly report',
@@ -152,7 +152,7 @@ class _CustomNavBarState extends State<CustomNavBar> {
                           MorePages(
                             image: 'assets/meet_svg.svg',
                             onTap: () {
-                              AppNavigator.navigateToAndReplace(meetUpRoute);
+                              context.go(MeetUpScreen.route);
                             },
                             pageName: 'Meetup',
                             pageDescription: 'Schedule meeting with mentee',

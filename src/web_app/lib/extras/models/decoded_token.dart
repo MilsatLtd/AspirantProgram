@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 class DecodedTokenResponse {
   String? tokenType;
   int? exp;
@@ -42,14 +40,5 @@ class DecodedTokenResponse {
     data['email'] = email;
     data['role'] = role;
     return data;
-  }
-
-  String toJsonString() {
-    return jsonEncode(toJson());
-  }
-
-  factory DecodedTokenResponse.fromJsonString(String jsonString) {
-    final Map<String, dynamic> jsonMap = jsonDecode(jsonString);
-    return DecodedTokenResponse.fromJson(jsonMap);
   }
 }

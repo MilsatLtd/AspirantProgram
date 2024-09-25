@@ -2,12 +2,16 @@
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:milsat_project_app/extras/components/files.dart';
+import 'package:milsat_project_app/mentor/more/meet_up/schedule_meetup.dart';
 
 List<ScheduleStructure> schedules = [];
 
 class MeetUpScreen extends StatelessWidget {
+  static const String name = 'meet-up';
+  static const String route = '/meet-up';
   const MeetUpScreen({super.key});
 
   @override
@@ -40,7 +44,7 @@ class MeetUpScreen extends StatelessWidget {
           ),
           GestureDetector(
             onTap: () {
-              AppNavigator.navigateTo(scheduleMeetUpRoute);
+              context.push(ScheduleMeetUp.route);
             },
             child: Container(
               width: 88,
@@ -99,7 +103,7 @@ class MeetUpScreen extends StatelessWidget {
           actions: [
             GestureDetector(
               onTap: () {
-                AppNavigator.navigateTo(scheduleMeetUpRoute);
+                context.push(ScheduleMeetUp.route);
               },
               child: Padding(
                 padding: const EdgeInsets.only(
@@ -114,9 +118,9 @@ class MeetUpScreen extends StatelessWidget {
           leading: IconButton(
             onPressed: () {
               if (schedules.isEmpty) {
-                AppNavigator.pop();
+                context.pop();
               }
-              AppNavigator.navigateTo(mentorSkeletonRoute);
+              context.push(MentorPageSkeleton.route);
             },
             icon: const Icon(
               Icons.arrow_back,

@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:milsat_project_app/extras/components/files.dart';
 
 late List d_;
 
 class AllMentorBlockers extends ConsumerStatefulWidget {
+  static const String route = '/all_mentor_blockers';
+  static const String name = 'all-mentor-blockers';
   const AllMentorBlockers({super.key});
 
   @override
@@ -32,8 +35,7 @@ class _AllMentorBlockersState extends ConsumerState<AllMentorBlockers> {
             automaticallyImplyLeading: false,
             elevation: 0.5,
             leading: GestureDetector(
-              onTap: () =>
-                  AppNavigator.navigateToAndReplace(mentorSkeletonRoute),
+              onTap: () => context.go(MentorPageSkeleton.route, extra: 0),
               child: const Icon(
                 Icons.arrow_back,
                 color: Colors.black,
@@ -153,7 +155,7 @@ class _AllMentorBlockersState extends ConsumerState<AllMentorBlockers> {
   }
 
   Future<bool?> goToMentorHomePage() async {
-    AppNavigator.navigateToAndClear(mentorSkeletonRoute);
+    context.go(MentorPageSkeleton.route);
     return null;
   }
 }

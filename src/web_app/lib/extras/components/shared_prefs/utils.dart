@@ -1,6 +1,4 @@
 import 'dart:convert';
-
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SharedPreferencesUtil {
@@ -12,6 +10,22 @@ class SharedPreferencesUtil {
   static Future<String?> getString(String key) async {
     final prefs = await SharedPreferences.getInstance();
     return prefs.getString(key);
+  }
+
+  static Future<bool> saveModel(String key, dynamic model) async {
+    final prefs = await SharedPreferences.getInstance();
+    String jsonString = jsonEncode(model.toJson());
+    return prefs.setString(key, jsonString);
+  }
+
+  static Future<T?> getModel<T>(
+      String key, T Function(Map<String, dynamic>) fromJson) async {
+    final prefs = await SharedPreferences.getInstance();
+    String? jsonString = prefs.getString(key);
+    if (jsonString == null) return null;
+
+    Map<String, dynamic> jsonMap = jsonDecode(jsonString);
+    return fromJson(jsonMap);
   }
 
   static Future<bool> removeString(String key) async {
@@ -57,75 +71,5 @@ class SharedPreferencesUtil {
   static Future<List<String>?> getStringList(String key) async {
     final prefs = await SharedPreferences.getInstance();
     return prefs.getStringList(key);
-  }
-}
-
-class SecureStorageUtils {
-  static Future<void> saveString(String key, String value) async {
-    const secureStorage = FlutterSecureStorage();
-    return secureStorage.write(key: key, value: value);
-  }
-
-  static Future<String?> getString(String key) async {
-    const secureStorage = FlutterSecureStorage();
-    return secureStorage.read(key: key);
-  }
-
-  static Future<void> removeString(String key) async {
-    const secureStorage = FlutterSecureStorage();
-    return secureStorage.delete(key: key);
-  }
-
-  static Future<void> saveInt(String key, int value) async {
-    const secureStorage = FlutterSecureStorage();
-    return secureStorage.write(key: key, value: value.toString());
-  }
-
-  static Future<int?> getInt(String key) async {
-    const secureStorage = FlutterSecureStorage();
-    return int.tryParse(await secureStorage.read(key: key) ?? '');
-  }
-
-  static Future<void> saveDouble(String key, double value) async {
-    const secureStorage = FlutterSecureStorage();
-    return secureStorage.write(key: key, value: value.toString());
-  }
-
-  static Future<double?> getDouble(String key) async {
-    const secureStorage = FlutterSecureStorage();
-    return double.tryParse(await secureStorage.read(key: key) ?? '');
-  }
-
-  static Future<void> saveStringList<T>(String key, List<T> value) async {
-    const secureStorage = FlutterSecureStorage();
-    return secureStorage.write(key: key, value: jsonEncode(value));
-  }
-
-  static Future<List<T>?> getStringList<T>(String key) async {
-    const secureStorage = FlutterSecureStorage();
-    final value = await secureStorage.read(key: key);
-    return value == null ? null : List<T>.from(jsonDecode(value));
-  }
-
-  static Future<void> saveDataToStorage<T>(
-      String key, T data, String Function(T) toJsonString) async {
-    const secureStorage = FlutterSecureStorage();
-    final jsonString = toJsonString(data);
-    await secureStorage.write(key: key, value: jsonString);
-  }
-
-  static Future<T?> getDataFromStorage<T>(
-      String key, T Function(String) fromJsonString) async {
-    const secureStorage = FlutterSecureStorage();
-    final jsonString = await secureStorage.read(key: key);
-    if (jsonString != null) {
-      return fromJsonString(jsonString);
-    }
-    return null;
-  }
-
-  static Future<void> deleteAnyDataFromStorage(String key) async {
-    const secureStorage = FlutterSecureStorage();
-    await secureStorage.delete(key: key);
   }
 }
