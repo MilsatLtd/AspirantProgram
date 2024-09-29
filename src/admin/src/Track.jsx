@@ -283,7 +283,6 @@ function CourseEdit ({addCourse, courseNo, removeCourse, updateCourse}) {
     const handleSubmit = () => {
         const allCourseDetails = {...courseDetails, id: courseNo}
         const result = CheckValidation(allCourseDetails)
-        console.log(result)
         setCourseError(result)
         const allEmpty = Object.values(result).every(value => value === '');
         if(allEmpty) {
