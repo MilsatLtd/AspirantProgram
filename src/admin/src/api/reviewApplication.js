@@ -13,7 +13,8 @@ async function reviewApplication(applicant_id, status) {
         }),
     });
     if (!res.ok) {
-        throw new Error("Network response was not ok");
+        const errorResponse = await res.json().catch(() => null);
+        throw new Error(errorResponse?.message || "Network response was not ok");
     }
     return res.json();
 }

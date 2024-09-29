@@ -71,7 +71,7 @@ class GetAllApplicationsWithPagination:
                     default=Value(0),
                     output_field=IntegerField()
                 )
-            ).order_by('applicant_id')
+            ).order_by('submission_date')
 
             mentors = combined_query.filter(is_mentor=1)[
                 (page_number - 1) * mentors_page_size: page_number * mentors_page_size
