@@ -145,7 +145,7 @@ class ReviewApplication:
                 if application.role == ROLE.MENTOR.value:
                     self.create_mentor(application)
                 elif application.role == ROLE.STUDENT.value:
-                    if Applications.objects.filter(role=ROLE.MENTOR.value, status=APPLICATION_STATUS.PENDING.value).exists():
+                    if Applications.objects.filter(role=ROLE.MENTOR.value, status=APPLICATION_STATUS.PENDING.value, cohort=application.cohort).exists():
                         return Response(
                             data={"message": "All mentor applications must be reviewed before student applications \U0001F9D0"},
                             status=status.HTTP_400_BAD_REQUEST)
