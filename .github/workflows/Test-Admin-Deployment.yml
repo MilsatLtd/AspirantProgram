@@ -1,4 +1,4 @@
-name: Deploy Admin Page
+name: Deploy Test Admin Page
 
 on:
   workflow_dispatch:
