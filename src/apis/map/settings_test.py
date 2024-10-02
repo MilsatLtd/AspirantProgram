@@ -73,6 +73,7 @@ CORS_ALLOWED_ORIGINS = [
     "https://test-admin-asp.milsat.africa",
     "https://test-aspirant.milsat.africa",
     "https://test-aspirant-api.milsat.africa",
+    "https://milsataspirant.netlify.app",
     "http://localhost:5173",
     "https://localhost:5173",
     "http://localhost:3000",
@@ -89,6 +90,7 @@ CSRF_TRUSTED_ORIGINS = [
     "https://test-admin-asp.milsat.africa",
     "https://test-aspirant.milsat.africa",
     "https://test-aspirant-api.milsat.africa",
+    "https://milsataspirant.netlify.app",
     "http://localhost:5173",
     "https://localhost:5173",
     "http://localhost:3000",
@@ -150,7 +152,7 @@ AWS_S3_REGION_NAME = "us-east-1"
 AWS_QUERYSTRING_AUTH = False
 
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-EMAIL_HOST = "email-smtp.us-east-1.amazonaws.com"
+EMAIL_HOST = "smtp.gmail.com"
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER", "")
