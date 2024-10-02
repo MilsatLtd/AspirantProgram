@@ -180,7 +180,7 @@ class ReviewApplication:
 
         logger.info(f"Added a new mentor to the track: {track.track_id} with email: {user.email}")
         message = application_message(application, password, isPreviousMentor)
-        sendEmail.delay(user.email, message['subject'], message['body'])
+        sendEmail(user.email, message['subject'], message['body'])
 
     def set_mentor_password(self, user):
         password = self.generate_mentor_password()
@@ -206,7 +206,7 @@ class ReviewApplication:
         isPreviouslyAccepted = Students.objects.filter(user=user).exists()
         logger.info(f"Added a new student to the track: {track.track_id} with email: {user.email}")
         message = application_message(application, user.phone_number, isPreviouslyAccepted)
-        sendEmail.delay(user.email, message['subject'], message['body'])
+        sendEmail(user.email, message['subject'], message['body'])
 
     def select_mentor(self, track):
         mentor = Mentors.objects.annotate(num_mentees=Count('mentees')).filter(track=track).order_by('num_mentees').first()
