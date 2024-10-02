@@ -12,5 +12,6 @@ def sendEmail(self, recipient=None, subject=None, message=None):
         sender = settings.DEFAULT_FROM_EMAIL
         send_mail(subject, message, sender, [recipient], fail_silently=False)
     except Exception as e:
-        logger.exception(e)
+        logger.exception(f"Error occured while sending email to {recipient}", e)
         raise e
+ 
