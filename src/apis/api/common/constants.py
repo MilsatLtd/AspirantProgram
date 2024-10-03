@@ -63,11 +63,9 @@ def application_message_previously_accepted(application):
             f"""
 Dear {application.user.first_name},
 
-We're thrilled to inform you that your application for the Milsat Aspirant Programme has been successfully reviewed, and it is with great pleasure that we extend our warmest congratulations on your readmission to the {cohort_name} cohort as a {role}.
+We're thrilled to inform you that your application for the Milsat Aspirant Programme has been successfully reviewed, and it is with great pleasure that we extend our warmest congratulations on your admission to the {cohort_name} cohort as a {role}.
 
 Your journey with us begins on {format_timestamp(application.track.cohort.start_date)}, and concludes on {format_timestamp(application.track.cohort.end_date)}.
-
-To ensure you make the most of your experience, we have prepared a starter pack for you.
 
 To ensure you make the most of your experience, we have prepared a starter pack for you;
     - Kindly take a moment to download the curriculum. [Data Collection Curriculum.pdf](https://drive.google.com/file/d/1KIim28hV4skwWjuioM4zVWaGe-do7zYF/view?usp=sharing)
