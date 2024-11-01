@@ -75,7 +75,9 @@ class _CommentsPageState extends ConsumerState<CommentsPage> {
             centerTitle: true,
             elevation: 0.5,
             leading: GestureDetector(
-              onTap: () => context.pop(),
+              onTap: () => context.canPop()
+                  ? context.pop()
+                  : context.pushReplacement(HomeScreen.route),
               child: const Icon(
                 Icons.arrow_back,
                 color: Colors.black,

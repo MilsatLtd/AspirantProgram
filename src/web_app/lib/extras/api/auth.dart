@@ -92,6 +92,7 @@ class SignInStateNotifier extends StateNotifier<SignInState> {
             SharedPrefKeys.tokenResponse, decodedResponse);
 
         SharedPreferencesUtil.saveString(SharedPrefKeys.accessToken, token);
+        SharedPreferencesUtil.saveBool(SharedPrefKeys.isLoggedIn, true);
         SharedPreferencesUtil.saveString(
             SharedPrefKeys.refreshToken, refreshToken);
         state = SignInState.success();
@@ -132,5 +133,6 @@ class SignInStateNotifier extends StateNotifier<SignInState> {
 void signOut(BuildContext context) {
   SignInState.initial();
   cred = {};
+  SharedPreferencesUtil.saveBool(SharedPrefKeys.isLoggedIn, false);
   context.go(LoginScreen.route);
 }

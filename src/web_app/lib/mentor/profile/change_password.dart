@@ -22,7 +22,9 @@ class MentorPasswordPage extends ConsumerWidget {
         child: AppBar(
           leading: GestureDetector(
             onTap: () {
-              context.pop();
+              context.canPop()
+                  ? context.pop()
+                  : context.pushReplacement(HomeScreen.route);
             },
             child: const Icon(
               Icons.arrow_back,

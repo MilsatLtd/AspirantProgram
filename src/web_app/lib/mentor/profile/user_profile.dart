@@ -25,7 +25,9 @@ class UserProfile extends StatelessWidget {
         automaticallyImplyLeading: false,
         leading: IconButton(
           onPressed: () {
-            context.pop();
+            context.canPop()
+                ? context.pop()
+                : context.pushReplacement(HomeScreen.route);
           },
           icon: const Icon(
             Icons.arrow_back,

@@ -36,7 +36,9 @@ class _AddBlockerState extends ConsumerState<AddBlocker> {
         automaticallyImplyLeading: false,
         elevation: 0.5,
         leading: GestureDetector(
-          onTap: () => context.pop(),
+          onTap: () => context.canPop()
+              ? context.pop()
+              : context.pushReplacement(HomeScreen.route),
           child: const Icon(
             Icons.arrow_back,
             color: Colors.black,
@@ -211,7 +213,11 @@ class _AddBlockerState extends ConsumerState<AddBlocker> {
             CustomButton(
               height: 54,
               pressed: () {
-                succeeded ? context.go(HomeScreen.route) : context.pop();
+                succeeded
+                    ? context.go(HomeScreen.route)
+                    : context.canPop()
+                        ? context.pop()
+                        : context.pushReplacement(HomeScreen.route);
               },
               color: AppTheme.kPurpleColor,
               width: 307,

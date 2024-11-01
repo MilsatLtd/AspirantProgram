@@ -39,7 +39,9 @@ class ReportPage extends StatelessWidget {
           backgroundColor: AppTheme.kAppWhiteScheme,
           elevation: 0.5,
           leading: GestureDetector(
-            onTap: () => context.pop(),
+            onTap: () => context.canPop()
+                ? context.pop()
+                : context.pushReplacement(HomeScreen.route),
             child: const Icon(
               Icons.arrow_back,
               color: Colors.black,
@@ -107,7 +109,9 @@ class ReportPage extends StatelessWidget {
                   children: [
                     TextButton(
                       onPressed: () {
-                        context.pop();
+                        context.canPop()
+                            ? context.pop()
+                            : context.pushReplacement(HomeScreen.route);
                       },
                       child: Text(
                         'Cancel',
@@ -189,7 +193,9 @@ class ReportPage1 extends StatelessWidget {
           backgroundColor: AppTheme.kAppWhiteScheme,
           elevation: 0.5,
           leading: GestureDetector(
-            onTap: () => context.pop(),
+            onTap: () => context.canPop()
+                ? context.pop()
+                : context.pushReplacement(HomeScreen.route),
             child: const Icon(
               Icons.arrow_back,
               color: Colors.black,
@@ -251,7 +257,9 @@ class ReportPage1 extends StatelessWidget {
                   children: [
                     TextButton(
                       onPressed: () {
-                        context.pop();
+                        context.canPop()
+                            ? context.pop()
+                            : context.pushReplacement(HomeScreen.route);
                       },
                       child: Text(
                         'Cancel',
@@ -336,7 +344,9 @@ class _ReportPage2State extends ConsumerState<ReportPage2> {
           backgroundColor: AppTheme.kAppWhiteScheme,
           elevation: 0.5,
           leading: GestureDetector(
-            onTap: () => context.pop(),
+            onTap: () => context.canPop()
+                ? context.pop()
+                : context.pushReplacement(HomeScreen.route),
             child: const Icon(
               Icons.arrow_back,
               color: Colors.black,
@@ -475,7 +485,9 @@ Future<dynamic> popUp(BuildContext context) {
               children: [
                 OutlinedButton(
                   onPressed: () {
-                    context.pop();
+                    context.canPop()
+                        ? context.pop()
+                        : context.pushReplacement(HomeScreen.route);
                   },
                   child: Text(
                     'Cancel',
@@ -491,7 +503,9 @@ Future<dynamic> popUp(BuildContext context) {
                       height: 54,
                       pressed: () {
                         ref.read(apiReportProvider).submitReport(weeklyReport);
-                        context.pop();
+                        context.canPop()
+                            ? context.pop()
+                            : context.pushReplacement(HomeScreen.route);
                         popUp1(context);
                       },
                       color: AppTheme.kPurpleColor,

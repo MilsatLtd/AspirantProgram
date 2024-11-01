@@ -154,7 +154,10 @@ class _MentorPageSkeletonState extends State<MentorPageSkeleton> {
                               MorePages(
                                 image: 'assets/blocker_icon.svg',
                                 onTap: () {
-                                  context.pop();
+                                  context.canPop()
+                                      ? context.pop()
+                                      : context
+                                          .pushReplacement(HomeScreen.route);
                                   context.go(AllMentorBlockers.route);
                                 },
                                 pageName: 'Blockers',
@@ -168,7 +171,10 @@ class _MentorPageSkeletonState extends State<MentorPageSkeleton> {
                               MorePages(
                                 image: 'assets/report_icon.svg',
                                 onTap: () {
-                                  context.pop();
+                                  context.canPop()
+                                      ? context.pop()
+                                      : context
+                                          .pushReplacement(HomeScreen.route);
                                   context.go(ReportPageMentor.route);
                                 },
                                 pageName: 'Report',
@@ -181,7 +187,10 @@ class _MentorPageSkeletonState extends State<MentorPageSkeleton> {
                               MorePages(
                                 image: 'assets/meet_svg.svg',
                                 onTap: () {
-                                  context.pop();
+                                  context.canPop()
+                                      ? context.pop()
+                                      : context
+                                          .pushReplacement(HomeScreen.route);
                                   context.go(MeetUpScreen.route);
                                 },
                                 pageName: 'Meetup',

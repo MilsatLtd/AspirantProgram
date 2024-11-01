@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:milsat_project_app/extras/components/shared_prefs/keys.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../extras/components/files.dart';
@@ -28,8 +29,9 @@ class _SplashScreenState extends State<SplashScreen> {
   Future<void> _checkOnboardingStatus() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     bool onboardingShown = prefs.getBool('onboardingShown') ?? false;
+    bool isLoggedIn = prefs.getBool(SharedPrefKeys.isLoggedIn) ?? false;
 
-    if (onboardingShown) {
+    if (onboardingShown || isLoggedIn) {
       setState(() {
         _showOnboarding = false;
       });
@@ -46,8 +48,8 @@ class _SplashScreenState extends State<SplashScreen> {
     await Future.delayed(const Duration(milliseconds: 3000), () {});
 
     _showOnboarding
-        ? context.go(LoginScreen.route)
-        : context.go(OnboardingScreen.route);
+        ? context.go(OnboardingScreen.route)
+        : context.go(LoginScreen.route);
   }
 
   @override

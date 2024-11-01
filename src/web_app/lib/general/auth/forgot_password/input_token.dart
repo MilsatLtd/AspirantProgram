@@ -183,7 +183,10 @@ class _InputTokenPageState extends ConsumerState<InputTokenPage> {
                                           'Hello!',
                                           message.message ??
                                               message.nonFieldErrors![0], () {
-                                          context.pop();
+                                          context.canPop()
+                                              ? context.pop()
+                                              : context.pushReplacement(
+                                                  HomeScreen.route);
                                           setState(() {
                                             hasError = false;
                                           });
