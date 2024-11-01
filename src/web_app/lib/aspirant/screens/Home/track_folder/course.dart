@@ -1,24 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:milsat_project_app/aspirant/screens/Home/track_folder/course_model.dart';
 import 'package:milsat_project_app/extras/components/files.dart';
 
 class CourseDetails extends StatelessWidget {
+  static const String name = 'courseDetails';
+  static const String route = '/courseDetails';
   const CourseDetails({
     super.key,
-    required this.courseTitle,
-    required this.courseDescription,
-    required this.courseRequirementTitle,
-    required this.courseRequirement,
-    required this.pressed,
-    required this.courseId,
+    required this.courseDemoModel,
   });
 
-  final String courseTitle;
-  final String courseDescription;
-  final String courseRequirementTitle;
-  final String courseRequirement;
-  final Function() pressed;
-  final String courseId;
+  final CourseDemoModel courseDemoModel;
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +30,7 @@ class CourseDetails extends StatelessWidget {
           ),
           leading: GestureDetector(
             onTap: () {
-              AppNavigator.doPop();
+              context.pop();
             },
             child: const Icon(
               Icons.arrow_back,
@@ -56,14 +50,14 @@ class CourseDetails extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              courseTitle,
+              courseDemoModel.courseTitle,
               style: kOnboardingLightTextStyle,
             ),
             const SizedBox(
               height: 8,
             ),
             Text(
-              courseDescription,
+              courseDemoModel.courseDescription,
               style: GoogleFonts.raleway(
                 fontSize: 13,
                 fontWeight: FontWeight.w500,
@@ -75,14 +69,14 @@ class CourseDetails extends StatelessWidget {
               height: 16,
             ),
             Text(
-              courseRequirementTitle,
+              courseDemoModel.courseRequirementTitle,
               style: kOnboardingLightTextStyle,
             ),
             const SizedBox(
               height: 8,
             ),
             Text(
-              courseRequirement,
+              courseDemoModel.courseRequirement,
               style: GoogleFonts.raleway(
                 fontSize: 13,
                 fontWeight: FontWeight.w500,
@@ -101,7 +95,9 @@ class CourseDetails extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(builder: (context) {
-                        return SubmitToDoPage(courseId: courseId);
+                        return SubmitToDoPage(
+                          courseId: courseDemoModel.courseId,
+                        );
                       }),
                     );
                   },
@@ -128,7 +124,7 @@ class CourseDetails extends StatelessWidget {
                 ),
                 CustomButton(
                   height: 42,
-                  pressed: pressed,
+                  pressed: courseDemoModel.pressed,
                   color: AppTheme.kPurpleColor,
                   width: 145,
                   elevation: 0,

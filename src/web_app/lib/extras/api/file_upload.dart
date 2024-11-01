@@ -38,7 +38,7 @@ class APIService {
       });
 
       String? token =
-          await SecureStorageUtils.getString(SharedPrefKeys.accessToken);
+          await SharedPreferencesUtil.getString(SharedPrefKeys.accessToken);
 
       final response = await dio.post(
         '${Env.apiUrl}/api/todos/submit',
@@ -87,7 +87,7 @@ class APIService {
       });
 
       String? token =
-          await SecureStorageUtils.getString(SharedPrefKeys.accessToken);
+          await SharedPreferencesUtil.getString(SharedPrefKeys.accessToken);
 
       final response = await dio.put(
         url,
@@ -104,8 +104,8 @@ class APIService {
         case 200:
           ProfilePictureResponse profileResponse =
               ProfilePictureResponse.fromJson(response.data);
-          SecureStorageUtils.saveDataToStorage(SharedPrefKeys.profileResponse,
-              profileResponse, (data) => data.toJsonString());
+          SharedPreferencesUtil.saveModel(
+              SharedPrefKeys.profileResponse, profileResponse);
           return profileResponse;
 
         case 404:
@@ -134,7 +134,7 @@ class APIService {
     final url = '${Env.apiUrl}/api/users/update/$userId';
     try {
       String? token =
-          await SecureStorageUtils.getString(SharedPrefKeys.accessToken);
+          await SharedPreferencesUtil.getString(SharedPrefKeys.accessToken);
       final response = await dio.put(
         url,
         data: {'bio': bio},

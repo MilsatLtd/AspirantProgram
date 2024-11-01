@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'dart:io';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
@@ -26,12 +27,15 @@ final image = StateProvider<File?>((ref) {
 final userDetails =
     FutureProvider.autoDispose<AspirantModelClass?>((ref) async {
   DecodedTokenResponse? response =
-      await SecureStorageUtils.getDataFromStorage<DecodedTokenResponse>(
-          SharedPrefKeys.tokenResponse, DecodedTokenResponse.fromJsonString);
+      await SharedPreferencesUtil.getModel<DecodedTokenResponse>(
+          SharedPrefKeys.tokenResponse,
+          (json) => DecodedTokenResponse.fromJson(json));
   return ref.read(apiServiceProvider).getUserData(response?.userId);
 });
 
 class ProfileScreen extends ConsumerStatefulWidget {
+  static const String name = 'profile';
+  static const String route = '/profile';
   const ProfileScreen({super.key});
 
   @override
@@ -42,9 +46,9 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   ProfilePictureResponse? profilePictureResponse;
   void getUserProfile() async {
     profilePictureResponse =
-        await SecureStorageUtils.getDataFromStorage<ProfilePictureResponse>(
+        await SharedPreferencesUtil.getModel<ProfilePictureResponse>(
             SharedPrefKeys.profileResponse,
-            ProfilePictureResponse.fromJsonString);
+            (json) => ProfilePictureResponse.fromJson(json));
   }
 
   @override
@@ -69,11 +73,18 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
             child: AppBar(
               elevation: 0,
               backgroundColor: Colors.transparent,
-              automaticallyImplyLeading: false,
+              automaticallyImplyLeading: true,
+              leading: InkWell(
+                onTap: () async => await popToHome(context),
+                child: const Icon(
+                  Icons.arrow_back_outlined,
+                  color: Colors.black,
+                ),
+              ),
               actions: [
                 TextButton(
                   onPressed: () {
-                    AppNavigator.navigateToAndReplace(editProfileRoute);
+                    context.go(EditProfile.route);
                   },
                   child: Text(
                     'Edit',
@@ -132,12 +143,12 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                               child: GestureDetector(
                                 onTap: () async {
                                   DecodedTokenResponse? decodedToken =
-                                      await SecureStorageUtils
-                                          .getDataFromStorage<
-                                                  DecodedTokenResponse>(
-                                              SharedPrefKeys.tokenResponse,
-                                              DecodedTokenResponse
-                                                  .fromJsonString);
+                                      await SharedPreferencesUtil.getModel<
+                                              DecodedTokenResponse>(
+                                          SharedPrefKeys.tokenResponse,
+                                          (json) =>
+                                              DecodedTokenResponse.fromJson(
+                                                  json));
                                   try {
                                     ref.read(pickedImage.notifier).state =
                                         await _imagePicker.pickImage(
@@ -341,7 +352,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                       ),
                       GestureDetector(
                         onTap: () {
-                          AppNavigator.navigateTo(passwordRoute);
+                          context.push(PasswordPage.route);
                         },
                         child: Container(
                           padding: const EdgeInsets.symmetric(
@@ -395,7 +406,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                       ),
                       GestureDetector(
                         onTap: () {
-                          signOut();
+                          signOut(context);
                         },
                         child: Container(
                           padding: const EdgeInsets.only(
@@ -437,7 +448,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
 
   Future<bool?> popToHome(BuildContext context) async {
     Navigator.pop(context, true);
-    AppNavigator.navigateToAndReplace(homeRoute);
+    context.go(HomeScreen.route);
     return null;
   }
 }

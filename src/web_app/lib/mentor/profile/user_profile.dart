@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../../extras/components/files.dart';
 
@@ -24,7 +25,7 @@ class UserProfile extends StatelessWidget {
         automaticallyImplyLeading: false,
         leading: IconButton(
           onPressed: () {
-            AppNavigator.pop();
+            context.pop();
           },
           icon: const Icon(
             Icons.arrow_back,

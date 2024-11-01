@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:milsat_project_app/extras/components/files.dart';
 
 class ViewAllPage extends StatelessWidget {
+  static const String name = 'view-all';
+  static const String route = '/view-all';
   const ViewAllPage({super.key});
 
   @override
@@ -24,7 +27,7 @@ class ViewAllPage extends StatelessWidget {
           centerTitle: true,
           leading: IconButton(
             onPressed: () {
-              AppNavigator.doPop();
+              context.pop();
             },
             icon: const Icon(
               Icons.arrow_back,

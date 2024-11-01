@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:milsat_project_app/extras/components/files.dart';
 import 'package:milsat_project_app/mentor/more/report/feedback_page.dart';
@@ -50,7 +51,7 @@ class AspirantReportPage extends StatelessWidget {
           elevation: 0.5,
           leading: IconButton(
             onPressed: () {
-              AppNavigator.doPop();
+              context.pop();
             },
             icon: const Icon(
               Icons.arrow_back,

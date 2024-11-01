@@ -1,8 +1,12 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:milsat_project_app/extras/components/files.dart';
 import 'package:milsat_project_app/extras/components/shared_prefs/keys.dart';
@@ -63,7 +67,8 @@ class SignInState {
 class SignInStateNotifier extends StateNotifier<SignInState> {
   SignInStateNotifier() : super(SignInState.initial());
 
-  Future<void> signIn(String email, String password) async {
+  Future<void> signIn(
+      String email, String password, BuildContext context) async {
     try {
       state = SignInState.loading();
       final response = await Dio().post(
@@ -82,17 +87,19 @@ class SignInStateNotifier extends StateNotifier<SignInState> {
         var refreshToken = response.data['refresh'];
         Map<String, dynamic> decodedToken = JwtDecoder.decode(token);
         final decodedResponse = DecodedTokenResponse.fromJson(decodedToken);
-        SecureStorageUtils.saveDataToStorage(SharedPrefKeys.tokenResponse,
-            decodedResponse, (data) => data.toJsonString());
-        SecureStorageUtils.saveString(SharedPrefKeys.accessToken, token);
-        SecureStorageUtils.saveString(
+
+        SharedPreferencesUtil.saveModel(
+            SharedPrefKeys.tokenResponse, decodedResponse);
+
+        SharedPreferencesUtil.saveString(SharedPrefKeys.accessToken, token);
+        SharedPreferencesUtil.saveString(
             SharedPrefKeys.refreshToken, refreshToken);
         state = SignInState.success();
         if (state.success == true) {
           if (decodedResponse.role == 2) {
-            AppNavigator.navigateTo(homeRoute);
+            context.go(HomeScreen.route);
           } else if (decodedResponse.role == 1) {
-            AppNavigator.navigateTo(mentorSkeletonRoute);
+            context.go(MentorPageSkeleton.route, extra: 0);
           }
         }
       } else {
@@ -122,8 +129,8 @@ class SignInStateNotifier extends StateNotifier<SignInState> {
   }
 }
 
-void signOut() {
+void signOut(BuildContext context) {
   SignInState.initial();
   cred = {};
-  AppNavigator.navigateToAndReplace(loginRoute);
+  context.go(LoginScreen.route);
 }

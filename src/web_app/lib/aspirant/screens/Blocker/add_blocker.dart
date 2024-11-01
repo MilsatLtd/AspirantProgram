@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:milsat_project_app/extras/components/shared_prefs/keys.dart';
 import 'package:milsat_project_app/extras/components/shared_prefs/utils.dart';
@@ -10,6 +11,8 @@ import '../../../extras/api/blockers_api.dart';
 import '../../../extras/components/files.dart';
 
 class AddBlocker extends ConsumerStatefulWidget {
+  static const String name = 'add_blocker';
+  static const String route = '/add_blocker';
   const AddBlocker({super.key});
 
   @override
@@ -33,7 +36,7 @@ class _AddBlockerState extends ConsumerState<AddBlocker> {
         automaticallyImplyLeading: false,
         elevation: 0.5,
         leading: GestureDetector(
-          onTap: () => AppNavigator.pop(),
+          onTap: () => context.pop(),
           child: const Icon(
             Icons.arrow_back,
             color: Colors.black,
@@ -139,10 +142,10 @@ class _AddBlockerState extends ConsumerState<AddBlocker> {
                 CustomButton(
                   height: 54,
                   pressed: () async {
-                    DecodedTokenResponse? response = await SecureStorageUtils
-                        .getDataFromStorage<DecodedTokenResponse>(
+                    DecodedTokenResponse? response = await SharedPreferencesUtil
+                        .getModel<DecodedTokenResponse>(
                             SharedPrefKeys.tokenResponse,
-                            DecodedTokenResponse.fromJsonString);
+                            (json) => DecodedTokenResponse.fromJson(json));
                     if (formKey.currentState!.validate()) {
                       final result =
                           await ref.read(apiBlockerServiceProvider).postBlocker(
@@ -208,9 +211,7 @@ class _AddBlockerState extends ConsumerState<AddBlocker> {
             CustomButton(
               height: 54,
               pressed: () {
-                succeeded
-                    ? AppNavigator.navigateToAndClear(homeRoute)
-                    : AppNavigator.pop();
+                succeeded ? context.go(HomeScreen.route) : context.pop();
               },
               color: AppTheme.kPurpleColor,
               width: 307,

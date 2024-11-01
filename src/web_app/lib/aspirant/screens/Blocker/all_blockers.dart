@@ -15,8 +15,8 @@ import '../../../extras/api/blockers_api.dart';
 
 final allBlockers = FutureProvider.autoDispose((ref) async {
   AspirantModelClass? userData =
-      await SecureStorageUtils.getDataFromStorage<AspirantModelClass>(
-          SharedPrefKeys.userData, AspirantModelClass.fromJsonString);
+      await SharedPreferencesUtil.getModel<AspirantModelClass>(
+          SharedPrefKeys.userData, (json) => AspirantModelClass.fromJson(json));
   return ref
       .read(apiBlockerServiceProvider)
       .getRaisedBlockersById(userData?.track?.trackId ?? '');
@@ -49,6 +49,8 @@ getPendngAndResolvedList() {
 }
 
 class AllBlockers extends ConsumerWidget {
+  static const String name = 'all-blockers';
+  static const String route = '/all-blockers';
   const AllBlockers({super.key});
 
   @override
@@ -76,9 +78,9 @@ class AllBlockers extends ConsumerWidget {
             return GestureDetector(
               onTap: () async {
                 DecodedTokenResponse? decodedTokenResponse =
-                    await SecureStorageUtils.getDataFromStorage<
-                            DecodedTokenResponse>(SharedPrefKeys.tokenResponse,
-                        DecodedTokenResponse.fromJsonString);
+                    await SharedPreferencesUtil.getModel<DecodedTokenResponse>(
+                        SharedPrefKeys.tokenResponse,
+                        (json) => DecodedTokenResponse.fromJson(json));
                 final comments = await ref
                     .read(apiBlockerServiceProvider)
                     .getCommentsById(cred['blockers'][index]['blocker_id']);

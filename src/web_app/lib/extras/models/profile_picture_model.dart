@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 class ProfilePictureResponse {
   String? userId;
   String? firstName;
@@ -46,14 +44,5 @@ class ProfilePictureResponse {
     data['bio'] = bio;
     data['profile_picture'] = profilePicture;
     return data;
-  }
-
-  String toJsonString() {
-    return jsonEncode(toJson());
-  }
-
-  factory ProfilePictureResponse.fromJsonString(String jsonString) {
-    final Map<String, dynamic> jsonMap = jsonDecode(jsonString);
-    return ProfilePictureResponse.fromJson(jsonMap);
   }
 }

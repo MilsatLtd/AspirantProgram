@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:milsat_project_app/extras/components/shared_prefs/keys.dart';
 import 'package:milsat_project_app/extras/components/shared_prefs/utils.dart';
@@ -14,15 +15,15 @@ import '../../extras/components/files.dart';
 
 final mentorDetails = FutureProvider.autoDispose<MentorData>((ref) async {
   DecodedTokenResponse? response =
-      await SecureStorageUtils.getDataFromStorage<DecodedTokenResponse>(
-          SharedPrefKeys.tokenResponse, DecodedTokenResponse.fromJsonString);
+      await SharedPreferencesUtil.getModel<DecodedTokenResponse>(
+          SharedPrefKeys.tokenResponse,
+          (json) => DecodedTokenResponse.fromJson(json));
   return ref.read(apiServiceProvider).getMentorData(response?.userId);
 });
 
 final allBlockersMentor = FutureProvider.autoDispose((ref) async {
-  MentorData? userData =
-      await SecureStorageUtils.getDataFromStorage<MentorData>(
-          SharedPrefKeys.userData, MentorData.fromJsonString);
+  MentorData? userData = await SharedPreferencesUtil.getModel<MentorData>(
+      SharedPrefKeys.userData, (json) => MentorData.fromJson(json));
   return ref
       .read(apiBlockerServiceProvider)
       .getRaisedBlockersById(userData?.track?.trackId ?? '');
@@ -39,9 +40,9 @@ class _MentorHomePageState extends ConsumerState<MentorHomePage> {
   ProfilePictureResponse? profilePictureResponse;
   void getUserProfile() async {
     profilePictureResponse =
-        await SecureStorageUtils.getDataFromStorage<ProfilePictureResponse>(
+        await SharedPreferencesUtil.getModel<ProfilePictureResponse>(
             SharedPrefKeys.profileResponse,
-            ProfilePictureResponse.fromJsonString);
+            (json) => ProfilePictureResponse.fromJson(json));
   }
 
   @override
@@ -174,7 +175,7 @@ class _MentorHomePageState extends ConsumerState<MentorHomePage> {
                           ),
                           InkWell(
                             onTap: () {
-                              AppNavigator.navigateTo(viewAllRoute);
+                              context.push(ViewAllPage.route);
                             },
                             child: Text(
                               'View all',

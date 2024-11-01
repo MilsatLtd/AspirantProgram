@@ -1,6 +1,9 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:milsat_project_app/extras/components/shared_prefs/keys.dart';
 import 'package:milsat_project_app/extras/components/shared_prefs/utils.dart';
@@ -11,6 +14,8 @@ import '../../../extras/api/report_api.dart';
 import '../../../extras/components/files.dart';
 
 class ReportPage extends StatelessWidget {
+  static const String name = 'report-page';
+  static const String route = '/report-page';
   const ReportPage({super.key});
 
   @override
@@ -34,7 +39,7 @@ class ReportPage extends StatelessWidget {
           backgroundColor: AppTheme.kAppWhiteScheme,
           elevation: 0.5,
           leading: GestureDetector(
-            onTap: () => AppNavigator.pop(),
+            onTap: () => context.pop(),
             child: const Icon(
               Icons.arrow_back,
               color: Colors.black,
@@ -56,103 +61,100 @@ class ReportPage extends StatelessWidget {
             ),
           ],
         ),
-        body: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 24,
-              vertical: 32,
-            ),
-            child: Form(
-              key: formKey,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    question1,
-                    style: GoogleFonts.raleway(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                      color: const Color(0xFF423B43),
+        body: Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: 24,
+            vertical: 32,
+          ),
+          child: Form(
+            key: formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  question1,
+                  style: GoogleFonts.raleway(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    color: const Color(0xFF423B43),
+                  ),
+                ),
+                const SizedBox(
+                  height: 16,
+                ),
+                TextFormField(
+                  controller: textController,
+                  decoration: InputDecoration(
+                    border: InputBorder.none,
+                    hintText: 'type something...',
+                    hintStyle: GoogleFonts.raleway(
+                      color: AppTheme.kHintTextColor,
+                      fontSize: 14,
                     ),
                   ),
-                  const SizedBox(
-                    height: 16,
-                  ),
-                  TextFormField(
-                    controller: textController,
-                    decoration: InputDecoration(
-                      border: InputBorder.none,
-                      hintText: 'type something...',
-                      hintStyle: GoogleFonts.raleway(
-                        color: AppTheme.kHintTextColor,
-                        fontSize: 14,
-                      ),
-                    ),
-                    maxLines: 12,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Answer cannot be empty';
-                      }
-                      return null;
-                    },
-                  ),
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      TextButton(
-                        onPressed: () {
-                          AppNavigator.pop();
-                        },
-                        child: Text(
-                          'Cancel',
-                          style: GoogleFonts.raleway(
-                            color: AppTheme.kPurpleColor,
-                            fontWeight: FontWeight.w600,
-                          ),
+                  maxLines: 12,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Answer cannot be empty';
+                    }
+                    return null;
+                  },
+                ),
+                const Spacer(),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    TextButton(
+                      onPressed: () {
+                        context.pop();
+                      },
+                      child: Text(
+                        'Cancel',
+                        style: GoogleFonts.raleway(
+                          color: AppTheme.kPurpleColor,
+                          fontWeight: FontWeight.w600,
                         ),
                       ),
-                      const SizedBox(
-                        height: 350,
-                      ),
-                      OutlinedButton(
-                        onPressed: () async {
-                          DecodedTokenResponse? decodedToken =
-                              await SecureStorageUtils.getDataFromStorage<
-                                      DecodedTokenResponse>(
-                                  SharedPrefKeys.tokenResponse,
-                                  DecodedTokenResponse.fromJsonString);
-                          if (formKey.currentState!.validate()) {
-                            weeklyReport['student_id'] = decodedToken!.userId;
-                            weeklyReport['question_1'] = textController.text;
-                            AppNavigator.navigateTo(reportRoute1);
-                          }
-                        },
-                        child: Row(
-                          children: [
-                            Text(
-                              'Next',
-                              style: GoogleFonts.raleway(
-                                color: AppTheme.kPurpleColor,
-                                fontSize: 14,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                            const SizedBox(
-                              width: 10,
-                            ),
-                            const Icon(
-                              Icons.arrow_forward_ios,
+                    ),
+                    const Spacer(),
+                    OutlinedButton(
+                      onPressed: () async {
+                        DecodedTokenResponse? decodedToken =
+                            await SharedPreferencesUtil.getModel<
+                                    DecodedTokenResponse>(
+                                SharedPrefKeys.tokenResponse,
+                                (json) => DecodedTokenResponse.fromJson(json));
+                        if (formKey.currentState!.validate()) {
+                          weeklyReport['student_id'] = decodedToken!.userId;
+                          weeklyReport['question_1'] = textController.text;
+                          context.push(ReportPage1.route);
+                        }
+                      },
+                      child: Row(
+                        children: [
+                          Text(
+                            'Next',
+                            style: GoogleFonts.raleway(
                               color: AppTheme.kPurpleColor,
-                              size: 14,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w600,
                             ),
-                          ],
-                        ),
-                      )
-                    ],
-                  ),
-                ],
-              ),
+                          ),
+                          const SizedBox(
+                            width: 10,
+                          ),
+                          const Icon(
+                            Icons.arrow_forward_ios,
+                            color: AppTheme.kPurpleColor,
+                            size: 14,
+                          ),
+                        ],
+                      ),
+                    )
+                  ],
+                ),
+              ],
             ),
           ),
         ),
@@ -162,6 +164,8 @@ class ReportPage extends StatelessWidget {
 }
 
 class ReportPage1 extends StatelessWidget {
+  static const String name = 'report-page1';
+  static const String route = '/report-page1';
   const ReportPage1({super.key});
 
   @override
@@ -185,7 +189,7 @@ class ReportPage1 extends StatelessWidget {
           backgroundColor: AppTheme.kAppWhiteScheme,
           elevation: 0.5,
           leading: GestureDetector(
-            onTap: () => AppNavigator.pop(),
+            onTap: () => context.pop(),
             child: const Icon(
               Icons.arrow_back,
               color: Colors.black,
@@ -207,92 +211,87 @@ class ReportPage1 extends StatelessWidget {
             ),
           ],
         ),
-        body: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 16,
-              vertical: 24,
-            ),
-            child: Form(
-              key: formKey,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    question2,
-                    style: GoogleFonts.raleway(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                      color: const Color(0xFF423B43),
+        body: Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: 16,
+            vertical: 24,
+          ),
+          child: Form(
+            key: formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  question2,
+                  style: GoogleFonts.raleway(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    color: const Color(0xFF423B43),
+                  ),
+                ),
+                const SizedBox(
+                  height: 16,
+                ),
+                TextField(
+                  controller: textController,
+                  decoration: InputDecoration(
+                    border: InputBorder.none,
+                    hintText: 'Type Something...',
+                    hintStyle: GoogleFonts.raleway(
+                      color: AppTheme.kHintTextColor,
+                      fontSize: 14,
                     ),
                   ),
-                  const SizedBox(
-                    height: 16,
-                  ),
-                  TextField(
-                    controller: textController,
-                    decoration: InputDecoration(
-                      border: InputBorder.none,
-                      hintText: 'Type Something...',
-                      hintStyle: GoogleFonts.raleway(
-                        color: AppTheme.kHintTextColor,
-                        fontSize: 14,
-                      ),
-                    ),
-                    maxLines: 12,
-                  ),
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      TextButton(
-                        onPressed: () {
-                          AppNavigator.doPop();
-                        },
-                        child: Text(
-                          'Cancel',
-                          style: GoogleFonts.raleway(
-                            color: AppTheme.kPurpleColor,
-                            fontWeight: FontWeight.w600,
-                          ),
+                  maxLines: 12,
+                ),
+                const Spacer(),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    TextButton(
+                      onPressed: () {
+                        context.pop();
+                      },
+                      child: Text(
+                        'Cancel',
+                        style: GoogleFonts.raleway(
+                          color: AppTheme.kPurpleColor,
+                          fontWeight: FontWeight.w600,
                         ),
                       ),
-                      const SizedBox(
-                        height: 350,
-                      ),
-                      OutlinedButton(
-                        onPressed: () {
-                          if (formKey.currentState!.validate()) {
-                            weeklyReport['question_2'] = textController.text;
-                            AppNavigator.navigateTo(reportRoute2);
-                          }
-                        },
-                        child: Row(
-                          children: [
-                            Text(
-                              'Next',
-                              style: GoogleFonts.raleway(
-                                color: AppTheme.kPurpleColor,
-                                fontSize: 14,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                            const SizedBox(
-                              width: 10,
-                            ),
-                            const Icon(
-                              Icons.arrow_forward_ios,
+                    ),
+                    OutlinedButton(
+                      onPressed: () {
+                        if (formKey.currentState!.validate()) {
+                          weeklyReport['question_2'] = textController.text;
+                          context.push(ReportPage2.route);
+                        }
+                      },
+                      child: Row(
+                        children: [
+                          Text(
+                            'Next',
+                            style: GoogleFonts.raleway(
                               color: AppTheme.kPurpleColor,
-                              size: 14,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w600,
                             ),
-                          ],
-                        ),
-                      )
-                    ],
-                  )
-                ],
-              ),
+                          ),
+                          const SizedBox(
+                            width: 10,
+                          ),
+                          const Icon(
+                            Icons.arrow_forward_ios,
+                            color: AppTheme.kPurpleColor,
+                            size: 14,
+                          ),
+                        ],
+                      ),
+                    )
+                  ],
+                )
+              ],
             ),
           ),
         ),
@@ -306,6 +305,8 @@ final isTappedProvider = StateProvider<bool>((ref) {
 });
 
 class ReportPage2 extends ConsumerStatefulWidget {
+  static const String name = 'report-page2';
+  static const String route = '/report-page2';
   const ReportPage2({super.key});
 
   @override
@@ -335,7 +336,7 @@ class _ReportPage2State extends ConsumerState<ReportPage2> {
           backgroundColor: AppTheme.kAppWhiteScheme,
           elevation: 0.5,
           leading: GestureDetector(
-            onTap: () => AppNavigator.pop(),
+            onTap: () => context.pop(),
             child: const Icon(
               Icons.arrow_back,
               color: Colors.black,
@@ -356,89 +357,85 @@ class _ReportPage2State extends ConsumerState<ReportPage2> {
             ),
           ],
         ),
-        body: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 16,
-              vertical: 24,
-            ),
-            child: Form(
-              key: formKey,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    question3,
-                    style: GoogleFonts.raleway(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                      color: const Color(0xFF423B43),
-                    ),
+        body: Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: 16,
+            vertical: 24,
+          ),
+          child: Form(
+            key: formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  question3,
+                  style: GoogleFonts.raleway(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    color: const Color(0xFF423B43),
                   ),
-                  const SizedBox(
-                    height: 16,
-                  ),
-                  Consumer(
-                    builder:
-                        (BuildContext context, WidgetRef ref, Widget? child) {
-                      return TextField(
-                        controller: controller,
-                        onChanged: (value) {
-                          if (value.isNotEmpty) {
-                            ref.read(isTappedProvider.notifier).state = true;
-                            setState(() {
-                              isEdited = true;
-                            });
-                          } else {
-                            setState(() {
-                              isEdited = false;
-                            });
-                          }
-                        },
-                        decoration: InputDecoration(
-                          border: InputBorder.none,
-                          hintText: 'Type Something...',
-                          hintStyle: GoogleFonts.raleway(
-                            color: AppTheme.kHintTextColor,
-                            fontSize: 14,
-                          ),
-                        ),
-                        maxLines: 12,
-                      );
-                    },
-                  ),
-                  const SizedBox(
-                    height: 280,
-                  ),
-                  CustomButton(
-                    height: 54,
-                    pressed: () {
-                      if (formKey.currentState!.validate()) {
-                        weeklyReport['question_3'] = controller.text;
-                        if (kDebugMode) {
-                          print(weeklyReport);
+                ),
+                const SizedBox(
+                  height: 16,
+                ),
+                Consumer(
+                  builder:
+                      (BuildContext context, WidgetRef ref, Widget? child) {
+                    return TextField(
+                      controller: controller,
+                      onChanged: (value) {
+                        if (value.isNotEmpty) {
+                          ref.read(isTappedProvider.notifier).state = true;
+                          setState(() {
+                            isEdited = true;
+                          });
+                        } else {
+                          setState(() {
+                            isEdited = false;
+                          });
                         }
-
-                        popUp(context);
-                      }
-                    },
-                    color: ref.read(isTappedProvider) == false
-                        ? const Color(0xFF96599A)
-                        : AppTheme.kPurpleColor,
-                    width: double.infinity,
-                    borderRadius: BorderRadius.circular(8),
-                    elevation: 0,
-                    child: Text(
-                      'Submit Report',
-                      style: GoogleFonts.raleway(
-                        color: AppTheme.kAppWhiteScheme,
-                        fontSize: 14,
-                        fontWeight: FontWeight.w600,
+                      },
+                      decoration: InputDecoration(
+                        border: InputBorder.none,
+                        hintText: 'Type Something...',
+                        hintStyle: GoogleFonts.raleway(
+                          color: AppTheme.kHintTextColor,
+                          fontSize: 14,
+                        ),
                       ),
+                      maxLines: 12,
+                    );
+                  },
+                ),
+                const Spacer(),
+                CustomButton(
+                  height: 54,
+                  pressed: () {
+                    if (formKey.currentState!.validate()) {
+                      weeklyReport['question_3'] = controller.text;
+                      if (kDebugMode) {
+                        print(weeklyReport);
+                      }
+
+                      popUp(context);
+                    }
+                  },
+                  color: ref.read(isTappedProvider) == false
+                      ? const Color(0xFF96599A)
+                      : AppTheme.kPurpleColor,
+                  width: double.infinity,
+                  borderRadius: BorderRadius.circular(8),
+                  elevation: 0,
+                  child: Text(
+                    'Submit Report',
+                    style: GoogleFonts.raleway(
+                      color: AppTheme.kAppWhiteScheme,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
                     ),
-                  )
-                ],
-              ),
+                  ),
+                )
+              ],
             ),
           ),
         ),
@@ -478,7 +475,7 @@ Future<dynamic> popUp(BuildContext context) {
               children: [
                 OutlinedButton(
                   onPressed: () {
-                    AppNavigator.doPop();
+                    context.pop();
                   },
                   child: Text(
                     'Cancel',
@@ -494,7 +491,7 @@ Future<dynamic> popUp(BuildContext context) {
                       height: 54,
                       pressed: () {
                         ref.read(apiReportProvider).submitReport(weeklyReport);
-                        AppNavigator.pop();
+                        context.pop();
                         popUp1(context);
                       },
                       color: AppTheme.kPurpleColor,
@@ -546,7 +543,7 @@ Future<dynamic> popUp1(BuildContext context) {
           CustomButton(
             height: 54,
             pressed: () {
-              AppNavigator.navigateTo(homeRoute);
+              context.go(HomeScreen.route);
             },
             color: AppTheme.kPurpleColor,
             width: 307,

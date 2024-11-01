@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
@@ -25,7 +26,7 @@ class ReportPage2 extends StatelessWidget {
         backgroundColor: AppTheme.kAppWhiteScheme,
         elevation: 0.5,
         leading: GestureDetector(
-          onTap: () => AppNavigator.pop(),
+          onTap: () => context.pop(),
           child: const Icon(
             Icons.arrow_back,
             color: Colors.black,

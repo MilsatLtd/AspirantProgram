@@ -1,8 +1,11 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'dart:developer';
+
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:milsat_project_app/extras/components/shared_prefs/keys.dart';
@@ -52,7 +55,7 @@ class _SubmitToDoPageState extends ConsumerState<SubmitToDoPage> {
           ),
           leading: GestureDetector(
             onTap: () {
-              AppNavigator.doPop();
+              context.pop();
             },
             child: const Icon(
               Icons.arrow_back,
@@ -122,17 +125,19 @@ class _SubmitToDoPageState extends ConsumerState<SubmitToDoPage> {
                           onTap: () async {
                             final result = await FilePicker.platform
                                 .pickFiles(type: FileType.any);
-                            if (result != null) {
-                              final file = result.files.single.path;
-                              if (file != null) {
-                                if (kDebugMode) {
-                                  print('File path: $file');
-                                }
-                                ref.read(fileName.notifier).state = file;
+                            if (result != null && result.files.isNotEmpty) {
+                              final fileBytes = result.files.first.bytes;
+                              final filePickedName = result.files.first.name;
+
+                              if (fileBytes != null) {
+                                log('File name: $fileName');
+                                log('File bytes length: ${fileBytes.length}');
+
+                                // Use the file name or fileBytes as needed
+                                ref.read(fileName.notifier).state =
+                                    filePickedName;
                               } else {
-                                if (kDebugMode) {
-                                  print('Failed to retrieve file path');
-                                }
+                                log('Failed to retrieve file data');
                               }
                             } else {
                               if (kDebugMode) {
@@ -178,10 +183,10 @@ class _SubmitToDoPageState extends ConsumerState<SubmitToDoPage> {
                   if (textKey.currentState!.validate() &&
                       ref.watch(fileName) != null) {
                     DecodedTokenResponse? decodedToken =
-                        await SecureStorageUtils.getDataFromStorage<
+                        await SharedPreferencesUtil.getModel<
                                 DecodedTokenResponse>(
                             SharedPrefKeys.tokenResponse,
-                            DecodedTokenResponse.fromJsonString);
+                            (json) => DecodedTokenResponse.fromJson(json));
                     if (kDebugMode) {
                       print(decodedToken!.userId!);
                       print(widget.courseId);

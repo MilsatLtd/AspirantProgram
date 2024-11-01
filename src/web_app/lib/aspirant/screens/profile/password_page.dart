@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import 'package:google_fonts/google_fonts.dart';
 
@@ -7,6 +8,8 @@ import '../../../extras/api/change_password.dart';
 import '../../../extras/components/files.dart';
 
 class PasswordPage extends ConsumerWidget {
+  static const String name = 'password-page';
+  static const String route = '/password-page';
   const PasswordPage({super.key});
 
   @override
@@ -18,7 +21,7 @@ class PasswordPage extends ConsumerWidget {
       appBar: AppBar(
         leading: GestureDetector(
           onTap: () {
-            AppNavigator.pop();
+            context.pop();
           },
           child: const Icon(
             Icons.arrow_back,
@@ -180,8 +183,8 @@ class PasswordPage extends ConsumerWidget {
               height: 54,
               pressed: () {
                 personalInfo["message"].toString().contains('400')
-                    ? AppNavigator.pop()
-                    : AppNavigator.navigateToAndReplace(loginRoute);
+                    ? context.pop()
+                    : context.go(LoginScreen.route);
               },
               color: AppTheme.kPurpleColor,
               width: 307,

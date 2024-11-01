@@ -1,18 +1,3 @@
-// class ReportList {
-//   List<AspirantReport>? report;
-
-//   ReportList({
-//     this.report,
-//   });
-
-//   ReportList.fromJson(List<Map<String, dynamic>> json) {
-//     report = json.isEmpty
-//         ? <AspirantReport>[]
-//         : List<AspirantReport>.from(
-//             json.map((x) => AspirantReport.fromJson(x)));
-//   }
-// }
-
 class AspirantReport {
   String? studentId;
   String? question1;
