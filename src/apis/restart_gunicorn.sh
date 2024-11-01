@@ -10,7 +10,7 @@ echo "Restarting Gunicorn processes for $APP_NAME"
 pkill -f "gunicorn $APP_NAME --bind $BIND_ADDRESS --daemon"
 
 # Stop previously running Celery workers
-pkill -f "celery -A map worker -n prod-celery --loglevel=info --detach"
+pkill -f "celery -A map worker -n prod-celery --concurrency=10 --prefetch-multiplier=1 --task-acks-late=True --loglevel=info --detach"
 
 echo "Old Gunicorn and Celery workers terminated successfully"
 
@@ -19,8 +19,8 @@ sleep 5
 
 # Start a new Celery worker and Flower
 echo "Starting Celery workers"
-# celery -A map flower --persistent=True --port=5454 --loglevel=info --basic_auth=admin@milsat.com:Password123?_
-celery -A map worker -n prod-celery --loglevel=info --detach
+# celery -A map flower --persistent=True --port=5454 --loglevel=info --basic_auth=admin@milsat.com:https://github.com/MilsatLtd/MilsatAPI/pull/917
+celery -A map worker -n prod-celery --concurrency=10 --prefetch-multiplier=1 --task-acks-late=True --loglevel=info --detach 
 echo "Celery workers started successfully"
 
 # Start a new Gunicorn daemon

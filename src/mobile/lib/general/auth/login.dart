@@ -154,19 +154,19 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                   }
                                 },
                           style: ButtonStyle(
-                            elevation: MaterialStateProperty.all<double?>(0),
+                            elevation: WidgetStateProperty.all<double?>(0),
                             minimumSize:
-                                MaterialStateProperty.all<Size>(const Size(
+                                WidgetStateProperty.all<Size>(const Size(
                               double.infinity,
                               54,
                             )),
-                            shape: MaterialStateProperty.all<
-                                RoundedRectangleBorder>(
+                            shape:
+                                WidgetStateProperty.all<RoundedRectangleBorder>(
                               RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(8),
                               ),
                             ),
-                            backgroundColor: MaterialStateProperty.all<Color>(
+                            backgroundColor: WidgetStateProperty.all<Color>(
                                 AppTheme.kPurpleColor),
                           ),
                           child: ref.watch(signInProvider).loading

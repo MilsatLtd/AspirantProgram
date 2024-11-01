@@ -1,0 +1,11 @@
+# Ignore Python byte-compiled files
+*.pyc
+
+# Ignore macOS Finder files
+.DS_Store
+
+# Ignore Next.js build directory
+.next
+
+# Ignore Node.js modules
+node_modules

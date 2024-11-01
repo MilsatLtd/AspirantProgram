@@ -70,7 +70,8 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 CORS_ALLOWED_ORIGINS = [
     "https://admin-asp.milsat.africa",
     "https://aspirant.milsat.africa",
-    "https://aspirant-api.milsat.africa",
+    "https://aspirant-api.milsat.africa", 
+    "https://milsataspirant.netlify.app",
     "http://localhost:5173",
     "https://localhost:5173",
     "http://localhost:3000",
@@ -84,6 +85,7 @@ CSRF_TRUSTED_ORIGINS = [
     "https://admin-asp.milsat.africa",
     "https://aspirant.milsat.africa",
     "https://aspirant-api.milsat.africa",
+    "https://milsataspirant.netlify.app/",
     "http://localhost:5173",
     "https://localhost:5173",
     "http://localhost:3000",
@@ -139,22 +141,18 @@ DATABASES = {
 }
 
 
-AWS_ACCESS_KEY_ID = os.environ.get("AWS_ACCESS_KEY_ID", "")
-AWS_SECRET_ACCESS_KEY = os.environ.get("AWS_SECRET_ACCESS_KEY", "")
 DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 AWS_STORAGE_BUCKET_NAME = "milsat-fileuploads"
 AWS_S3_REGION_NAME = "us-east-1"
 AWS_QUERYSTRING_AUTH = False
 
-try:
-    EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-    EMAIL_HOST = "smtp.gmail.com"
-    EMAIL_PORT = 587
-    EMAIL_USE_TLS = True
-    EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER", "")
-    EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD", "")
-except:
-    EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER", "")
+EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD", "")
+DEFAULT_FROM_EMAIL = "map.milsat@gmail.com"
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
@@ -282,7 +280,7 @@ LOGGING = {
         'slack': {
             'level': 'ERROR',
             'class': 'api.logging.SlackLogHandler',
-            'logging_url': os.path.join("SLACK_URL", ""),
+            'logging_url': os.environ.get("SLACK_URL", ""),
             'stack_trace': True
         },
         'console': {

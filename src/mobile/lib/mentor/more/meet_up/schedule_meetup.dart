@@ -26,6 +26,7 @@ class _ScheduleMeetUpState extends State<ScheduleMeetUp> {
 
   @override
   Widget build(BuildContext context) {
+    // ignore: deprecated_member_use
     return WillPopScope(
       onWillPop: () async {
         final shouldPop = await goToMentorHomePage();

@@ -18,6 +18,7 @@ class _AllMentorBlockersState extends ConsumerState<AllMentorBlockers> {
   int currentlyTapped = 0;
   @override
   Widget build(BuildContext context) {
+    // ignore: deprecated_member_use
     return WillPopScope(
       onWillPop: () async {
         final shouldPop = await goToMentorHomePage();

@@ -98,14 +98,14 @@ class SignInStateNotifier extends StateNotifier<SignInState> {
       } else {
         state = SignInState.error('An error occurred. Please try again later.');
       }
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       if (e.response?.statusCode == 401) {
         state = SignInState.error('Incorrect email or password.');
       } else if (e.error is SocketException) {
         state = SignInState.error(
             'Network error. Please check your internet connection.');
-      } else if (e.type == DioErrorType.connectionTimeout ||
-          e.type == DioErrorType.receiveTimeout) {
+      } else if (e.type == DioExceptionType.connectionTimeout ||
+          e.type == DioExceptionType.receiveTimeout) {
         state = SignInState.error('Request timeout. Please try again later.');
       } else {
         state = SignInState.error(

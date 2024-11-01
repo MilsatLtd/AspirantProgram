@@ -111,13 +111,13 @@ class APIService {
         case 404:
           throw ('Invalid userId');
       }
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       if (e.response?.statusCode == 401) {
         throw ('${e.response}');
       } else if (e.error is SocketException) {
         throw ('${e.response}');
-      } else if (e.type == DioErrorType.connectionTimeout ||
-          e.type == DioErrorType.receiveTimeout) {
+      } else if (e.type == DioExceptionType.connectionTimeout ||
+          e.type == DioExceptionType.receiveTimeout) {
         throw ('${e.response}');
       } else if (e.response?.statusCode == 404) {
         throw ('${e.response}');
@@ -156,13 +156,13 @@ class APIService {
         case 404:
           throw ('Invalid userId');
       }
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       if (e.response?.statusCode == 401) {
         throw ('${e.response}');
       } else if (e.error is SocketException) {
         throw ('${e.response}');
-      } else if (e.type == DioErrorType.connectionTimeout ||
-          e.type == DioErrorType.receiveTimeout) {
+      } else if (e.type == DioExceptionType.connectionTimeout ||
+          e.type == DioExceptionType.receiveTimeout) {
         throw ('${e.response}');
       } else if (e.response?.statusCode == 404) {
         throw ('${e.response}');

@@ -28,14 +28,14 @@ class ApiService {
     final url = '${Env.apiUrl}/api/tracks/cohort/$id';
     try {
       final response = await dio.get(url);
-      
+
       if (kDebugMode) {
         print(response.data);
       }
       cred['trackData'] = response.data;
 
       return response;
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       if (e.response != null) {
         return e.response!;
       } else {

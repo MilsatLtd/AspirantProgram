@@ -18,7 +18,7 @@ const Footer = () => {
         }}
         >
           <div className="md:h-[95%] h-[90%] lg:px-96 px-24 flex md:flex-row flex-col items-center md:justify-between ">
-          <div className=" flex-1 flex flex-col h-full justify-evenly">
+          <div className=" flex-1 flex flex-col h-full gap-24 justify-center items-start">
             <div className="flex flex-col md:gap-24 gap-10">
               <Link href="/">
                <Image src={logo} alt="Map-logo" />
@@ -39,7 +39,7 @@ const Footer = () => {
               })}
             </div>
           </div>
-            <div className="flex-1 flex lg:gap-[6.5em] md:gap-[4em] gap-[1.2em]  md:justify-end">
+            <div className="flex-1 flex lg:gap-[6.5em] md:gap-[4em] gap-[1.2em] md:justify-end">
               <ul className="flex flex-col gap-6">
                 {navLinks.map((navLink, index) => {
                   return (
@@ -76,7 +76,7 @@ const Footer = () => {
 
             </div>
           </div>
-          <span className="w-full text-center text-N00 leading-[16px] font-medium text-[10px]">
+          <span className="w-full text-center text-N00 leading-[16px] mb-16 font-medium text-[12px]">
               © {new Date().getFullYear()}{" "}
               <a
                 href="https://milsat.africa/"

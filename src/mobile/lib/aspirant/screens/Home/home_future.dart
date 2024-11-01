@@ -17,6 +17,7 @@ homeWidget(BuildContext context, WidgetRef ref,
     if (data != null) {
       String userName = data.fullName ?? 'Stranger';
       d = data;
+      // ignore: deprecated_member_use
       return WillPopScope(
         onWillPop: () async {
           final shouldPop = await showWarning(context);

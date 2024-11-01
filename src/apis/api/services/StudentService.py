@@ -152,6 +152,7 @@ class ChangeStudentMentor:
             mentor_id = request.data.get('mentor_id')
             student = Students.objects.get(user_id=user_id, track_id=track_id)
             mentor = Mentors.objects.get(user_id=mentor_id, track_id=track_id)
+
             student.mentor = mentor
             student.save()
             return Response(
@@ -160,12 +161,12 @@ class ChangeStudentMentor:
             )
         except Students.DoesNotExist:
             return Response(
-                data={"message": "Student with id: {} does not exist \U0001F9D0".format(user_id)},
+                data={"message": "Student with id: {} does not exist or not registered in this cohort \U0001F9D0".format(user_id)},
                 status=status.HTTP_404_NOT_FOUND,
             )
         except Mentors.DoesNotExist:
             return Response(
-                data={"message": "Mentor with id: {} does not exist \U0001F9D0".format(mentor_id)},
+                data={"message": "Mentor with id: {} does not exist or not registered in this cohort \U0001F9D0".format(mentor_id)},
                 status=status.HTTP_404_NOT_FOUND,
             )
         except Exception as e:

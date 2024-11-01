@@ -62,8 +62,8 @@ export const routes = {
     {
       id: 3,
       name: "Geospatial Enterprise Solution",
-      link: "/track/geospatial-enterprise-solution"
-    }
+      link: "/track/geospatial-enterprise-solution",
+    },
   ],
 };
 
@@ -136,8 +136,8 @@ export const AvailableTracks = [
     trackName: "Data Collection and Field Mapping",
     description:
       "Designed to equip participants with the essential skills and knowledge needed for effective field data collection, spatial analysis, and utilizing cutting-edge data collection technologies",
-    startDate: "5th Feburary, 2024",
-    endDate: "16th Feburary, 2024",
+    startDate: "23rd August, 2024",
+    endDate: "14th September, 2024",
     learningTimeLine: "2 weeks",
     TrackInfo: [
       {
@@ -178,7 +178,8 @@ export const AvailableTracks = [
         list: [
           {
             id: 1,
-            criteria: "You need A mobile device (Android Version 10.0 and Above)",
+            criteria:
+              "You need A mobile device (Android Version 10.0 and Above)",
           },
           {
             id: 2,
@@ -197,8 +198,8 @@ export const AvailableTracks = [
     trackName: "Fundamental of GIS",
     description:
       "Explore the foundational principles and essential skills of Geographic Information Systems (GIS) in this beginner-friendly track, gaining a solid understanding of the system",
-    startDate: "19th Feburary, 2024",
-    endDate: "2nd March, 2024",
+    startDate: "23rd August, 2024",
+    endDate: "14th September, 2024",
     learningTimeLine: "2 weeks",
     TrackInfo: [
       {
@@ -237,7 +238,7 @@ export const AvailableTracks = [
             id: 1,
             criteria:
               "You will need a mouse and a computer, to install QGIS or ArcMap and a willing mind to learn!",
-          }
+          },
         ],
       },
     ],
@@ -269,15 +270,16 @@ export const AvailableTracks = [
           {
             id: 4,
             criteria: "Activating and licensing of software",
-          }
+          },
         ],
       },
-      { 
+      {
         name: "Track Requirement",
         list: [
           {
             id: 1,
-            criteria: "You need a Personal Computer (PC) with “Configuration: 8 GB RAM, storage: 500 GB and Above” clickhere to View a complete system configuration",
+            criteria:
+              "You need a Personal Computer (PC) with “Configuration: 8 GB RAM, storage: 500 GB and Above” clickhere to View a complete system configuration",
           },
           {
             id: 2,
@@ -286,16 +288,16 @@ export const AvailableTracks = [
           {
             id: 3,
             criteria: "Must have complete Fundamental of GIS track",
-          }
+          },
         ],
       },
     ],
-  }
+  },
 ];
 
 export const applictionTimeline = {
-  startDate: "5th Feburary, 2024",
-  endDate: "16th Feburary, 2024",
+  startDate: "23rd August, 2024",
+  endDate: "14th September, 2024",
 };
 
 export const termsAndConditions = {
@@ -304,7 +306,6 @@ export const termsAndConditions = {
   secondTerms:
     "I hereby declare that I have read and understood the terms and conditions of the Milsat Aspirant Programme (MAP) and agree to abide by them.",
 };
-
 
 export const ProgrammeFeatures = {
   title: "How it works ?",
@@ -346,7 +347,7 @@ export const TrackCardsInfo = [
     id: 1,
     name: "Fundamental of GIS",
     picture: community,
-    route: "/track/fundamental-of-gis", 
+    route: "/track/fundamental-of-gis",
   },
   {
     id: 3,
@@ -440,12 +441,13 @@ export const Faqs = [
       },
       {
         id: 3,
-        question: "Is this course really 100% online, do I need to attend any classes in person?",
+        question:
+          "Is this course really 100% online, do I need to attend any classes in person?",
         answer:
           "This course is completely online, so there’s no need to show up to a classroom in person. You have the flexibility to reach your lectures, readings, and assignments at your convenience, whether through the web or on your mobile device, from any location.",
       },
     ],
-  }
+  },
 ];
 
 export const MobileFeatures = [
@@ -493,7 +495,10 @@ export const africanCountries = [
   { label: "Central African Republic", value: "Central African Republic" },
   { label: "Chad", value: "Chad" },
   { label: "Comoros", value: "Comoros" },
-  { label: "Democratic Republic of the Congo", value: "Democratic Republic of the Congo" },
+  {
+    label: "Democratic Republic of the Congo",
+    value: "Democratic Republic of the Congo",
+  },
   { label: "Republic of the Congo", value: "Republic of the Congo" },
   { label: "Djibouti", value: "Djibouti" },
   { label: "Egypt", value: "Egypt" },
@@ -535,18 +540,19 @@ export const africanCountries = [
   { label: "Tunisia", value: "Tunisia" },
   { label: "Uganda", value: "Uganda" },
   { label: "Zambia", value: "Zambia" },
-  { label: "Zimbabwe", value: "Zimbabwe" }
+  { label: "Zimbabwe", value: "Zimbabwe" },
 ];
 
-export const Brochure =  {
+export const Brochure = {
   FundamentalOfGIS: "/Fundamental_of_GIS.pdf",
   DataCollectionAndFieldMapping: "/Data_Collection_and_Field_Mapping.pdf",
   GeospatialEnterpriseSolution: "/Geospatial_Enterprise_Solution.pdf",
-}
+};
 
-export const MobileAppPlayStoreLink = "https://play.google.com/store/apps/details?id=com.milsat.apirant&pcampaignid=web_share"
+export const MobileAppPlayStoreLink =
+  "https://play.google.com/store/apps/details?id=com.milsat.apirant&pcampaignid=web_share";
 
-export const ApplicationEmailTemplate  = `<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8">
+export const ApplicationEmailTemplate = `<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Application Received</title>
 <style>
@@ -600,4 +606,4 @@ export const ApplicationEmailTemplate  = `<!DOCTYPE html><html lang="en"><head><
 </div>
 </body>
 </html>
-`
+`;
