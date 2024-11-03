@@ -135,73 +135,82 @@ class AllBlockers extends ConsumerWidget {
                     ),
                   ],
                 ),
-                child: Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 16,
+                child: Card(
+                  elevation: 3,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
                   ),
-                  color: AppTheme.kAppWhiteScheme,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            '${cred['blockers'][index]['title']}',
-                            style: kOnboardingLightTextStyle,
-                          ),
-                          Row(
-                            children: [
-                              cred['blockers'][index]['status'] == 0
-                                  ? SvgPicture.asset('assets/double_mark.svg')
-                                  : const SizedBox.shrink(),
-                              Text(
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 16,
+                    ),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: AppTheme.kAppWhiteScheme,
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              '${cred['blockers'][index]['title']}',
+                              style: kOnboardingLightTextStyle,
+                            ),
+                            Row(
+                              children: [
                                 cred['blockers'][index]['status'] == 0
-                                    ? status[0] as String
-                                    : status[1] as String,
-                                style: GoogleFonts.raleway(
-                                  color: const Color(0xFF11A263),
-                                  fontSize: 10,
-                                  fontWeight: FontWeight.w600,
+                                    ? SvgPicture.asset('assets/double_mark.svg')
+                                    : const SizedBox.shrink(),
+                                Text(
+                                  cred['blockers'][index]['status'] == 0
+                                      ? status[0] as String
+                                      : status[1] as String,
+                                  style: GoogleFonts.raleway(
+                                    color: const Color(0xFF11A263),
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.w600,
+                                  ),
                                 ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                      const SizedBox(
-                        height: 4,
-                      ),
-                      Row(
-                        children: [
-                          Text(
-                            '${cred['blockers'][index]['user_name']}',
-                            style: kTrackTextStyle,
-                          ),
-                          const SizedBox(
-                            width: 8,
-                          ),
-                          Text(
-                            '$timeAgo days ago',
-                            style: kTimeTextStyle,
-                          ),
-                        ],
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      Text(
-                        'Hi everyone,\n'
-                        '${cred['blockers'][index]['description']}',
-                        style: GoogleFonts.raleway(
-                          fontSize: 13,
-                          fontWeight: FontWeight.w500,
-                          color: const Color(0xFF504D51),
-                          height: 2,
+                              ],
+                            ),
+                          ],
                         ),
-                      ),
-                    ],
+                        const SizedBox(
+                          height: 4,
+                        ),
+                        Row(
+                          children: [
+                            Text(
+                              '${cred['blockers'][index]['user_name']}',
+                              style: kTrackTextStyle,
+                            ),
+                            const SizedBox(
+                              width: 8,
+                            ),
+                            Text(
+                              '$timeAgo days ago',
+                              style: kTimeTextStyle,
+                            ),
+                          ],
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        Text(
+                          'Hi everyone,\n'
+                          '${cred['blockers'][index]['description']}',
+                          style: GoogleFonts.raleway(
+                            fontSize: 13,
+                            fontWeight: FontWeight.w500,
+                            color: const Color(0xFF504D51),
+                            height: 2,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
