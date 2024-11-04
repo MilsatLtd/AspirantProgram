@@ -172,7 +172,10 @@ homeWidget(BuildContext context, WidgetRef ref,
                                         CustomButton(
                                           height: 54,
                                           pressed: () {
-                                            context.pop();
+                                            context.canPop()
+                                                ? context.pop()
+                                                : context.pushReplacement(
+                                                    HomeScreen.route);
                                           },
                                           color: AppTheme.kPurpleColor,
                                           width: double.infinity,

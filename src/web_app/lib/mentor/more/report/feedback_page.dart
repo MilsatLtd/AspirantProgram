@@ -14,6 +14,8 @@ import 'package:milsat_project_app/extras/components/shared_prefs/utils.dart';
 import 'package:milsat_project_app/extras/components/widgets.dart';
 import 'package:milsat_project_app/extras/models/decoded_token.dart';
 
+import '../../../aspirant/screens/Home/home_page.dart';
+
 class FeedbackPage extends ConsumerStatefulWidget {
   final String reportId;
   const FeedbackPage({
@@ -45,7 +47,9 @@ class _FeedbackPageState extends ConsumerState<FeedbackPage> {
           ),
           leading: GestureDetector(
             onTap: () {
-              context.pop();
+              context.canPop()
+                  ? context.pop()
+                  : context.pushReplacement(HomeScreen.route);
             },
             child: const Icon(
               Icons.arrow_back,
@@ -109,7 +113,13 @@ class _FeedbackPageState extends ConsumerState<FeedbackPage> {
                     "mentor_feedback": textController.text,
                   });
 
-                  popUpCard(context, 'Hello!', error[0], () => context.pop());
+                  popUpCard(
+                      context,
+                      'Hello!',
+                      error[0],
+                      () => context.canPop()
+                          ? context.pop()
+                          : context.pushReplacement(HomeScreen.route));
                 }
               },
               color: AppTheme.kPurpleColor,

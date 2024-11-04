@@ -37,7 +37,9 @@ class EditMentorProfile extends ConsumerWidget {
           automaticallyImplyLeading: false,
           leading: TextButton(
             onPressed: () {
-              context.pop();
+              context.canPop()
+                  ? context.pop()
+                  : context.pushReplacement(HomeScreen.route);
             },
             child: Text(
               'Back',

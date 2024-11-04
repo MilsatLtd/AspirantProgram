@@ -21,7 +21,9 @@ class PasswordPage extends ConsumerWidget {
       appBar: AppBar(
         leading: GestureDetector(
           onTap: () {
-            context.pop();
+            context.canPop()
+                ? context.pop()
+                : context.pushReplacement(HomeScreen.route);
           },
           child: const Icon(
             Icons.arrow_back,
@@ -183,7 +185,9 @@ class PasswordPage extends ConsumerWidget {
               height: 54,
               pressed: () {
                 personalInfo["message"].toString().contains('400')
-                    ? context.pop()
+                    ? context.canPop()
+                        ? context.pop()
+                        : context.pushReplacement(HomeScreen.route)
                     : context.go(LoginScreen.route);
               },
               color: AppTheme.kPurpleColor,

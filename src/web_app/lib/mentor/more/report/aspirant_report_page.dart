@@ -51,7 +51,9 @@ class AspirantReportPage extends StatelessWidget {
           elevation: 0.5,
           leading: IconButton(
             onPressed: () {
-              context.pop();
+              context.canPop()
+                  ? context.pop()
+                  : context.pushReplacement(HomeScreen.route);
             },
             icon: const Icon(
               Icons.arrow_back,

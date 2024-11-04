@@ -230,7 +230,9 @@ class _TrackDetailsConsumerState extends ConsumerState<TrackDetails> {
                             duration: const Duration(seconds: 2),
                             child: GestureDetector(
                               onTap: () {
-                                context.pop();
+                                context.canPop()
+                                    ? context.pop()
+                                    : context.pushReplacement(HomeScreen.route);
                               },
                               child: Container(
                                 height: 40,

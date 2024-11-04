@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:milsat_project_app/aspirant/screens/Home/track_folder/course_model.dart';
@@ -8,8 +9,37 @@ import 'package:milsat_project_app/mentor/more/blocker/all_blockers_mentor.dart'
 import 'package:milsat_project_app/mentor/more/meet_up/schedule_meetup.dart';
 import 'package:milsat_project_app/mentor/profile/profile.dart';
 
+import 'persistent_navigation_service.dart';
+
 final routes = GoRouter(
   initialLocation: SplashScreen.route,
+  observers: [CustomRouteObserver()],
+  redirect: (context, state) async {
+    if (kIsWeb) {
+      final currentLocation = state.fullPath;
+      final routeInfo = await NavigationService.getLastRouteInfo();
+      final savedRoute = routeInfo['route'] as String?;
+
+      // Check if we're at the initial route/splash screen
+      if (savedRoute != null &&
+          (currentLocation == SplashScreen.route || currentLocation == '/')) {
+        // Make sure the saved route starts with '/'
+        final redirectPath =
+            savedRoute.startsWith('/') ? savedRoute : '/$savedRoute';
+
+        return redirectPath;
+      }
+
+      // If we're not at splash screen, save the current route
+      if (currentLocation != SplashScreen.route && currentLocation != '/') {
+        await NavigationService.saveCurrentRoute(
+          path: currentLocation!,
+          extra: state.extra,
+        );
+      }
+    }
+    return null;
+  },
   routes: [
     GoRoute(
       name: SplashScreen.name,
