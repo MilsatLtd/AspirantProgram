@@ -156,7 +156,10 @@ class _ForgotPasswordState extends ConsumerState<ForgotPassword> {
                                   hasError
                                       ? popUpCard(context, 'Hello!',
                                           message.profileType![0], () {
-                                          context.pop();
+                                          context.canPop()
+                                              ? context.pop()
+                                              : context.pushReplacement(
+                                                  HomeScreen.route);
                                           setState(() {
                                             hasError = false;
                                           });

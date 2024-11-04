@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:milsat_project_app/extras/navigation/app_route.dart';
-import 'extras/components/files.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
+import 'extras/navigation/app_route.dart';
+import 'extras/components/files.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
   await SystemChrome.setPreferredOrientations(<DeviceOrientation>[
     DeviceOrientation.portraitUp,
-    DeviceOrientation.portraitDown
   ]);
+
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
       statusBarColor: AppTheme.kPurpleColor,

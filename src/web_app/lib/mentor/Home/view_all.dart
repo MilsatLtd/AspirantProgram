@@ -27,7 +27,9 @@ class ViewAllPage extends StatelessWidget {
           centerTitle: true,
           leading: IconButton(
             onPressed: () {
-              context.pop();
+              context.canPop()
+                  ? context.pop()
+                  : context.pushReplacement(HomeScreen.route);
             },
             icon: const Icon(
               Icons.arrow_back,

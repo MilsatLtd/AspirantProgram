@@ -118,7 +118,9 @@ class MeetUpScreen extends StatelessWidget {
           leading: IconButton(
             onPressed: () {
               if (schedules.isEmpty) {
-                context.pop();
+                context.canPop()
+                    ? context.pop()
+                    : context.pushReplacement(HomeScreen.route);
               }
               context.push(MentorPageSkeleton.route);
             },

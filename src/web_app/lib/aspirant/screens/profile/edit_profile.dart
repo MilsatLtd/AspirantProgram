@@ -50,7 +50,9 @@ class _EditProfileState extends ConsumerState<EditProfile> {
           automaticallyImplyLeading: false,
           leading: TextButton(
             onPressed: () {
-              context.pop();
+              context.canPop()
+                  ? context.pop()
+                  : context.pushReplacement(HomeScreen.route);
             },
             child: Text(
               'Back',
