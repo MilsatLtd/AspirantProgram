@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:milsat_project_app/extras/components/shared_prefs/keys.dart';
 import 'package:milsat_project_app/extras/components/shared_prefs/utils.dart';
+import 'package:milsat_project_app/extras/components/widgets.dart';
 import 'package:milsat_project_app/extras/models/decoded_token.dart';
 import '../../../extras/api/blockers_api.dart';
 import '../../../extras/components/files.dart';
@@ -26,6 +27,8 @@ class _AddBlockerState extends ConsumerState<AddBlocker> {
   final titleController = TextEditingController();
   final descriptionController = TextEditingController();
   final formKey = GlobalKey<FormState>();
+
+  bool _blockerButtonPressed = false;
 
   @override
   Widget build(BuildContext context) {
@@ -76,7 +79,7 @@ class _AddBlockerState extends ConsumerState<AddBlocker> {
                   controller: titleController,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'topic cannot be empty';
+                      return 'Topic cannot be empty';
                     }
                     return null;
                   },
@@ -87,6 +90,7 @@ class _AddBlockerState extends ConsumerState<AddBlocker> {
                       });
                     }
                   },
+                  readOnly: _blockerButtonPressed,
                   decoration: InputDecoration(
                     constraints: const BoxConstraints(maxHeight: 54),
                     hintText: 'e.g Dashboard visualization',
@@ -109,7 +113,7 @@ class _AddBlockerState extends ConsumerState<AddBlocker> {
                   controller: descriptionController,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'description cannot be empty';
+                      return 'Description cannot be empty';
                     }
                     return null;
                   },
@@ -120,6 +124,7 @@ class _AddBlockerState extends ConsumerState<AddBlocker> {
                       });
                     }
                   },
+                  readOnly: _blockerButtonPressed,
                   maxLines: 12,
                   decoration: InputDecoration(
                     hintText: 'Describe your blocker in details',
@@ -140,41 +145,53 @@ class _AddBlockerState extends ConsumerState<AddBlocker> {
                   height: 64,
                 ),
                 CustomButton(
-                  height: 54,
-                  pressed: () async {
-                    DecodedTokenResponse? response = await SharedPreferencesUtil
-                        .getModel<DecodedTokenResponse>(
-                            SharedPrefKeys.tokenResponse,
-                            (json) => DecodedTokenResponse.fromJson(json));
-                    if (formKey.currentState!.validate()) {
-                      final result =
-                          await ref.read(apiBlockerServiceProvider).postBlocker(
-                                description: descriptionController.text,
-                                status: 0,
-                                title: titleController.text,
-                                trackId: d.track!.trackId!,
-                                userId: response!.userId!,
-                              );
+                  pressed: titleController.text.isEmpty ||
+                          descriptionController.text.isEmpty ||
+                          _blockerButtonPressed
+                      ? null
+                      : () async {
+                          setState(() {
+                            _blockerButtonPressed = true;
+                          });
+                          DecodedTokenResponse? response =
+                              await SharedPreferencesUtil.getModel<
+                                      DecodedTokenResponse>(
+                                  SharedPrefKeys.tokenResponse,
+                                  (json) =>
+                                      DecodedTokenResponse.fromJson(json));
+                          if (formKey.currentState!.validate()) {
+                            final result = await ref
+                                .read(apiBlockerServiceProvider)
+                                .postBlocker(
+                                  description: descriptionController.text,
+                                  status: 0,
+                                  title: titleController.text,
+                                  trackId: d.track!.trackId!,
+                                  userId: response!.userId!,
+                                );
 
-                      popUp(
-                        context,
-                        result['error'] ??
-                            'Blocker Submitted Successfully, you will receive your response soon',
-                        result['error'] == null ? true : false,
-                      );
-                    }
-                  },
-                  color: !titleEmpty && !descriptionEmpty
-                      ? AppTheme.kPurpleColor
-                      : AppTheme.kPurpleColor3,
-                  width: double.infinity,
+                            popUp(
+                              context,
+                              result['error'] ??
+                                  'Blocker Submitted Successfully, you will receive your response soon',
+                              result['error'] == null ? true : false,
+                            );
+                          }
+
+                          setState(() {
+                            _blockerButtonPressed = false;
+                          });
+                        },
+                  color: AppTheme.kPurpleColor,
                   borderRadius: BorderRadius.circular(8),
-                  child: Text(
-                    'Submit',
-                    style: GoogleFonts.raleway(
-                      color: AppTheme.kAppWhiteScheme,
-                    ),
-                  ),
+                  child: _blockerButtonPressed
+                      ? const CircularLoadingWidget()
+                      : Text(
+                          'Submit',
+                          style: GoogleFonts.raleway(
+                            color: AppTheme.kAppWhiteScheme,
+                          ),
+                        ),
                 )
               ],
             ),
@@ -209,12 +226,10 @@ class _AddBlockerState extends ConsumerState<AddBlocker> {
           ),
           actions: [
             CustomButton(
-              height: 54,
               pressed: () {
                 succeeded ? context.go(HomeScreen.route) : context.pop();
               },
               color: AppTheme.kPurpleColor,
-              width: 307,
               elevation: 0,
               borderRadius: BorderRadius.circular(8),
               child: Text(

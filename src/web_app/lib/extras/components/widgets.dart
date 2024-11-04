@@ -47,3 +47,20 @@ Future<dynamic> popUpCard(BuildContext context, String? titleString,
     },
   );
 }
+
+class CircularLoadingWidget extends StatelessWidget {
+  final Color? color;
+  const CircularLoadingWidget({super.key, this.color});
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 20,
+      width: 20,
+      child: CircularProgressIndicator(
+        strokeWidth: 2,
+        color: color ?? Colors.white,
+      ),
+    );
+  }
+}

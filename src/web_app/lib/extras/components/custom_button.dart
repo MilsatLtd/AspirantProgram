@@ -3,17 +3,17 @@ import 'package:flutter/material.dart';
 class CustomButton extends StatelessWidget {
   const CustomButton({
     super.key,
-    required this.height,
+    this.height,
     required this.pressed,
     required this.child,
     this.elevation,
     required this.color,
-    required this.width,
+    this.width,
     required this.borderRadius,
   });
 
-  final double height;
-  final double width;
+  final double? height;
+  final double? width;
   final Function()? pressed;
   final Widget child;
   final Color color;
@@ -25,14 +25,32 @@ class CustomButton extends StatelessWidget {
     return ElevatedButton(
       onPressed: pressed,
       style: ButtonStyle(
+        foregroundColor: WidgetStateProperty.resolveWith<Color>(
+          (Set<WidgetState> states) {
+            if (states.contains(WidgetState.disabled)) {
+              return Colors.white54;
+            }
+            return Colors.white;
+          },
+        ),
+        backgroundColor: WidgetStateProperty.resolveWith<Color>(
+          (Set<WidgetState> states) {
+            if (states.contains(WidgetState.disabled)) {
+              return color.withOpacity(.5);
+            }
+            return color;
+          },
+        ),
         elevation: WidgetStateProperty.all<double?>(elevation),
-        minimumSize: WidgetStateProperty.all<Size>(Size(width, height)),
+        minimumSize: WidgetStateProperty.all<Size>(
+            width != null && height != null
+                ? Size(width!, height!)
+                : const Size(double.infinity, 60)),
         shape: WidgetStateProperty.all<RoundedRectangleBorder>(
           RoundedRectangleBorder(
             borderRadius: borderRadius,
           ),
         ),
-        backgroundColor: WidgetStateProperty.all<Color>(color),
       ),
       child: child,
     );

@@ -6,6 +6,7 @@ class AppTheme {
   static const kLightPurpleColor = Color(0xFFCBADCD);
   static const kPurpleColor = Color(0xFF803785);
   static const kPurpleColor2 = Color(0xFF5A275D);
+  static const primaryColor = Color(0xFF5A275D);
   static const kPurpleColor3 = Color(0xFF96599A);
   static const kBlackColor = Color(0xFF000000);
   static const kHintTextColor = Color(0xFFB7B6B8);
