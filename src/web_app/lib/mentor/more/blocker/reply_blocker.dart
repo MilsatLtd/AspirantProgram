@@ -77,7 +77,7 @@ class _ReplyBlockerState extends ConsumerState<ReplyBlocker> {
             ),
           ),
           centerTitle: true,
-          leading: GestureDetector(
+          leading: InkWell(
             onTap: () => context.canPop()
                 ? context.pop()
                 : context.pushReplacement(HomeScreen.route),

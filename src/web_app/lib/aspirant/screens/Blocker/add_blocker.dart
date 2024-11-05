@@ -38,7 +38,7 @@ class _AddBlockerState extends ConsumerState<AddBlocker> {
         toolbarHeight: 44,
         automaticallyImplyLeading: false,
         elevation: 0.5,
-        leading: GestureDetector(
+        leading: InkWell(
           onTap: () => context.canPop()
               ? context.pop()
               : context.pushReplacement(HomeScreen.route),
@@ -229,11 +229,7 @@ class _AddBlockerState extends ConsumerState<AddBlocker> {
           actions: [
             CustomButton(
               pressed: () {
-                succeeded
-                    ? context.go(HomeScreen.route)
-                    : context.canPop()
-                        ? context.pop()
-                        : context.pushReplacement(HomeScreen.route);
+                succeeded ? context.go(HomeScreen.route) : context.pop();
               },
               color: AppTheme.kPurpleColor,
               elevation: 0,

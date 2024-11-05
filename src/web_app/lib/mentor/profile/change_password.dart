@@ -20,7 +20,7 @@ class MentorPasswordPage extends ConsumerWidget {
       appBar: PreferredSize(
         preferredSize: appBarHeight,
         child: AppBar(
-          leading: GestureDetector(
+          leading: InkWell(
             onTap: () {
               context.canPop()
                   ? context.pop()

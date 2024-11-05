@@ -28,7 +28,7 @@ class CourseDetails extends StatelessWidget {
             'Course',
             style: kCourseTextStyle,
           ),
-          leading: GestureDetector(
+          leading: InkWell(
             onTap: () {
               context.canPop()
                   ? context.pop()
@@ -92,7 +92,7 @@ class CourseDetails extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                GestureDetector(
+                InkWell(
                   onTap: () {
                     Navigator.push(
                       context,

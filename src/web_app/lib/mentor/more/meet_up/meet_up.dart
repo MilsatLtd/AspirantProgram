@@ -42,7 +42,7 @@ class MeetUpScreen extends StatelessWidget {
           const SizedBox(
             height: 32,
           ),
-          GestureDetector(
+          InkWell(
             onTap: () {
               context.push(ScheduleMeetUp.route);
             },
@@ -101,7 +101,7 @@ class MeetUpScreen extends StatelessWidget {
           backgroundColor: AppTheme.kAppWhiteScheme,
           elevation: 0.5,
           actions: [
-            GestureDetector(
+            InkWell(
               onTap: () {
                 context.push(ScheduleMeetUp.route);
               },

@@ -140,7 +140,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                             Positioned(
                               right: 0,
                               bottom: 0,
-                              child: GestureDetector(
+                              child: InkWell(
                                 onTap: () async {
                                   DecodedTokenResponse? decodedToken =
                                       await SharedPreferencesUtil.getModel<
@@ -350,7 +350,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                       const SizedBox(
                         height: 32,
                       ),
-                      GestureDetector(
+                      InkWell(
                         onTap: () {
                           context.push(PasswordPage.route);
                         },
@@ -404,7 +404,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                       const SizedBox(
                         height: 16,
                       ),
-                      GestureDetector(
+                      InkWell(
                         onTap: () {
                           signOut(context);
                         },

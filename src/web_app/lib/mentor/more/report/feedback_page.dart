@@ -45,7 +45,7 @@ class _FeedbackPageState extends ConsumerState<FeedbackPage> {
             'Give Feedback',
             style: kCourseTextStyle,
           ),
-          leading: GestureDetector(
+          leading: InkWell(
             onTap: () {
               context.canPop()
                   ? context.pop()

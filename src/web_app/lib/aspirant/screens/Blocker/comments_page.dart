@@ -74,7 +74,7 @@ class _CommentsPageState extends ConsumerState<CommentsPage> {
             ),
             centerTitle: true,
             elevation: 0.5,
-            leading: GestureDetector(
+            leading: InkWell(
               onTap: () => context.canPop()
                   ? context.pop()
                   : context.pushReplacement(HomeScreen.route),
@@ -108,7 +108,7 @@ class _CommentsPageState extends ConsumerState<CommentsPage> {
                             ),
                             if (widget.status == 0 &&
                                 widget.userId == widget.currentUser) ...{
-                              GestureDetector(
+                              InkWell(
                                 onTap: () async {
                                   try {
                                     await ref

@@ -30,31 +30,45 @@ Map<int, String> status = {
 List pendingList = [];
 List resolvedList = [];
 
-getPendngAndResolvedList() async {
-  pendingList = [];
-  resolvedList = [];
-  if (cred['blockers'] != null) {
-    for (var i in cred['blockers']) {
-      if (i['status'] == 0 && !pendingList.contains(i['blocker_id'])) {
-        pendingList.add(i);
-      } else if (i['status'] == 0 && pendingList.contains(i['blocker_id'])) {
-        return pendingList;
-      } else if (i['status'] == 1 && !pendingList.contains(i)) {
-        resolvedList.add(i);
-      } else {
-        return;
-      }
-    }
-  }
-}
-
-class AllBlockers extends ConsumerWidget {
+class AllBlockers extends ConsumerStatefulWidget {
   static const String name = 'all-blockers';
   static const String route = '/all-blockers';
   const AllBlockers({super.key});
 
   @override
-  Widget build(BuildContext context, ref) {
+  ConsumerState<AllBlockers> createState() => _AllBlockersState();
+}
+
+class _AllBlockersState extends ConsumerState<AllBlockers> {
+  void sortBlockersByDate(List blockers, {bool ascending = false}) {
+    blockers.sort((a, b) {
+      DateTime dateA = DateTime.parse(a['created_at']);
+      DateTime dateB = DateTime.parse(b['created_at']);
+      return ascending ? dateA.compareTo(dateB) : dateB.compareTo(dateA);
+    });
+  }
+
+  Future<void> getPendingAndResolvedList() async {
+    pendingList.clear();
+    resolvedList.clear();
+
+    if (cred['blockers'] != null) {
+      sortBlockersByDate(cred['blockers']);
+      for (var i in cred['blockers']) {
+        if (i['status'] == 0 && !pendingList.contains(i['blocker_id'])) {
+          pendingList.add(i);
+        } else if (i['status'] == 0 && pendingList.contains(i['blocker_id'])) {
+          continue;
+        } else if (i['status'] == 1 && !resolvedList.contains(i)) {
+          resolvedList.add(i);
+        }
+      }
+    }
+    setState(() {}); // Trigger UI update
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final allBlockersData = ref.watch(allBlockers);
 
     Future<void> onDeleted(index) async {
@@ -65,11 +79,16 @@ class AllBlockers extends ConsumerWidget {
 
     return allBlockersData.when(
       data: (data) {
-        getPendngAndResolvedList();
+        if (cred['blockers'] != null) {
+          // Sort blockers when data is loaded
+          sortBlockersByDate(cred['blockers']);
+        }
+        getPendingAndResolvedList();
+
         return RefreshIndicator(
-          onRefresh: () async => getPendngAndResolvedList(),
+          onRefresh: () async {},
           child: ListView.separated(
-            reverse: true,
+            physics: const AlwaysScrollableScrollPhysics(),
             itemBuilder: ((context, index) {
               String time = cred['blockers'][index]['created_at'];
               DateTime p = DateTime.parse(time);
@@ -78,7 +97,7 @@ class AllBlockers extends ConsumerWidget {
               final duration = now.difference(p);
               final timeAgo = duration.inDays;
 
-              return GestureDetector(
+              return InkWell(
                 onTap: () async {
                   DecodedTokenResponse? decodedTokenResponse =
                       await SharedPreferencesUtil.getModel<

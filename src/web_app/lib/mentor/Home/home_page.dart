@@ -205,7 +205,7 @@ class _MentorHomePageState extends ConsumerState<MentorHomePage> {
                             final timeAgo = duration.inDays;
                             return allBlockersData.when(
                               data: (data) {
-                                return GestureDetector(
+                                return InkWell(
                                   onTap: () async {
                                     final comments = await ref
                                         .read(apiBlockerServiceProvider)
@@ -246,7 +246,7 @@ class _MentorHomePageState extends ConsumerState<MentorHomePage> {
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: [
-                                          GestureDetector(
+                                          InkWell(
                                             onTap: () {},
                                             child: Row(
                                               mainAxisAlignment:

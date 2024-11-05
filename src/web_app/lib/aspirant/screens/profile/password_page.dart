@@ -19,7 +19,7 @@ class PasswordPage extends ConsumerWidget {
     final confirmPasswordController = TextEditingController();
     return Scaffold(
       appBar: AppBar(
-        leading: GestureDetector(
+        leading: InkWell(
           onTap: () {
             context.canPop()
                 ? context.pop()

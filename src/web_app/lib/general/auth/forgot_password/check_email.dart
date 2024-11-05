@@ -109,7 +109,7 @@ class _CheckEmailScreenState extends State<CheckEmailScreen> {
                         const SizedBox(
                           width: 8,
                         ),
-                        GestureDetector(
+                        InkWell(
                           onTap: () {},
                           child: Text(
                             'Resend',

@@ -18,7 +18,7 @@ class CustomHolder extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        GestureDetector(
+        InkWell(
           onTap: onTap,
           child: Container(
             height: 48,

@@ -46,6 +46,7 @@ class APIService {
     try {
       final token =
           await SharedPreferencesUtil.getString(SharedPrefKeys.accessToken);
+
       final headers = {
         'accept': 'application/json',
         'Authorization': 'Bearer $token',
@@ -56,10 +57,12 @@ class APIService {
         options: Options(headers: headers),
         data: data,
       );
+
       return response.data;
     } on DioException catch (e) {
       // Handle Dio errors
       final errorMessage = _parseDioException(e);
+
       return {'error': errorMessage};
     } catch (error) {
       // Handle generic errors
@@ -285,7 +288,7 @@ class APIService {
         url,
         options: Options(headers: headers),
       );
-      print(response.data);
+
       return response;
     } on DioException catch (e) {
       if (e.response != null) {
