@@ -73,7 +73,7 @@ class EditMentorProfile extends ConsumerWidget {
                               top: 6,
                               bottom: 16,
                             ),
-                            child: GestureDetector(
+                            child: InkWell(
                                 onTap: () {
                                   Navigator.push(context,
                                       MaterialPageRoute(builder: (context) {
@@ -145,7 +145,7 @@ class EditMentorProfile extends ConsumerWidget {
                         Positioned(
                           right: 0,
                           bottom: 0,
-                          child: GestureDetector(
+                          child: InkWell(
                             onTap: () async {
                               DecodedTokenResponse? decodedToken =
                                   await SharedPreferencesUtil.getModel<

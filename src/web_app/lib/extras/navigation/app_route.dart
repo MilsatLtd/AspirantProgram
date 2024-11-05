@@ -76,7 +76,9 @@ final routes = GoRouter(
       path: MentorPageSkeleton.route,
       builder: (BuildContext context, GoRouterState state) =>
           MentorPageSkeleton(
-        currentPage: (state.extra ?? 0) as int,
+        currentPage: state.extra != null
+            ? (state.extra as Map<String, dynamic>)["currentPage"] ?? 0
+            : 0,
       ),
     ),
     GoRoute(

@@ -75,7 +75,7 @@ class AllBlockers extends ConsumerWidget {
             final duration = now.difference(p);
             final timeAgo = duration.inDays;
 
-            return GestureDetector(
+            return InkWell(
               onTap: () async {
                 DecodedTokenResponse? decodedTokenResponse =
                     await SharedPreferencesUtil.getModel<DecodedTokenResponse>(

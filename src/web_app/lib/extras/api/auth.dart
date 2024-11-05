@@ -96,11 +96,12 @@ class SignInStateNotifier extends StateNotifier<SignInState> {
         SharedPreferencesUtil.saveString(
             SharedPrefKeys.refreshToken, refreshToken);
         state = SignInState.success();
+
         if (state.success == true) {
           if (decodedResponse.role == 2) {
             context.go(HomeScreen.route);
           } else if (decodedResponse.role == 1) {
-            context.go(MentorPageSkeleton.route, extra: 0);
+            context.go(MentorPageSkeleton.route, extra: {"currentPage": 0});
           }
         }
       } else {

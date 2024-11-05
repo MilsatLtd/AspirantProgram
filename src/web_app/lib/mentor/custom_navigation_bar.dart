@@ -88,7 +88,7 @@ class _CustomNavBarState extends State<CustomNavBar> {
                   : const Color(0xFF504D51),
             ),
           ),
-          GestureDetector(
+          InkWell(
             onTap: () {
               setState(() {
                 firstTapped = false;

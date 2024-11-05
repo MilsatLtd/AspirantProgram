@@ -31,6 +31,8 @@ class _FeedbackPageState extends ConsumerState<FeedbackPage> {
   TextEditingController textController = TextEditingController();
   final textKey = GlobalKey<FormState>();
 
+  bool _isButtonClicked = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -45,7 +47,7 @@ class _FeedbackPageState extends ConsumerState<FeedbackPage> {
             'Give Feedback',
             style: kCourseTextStyle,
           ),
-          leading: GestureDetector(
+          leading: InkWell(
             onTap: () {
               context.canPop()
                   ? context.pop()
@@ -100,41 +102,59 @@ class _FeedbackPageState extends ConsumerState<FeedbackPage> {
             ),
             CustomButton(
               height: 54,
-              pressed: () async {
-                if (textKey.currentState!.validate()) {
-                  DecodedTokenResponse? response = await SharedPreferencesUtil
-                      .getModel<DecodedTokenResponse>(
-                          SharedPrefKeys.tokenResponse,
-                          (json) => DecodedTokenResponse.fromJson(json));
-                  ref
-                      .read(apiReportProvider)
-                      .giveReportFeedback(widget.reportId, {
-                    "mentor_id": "${response?.userId}",
-                    "mentor_feedback": textController.text,
-                  });
-
-                  popUpCard(
-                      context,
-                      'Hello!',
-                      error[0],
-                      () => context.canPop()
-                          ? context.pop()
-                          : context.pushReplacement(HomeScreen.route));
-                }
-              },
+              pressed: _isButtonClicked
+                  ? null
+                  : () async {
+                      if (textKey.currentState!.validate()) {
+                        setState(() {
+                          _isButtonClicked = true;
+                        });
+                        print("validated");
+                        DecodedTokenResponse? response =
+                            await SharedPreferencesUtil.getModel<
+                                    DecodedTokenResponse>(
+                                SharedPrefKeys.tokenResponse,
+                                (json) => DecodedTokenResponse.fromJson(json));
+                        await ref
+                            .read(apiReportProvider)
+                            .giveReportFeedback(widget.reportId, {
+                          "mentor_id": "${response?.userId}",
+                          "mentor_feedback": textController.text,
+                        });
+                        setState(() {
+                          _isButtonClicked = false;
+                        });
+                        popUpCard(
+                            context,
+                            'Hello!',
+                            error.isEmpty ? "" : error[0],
+                            () => error.isEmpty
+                                ? context.go(HomeScreen.route)
+                                : context.pop());
+                      }
+                    },
               color: AppTheme.kPurpleColor,
               width: double.infinity,
               elevation: 0,
               borderRadius: BorderRadius.circular(8),
               child: Center(
-                child: Text(
-                  'Submit Feedback',
-                  style: GoogleFonts.raleway(
-                    color: AppTheme.kAppWhiteScheme,
-                    fontWeight: FontWeight.w600,
-                    fontSize: 14,
-                  ),
-                ),
+                child: _isButtonClicked
+                    ? const SizedBox(
+                        height: 20,
+                        width: 20,
+                        child: CircularProgressIndicator(
+                          color: Colors.white,
+                          strokeWidth: 2,
+                        ),
+                      )
+                    : Text(
+                        'Submit Feedback',
+                        style: GoogleFonts.raleway(
+                          color: AppTheme.kAppWhiteScheme,
+                          fontWeight: FontWeight.w600,
+                          fontSize: 14,
+                        ),
+                      ),
               ),
             )
           ],

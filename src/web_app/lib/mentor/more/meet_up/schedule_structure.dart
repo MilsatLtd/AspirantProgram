@@ -36,7 +36,7 @@ class ScheduleStructure extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              GestureDetector(
+              InkWell(
                 onTap: onTap,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,

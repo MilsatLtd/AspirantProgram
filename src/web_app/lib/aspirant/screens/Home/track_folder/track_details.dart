@@ -228,7 +228,7 @@ class _TrackDetailsConsumerState extends ConsumerState<TrackDetails> {
                           child: AnimatedOpacity(
                             opacity: _isHovering ? 1.0 : 0.0,
                             duration: const Duration(seconds: 2),
-                            child: GestureDetector(
+                            child: InkWell(
                               onTap: () {
                                 context.canPop()
                                     ? context.pop()

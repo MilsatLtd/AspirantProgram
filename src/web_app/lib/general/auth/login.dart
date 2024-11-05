@@ -155,16 +155,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                         : () async {
                                             FocusManager.instance.primaryFocus
                                                 ?.unfocus();
-                                            DecodedTokenResponse? decodedToken =
-                                                await SharedPreferencesUtil
-                                                    .getModel<
-                                                            DecodedTokenResponse>(
-                                                        SharedPrefKeys
-                                                            .tokenResponse,
-                                                        (json) =>
-                                                            DecodedTokenResponse
-                                                                .fromJson(
-                                                                    json));
+
                                             if (formKey.currentState
                                                     ?.validate() ??
                                                 false) {
@@ -184,6 +175,17 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                                             .trim(),
                                                         context);
 
+                                                DecodedTokenResponse?
+                                                    decodedToken =
+                                                    await SharedPreferencesUtil
+                                                        .getModel<
+                                                                DecodedTokenResponse>(
+                                                            SharedPrefKeys
+                                                                .tokenResponse,
+                                                            (json) =>
+                                                                DecodedTokenResponse
+                                                                    .fromJson(
+                                                                        json));
                                                 await ref
                                                     .read(apiServiceProvider)
                                                     .getUserData(
@@ -214,8 +216,13 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                               AppTheme.kPurpleColor),
                                     ),
                                     child: ref.watch(signInProvider).loading
-                                        ? const CircularProgressIndicator(
-                                            color: AppTheme.kAppWhiteScheme,
+                                        ? const SizedBox(
+                                            height: 20,
+                                            width: 20,
+                                            child: CircularProgressIndicator(
+                                              color: AppTheme.kAppWhiteScheme,
+                                              strokeWidth: 2,
+                                            ),
                                           )
                                         : Text(
                                             'Login',
