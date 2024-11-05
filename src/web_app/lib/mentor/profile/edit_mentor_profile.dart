@@ -39,7 +39,8 @@ class EditMentorProfile extends ConsumerWidget {
             onPressed: () {
               context.canPop()
                   ? context.pop()
-                  : context.pushReplacement(HomeScreen.route);
+                  : context.pushReplacement(MentorPageSkeleton.route,
+                      extra: {"currentPage": 0});
             },
             child: Text(
               'Back',

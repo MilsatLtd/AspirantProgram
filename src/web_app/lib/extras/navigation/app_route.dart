@@ -1,7 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:milsat_project_app/aspirant/screens/Home/track_folder/course_model.dart';
 import 'package:milsat_project_app/extras/components/files.dart';
 import 'package:milsat_project_app/extras/models/aspirant_model.dart';
 import 'package:milsat_project_app/general/auth/forgot_password/input_token.dart';
@@ -207,7 +206,9 @@ final routes = GoRouter(
       path: CourseDetails.route,
       builder: (BuildContext context, GoRouterState state) {
         return CourseDetails(
-          courseDemoModel: state.extra as CourseDemoModel,
+          courseDemoModel: state.extra != null
+              ? (state.extra as Map<String, dynamic>)["courseDetails"]
+              : CourseModel(),
         );
       },
     ),

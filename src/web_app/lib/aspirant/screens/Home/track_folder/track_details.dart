@@ -173,26 +173,29 @@ class _TrackDetailsConsumerState extends ConsumerState<TrackDetails> {
                                           canView
                                               ? context.pushReplacement(
                                                   CourseDetails.route,
-                                                  extra: CourseDemoModel(
-                                                    courseTitle: data.courses!
-                                                        .elementAt(index)
-                                                        .name!,
-                                                    courseDescription: data
-                                                        .courses!
-                                                        .elementAt(index)
-                                                        .description!,
-                                                    courseRequirementTitle:
-                                                        'Course Requirement',
-                                                    courseRequirement: data
-                                                        .courses!
-                                                        .elementAt(index)
-                                                        .requirements!,
-                                                    pressed: () =>
-                                                        launchUrl_(index),
-                                                    courseId: data.courses!
-                                                        .elementAt(index)
-                                                        .courseId!,
-                                                  ),
+                                                  extra: {
+                                                    "courseDetails":
+                                                        CourseDemoModel(
+                                                      courseTitle: data.courses!
+                                                          .elementAt(index)
+                                                          .name!,
+                                                      courseDescription: data
+                                                          .courses!
+                                                          .elementAt(index)
+                                                          .description!,
+                                                      courseRequirementTitle:
+                                                          'Course Requirement',
+                                                      courseRequirement: data
+                                                          .courses!
+                                                          .elementAt(index)
+                                                          .requirements!,
+                                                      pressed: () =>
+                                                          launchUrl_(index),
+                                                      courseId: data.courses!
+                                                          .elementAt(index)
+                                                          .courseId!,
+                                                    )
+                                                  },
                                                 )
                                               : null;
                                         },

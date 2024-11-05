@@ -4,17 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:milsat_project_app/extras/api/data.dart';
 import 'package:milsat_project_app/extras/api/report_api.dart';
-import 'package:milsat_project_app/extras/components/app_color.dart';
-import 'package:milsat_project_app/extras/components/app_style.dart';
-import 'package:milsat_project_app/extras/components/custom_button.dart';
+
+import 'package:milsat_project_app/extras/components/files.dart';
 import 'package:milsat_project_app/extras/components/shared_prefs/keys.dart';
 import 'package:milsat_project_app/extras/components/shared_prefs/utils.dart';
 import 'package:milsat_project_app/extras/components/widgets.dart';
 import 'package:milsat_project_app/extras/models/decoded_token.dart';
-
-import '../../../aspirant/screens/Home/home_page.dart';
 
 class FeedbackPage extends ConsumerStatefulWidget {
   final String reportId;
@@ -109,7 +105,7 @@ class _FeedbackPageState extends ConsumerState<FeedbackPage> {
                         setState(() {
                           _isButtonClicked = true;
                         });
-                        print("validated");
+
                         DecodedTokenResponse? response =
                             await SharedPreferencesUtil.getModel<
                                     DecodedTokenResponse>(
@@ -125,12 +121,13 @@ class _FeedbackPageState extends ConsumerState<FeedbackPage> {
                           _isButtonClicked = false;
                         });
                         popUpCard(
-                            context,
-                            'Hello!',
-                            error.isEmpty ? "" : error[0],
-                            () => error.isEmpty
-                                ? context.go(HomeScreen.route)
-                                : context.pop());
+                          context,
+                          'Hello!',
+                          error.isEmpty ? message[0] : error[0],
+                          () => error.isEmpty
+                              ? context.go(MentorPageSkeleton.route)
+                              : context.pop(),
+                        );
                       }
                     },
               color: AppTheme.kPurpleColor,

@@ -35,7 +35,8 @@ class _AllMentorBlockersState extends ConsumerState<AllMentorBlockers> {
             automaticallyImplyLeading: false,
             elevation: 0.5,
             leading: InkWell(
-              onTap: () => context.go(MentorPageSkeleton.route, extra: 0),
+              onTap: () => context
+                  .go(MentorPageSkeleton.route, extra: {"currentPage": 0}),
               child: const Icon(
                 Icons.arrow_back,
                 color: Colors.black,
