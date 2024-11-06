@@ -214,6 +214,7 @@ class _MentorHomePageState extends ConsumerState<MentorHomePage> {
                                     Navigator.push(context,
                                         MaterialPageRoute(builder: (context) {
                                       return ReplyBlocker(
+                                        mentorName: mentorName,
                                         description:
                                             '${cred['blockers'][index]['description']}',
                                         title:
