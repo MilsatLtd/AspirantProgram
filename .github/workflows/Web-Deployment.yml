@@ -46,7 +46,7 @@ jobs:
             npm run build
             # cd .next/
             tmux kill-session -t web-app 2>/dev/null || true
-            tmux new -d -s web-app "PORT=3000 npm start"
+            tmux new -d -s web-app "PORT=3004 npm start"
 
       - name: Slack Notification (Success)
         if: ${{ success() }}
