@@ -1,9 +1,6 @@
 name: Deploy Study Web App to Test
 
 on:
-  push:
-    branches:
-      - web-app-setup
   pull_request:
     branches:
       - main
