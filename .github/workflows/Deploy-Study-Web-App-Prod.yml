@@ -19,10 +19,10 @@ jobs:
       - name: Rsync files to server
         uses: easingthemes/ssh-deploy@main
         env:
-          SSH_PRIVATE_KEY: ${{ secrets.PROD_SSH_KEY }}
-          REMOTE_HOST: ${{ secrets.PROD_SERVER_IP }}
-          REMOTE_USER: ${{ secrets.PROD_SERVER_USER }}
-          REMOTE_PORT: ${{ secrets.PROD_SERVER_PORT }}
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_KEY }}
+          REMOTE_HOST: ${{ secrets.SERVER_IP }}
+          REMOTE_USER: ${{ secrets.SERVER_USER }}
+          REMOTE_PORT: ${{ secrets.SERVER_PORT }}
           ARGS: "-avzr --delete --exclude='.env.local'"
           EXCLUDE: ".env"
           SOURCE: "src/web_app/"
@@ -32,10 +32,10 @@ jobs:
       - name: Build and deploy on production server
         uses: appleboy/ssh-action@master
         with:
-          host: ${{ secrets.PROD_SERVER_IP }}
-          username: ${{ secrets.PROD_SERVER_USER }}
-          port: ${{ secrets.PROD_SERVER_PORT }}
-          key: ${{ secrets.PROD_SSH_KEY }}
+          host: ${{ secrets.SERVER_IP }}
+          username: ${{ secrets.SERVER_USER }}
+          port: ${{ secrets.SERVER_PORT }}
+          key: ${{ secrets.SSH_KEY }}
           script: |
             cd ~/AspirantProgram/src/web_app
             flutter clean
