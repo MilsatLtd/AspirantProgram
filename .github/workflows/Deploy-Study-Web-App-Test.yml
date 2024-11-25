@@ -33,14 +33,15 @@ jobs:
           
       # SSH into the server, build, and deploy
       - name: Build and deploy on test server
-        env:
+        uses: appleboy/ssh-action@master
+        with:
           host: ${{ secrets.SERVER_IP }}
           username: ${{ secrets.SERVER_USER }}
-        run: |
-          ssh $username@$host << 'EOF'
-          cd ~/test-aspirant-program/src/web_app
-          flutter clean
-          flutter build web --release
-          rm -rf /var/www/flutter-test/*
-          mv build/web/* /var/www/flutter-test/
-          EOF
+          port: ${{ secrets.SERVER_PORT }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            cd ~/test-aspirant-program/src/web_app
+            flutter clean
+            flutter build web --release
+            rm -rf /var/www/flutter-test/*
+            mv build/web/* /var/www/flutter-test/
