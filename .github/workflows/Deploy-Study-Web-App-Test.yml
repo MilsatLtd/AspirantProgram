@@ -43,5 +43,5 @@ jobs:
             cd ~/test-aspirant-program/src/web_app
             flutter clean
             flutter build web --release
-            rm -rf /var/www/flutter-test/*
-            mv build/web/* /var/www/flutter-test/
+            sudo rm -rf /var/www/flutter-test/*
+            sudo mv build/web/* /var/www/flutter-test/
