@@ -1,9 +1,6 @@
 name: Deploy Study Web App to Production
 
 on:
-  push:
-    branches:
-      - web-app-setup
   workflow_dispatch:
 
 jobs:
