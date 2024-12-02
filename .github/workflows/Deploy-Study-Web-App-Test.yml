@@ -1,6 +1,9 @@
 name: Deploy Flutter Web App to Test Server
 
 on:
+  push:
+    branches:
+      - web-app-deployment-fix
   pull_request:
     branches:
       - main
