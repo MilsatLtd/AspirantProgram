@@ -1,44 +1,51 @@
-name: Deploy Study Web App to Test
+name: Deploy Flutter Web App to Test Server
 
 on:
   pull_request:
     branches:
       - main
-      
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
       # Checkout the repository
-      - name: Checkout repository
+      - name: Checkout Repository
         uses: actions/checkout@v4
 
+      # Set up Flutter
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: 'stable'
 
-      # Sync changes to the test server
-      - name: Rsync files to server
-        uses: easingthemes/ssh-deploy@main
-        env:
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_KEY }}
-          REMOTE_HOST: ${{ secrets.SERVER_IP }}
-          REMOTE_USER: ${{ secrets.SERVER_USER }}
-          REMOTE_PORT: ${{ secrets.SERVER_PORT }}
-          ARGS: "-avzr --delete --exclude='.env.local'"
-          EXCLUDE: ".env"
-          SOURCE: "src/web_app/"
-          TARGET: "~/test-aspirant-program/src/web_app/"
-          
-      # SSH into the server, build, and deploy
-      - name: Build and deploy on test server
+      # Install Flutter dependencies
+      - name: Install Flutter Dependencies
+        run: flutter pub get
+
+      # Build Flutter Web App
+      - name: Build Flutter Web
+        run: flutter build web --release
+
+      # Deploy to Test Server
+      - name: Deploy to Test Server
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.SERVER_IP }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          port: ${{ secrets.SERVER_PORT }}
+          source: build/web/*
+          target: /var/www/flutter-test/
+
+      # Verify Deployment
+      - name: Verify Deployment
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.SERVER_IP }}
           username: ${{ secrets.SERVER_USER }}
-          port: ${{ secrets.SERVER_PORT }}
           key: ${{ secrets.SSH_KEY }}
+          port: ${{ secrets.SERVER_PORT }}
           script: |
-            cd ~/test-aspirant-program/src/web_app
-            flutter clean
-            flutter build web --release
-            sudo rm -rf /var/www/flutter-test/*
-            sudo mv build/web/* /var/www/flutter-test/
+            ls -l /var/www/flutter-test/
