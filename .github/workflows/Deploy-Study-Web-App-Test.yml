@@ -51,7 +51,7 @@ jobs:
           port: ${{ secrets.SERVER_PORT }}
           script: |
             sudo rm -rf /var/www/flutter-test/*
-            sudo mv /tmp/flutter-build/src/web_app/build/web /var/www/flutter-test/
+            sudo mv /tmp/flutter-build/src/web_app/build/web/* /var/www/flutter-test/
             sudo chown -R www-data:www-data /var/www/flutter-test/
 
       # # Deploy to Test Server
