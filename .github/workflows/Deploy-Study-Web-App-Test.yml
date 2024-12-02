@@ -23,28 +23,47 @@ jobs:
         with:
           flutter-version: '3.22.2'
 
-      # Install Flutter dependencies
-      - name: Install Flutter Dependencies
-        run: |
-          cd src/web_app 
-          flutter pub get
-
-      # Build Flutter Web App
-      - name: Build Flutter Web
+      # Install dependencies and build the app
+      - name: Install Flutter Dependencies and Build
         run: |
           cd src/web_app
+          flutter pub get
           flutter build web --release
 
-      # Deploy to Test Server
-      - name: Deploy to Test Server
+      # Upload build files to the server's temporary directory
+      - name: Upload Build Files
         uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.SERVER_IP }}
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SSH_KEY }}
           port: ${{ secrets.SERVER_PORT }}
-          source: src/web_app/build/web/
-          target: /var/www/flutter-test/
+          source: src/web_app/build/web/*
+          target: /tmp/flutter-build/
+
+      # Move files to the target directory using sudo
+      - name: Deploy Files to Target Directory
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SERVER_IP }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          port: ${{ secrets.SERVER_PORT }}
+          script: |
+            sudo rm -rf /var/www/flutter-test/*
+            sudo mv /tmp/flutter-build/* /var/www/flutter-test/
+            sudo chown -R www-data:www-data /var/www/flutter-test/
+
+      # # Deploy to Test Server
+      # - name: Deploy to Test Server
+      #   uses: appleboy/scp-action@v0.1.7
+      #   with:
+      #     host: ${{ secrets.SERVER_IP }}
+      #     username: ${{ secrets.SERVER_USER }}
+      #     key: ${{ secrets.SSH_KEY }}
+      #     port: ${{ secrets.SERVER_PORT }}
+      #     source: src/web_app/build/web/
+      #     target: /var/www/flutter-test/
 
       # Verify Deployment
       - name: Verify Deployment
