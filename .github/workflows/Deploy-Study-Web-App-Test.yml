@@ -25,11 +25,15 @@ jobs:
 
       # Install Flutter dependencies
       - name: Install Flutter Dependencies
-        run: flutter pub get
+        run: |
+          cd src/web_app 
+          flutter pub get
 
       # Build Flutter Web App
       - name: Build Flutter Web
-        run: flutter build web --release
+        run: |
+          cd src/web_app
+          flutter build web --release
 
       # Deploy to Test Server
       - name: Deploy to Test Server
@@ -39,7 +43,7 @@ jobs:
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SSH_KEY }}
           port: ${{ secrets.SERVER_PORT }}
-          source: build/web/*
+          source: cd src/web_app/build/web/*
           target: /var/www/flutter-test/
 
       # Verify Deployment
