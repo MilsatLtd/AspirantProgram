@@ -56,7 +56,7 @@ jobs:
             SLACK_CHANNEL: dev-builds
             SLACK_COLOR: '#008000'
             SLACK_ICON: https://avatars.githubusercontent.com/in/15368?s=80&v=4
-            SLACK_MESSAGE: "Successfully Deployed ${{ github.repository }} Web to Prod Environment :rocket:"
+            SLACK_MESSAGE: "Successfully Deployed ${{ github.repository }} Admin to Prod Environment :rocket:"
             SLACK_TITLE: "${{ github.repository }} Deployment"
             SLACK_USERNAME: github-actions
             SLACK_WEBHOOK: ${{ secrets.SLACK_NOTIFICATION_WEBHOOK }}
@@ -68,7 +68,7 @@ jobs:
             SLACK_CHANNEL: dev-builds
             SLACK_COLOR: '#FF0000'
             SLACK_ICON: https://avatars.githubusercontent.com/in/15368?s=80&v=4
-            SLACK_MESSAGE: "Failed to Deploy ${{ github.repository }} Web to Prod Environment :x:"
+            SLACK_MESSAGE: "Failed to Deploy ${{ github.repository }} Admin to Prod Environment :x:"
             SLACK_TITLE: "${{ github.repository }} ECS Deployment Failure"
             SLACK_USERNAME: github-actions
             SLACK_WEBHOOK: ${{ secrets.SLACK_NOTIFICATION_WEBHOOK }}            
