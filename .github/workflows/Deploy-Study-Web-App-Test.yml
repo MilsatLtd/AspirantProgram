@@ -43,7 +43,7 @@ jobs:
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SSH_KEY }}
           port: ${{ secrets.SERVER_PORT }}
-          source: cd src/web_app/build/web/*
+          source: src/web_app/build/web/
           target: /var/www/flutter-test/
 
       # Verify Deployment
