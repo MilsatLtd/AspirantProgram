@@ -8,34 +8,90 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Slack Notification
+        uses: rtCamp/action-slack-notify@v2
+        env:
+          SLACK_CHANNEL: dev-builds
+          SLACK_COLOR: '#0000FF'
+          SLACK_ICON: https://avatars.githubusercontent.com/in/15368?s=80&v=4
+          SLACK_MESSAGE:  "${{ github.repository }} Mentorship Web App Prod Environment Deployment Started!!"
+          SLACK_TITLE: "${{ github.repository }} Deployment"
+          SLACK_USERNAME: github-actions
+          SLACK_WEBHOOK: ${{ secrets.SLACK_NOTIFICATION_WEBHOOK }}
+    
       # Checkout the repository
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # Sync changes to the production server
-      - name: Rsync files to server
-        uses: easingthemes/ssh-deploy@main
-        env:
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_KEY }}
-          REMOTE_HOST: ${{ secrets.SERVER_IP }}
-          REMOTE_USER: ${{ secrets.SERVER_USER }}
-          REMOTE_PORT: ${{ secrets.SERVER_PORT }}
-          ARGS: "-avzr --delete --exclude='.env.local'"
-          EXCLUDE: ".env"
-          SOURCE: "src/web_app/"
-          TARGET: "~/AspirantProgram/src/web_app/"
-          
-      # SSH into the server, build, and deploy
-      - name: Build and deploy on production server
+      # Set up Flutter
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.22.2'
+
+      # Install dependencies and build the app
+      - name: Install Flutter Dependencies and Build
+        run: |
+          cd src/web_app
+          flutter pub get
+          flutter build web --release
+
+      # Upload build files to the server's temporary directory
+      - name: Upload Build Files
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.SERVER_IP }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          port: ${{ secrets.SERVER_PORT }}
+          source: src/web_app/build/web/*
+          target: /tmp/flutter-build/
+
+      # Move files to the target directory using sudo
+      - name: Deploy Files to Target Directory
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.SERVER_IP }}
           username: ${{ secrets.SERVER_USER }}
-          port: ${{ secrets.SERVER_PORT }}
           key: ${{ secrets.SSH_KEY }}
+          port: ${{ secrets.SERVER_PORT }}
           script: |
-            cd ~/AspirantProgram/src/web_app
-            flutter clean
-            flutter build web --release
             sudo rm -rf /var/www/flutter-prod/*
-            sudo mv build/web/* /var/www/flutter-prod/
+            sudo mv /tmp/flutter-build/src/web_app/build/web/* /var/www/flutter-prod/
+            sudo chown -R www-data:www-data /var/www/flutter-prod/
+
+      # Verify Deployment
+      - name: Verify Deployment
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SERVER_IP }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          port: ${{ secrets.SERVER_PORT }}
+          script: |
+            ls -l /var/www/flutter-prod/
+
+      - name: Slack Notification (Success)
+        if: ${{ success() }}
+        uses: rtCamp/action-slack-notify@v2
+        env:
+            SLACK_CHANNEL: dev-builds
+            SLACK_COLOR: '#008000'
+            SLACK_ICON: https://avatars.githubusercontent.com/in/15368?s=80&v=4
+            SLACK_MESSAGE: "Successfully Deployed ${{ github.repository }} Mentorship Web App to Prod Environment :rocket:"
+            SLACK_TITLE: "${{ github.repository }} Deployment"
+            SLACK_USERNAME: github-actions
+            SLACK_WEBHOOK: ${{ secrets.SLACK_NOTIFICATION_WEBHOOK }}
+          
+      - name: Slack Notification (Failure)
+        if: ${{ failure() }}
+        uses: rtCamp/action-slack-notify@v2
+        env:
+            SLACK_CHANNEL: dev-builds
+            SLACK_COLOR: '#FF0000'
+            SLACK_ICON: https://avatars.githubusercontent.com/in/15368?s=80&v=4
+            SLACK_MESSAGE: "Failed to Deploy ${{ github.repository }} Mentorship Web App to Prod Environment :x:"
+            SLACK_TITLE: "${{ github.repository }} ECS Deployment Failure"
+            SLACK_USERNAME: github-actions
+            SLACK_WEBHOOK: ${{ secrets.SLACK_NOTIFICATION_WEBHOOK }} 
+            

@@ -1,44 +1,81 @@
-name: Deploy Study Web App to Test
+name: Deploy Flutter Web App to Test Server
 
 on:
   pull_request:
     branches:
       - main
-      
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
       # Checkout the repository
-      - name: Checkout repository
+      - name: Checkout Repository
         uses: actions/checkout@v4
 
+      # Set up Flutter
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.22.2'
 
-      # Sync changes to the test server
-      - name: Rsync files to server
-        uses: easingthemes/ssh-deploy@main
-        env:
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_KEY }}
-          REMOTE_HOST: ${{ secrets.SERVER_IP }}
-          REMOTE_USER: ${{ secrets.SERVER_USER }}
-          REMOTE_PORT: ${{ secrets.SERVER_PORT }}
-          ARGS: "-avzr --delete --exclude='.env.local'"
-          EXCLUDE: ".env"
-          SOURCE: "src/web_app/"
-          TARGET: "~/test-aspirant-program/src/web_app/"
-          
-      # SSH into the server, build, and deploy
-      - name: Build and deploy on test server
+      # Install dependencies and build the app
+      - name: Install Flutter Dependencies and Build
+        run: |
+          cd src/web_app
+          flutter pub get
+          flutter build web --release
+
+      # Upload build files to the server's temporary directory
+      - name: Upload Build Files
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.SERVER_IP }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          port: ${{ secrets.SERVER_PORT }}
+          source: src/web_app/build/web/*
+          target: /tmp/flutter-build/
+
+      # Move files to the target directory using sudo
+      - name: Deploy Files to Target Directory
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.SERVER_IP }}
           username: ${{ secrets.SERVER_USER }}
-          port: ${{ secrets.SERVER_PORT }}
           key: ${{ secrets.SSH_KEY }}
+          port: ${{ secrets.SERVER_PORT }}
           script: |
-            cd ~/test-aspirant-program/src/web_app
-            flutter clean
-            flutter build web --release
             sudo rm -rf /var/www/flutter-test/*
-            sudo mv build/web/* /var/www/flutter-test/
+            sudo mv /tmp/flutter-build/src/web_app/build/web/* /var/www/flutter-test/
+            sudo chown -R www-data:www-data /var/www/flutter-test/
+
+      # Verify Deployment
+      - name: Verify Deployment
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SERVER_IP }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          port: ${{ secrets.SERVER_PORT }}
+          script: |
+            ls -l /var/www/flutter-test/
+
+      - name: Add HTTPS endpoint to PR comment
+        uses: mshick/add-pr-comment@v2
+        with:
+          message: |
+            checkout your changes to the Test environment URL: [https://test-asp-mentorship.milsat.africa/](https://test-asp-mentorship.milsat.africa/)
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          repo-token-user-login: "github-actions[bot]"
+          allow-repeats: true
+
+      - name: Review PR file(s) with chat-gpt
+        uses: anc95/ChatGPT-CodeReview@main
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          OPENAI_API_KEY: ${{ secrets.TEMP_OPEN_AI_KEY }}
+          OPENAI_API_ENDPOINT: https://api.openai.com/v1
+          MODEL: gpt-3.5-turbo
+          LANGUAGE: English
