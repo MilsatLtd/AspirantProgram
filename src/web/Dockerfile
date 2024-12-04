@@ -15,18 +15,18 @@ RUN \
 COPY . . 
 COPY .env .env
 
-# Build the Next.js application and export static files
-RUN npm run build && npx next export
+# Build the Next.js application
+RUN npm run build
 
 # Production stage
-FROM nginx:stable-alpine
-WORKDIR /usr/share/nginx/html
+FROM node:18-alpine
+WORKDIR /app
 
-# Copy the exported app to nginx's serving directory
-COPY --from=builder /app/out /usr/share/nginx/html
+# Copy the built application from the builder
+COPY --from=builder /app /app
 
-# Copy the .env file (optional: if needed by frontend JavaScript)
-COPY --from=builder /app/.env .env
+# Expose port 3000
+EXPOSE 3000
 
-EXPOSE 80
-CMD ["nginx", "-g", "daemon off;"]
+# Start the Next.js application
+CMD ["npm", "start"]
