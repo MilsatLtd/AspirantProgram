@@ -7,6 +7,9 @@ WORKDIR /usr/src/app
 # Copy the project files into the docker image
 COPY . .
 
+# Copy the .env file
+COPY .env .env
+
 # Install dependencies
 RUN npm install
 
@@ -21,6 +24,9 @@ COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 # Copy the build files from the build stage
 COPY --from=build /usr/src/app/dist /usr/share/nginx/html
+
+# Copy the .env file (optional for runtime use)
+COPY --from=build /usr/src/app/.env /usr/share/nginx/html/.env
 
 # Expose port 3001 for the HTTP server
 EXPOSE 3001
