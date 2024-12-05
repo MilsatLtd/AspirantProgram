@@ -8,7 +8,7 @@ WORKDIR /usr/src/app
 COPY . .
 
 # Copy the .env file
-COPY .env .env
+COPY .env.local .env
 
 # Install dependencies
 RUN npm install
@@ -26,7 +26,7 @@ WORKDIR /usr/src/app
 COPY --from=build /usr/src/app/dist/ ./dist
 
 # Copy the .env file (optional for runtime use)
-# COPY --from=build /usr/src/app/.env .env
+ COPY --from=build /usr/src/app/.env .env
 
 # Install a lightweight static file server (e.g., serve)
 RUN npm install -g serve
