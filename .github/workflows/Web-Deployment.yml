@@ -51,7 +51,7 @@ jobs:
             docker rm web-app || true
 
             echo "Running Docker Container..."
-            docker run -d --name web-app --env-file .env.local -p 3004:3004 web-app:latest
+            docker run -d --name web-app -p 3004:3004 web-app:latest
           
            # export NVM_DIR="/home/ubuntu/.nvm"
            # [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
