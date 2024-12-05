@@ -13,7 +13,7 @@ RUN \
 
 # Copy source files
 COPY . .
-COPY .env .env 
+COPY .env.local .env 
 
 # Build the static files
 RUN npm run build
@@ -29,8 +29,8 @@ RUN npm install -g serve
 COPY --from=builder /app/out .
 COPY --from=builder /app/.env .env
 
-# Expose port 3000
-EXPOSE 3000
+# Expose port 3004
+EXPOSE 3004
 
 # Use 'serve' to serve the static files
-CMD ["serve", "-s", ".", "-l", "3000"]
+CMD ["serve", "-s", ".", "-l", "3004"]
