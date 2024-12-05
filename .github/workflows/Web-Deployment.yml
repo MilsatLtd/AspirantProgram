@@ -1,22 +1,25 @@
 name: Deploy Prod Web Page
 
 on:
+  push:
+    branches:
+      - dockerized-update
   workflow_dispatch:
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Slack Notification
-        uses: rtCamp/action-slack-notify@v2
-        env:
-          SLACK_CHANNEL: dev-builds
-          SLACK_COLOR: '#0000FF'
-          SLACK_ICON: https://avatars.githubusercontent.com/in/15368?s=80&v=4
-          SLACK_MESSAGE:  "${{ github.repository }} Web Prod Environment Deployment Started!!"
-          SLACK_TITLE: "${{ github.repository }} Deployment"
-          SLACK_USERNAME: github-actions
-          SLACK_WEBHOOK: ${{ secrets.SLACK_NOTIFICATION_WEBHOOK }}  
+      # - name: Slack Notification
+      #   uses: rtCamp/action-slack-notify@v2
+      #   env:
+      #     SLACK_CHANNEL: dev-builds
+      #     SLACK_COLOR: '#0000FF'
+      #     SLACK_ICON: https://avatars.githubusercontent.com/in/15368?s=80&v=4
+      #     SLACK_MESSAGE:  "${{ github.repository }} Web Prod Environment Deployment Started!!"
+      #     SLACK_TITLE: "${{ github.repository }} Deployment"
+      #     SLACK_USERNAME: github-actions
+      #     SLACK_WEBHOOK: ${{ secrets.SLACK_NOTIFICATION_WEBHOOK }}  
 
       - name: Checkout code
         uses: actions/checkout@v4
@@ -39,35 +42,46 @@ jobs:
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SSH_KEY }}
           script: |
-           export NVM_DIR="/home/ubuntu/.nvm"
-           [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-            cd ~/AspirantProgram/src/web/
-            npm install
-            npm run build
-            # cd .next/
-            tmux kill-session -t web-app 2>/dev/null || true
-            tmux new -d -s web-app "PORT=3004 npm start"
+            cd ~/AspirantProgram/src/admin
+            echo "Building Docker Image..."
+            docker build -t admin-app:latest .
 
-      - name: Slack Notification (Success)
-        if: ${{ success() }}
-        uses: rtCamp/action-slack-notify@v2
-        env:
-            SLACK_CHANNEL: dev-builds
-            SLACK_COLOR: '#008000'
-            SLACK_ICON: https://avatars.githubusercontent.com/in/15368?s=80&v=4
-            SLACK_MESSAGE: "Successfully Deployed ${{ github.repository }} Web to Prod Environment :rocket:"
-            SLACK_TITLE: "${{ github.repository }} Deployment"
-            SLACK_USERNAME: github-actions
-            SLACK_WEBHOOK: ${{ secrets.SLACK_NOTIFICATION_WEBHOOK }}
+            echo "Stopping existing container (if any)..."
+            docker stop admin-app || true
+            docker rm admin-app || true
+
+            echo "Running Docker Container..."
+            docker run -d --name admin-app -p 3004:3004 admin-app:latest
           
-      - name: Slack Notification (Failure)
-        if: ${{ failure() }}
-        uses: rtCamp/action-slack-notify@v2
-        env:
-            SLACK_CHANNEL: dev-builds
-            SLACK_COLOR: '#FF0000'
-            SLACK_ICON: https://avatars.githubusercontent.com/in/15368?s=80&v=4
-            SLACK_MESSAGE: "Failed to Deploy ${{ github.repository }} Web to Prod Environment :x:"
-            SLACK_TITLE: "${{ github.repository }} ECS Deployment Failure"
-            SLACK_USERNAME: github-actions
-            SLACK_WEBHOOK: ${{ secrets.SLACK_NOTIFICATION_WEBHOOK }}
+           # export NVM_DIR="/home/ubuntu/.nvm"
+           # [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+           #  cd ~/AspirantProgram/src/web/
+           #  npm install
+           #  npm run build
+           #  # cd .next/
+           #  tmux kill-session -t web-app 2>/dev/null || true
+           #  tmux new -d -s web-app "PORT=3004 npm start"
+
+      # - name: Slack Notification (Success)
+      #   if: ${{ success() }}
+      #   uses: rtCamp/action-slack-notify@v2
+      #   env:
+      #       SLACK_CHANNEL: dev-builds
+      #       SLACK_COLOR: '#008000'
+      #       SLACK_ICON: https://avatars.githubusercontent.com/in/15368?s=80&v=4
+      #       SLACK_MESSAGE: "Successfully Deployed ${{ github.repository }} Web to Prod Environment :rocket:"
+      #       SLACK_TITLE: "${{ github.repository }} Deployment"
+      #       SLACK_USERNAME: github-actions
+      #       SLACK_WEBHOOK: ${{ secrets.SLACK_NOTIFICATION_WEBHOOK }}
+          
+      # - name: Slack Notification (Failure)
+      #   if: ${{ failure() }}
+      #   uses: rtCamp/action-slack-notify@v2
+      #   env:
+      #       SLACK_CHANNEL: dev-builds
+      #       SLACK_COLOR: '#FF0000'
+      #       SLACK_ICON: https://avatars.githubusercontent.com/in/15368?s=80&v=4
+      #       SLACK_MESSAGE: "Failed to Deploy ${{ github.repository }} Web to Prod Environment :x:"
+      #       SLACK_TITLE: "${{ github.repository }} ECS Deployment Failure"
+      #       SLACK_USERNAME: github-actions
+      #       SLACK_WEBHOOK: ${{ secrets.SLACK_NOTIFICATION_WEBHOOK }}
