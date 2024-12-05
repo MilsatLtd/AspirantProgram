@@ -52,7 +52,7 @@ jobs:
               docker rm admin-app || true
   
               echo "Running Docker Container..."
-              docker run -d --name admin-app --env-file .env.local -p 3001:3001 admin-app:latest
+              docker run -d --name admin-app -p 3001:3001 admin-app:latest
 
            # export NVM_DIR="/home/ubuntu/.nvm"
            # [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
