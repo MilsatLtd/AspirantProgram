@@ -1,24 +1,21 @@
 name: Deploy Map Prod-API
 on:
-  push:
-    branches:
-      - dockerized-update
   workflow_dispatch:
      
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      # - name: Slack Notification
-      #   uses: rtCamp/action-slack-notify@v2
-      #   env:
-      #     SLACK_CHANNEL: dev-builds
-      #     SLACK_COLOR: '#0000FF'
-      #     SLACK_ICON: https://avatars.githubusercontent.com/in/15368?s=80&v=4
-      #     SLACK_MESSAGE:  "${{ github.repository }} API Prod Environment Deployment Started!!"
-      #     SLACK_TITLE: "${{ github.repository }} Deployment"
-      #     SLACK_USERNAME: github-actions
-      #     SLACK_WEBHOOK: ${{ secrets.SLACK_NOTIFICATION_WEBHOOK }}
+      - name: Slack Notification
+        uses: rtCamp/action-slack-notify@v2
+        env:
+          SLACK_CHANNEL: dev-builds
+          SLACK_COLOR: '#0000FF'
+          SLACK_ICON: https://avatars.githubusercontent.com/in/15368?s=80&v=4
+          SLACK_MESSAGE:  "${{ github.repository }} API Prod Environment Deployment Started!!"
+          SLACK_TITLE: "${{ github.repository }} Deployment"
+          SLACK_USERNAME: github-actions
+          SLACK_WEBHOOK: ${{ secrets.SLACK_NOTIFICATION_WEBHOOK }}
 
       - name: Checkout code
         uses: actions/checkout@v4
@@ -52,34 +49,27 @@ jobs:
             
             echo "Running Docker Container..."
             docker run -d --name map-api --env-file .env -p 8000:8000 map-api:latest
-            
-            # pip install -r requirements.txt
-            # export DJANGO_ENV="Production"
-            # export DJANGO_SETTINGS_MODULE=map.settings
-            # python3 manage.py migrate
-            # chmod +x restart_gunicorn.sh
-            # ./restart_gunicorn.sh
 
-      # - name: Slack Notification (Success)
-      #   if: ${{ success() }}
-      #   uses: rtCamp/action-slack-notify@v2
-      #   env:
-      #       SLACK_CHANNEL: dev-builds
-      #       SLACK_COLOR: '#008000'
-      #       SLACK_ICON: https://avatars.githubusercontent.com/in/15368?s=80&v=4
-      #       SLACK_MESSAGE: "Successfully Deployed ${{ github.repository }} API to Prod Environment :rocket:"
-      #       SLACK_TITLE: "${{ github.repository }} Deployment"
-      #       SLACK_USERNAME: github-actions
-      #       SLACK_WEBHOOK: ${{ secrets.SLACK_NOTIFICATION_WEBHOOK }}
+      - name: Slack Notification (Success)
+        if: ${{ success() }}
+        uses: rtCamp/action-slack-notify@v2
+        env:
+            SLACK_CHANNEL: dev-builds
+            SLACK_COLOR: '#008000'
+            SLACK_ICON: https://avatars.githubusercontent.com/in/15368?s=80&v=4
+            SLACK_MESSAGE: "Successfully Deployed ${{ github.repository }} API to Prod Environment :rocket:"
+            SLACK_TITLE: "${{ github.repository }} Deployment"
+            SLACK_USERNAME: github-actions
+            SLACK_WEBHOOK: ${{ secrets.SLACK_NOTIFICATION_WEBHOOK }}
           
-      # - name: Slack Notification (Failure)
-      #   if: ${{ failure() }}
-      #   uses: rtCamp/action-slack-notify@v2
-      #   env:
-      #       SLACK_CHANNEL: dev-builds
-      #       SLACK_COLOR: '#FF0000'
-      #       SLACK_ICON: https://avatars.githubusercontent.com/in/15368?s=80&v=4
-            # SLACK_MESSAGE: "Failed to Deploy ${{ github.repository }} API to Prod Environment :x:"
-            # SLACK_TITLE: "${{ github.repository }} ECS Deployment Failure"
-            # SLACK_USERNAME: github-actions
-            # SLACK_WEBHOOK: ${{ secrets.SLACK_NOTIFICATION_WEBHOOK }}            
+      - name: Slack Notification (Failure)
+        if: ${{ failure() }}
+        uses: rtCamp/action-slack-notify@v2
+        env:
+            SLACK_CHANNEL: dev-builds
+            SLACK_COLOR: '#FF0000'
+            SLACK_ICON: https://avatars.githubusercontent.com/in/15368?s=80&v=4
+            SLACK_MESSAGE: "Failed to Deploy ${{ github.repository }} API to Prod Environment :x:"
+            SLACK_TITLE: "${{ github.repository }} ECS Deployment Failure"
+            SLACK_USERNAME: github-actions
+            SLACK_WEBHOOK: ${{ secrets.SLACK_NOTIFICATION_WEBHOOK }}            
