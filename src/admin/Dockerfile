@@ -26,13 +26,13 @@ WORKDIR /usr/src/app
 COPY --from=build /usr/src/app/dist/ ./dist
 
 # Copy the .env file (optional for runtime use)
-COPY --from=build /usr/src/app/.env .env
+# COPY --from=build /usr/src/app/.env .env
 
 # Install a lightweight static file server (e.g., serve)
 RUN npm install -g serve
 
 # Expose port 3001 for the HTTP server
-EXPOSE 3000
+EXPOSE 3001
 
 # Command to serve the app on port 3001
-CMD ["serve", "-s", "dist", "-l", "3000"]
+CMD ["serve", "-s", "dist", "-l", "3001"]
