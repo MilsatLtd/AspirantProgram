@@ -42,16 +42,16 @@ jobs:
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SSH_KEY }}
           script: |
-            cd ~/AspirantProgram/src/admin
+            cd ~/AspirantProgram/src/web
             echo "Building Docker Image..."
-            docker build -t admin-app:latest .
+            docker build -t web-app:latest .
 
             echo "Stopping existing container (if any)..."
-            docker stop admin-app || true
-            docker rm admin-app || true
+            docker stop web-app || true
+            docker rm web-app || true
 
             echo "Running Docker Container..."
-            docker run -d --name admin-app -p 3004:3004 admin-app:latest
+            docker run -d --name web-app --env-file .env.local -p 3004:3004 web-app:latest
           
            # export NVM_DIR="/home/ubuntu/.nvm"
            # [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
