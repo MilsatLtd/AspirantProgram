@@ -29,8 +29,8 @@ RUN npm install -g serve
 COPY --from=builder /app/out .
 COPY --from=builder /app/.env .env
 
-# Expose port 3004
-EXPOSE 3004
+# Expose port 3002
+EXPOSE 3002
 
 # Use 'serve' to serve the static files
-CMD ["serve", "-s", ".", "-l", "3004"]
+CMD ["serve", "-s", ".", "-l", "3002"]

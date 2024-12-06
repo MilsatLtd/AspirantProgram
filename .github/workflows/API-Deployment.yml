@@ -27,7 +27,7 @@ jobs:
           REMOTE_HOST: ${{ secrets.SERVER_IP }}
           REMOTE_USER: ${{ secrets.SERVER_USER }}
           REMOTE_PORT: ${{ secrets.SERVER_PORT }}
-          ARGS: "-avzr --delete --exclude='.env'"
+          ARGS: "-rlgoDzvc -i --delete --exclude='.env'"
           SOURCE: "src/apis/"
           EXCLUDE: ".env"
           TARGET: "~/AspirantProgram/src/apis/"
@@ -40,12 +40,15 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           script: |
             cd ~/AspirantProgram/src/apis/
-            pip install -r requirements.txt
-            export DJANGO_ENV="Production"
-            export DJANGO_SETTINGS_MODULE=map.settings
-            python3 manage.py migrate
-            chmod +x restart_gunicorn.sh
-            ./restart_gunicorn.sh
+            echo "Building Docker Image..."
+            docker build -t map-api:latest .
+            
+            echo "Stopping existing container (if any)..."
+            docker stop map-api || true
+            docker rm map-api || true
+            
+            echo "Running Docker Container..."
+            docker run -d --name map-api --env-file .env -p 8000:8000 map-api:latest
 
       - name: Slack Notification (Success)
         if: ${{ success() }}
