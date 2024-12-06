@@ -1,7 +1,12 @@
 name: Deploy Test Admin Page
 
 on:
+  push:
+    branches:
+      - dockerized-update
+
   workflow_dispatch:
+
   pull_request:
      branches: [ "main" ]
      paths: ["src/admin/**"]
@@ -13,33 +18,68 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Rsync files to server
+      - name: Convert Dockerfile.test to Dockerfile
+        run: |
+          cd /home/runner/work/AspirantProgram/AspirantProgram/src/admin/
+          cp Dockerfile.test Dockerfile
+
+      - name: Sync Files to Server
         uses: easingthemes/ssh-deploy@main
         env:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_KEY }}
           REMOTE_HOST: ${{ secrets.SERVER_IP }}
           REMOTE_USER: ${{ secrets.SERVER_USER }}
           REMOTE_PORT: ${{ secrets.SERVER_PORT }}
-          ARGS: "-avzr --delete --exclude='.env.local'"
-          EXCLUDE: ".env"
-          SOURCE: "src/admin/"
+          ARGS: "-rlgoDzvc -i --delete --exclude='.env.local'"
+          SOURCE: "./src/admin/"
           TARGET: "~/test-aspirant-program/src/admin/"
 
-      - name: SSH and Build on Server
+      - name: SSH and Build/Run Dockerized Test Admin App
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.SERVER_IP }}
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SSH_KEY }}
           script: |
-           export NVM_DIR="/home/ubuntu/.nvm"
-           [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-            cd ~/test-aspirant-program/src/admin/
-            npm install
-            npm run build
-            cd dist/
-            tmux kill-session -t test-admin-app 2>/dev/null || true
-            tmux new -d -s test-admin-app "serve -s -l 3003"
+            cd ~/test-aspirant-program/src/admin
+            echo "Building Docker Image..."
+            docker build -t admin-app-test:latest .
+
+            echo "Stopping existing test container (if any)..."
+            docker stop admin-app-test || true
+            docker rm admin-app-test || true
+
+            echo "Running Docker Container..."
+            docker run -d --name admin-app-test -p 3003:3003 admin-app-test:latest
+
+
+      # - name: Rsync files to server
+      #   uses: easingthemes/ssh-deploy@main
+      #   env:
+      #     SSH_PRIVATE_KEY: ${{ secrets.SSH_KEY }}
+      #     REMOTE_HOST: ${{ secrets.SERVER_IP }}
+      #     REMOTE_USER: ${{ secrets.SERVER_USER }}
+      #     REMOTE_PORT: ${{ secrets.SERVER_PORT }}
+      #     ARGS: "-avzr --delete --exclude='.env.local'"
+      #     EXCLUDE: ".env"
+      #     SOURCE: "src/admin/"
+      #     TARGET: "~/test-aspirant-program/src/admin/"
+
+      # - name: SSH and Build on Server
+      #   uses: appleboy/ssh-action@master
+      #   with:
+      #     host: ${{ secrets.SERVER_IP }}
+      #     username: ${{ secrets.SERVER_USER }}
+      #     key: ${{ secrets.SSH_KEY }}
+      #     script: |
+      #      export NVM_DIR="/home/ubuntu/.nvm"
+      #      [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+      #       cd ~/test-aspirant-program/src/admin/
+      #       npm install
+      #       npm run build
+      #       cd dist/
+      #       tmux kill-session -t test-admin-app 2>/dev/null || true
+      #       tmux new -d -s test-admin-app "serve -s -l 3003"
 
       - name: Add HTTPS endpoint to PR comment
         uses: mshick/add-pr-comment@v2

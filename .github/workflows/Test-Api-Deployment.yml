@@ -1,9 +1,7 @@
 name: Deploy Map API-Test
 on:
-  push:
-    branches:
-      - dockerized-update
   workflow_dispatch:
+    
   pull_request:
      branches: [ "main" ]
      paths: ["src/apis/**"]
@@ -58,48 +56,6 @@ jobs:
 
             echo "Running Docker Container..."
             docker run -d --name map-api-test --env-file .env -p 8001:8001 map-api-test:latest
-
-
-
-
-
-
-
-      # - name: Install SSH Key
-      #   uses: shimataro/ssh-key-action@v2
-      #   with:
-      #     key: ${{ secrets.SSH_KEY }}
-      #     known_hosts: ${{ secrets.KNOWN_HOSTS }}
-          
-      # - name: Adding Known Hosts
-      #   run: ssh-keyscan -H ${{ secrets.SERVER_IP }} >> ~/.ssh/known_hosts
-
-      # - name: Rsync files to server
-      #   uses: easingthemes/ssh-deploy@main
-      #   env:
-      #     SSH_PRIVATE_KEY: ${{ secrets.SSH_KEY }}
-      #     REMOTE_HOST: ${{ secrets.SERVER_IP }}
-      #     REMOTE_USER: ${{ secrets.SERVER_USER }}
-      #     REMOTE_PORT: ${{ secrets.SERVER_PORT }}
-      #     ARGS: "-avzr --delete --exclude='.env'"
-      #     SOURCE: "src/apis/"
-      #     EXCLUDE: ".env"
-      #     TARGET: "~/test-aspirant-program/src/apis/"
-
-      # - name: SSH and Deploy Django App
-      #   uses: appleboy/ssh-action@master
-      #   with:
-      #     host: ${{ secrets.SERVER_IP }}
-      #     username: ${{ secrets.SERVER_USER }}
-      #     key: ${{ secrets.SSH_KEY }}
-      #     script: |
-      #       cd ~/test-aspirant-program/src/apis/
-      #       pip install -r requirements.txt
-      #       export DJANGO_ENV = "Test"
-      #       export DJANGO_SETTINGS_MODULE=map.settings_test
-      #       python3 manage.py migrate --settings=map.settings_test
-      #       chmod +x test_restart_gunicorn.sh
-      #       ./test_restart_gunicorn.sh
 
       - name: Add HTTPS endpoint to PR comment
         uses: mshick/add-pr-comment@v2
