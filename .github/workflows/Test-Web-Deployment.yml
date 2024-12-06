@@ -17,7 +17,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-        - name: Convert Dockerfile.test to Dockerfile
+      - name: Convert Dockerfile.test to Dockerfile
         run: |
           cd /home/runner/work/AspirantProgram/AspirantProgram/src/web/
           cp Dockerfile.test Dockerfile
