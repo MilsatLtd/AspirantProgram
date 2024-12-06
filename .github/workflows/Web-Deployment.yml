@@ -24,7 +24,16 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Rsync files to server
+      - name: Build Docker Image
+        run: |
+          cd ./src/web
+          docker build -t web-app:latest .
+
+      - name: Save Docker Image as Tarball
+        run: |
+          docker save web-app:latest | gzip > web-app.tar.gz
+
+      - name: Transfer Docker Image to Server
         uses: easingthemes/ssh-deploy@main
         env:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_KEY }}
@@ -32,26 +41,56 @@ jobs:
           REMOTE_USER: ${{ secrets.SERVER_USER }}
           REMOTE_PORT: ${{ secrets.SERVER_PORT }}
           ARGS: "-avzr --delete --exclude='.env.local'"
-          SOURCE: "src/web/"
-          TARGET: "~/AspirantProgram/src/web/"
+          SOURCE: "web-app.tar.gz"
+          TARGET: "~/AspirantProgram//src/web/"
 
-      - name: SSH and Build on Server
+      - name: SSH and Load/Run Dockerized Web App
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.SERVER_IP }}
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SSH_KEY }}
           script: |
-            cd ~/AspirantProgram/src/web
-            echo "Building Docker Image..."
-            docker build -t web-app:latest .
+            cd ~/AspirantProgram/src/web/
+            echo "Loading Docker Image..."
+            docker load < web-app.tar.gz
 
             echo "Stopping existing container (if any)..."
             docker stop web-app || true
             docker rm web-app || true
 
             echo "Running Docker Container..."
-            docker run -d --name web-app -p 3004:3004 web-app:latest
+            docker run -d --name web-app --env-file .env.local -p 3004:3004 web-app:latest
+
+
+      # - name: Rsync files to server
+      #   uses: easingthemes/ssh-deploy@main
+      #   env:
+      #     SSH_PRIVATE_KEY: ${{ secrets.SSH_KEY }}
+      #     REMOTE_HOST: ${{ secrets.SERVER_IP }}
+      #     REMOTE_USER: ${{ secrets.SERVER_USER }}
+      #     REMOTE_PORT: ${{ secrets.SERVER_PORT }}
+      #     ARGS: "-avzr --delete --exclude='.env.local'"
+      #     SOURCE: "src/web/"
+      #     TARGET: "~/AspirantProgram/src/web/"
+
+      # - name: SSH and Build on Server
+      #   uses: appleboy/ssh-action@master
+      #   with:
+      #     host: ${{ secrets.SERVER_IP }}
+      #     username: ${{ secrets.SERVER_USER }}
+      #     key: ${{ secrets.SSH_KEY }}
+      #     script: |
+      #       cd ~/AspirantProgram/src/web
+      #       echo "Building Docker Image..."
+      #       docker build -t web-app:latest .
+
+      #       echo "Stopping existing container (if any)..."
+      #       docker stop web-app || true
+      #       docker rm web-app || true
+
+      #       echo "Running Docker Container..."
+      #       docker run -d --name web-app -p 3004:3004 web-app:latest
           
            # export NVM_DIR="/home/ubuntu/.nvm"
            # [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
