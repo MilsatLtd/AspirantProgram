@@ -13,7 +13,7 @@ RUN \
 
 # Copy source files
 COPY . .
-# COPY .env.local .env 
+COPY .env.local .env 
 
 # Build the static files
 RUN npm run build
@@ -27,7 +27,7 @@ RUN npm install -g serve
 
 # Copy the static export folder from the build stage
 COPY --from=builder /app/out .
-# COPY --from=builder /app/.env .env
+COPY --from=builder /app/.env .env
 
 # Expose port 3004
 EXPOSE 3004
