@@ -38,7 +38,7 @@ jobs:
           REMOTE_USER: ${{ secrets.SERVER_USER }}
           REMOTE_PORT: ${{ secrets.SERVER_PORT }}
           ARGS: "-rlgoDzvc -i --delete --exclude='.env'"
-          SOURCE: "./"
+          SOURCE: "./src/apis/"
           TARGET: "~/test-aspirant-program/src/apis/"
 
       - name: SSH and Build/Run Dockerized Test App
