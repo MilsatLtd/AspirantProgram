@@ -22,7 +22,9 @@ jobs:
           flutter-version: "3.22.2"
 
       - name: Install dependencies
-        run: flutter pub get
+        run: |
+          flutter pub get
+          cd ios && pod install
 
       - name: Decode and save Certificate
         env:
@@ -45,9 +47,22 @@ jobs:
           security default-keychain -s build.keychain
           security unlock-keychain -p "" build.keychain
           security set-key-partition-list -S apple-tool:,apple: -s -k "" build.keychain
+          security find-identity -v -p codesigning
+
+      - name: Install Provisioning Profile
+        run: |
+          mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
+          cp $IOS_PROVISIONING_PROFILE_PATH ~/Library/MobileDevice/Provisioning\ Profiles/
+
+      - name: Update Xcode Project
+        working-directory: src/mobile/ios
+        run: |
+          pod deintegrate
+          pod install
+          xcodebuild -project Runner.xcodeproj clean
 
       - name: Build iOS app
-        run: flutter build ipa --release
+        run: flutter build ipa --release --export-options-plist=ExportOptions.plist
 
       - name: Upload to App Store Connect via Fastlane
         env:
