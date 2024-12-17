@@ -29,6 +29,16 @@ jobs:
           CERTIFICATE_P12: ${{ secrets.APPLE_CERTIFICATE_P12 }}
         run: echo "$CERTIFICATE_P12" | base64 --decode > ios_distribution.p12
 
+      - name: Decode and export Certificate
+        env:
+          CERTIFICATE_P12: ${{ secrets.APPLE_CERTIFICATE_P12 }}
+        run: echo "IOS_CERTIFICATE=$(echo $CERTIFICATE_P12 | base64 --decode)" >> $GITHUB_ENV
+      
+      - name: Decode and export Provisioning Profile
+        env:
+          PROVISIONING_PROFILE: ${{ secrets.APPLE_PROVISIONING_PROFILE }}
+        run: echo "IOS_PROVISIONING_PROFILE=$(echo $PROVISIONING_PROFILE | base64 --decode)" >> $GITHUB_ENV
+
       - name: Decode and save Provisioning Profile
         env:
           PROVISIONING_PROFILE: ${{ secrets.APPLE_PROVISIONING_PROFILE }}
