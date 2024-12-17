@@ -9,8 +9,8 @@ jobs:
   build-and-deploy:
     runs-on: macos-latest
     defaults:
-        run:
-            working-directory: src/mobile
+      run:
+        working-directory: src/mobile
 
     steps:
       - name: Checkout code
@@ -27,44 +27,39 @@ jobs:
       - name: Decode and save Certificate
         env:
           CERTIFICATE_P12: ${{ secrets.APPLE_CERTIFICATE_P12 }}
-        run: echo "$CERTIFICATE_P12" | base64 --decode > ios_distribution.p12
-
-      - name: Decode and export Certificate
-        env:
-          CERTIFICATE_P12: ${{ secrets.APPLE_CERTIFICATE_P12 }}
-        run: echo "IOS_CERTIFICATE=$(echo $CERTIFICATE_P12 | base64 --decode)" >> $GITHUB_ENV
-      
-      - name: Decode and export Provisioning Profile
-        env:
-          PROVISIONING_PROFILE: ${{ secrets.APPLE_PROVISIONING_PROFILE }}
-        run: echo "IOS_PROVISIONING_PROFILE=$(echo $PROVISIONING_PROFILE | base64 --decode)" >> $GITHUB_ENV
+        run: |
+          echo "$CERTIFICATE_P12" | base64 --decode > ios_distribution.p12
+          echo "IOS_CERTIFICATE_PATH=$(pwd)/ios_distribution.p12" >> $GITHUB_ENV
 
       - name: Decode and save Provisioning Profile
         env:
           PROVISIONING_PROFILE: ${{ secrets.APPLE_PROVISIONING_PROFILE }}
-        run: echo "$PROVISIONING_PROFILE" | base64 --decode > provisioning_profile.mobileprovision
+        run: |
+          echo "$PROVISIONING_PROFILE" | base64 --decode > provisioning_profile.mobileprovision
+          echo "IOS_PROVISIONING_PROFILE_PATH=$(pwd)/provisioning_profile.mobileprovision" >> $GITHUB_ENV
 
       - name: Install Certificate
         run: |
           security create-keychain -p "" build.keychain
-          security import ios_distribution.p12 -k build.keychain -P ${{ secrets.APPLE_CERTIFICATE_PASSWORD }} -T /usr/bin/codesign
+          security import $IOS_CERTIFICATE_PATH -k build.keychain -P ${{ secrets.APPLE_CERTIFICATE_PASSWORD }} -T /usr/bin/codesign
           security default-keychain -s build.keychain
           security unlock-keychain -p "" build.keychain
           security set-key-partition-list -S apple-tool:,apple: -s -k "" build.keychain
 
-      - name: Install Provisioning Profile
-        run: mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles && cp provisioning_profile.mobileprovision ~/Library/MobileDevice/Provisioning\ Profiles/
-
-      - name: Build iOS App
+      - name: Build iOS app
         run: flutter build ipa --release
 
-      - name: Deploy to TestFlight
+      - name: Upload to App Store Connect via Fastlane
         env:
           APPLE_ID: ${{ secrets.APPLE_ID }}
           APPLE_APP_SPECIFIC_PASSWORD: ${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}
-          BUNDLE_ID: "com.milsat.aspirant"
+          BUNDLE_ID: ${{ secrets.APPLE_BUNDLE_ID }}
         run: |
-          xcrun altool --upload-app -f build/ios/ipa/Runner.ipa \
-          --type ios \
-          --apiKey $APPLE_ID \
-          --apiIssuer $APPLE_APP_SPECIFIC_PASSWORD
+          fastlane deliver \
+            --ipa "build/ios/ipa/*.ipa" \
+            --username "$APPLE_ID" \
+            --app_identifier "$BUNDLE_ID" \
+            --team_id "${{ secrets.APPLE_TEAM_ID }}" \
+            --force \
+            --skip_screenshots \
+            --skip_metadata
