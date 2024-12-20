@@ -69,7 +69,7 @@ class MentorCardContent extends StatelessWidget {
           ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: GestureDetector(
+            child: InkWell(
               onTap: () {
                 Navigator.push(context, MaterialPageRoute(builder: (context) {
                   return AllAspirants(d: d);

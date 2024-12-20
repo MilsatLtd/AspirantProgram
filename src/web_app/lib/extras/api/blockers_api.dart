@@ -190,6 +190,7 @@ class APIService {
     try {
       String? token =
           await SharedPreferencesUtil.getString(SharedPrefKeys.accessToken);
+
       final headers = {
         'accept': 'application/json',
         'Authorization': 'Bearer $token',
@@ -200,12 +201,10 @@ class APIService {
         options: Options(headers: headers),
       );
       if (kDebugMode) {
-        print(response.data);
+        print("Raised Blockers ${response.data}");
       }
       cred['blockers'] = response.data;
-      if (kDebugMode) {
-        print(response.data);
-      }
+
       return response;
     } on DioException catch (e) {
       if (e.response != null) {

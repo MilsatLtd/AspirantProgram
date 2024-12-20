@@ -27,7 +27,7 @@ class UserProfile extends StatelessWidget {
           onPressed: () {
             context.canPop()
                 ? context.pop()
-                : context.pushReplacement(HomeScreen.route);
+                : context.pushReplacement(MentorPageSkeleton.route, extra: 0);
           },
           icon: const Icon(
             Icons.arrow_back,

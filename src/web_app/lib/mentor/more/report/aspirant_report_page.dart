@@ -97,7 +97,7 @@ class AspirantReportPage extends StatelessWidget {
                 height: 32,
               ),
               Center(
-                child: GestureDetector(
+                child: InkWell(
                   onTap: () {
                     Navigator.push(
                       context,

@@ -15,7 +15,7 @@ class AllAspirants extends ConsumerWidget {
   Widget build(BuildContext context, ref) {
     return Scaffold(
       appBar: AppBar(
-        leading: GestureDetector(
+        leading: InkWell(
           onTap: () {
             context.canPop()
                 ? context.pop()

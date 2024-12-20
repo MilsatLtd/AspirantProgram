@@ -25,7 +25,7 @@ class Resolved extends StatelessWidget {
     }
     return ListView.separated(
       itemBuilder: ((context, index) {
-        return GestureDetector(
+        return InkWell(
           onTap: () async {
             DecodedTokenResponse? decodedTokenResponse =
                 await SharedPreferencesUtil.getModel<DecodedTokenResponse>(

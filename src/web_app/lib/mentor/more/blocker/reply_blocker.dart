@@ -77,10 +77,11 @@ class _ReplyBlockerState extends ConsumerState<ReplyBlocker> {
             ),
           ),
           centerTitle: true,
-          leading: GestureDetector(
+          leading: InkWell(
             onTap: () => context.canPop()
                 ? context.pop()
-                : context.pushReplacement(HomeScreen.route),
+                : context.pushReplacement(MentorPageSkeleton.route,
+                    extra: {"currentPage": 0}),
             child: const Icon(
               Icons.arrow_back,
               color: Colors.black,

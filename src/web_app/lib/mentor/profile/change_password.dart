@@ -20,11 +20,12 @@ class MentorPasswordPage extends ConsumerWidget {
       appBar: PreferredSize(
         preferredSize: appBarHeight,
         child: AppBar(
-          leading: GestureDetector(
+          leading: InkWell(
             onTap: () {
               context.canPop()
                   ? context.pop()
-                  : context.pushReplacement(HomeScreen.route);
+                  : context.pushReplacement(MentorPageSkeleton.route,
+                      extra: {"currentPage": 0});
             },
             child: const Icon(
               Icons.arrow_back,
