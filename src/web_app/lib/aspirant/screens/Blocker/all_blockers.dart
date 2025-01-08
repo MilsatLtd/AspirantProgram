@@ -79,7 +79,7 @@ class _AllBlockersState extends ConsumerState<AllBlockers> {
 
     return allBlockersData.when(
       data: (data) {
-        getPendngAndResolvedList();
+        getPendingAndResolvedList();
         return ListView.separated(
           itemBuilder: ((context, index) {
             String time = cred['blockers'][index]['created_at'];
@@ -172,106 +172,108 @@ class _AllBlockersState extends ConsumerState<AllBlockers> {
                             label: 'Delete',
                           );
                         },
+                        child: Card(
+                          elevation: 3,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 16,
+                              vertical: 16,
+                            ),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: AppTheme.kAppWhiteScheme,
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      '${cred['blockers'][index]['title']}',
+                                      style: kBlockerHeadingTextStyle,
+                                    ),
+                                    Row(
+                                      children: [
+                                        cred['blockers'][index]['status'] == 0
+                                            ? SvgPicture.asset(
+                                                'assets/double_mark.svg',
+                                                colorFilter: ColorFilter.mode(
+                                                  Colors.grey.shade500,
+                                                  BlendMode.srcIn,
+                                                ),
+                                              )
+                                            : const SizedBox.shrink(),
+                                        Text(
+                                          cred['blockers'][index]['status'] == 0
+                                              ? status[0] as String
+                                              : status[1] as String,
+                                          style: GoogleFonts.raleway(
+                                            color: cred['blockers'][index]
+                                                        ['status'] ==
+                                                    0
+                                                ? Colors.grey.shade500
+                                                : const Color(0xFF11A263),
+                                            fontSize: 10,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(
+                                  height: 4,
+                                ),
+                                Row(
+                                  children: [
+                                    Text(
+                                      '${cred['blockers'][index]['user_name']}',
+                                      style: kBlockerSubHeadingTextStyle,
+                                    ),
+                                    const SizedBox(
+                                      width: 8,
+                                    ),
+                                    Text(
+                                      '$timeAgo days ago',
+                                      style: kTimeTextStyle,
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                                Text(
+                                  'Hi everyone,\n'
+                                  '${cred['blockers'][index]['description']}',
+                                  style: GoogleFonts.raleway(
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w500,
+                                    color: const Color(0xFF504D51),
+                                    height: 2,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
                       ),
                     ],
                   ),
-                  child: Card(
-                    elevation: 3,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 16,
-                      ),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: AppTheme.kAppWhiteScheme,
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                '${cred['blockers'][index]['title']}',
-                                style: kBlockerHeadingTextStyle,
-                              ),
-                              Row(
-                                children: [
-                                  cred['blockers'][index]['status'] == 0
-                                      ? SvgPicture.asset(
-                                          'assets/double_mark.svg',
-                                          colorFilter: ColorFilter.mode(
-                                            Colors.grey.shade500,
-                                            BlendMode.srcIn,
-                                          ),
-                                        )
-                                      : const SizedBox.shrink(),
-                                  Text(
-                                    cred['blockers'][index]['status'] == 0
-                                        ? status[0] as String
-                                        : status[1] as String,
-                                    style: GoogleFonts.raleway(
-                                      color:
-                                          cred['blockers'][index]['status'] == 0
-                                              ? Colors.grey.shade500
-                                              : const Color(0xFF11A263),
-                                      fontSize: 10,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                          const SizedBox(
-                            height: 4,
-                          ),
-                          Row(
-                            children: [
-                              Text(
-                                '${cred['blockers'][index]['user_name']}',
-                                style: kBlockerSubHeadingTextStyle,
-                              ),
-                              const SizedBox(
-                                width: 8,
-                              ),
-                              Text(
-                                '$timeAgo days ago',
-                                style: kTimeTextStyle,
-                              ),
-                            ],
-                          ),
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          Text(
-                            'Hi everyone,\n'
-                            '${cred['blockers'][index]['description']}',
-                            style: GoogleFonts.raleway(
-                              fontSize: 13,
-                              fontWeight: FontWeight.w500,
-                              color: const Color(0xFF504D51),
-                              height: 2,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
                 ),
-              );
-            }),
-            itemCount: cred['blockers'] == null ? 0 : cred['blockers'].length,
-            separatorBuilder: (BuildContext context, int index) {
-              return const SizedBox(
-                height: 6,
-              );
-            },
-          ),
+              ),
+            );
+          }),
+          itemCount: cred['blockers'] == null ? 0 : cred['blockers'].length,
+          separatorBuilder: (BuildContext context, int index) {
+            return const SizedBox(
+              height: 6,
+            );
+          },
         );
       },
       error: (((error, stackTrace) => Text(error.toString()))),
@@ -282,17 +284,17 @@ class _AllBlockersState extends ConsumerState<AllBlockers> {
       },
     );
   }
+}
 
-  void showInSnackBar(String value, BuildContext context) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          value,
-          textAlign: TextAlign.center,
-        ),
-        duration: const Duration(seconds: 7),
-        dismissDirection: DismissDirection.up,
+void showInSnackBar(String value, BuildContext context) {
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(
+      content: Text(
+        value,
+        textAlign: TextAlign.center,
       ),
-    );
-  }
+      duration: const Duration(seconds: 7),
+      dismissDirection: DismissDirection.up,
+    ),
+  );
 }
