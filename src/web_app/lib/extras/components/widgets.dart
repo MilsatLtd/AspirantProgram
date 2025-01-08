@@ -48,6 +48,27 @@ Future<dynamic> popUpCard(BuildContext context, String? titleString,
   );
 }
 
+class CustomFabLocation extends FloatingActionButtonLocation {
+  final FloatingActionButtonLocation location;
+  final double offsetX;
+  final double offsetY;
+
+  CustomFabLocation({
+    required this.location,
+    this.offsetX = 0,
+    this.offsetY = 0,
+  });
+
+  @override
+  Offset getOffset(ScaffoldPrelayoutGeometry scaffoldGeometry) {
+    final Offset standardPosition = location.getOffset(scaffoldGeometry);
+    return Offset(
+      standardPosition.dx + offsetX,
+      standardPosition.dy + offsetY,
+    );
+  }
+}
+
 class CircularLoadingWidget extends StatelessWidget {
   final Color? color;
   const CircularLoadingWidget({super.key, this.color});

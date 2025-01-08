@@ -19,6 +19,7 @@ class ReplyBlocker extends ConsumerStatefulWidget {
     required this.time,
     required this.trackId,
     required this.comments,
+    required this.mentorName,
   });
 
   final String title;
@@ -26,6 +27,7 @@ class ReplyBlocker extends ConsumerStatefulWidget {
   final String userName;
   final String blockerId;
   final String time;
+  final String mentorName;
   final String trackId;
   final List<BlockerCommentModel> comments;
 
@@ -69,7 +71,7 @@ class _ReplyBlockerState extends ConsumerState<ReplyBlocker> {
         child: AppBar(
           backgroundColor: Colors.white,
           title: Text(
-            'Blockers',
+            widget.title,
             style: GoogleFonts.raleway(
               color: const Color(0xFF423B43),
               fontSize: 16,
@@ -93,60 +95,71 @@ class _ReplyBlockerState extends ConsumerState<ReplyBlocker> {
       ),
       body: Column(
         children: [
-          Container(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 16,
-              vertical: 16,
-            ),
-            color: AppTheme.kAppWhiteScheme,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+          const SizedBox(
+            height: 30,
+          ),
+          RichText(
+            text: TextSpan(
+              text: widget.userName,
+              style: kSmallHeadingStyle,
               children: [
-                Text(
-                  widget.title,
-                  style: GoogleFonts.raleway(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w700,
-                    color: const Color(0xFF504D51),
-                  ),
+                TextSpan(
+                  text: " created this blocker ",
+                  style: kSmallTextStyle,
                 ),
-                const SizedBox(
-                  height: 4,
-                ),
-                Row(
-                  children: [
-                    Text(
-                      widget.userName,
-                      style: GoogleFonts.raleway(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600,
-                          color: const Color(0xFF504D51),
-                          height: 1.5),
-                    ),
-                    const SizedBox(
-                      width: 8,
-                    ),
-                    Text(
-                      '${widget.time} day(s)',
-                      style: kTimeTextStyle,
-                    ),
-                  ],
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                Text(
-                  'Hi everyone,\n'
-                  '${widget.description}',
-                  style: GoogleFonts.raleway(
-                    fontSize: 13,
-                    fontWeight: FontWeight.w500,
-                    color: const Color(0xFF504D51),
-                    height: 2,
-                  ),
+                TextSpan(
+                  text: "${widget.time} days ago",
+                  style: kTimeTextStyle,
                 ),
               ],
             ),
+          ),
+          const SizedBox(
+            height: 20,
+          ),
+          Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 16,
+                ),
+                margin: const EdgeInsets.all(5),
+                constraints: BoxConstraints(
+                    maxWidth: MediaQuery.sizeOf(context).width / 1.5),
+                color: AppTheme.kAppWhiteScheme,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Text(
+                          widget.userName,
+                          style: GoogleFonts.raleway(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w600,
+                              color: const Color(0xFF504D51),
+                              height: 1.5),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    Text(
+                      'Hi everyone,\n'
+                      '${widget.description}',
+                      style: GoogleFonts.raleway(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w500,
+                        color: const Color(0xFF504D51),
+                        height: 2,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
           const SizedBox(
             height: 16,
@@ -157,20 +170,23 @@ class _ReplyBlockerState extends ConsumerState<ReplyBlocker> {
                     controller: _scrollController,
                     itemCount: widget.comments.length,
                     itemBuilder: (context, index) {
-                      return SizedBox(
-                        width: 250,
-                        child: Align(
-                          alignment: widget.comments[index].senderName ==
-                                  loginResponse?.fullName
-                              ? Alignment.centerRight
-                              : Alignment.centerLeft,
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Container(
-                              padding: const EdgeInsets.all(12),
+                      return Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Row(
+                          mainAxisAlignment:
+                              widget.comments[index].senderName ==
+                                      widget.mentorName
+                                  ? MainAxisAlignment.end
+                                  : MainAxisAlignment.start,
+                          children: [
+                            Container(
                               decoration: const BoxDecoration(
                                 color: AppTheme.kAppWhiteScheme,
                               ),
+                              margin: const EdgeInsets.all(5),
+                              constraints: BoxConstraints(
+                                  maxWidth:
+                                      MediaQuery.sizeOf(context).width / 1.5),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
@@ -198,7 +214,7 @@ class _ReplyBlockerState extends ConsumerState<ReplyBlocker> {
                                 ],
                               ),
                             ),
-                          ),
+                          ],
                         ),
                       );
                     })

@@ -67,6 +67,7 @@ class _PendingState extends ConsumerState<Pending> {
                       Navigator.push(context,
                           MaterialPageRoute(builder: (context) {
                         return ReplyBlocker(
+                          mentorName: mentorDetails.name ?? "Mentor",
                           description: '${pendingList[index]['description']}',
                           title: '${pendingList[index]['title']}',
                           userName: '${pendingList[index]['user_name']}',

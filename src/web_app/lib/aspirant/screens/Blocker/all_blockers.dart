@@ -101,6 +101,7 @@ class _AllBlockersState extends ConsumerState<AllBlockers> {
                 if (decodedTokenResponse?.role == 1) {
                   Navigator.push(context, MaterialPageRoute(builder: (context) {
                     return ReplyBlocker(
+                      mentorName: mentorDetails.name ?? "Mentor",
                       description: '${cred['blockers'][index]['description']}',
                       title: '${cred['blockers'][index]['title']}',
                       userName: '${cred['blockers'][index]['user_name']}',

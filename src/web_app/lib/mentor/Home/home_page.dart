@@ -350,6 +350,7 @@ class _MentorHomePageState extends ConsumerState<MentorHomePage> {
       context,
       MaterialPageRoute(
         builder: (context) => ReplyBlocker(
+          mentorName: mentorDetails.name ?? "",
           description: blocker['description'],
           title: blocker['title'],
           userName: blocker['user_name'],

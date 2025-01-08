@@ -42,7 +42,7 @@ class ViewAllPage extends StatelessWidget {
         padding: const EdgeInsets.symmetric(
           horizontal: 16,
         ),
-        child: cred['blockers'] == []
+        child: cred['blockers'] != []
             ? ListView.separated(
                 padding: const EdgeInsets.symmetric(
                   vertical: 16,
