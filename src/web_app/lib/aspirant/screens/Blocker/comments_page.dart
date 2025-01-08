@@ -71,17 +71,17 @@ class _CommentsPageState extends ConsumerState<CommentsPage> {
               fontSize: 16,
               fontWeight: FontWeight.w600,
             ),
-          ),
-          centerTitle: true,
-          elevation: 0.5,
-          leading: GestureDetector(
-            onTap: () => context.canPop()
-                ? context.pop()
-                : context.pushReplacement(HomeScreen.route),
-            child: const Icon(
-              Icons.arrow_back,
-              color: Colors.black,
-              size: 24,
+            centerTitle: true,
+            elevation: 0.5,
+            leading: InkWell(
+              onTap: () => context.canPop()
+                  ? context.pop()
+                  : context.pushReplacement(HomeScreen.route),
+              child: const Icon(
+                Icons.arrow_back,
+                color: Colors.black,
+                size: 24,
+              ),
             ),
           ),
         ),
@@ -129,6 +129,52 @@ class _CommentsPageState extends ConsumerState<CommentsPage> {
                         Row(
                           mainAxisSize: MainAxisSize.min, // Add this
                           mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Text(
+                              widget.title,
+                              style: kOnboardingLightTextStyle,
+                            ),
+                            if (widget.status == 0 &&
+                                widget.userId == widget.currentUser) ...{
+                              InkWell(
+                                onTap: () async {
+                                  try {
+                                    await ref
+                                        .read(apiBlockerServiceProvider)
+                                        .resolveABlocker(
+                                          trackId: widget.trackId,
+                                          userId: widget.userId,
+                                          blockerId: widget.blockerId,
+                                          description: widget.description,
+                                          title: widget.title,
+                                          status: 1,
+                                        );
+                                    context.go(AddBlocker.route);
+                                  } finally {
+                                    showInSnackBar(message[0]);
+                                  }
+                                },
+                                child: Row(
+                                  children: [
+                                    SvgPicture.asset('assets/double_mark.svg'),
+                                    Text(
+                                      status,
+                                      style: GoogleFonts.raleway(
+                                        color: const Color(0xFF11A263),
+                                        fontSize: 10,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            }
+                          ],
+                        ),
+                        const SizedBox(
+                          height: 4,
+                        ),
+                        Row(
                           children: [
                             Text(
                               widget.userId == widget.currentUser

@@ -38,7 +38,7 @@ class ReportPage extends StatelessWidget {
           centerTitle: true,
           backgroundColor: AppTheme.kAppWhiteScheme,
           elevation: 0.5,
-          leading: GestureDetector(
+          leading: InkWell(
             onTap: () => context.canPop()
                 ? context.pop()
                 : context.pushReplacement(HomeScreen.route),
@@ -192,7 +192,7 @@ class ReportPage1 extends StatelessWidget {
           centerTitle: true,
           backgroundColor: AppTheme.kAppWhiteScheme,
           elevation: 0.5,
-          leading: GestureDetector(
+          leading: InkWell(
             onTap: () => context.canPop()
                 ? context.pop()
                 : context.pushReplacement(HomeScreen.route),
@@ -343,7 +343,7 @@ class _ReportPage2State extends ConsumerState<ReportPage2> {
           centerTitle: true,
           backgroundColor: AppTheme.kAppWhiteScheme,
           elevation: 0.5,
-          leading: GestureDetector(
+          leading: InkWell(
             onTap: () => context.canPop()
                 ? context.pop()
                 : context.pushReplacement(HomeScreen.route),

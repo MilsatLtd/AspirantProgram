@@ -34,6 +34,7 @@ django-timezone-field==5.0
 djangorestframework==3.14.0
 djangorestframework-simplejwt==5.2.2
 django-ses==4.1.1
+python-dotenv==1.0.1
 drf-yasg==1.21.5
 flower==2.0.1
 gunicorn==20.1.0
@@ -54,7 +55,7 @@ packaging==23.1
 Pillow==9.5.0
 prompt-toolkit==3.0.38
 psutil==5.9.5
-psycopg2-binary==2.8.6
+psycopg2-binary==2.9.7
 pyasn1==0.5.0
 pyasn1-modules==0.3.0
 pycodestyle==2.10.0

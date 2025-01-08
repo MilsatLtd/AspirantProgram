@@ -33,7 +33,7 @@ class DateOrTimeHolder extends StatelessWidget {
         const SizedBox(
           height: 8,
         ),
-        GestureDetector(
+        InkWell(
           onTap: onTap,
           child: Container(
             width: 163.5,

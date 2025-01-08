@@ -35,7 +35,7 @@ class _AddBlockerState extends ConsumerState<AddBlocker> {
         toolbarHeight: 44,
         automaticallyImplyLeading: false,
         elevation: 0.5,
-        leading: GestureDetector(
+        leading: InkWell(
           onTap: () => context.canPop()
               ? context.pop()
               : context.pushReplacement(HomeScreen.route),

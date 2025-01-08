@@ -37,7 +37,7 @@ homeWidget(BuildContext context, WidgetRef ref,
                   right: 12,
                   top: 4,
                 ),
-                child: GestureDetector(
+                child: InkWell(
                   onTap: () {
                     context.push(ProfileScreen.route);
                   },

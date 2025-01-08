@@ -181,7 +181,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 child: AnimatedOpacity(
                   opacity: _isHovering ? 1.0 : 0.0,
                   duration: const Duration(seconds: 1),
-                  child: GestureDetector(
+                  child: InkWell(
                     onTap: () {
                       if (currentIndex < 2) {
                         setState(() {
@@ -215,7 +215,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 child: AnimatedOpacity(
                   opacity: _isHovering ? 1.0 : 0.0,
                   duration: const Duration(seconds: 1),
-                  child: GestureDetector(
+                  child: InkWell(
                     onTap: () {
                       if (currentIndex > 0) {
                         setState(() {

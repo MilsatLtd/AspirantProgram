@@ -52,7 +52,7 @@ class _PendingState extends ConsumerState<Pending> {
 
                 final duration = now.difference(p);
                 final timeAgo = duration.inDays;
-                return GestureDetector(
+                return InkWell(
                   onTap: () async {
                     String time = pendingList[index]['created_at'];
                     DateTime p = DateTime.parse(time);
@@ -105,7 +105,7 @@ class _PendingState extends ConsumerState<Pending> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        GestureDetector(
+                        InkWell(
                           onTap: () {},
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,

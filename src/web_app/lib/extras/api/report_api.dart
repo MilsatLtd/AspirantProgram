@@ -137,7 +137,7 @@ class ApiService {
       if (e.response != null) {
         if (kDebugMode) {
           print('Error message: ${e.response?.data}');
-          message = ['${e.response?.data['message']}'];
+          error = ['${e.response?.data['message']}'];
         }
       } else {
         if (kDebugMode) {

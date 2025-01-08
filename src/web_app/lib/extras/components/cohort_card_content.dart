@@ -141,7 +141,7 @@ class CardContent extends ConsumerWidget {
                           color: AppTheme.kAppWhiteScheme,
                         ),
                       ),
-                      GestureDetector(
+                      InkWell(
                         child: Image.asset(
                           'assets/see_all_courses.png',
                           color: AppTheme.kAppWhiteScheme,

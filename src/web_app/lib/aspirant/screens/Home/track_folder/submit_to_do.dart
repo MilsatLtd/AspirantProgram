@@ -53,7 +53,7 @@ class _SubmitToDoPageState extends ConsumerState<SubmitToDoPage> {
             'Submit To-dos',
             style: kCourseTextStyle,
           ),
-          leading: GestureDetector(
+          leading: InkWell(
             onTap: () {
               context.canPop()
                   ? context.pop()
@@ -123,7 +123,7 @@ class _SubmitToDoPageState extends ConsumerState<SubmitToDoPage> {
                     child: Consumer(
                       builder:
                           (BuildContext context, WidgetRef ref, Widget? child) {
-                        return GestureDetector(
+                        return InkWell(
                           onTap: () async {
                             final result = await FilePicker.platform
                                 .pickFiles(type: FileType.any);
