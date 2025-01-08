@@ -79,71 +79,84 @@ class _AllBlockersState extends ConsumerState<AllBlockers> {
 
     return allBlockersData.when(
       data: (data) {
-        if (cred['blockers'] != null) {
-          // Sort blockers when data is loaded
-          sortBlockersByDate(cred['blockers']);
-        }
-        getPendingAndResolvedList();
+        getPendngAndResolvedList();
+        return ListView.separated(
+          itemBuilder: ((context, index) {
+            String time = cred['blockers'][index]['created_at'];
+            DateTime p = DateTime.parse(time);
+            DateTime now = DateTime.now();
 
-        return RefreshIndicator(
-          onRefresh: () async {},
-          child: ListView.separated(
-            physics: const AlwaysScrollableScrollPhysics(),
-            itemBuilder: ((context, index) {
-              String time = cred['blockers'][index]['created_at'];
-              DateTime p = DateTime.parse(time);
-              DateTime now = DateTime.now();
+            final duration = now.difference(p);
+            final timeAgo = duration.inDays;
 
-              final duration = now.difference(p);
-              final timeAgo = duration.inDays;
-
-              return InkWell(
-                onTap: () async {
-                  DecodedTokenResponse? decodedTokenResponse =
-                      await SharedPreferencesUtil.getModel<
-                              DecodedTokenResponse>(
-                          SharedPrefKeys.tokenResponse,
-                          (json) => DecodedTokenResponse.fromJson(json));
-                  final comments = await ref
-                      .read(apiBlockerServiceProvider)
-                      .getCommentsById(cred['blockers'][index]['blocker_id']);
-                  if (decodedTokenResponse?.role == 1) {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) {
-                      return ReplyBlocker(
-                        description:
-                            '${cred['blockers'][index]['description']}',
-                        title: '${cred['blockers'][index]['title']}',
-                        userName: '${cred['blockers'][index]['user_name']}',
-                        blockerId: '${cred['blockers'][index]['blocker_id']}',
-                        time: '$timeAgo',
-                        trackId: '${cred['blockers'][index]['track']}',
-                        comments: comments,
-                      );
-                    }));
-                  } else {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) {
-                      blockerID = '${cred['blockers'][index]['blocker_id']}';
-                      return CommentsPage(
-                        description:
-                            '${cred['blockers'][index]['description']}',
-                        title: '${cred['blockers'][index]['title']}',
-                        userName: '${cred['blockers'][index]['user_name']}',
-                        blockerId: '${cred['blockers'][index]['blocker_id']}',
-                        trackId: '${cred['blockers'][index]['track']}',
-                        userId: '${cred['blockers'][index]['user']}',
-                        status: cred['blockers'][index]['status'],
-                        currentUser: decodedTokenResponse?.userId ?? '',
-                        time: '$timeAgo',
-                        comments: comments,
-                      );
-                    }));
-                  }
-                },
-                child: Slidable(
-                  startActionPane: ActionPane(
-                    motion: const StretchMotion(),
+            return InkWell(
+              onTap: () async {
+                DecodedTokenResponse? decodedTokenResponse =
+                    await SharedPreferencesUtil.getModel<DecodedTokenResponse>(
+                        SharedPrefKeys.tokenResponse,
+                        (json) => DecodedTokenResponse.fromJson(json));
+                final comments = await ref
+                    .read(apiBlockerServiceProvider)
+                    .getCommentsById(cred['blockers'][index]['blocker_id']);
+                if (decodedTokenResponse?.role == 1) {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) {
+                    return ReplyBlocker(
+                      description: '${cred['blockers'][index]['description']}',
+                      title: '${cred['blockers'][index]['title']}',
+                      userName: '${cred['blockers'][index]['user_name']}',
+                      blockerId: '${cred['blockers'][index]['blocker_id']}',
+                      time: '$timeAgo',
+                      trackId: '${cred['blockers'][index]['track']}',
+                      comments: comments,
+                    );
+                  }));
+                } else {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) {
+                    blockerID = '${cred['blockers'][index]['blocker_id']}';
+                    return CommentsPage(
+                      description: '${cred['blockers'][index]['description']}',
+                      title: '${cred['blockers'][index]['title']}',
+                      userName: '${cred['blockers'][index]['user_name']}',
+                      blockerId: '${cred['blockers'][index]['blocker_id']}',
+                      trackId: '${cred['blockers'][index]['track']}',
+                      userId: '${cred['blockers'][index]['user']}',
+                      status: cred['blockers'][index]['status'],
+                      currentUser: decodedTokenResponse?.userId ?? '',
+                      time: '$timeAgo',
+                      comments: comments,
+                    );
+                  }));
+                }
+              },
+              child: Slidable(
+                startActionPane: ActionPane(
+                  motion: const StretchMotion(),
+                  children: [
+                    Consumer(
+                      builder: (context, ref, child) {
+                        return SlidableAction(
+                          onPressed: (context) {
+                            onDeleted(index);
+                            showInSnackBar(
+                                'Blocker Deleted Successfully', context);
+                            return ref.refresh(allBlockers.future);
+                          },
+                          backgroundColor: Colors.red,
+                          icon: Icons.delete,
+                          label: 'Delete',
+                        );
+                      },
+                    ),
+                  ],
+                ),
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 16,
+                  ),
+                  color: AppTheme.kAppWhiteScheme,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Consumer(
                         builder: (context, ref, child) {

@@ -34,8 +34,8 @@ We're thrilled to inform you that your application for the Milsat Aspirant Progr
 Your journey with us begins on {format_timestamp(application.track.cohort.start_date)}, and concludes on {format_timestamp(application.track.cohort.end_date)}.
 
 To ensure you make the most of your experience, we have prepared a starter pack for you;
-    - Kindly take a moment to download the curriculum. [Data Collection Curriculum.pdf](https://drive.google.com/file/d/1KIim28hV4skwWjuioM4zVWaGe-do7zYF/view?usp=sharing)
-    - To facilitate effective communication and collaboration, we invite you to join our WhatsApp group by clicking on this link [MAP Second Cohort](https://chat.whatsapp.com/GRgsY8bSjU412CmHor26UN).
+    - Kindly take a moment to download the curriculum. [Download here](https://aspirant.milsat.africa/track/fundamental-of-gis)
+    - To facilitate effective communication and collaboration, we invite you to join our WhatsApp group by clicking on this link [Cohort Channel Link]](https://chat.whatsapp.com/HDFyFNp5mEPBa6tBWnu0kg).
 
 Should you have any questions or require assistance, please don't hesitate to contact us at map.milsat@gmail.com.
 
@@ -68,8 +68,8 @@ We're thrilled to inform you that your application for the Milsat Aspirant Progr
 Your journey with us begins on {format_timestamp(application.track.cohort.start_date)}, and concludes on {format_timestamp(application.track.cohort.end_date)}.
 
 To ensure you make the most of your experience, we have prepared a starter pack for you;
-    - Kindly take a moment to download the curriculum. [Data Collection Curriculum.pdf](https://drive.google.com/file/d/1KIim28hV4skwWjuioM4zVWaGe-do7zYF/view?usp=sharing)
-    - To facilitate effective communication and collaboration, we invite you to join our WhatsApp group by clicking on this link [MAP Second Cohort](https://chat.whatsapp.com/GRgsY8bSjU412CmHor26UN).
+    - Kindly take a moment to download the curriculum. [Download here](https://aspirant.milsat.africa/track/fundamental-of-gis)
+    - To facilitate effective communication and collaboration, we invite you to join our WhatsApp group by clicking on this link [Cohort Channel Link]((https://chat.whatsapp.com/HDFyFNp5mEPBa6tBWnu0kg).
 
 Should you have any questions or require assistance, please don't hesitate to contact us at map.milsat@gmail.com.
 

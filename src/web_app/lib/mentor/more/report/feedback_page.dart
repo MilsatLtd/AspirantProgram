@@ -4,17 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:milsat_project_app/extras/api/data.dart';
 import 'package:milsat_project_app/extras/api/report_api.dart';
-import 'package:milsat_project_app/extras/components/app_color.dart';
-import 'package:milsat_project_app/extras/components/app_style.dart';
-import 'package:milsat_project_app/extras/components/custom_button.dart';
+
+import 'package:milsat_project_app/extras/components/files.dart';
 import 'package:milsat_project_app/extras/components/shared_prefs/keys.dart';
 import 'package:milsat_project_app/extras/components/shared_prefs/utils.dart';
 import 'package:milsat_project_app/extras/components/widgets.dart';
 import 'package:milsat_project_app/extras/models/decoded_token.dart';
-
-import '../../../aspirant/screens/Home/home_page.dart';
 
 class FeedbackPage extends ConsumerStatefulWidget {
   final String reportId;
@@ -30,6 +26,8 @@ class FeedbackPage extends ConsumerStatefulWidget {
 class _FeedbackPageState extends ConsumerState<FeedbackPage> {
   TextEditingController textController = TextEditingController();
   final textKey = GlobalKey<FormState>();
+
+  bool _isButtonClicked = false;
 
   @override
   Widget build(BuildContext context) {
@@ -100,41 +98,60 @@ class _FeedbackPageState extends ConsumerState<FeedbackPage> {
             ),
             CustomButton(
               height: 54,
-              pressed: () async {
-                if (textKey.currentState!.validate()) {
-                  DecodedTokenResponse? response = await SharedPreferencesUtil
-                      .getModel<DecodedTokenResponse>(
-                          SharedPrefKeys.tokenResponse,
-                          (json) => DecodedTokenResponse.fromJson(json));
-                  ref
-                      .read(apiReportProvider)
-                      .giveReportFeedback(widget.reportId, {
-                    "mentor_id": "${response?.userId}",
-                    "mentor_feedback": textController.text,
-                  });
+              pressed: _isButtonClicked
+                  ? null
+                  : () async {
+                      if (textKey.currentState!.validate()) {
+                        setState(() {
+                          _isButtonClicked = true;
+                        });
 
-                  popUpCard(
-                      context,
-                      'Hello!',
-                      error[0],
-                      () => context.canPop()
-                          ? context.pop()
-                          : context.pushReplacement(HomeScreen.route));
-                }
-              },
+                        DecodedTokenResponse? response =
+                            await SharedPreferencesUtil.getModel<
+                                    DecodedTokenResponse>(
+                                SharedPrefKeys.tokenResponse,
+                                (json) => DecodedTokenResponse.fromJson(json));
+                        await ref
+                            .read(apiReportProvider)
+                            .giveReportFeedback(widget.reportId, {
+                          "mentor_id": "${response?.userId}",
+                          "mentor_feedback": textController.text,
+                        });
+                        setState(() {
+                          _isButtonClicked = false;
+                        });
+                        popUpCard(
+                          context,
+                          'Hello!',
+                          error.isEmpty ? message[0] : error[0],
+                          () => error.isEmpty
+                              ? context.go(MentorPageSkeleton.route)
+                              : context.pop(),
+                        );
+                      }
+                    },
               color: AppTheme.kPurpleColor,
               width: double.infinity,
               elevation: 0,
               borderRadius: BorderRadius.circular(8),
               child: Center(
-                child: Text(
-                  'Submit Feedback',
-                  style: GoogleFonts.raleway(
-                    color: AppTheme.kAppWhiteScheme,
-                    fontWeight: FontWeight.w600,
-                    fontSize: 14,
-                  ),
-                ),
+                child: _isButtonClicked
+                    ? const SizedBox(
+                        height: 20,
+                        width: 20,
+                        child: CircularProgressIndicator(
+                          color: Colors.white,
+                          strokeWidth: 2,
+                        ),
+                      )
+                    : Text(
+                        'Submit Feedback',
+                        style: GoogleFonts.raleway(
+                          color: AppTheme.kAppWhiteScheme,
+                          fontWeight: FontWeight.w600,
+                          fontSize: 14,
+                        ),
+                      ),
               ),
             )
           ],

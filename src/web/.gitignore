@@ -6,6 +6,8 @@
 
 # Ignore Next.js build directory
 .next
+.env.local
+.env
 
 # Ignore Node.js modules
 node_modules

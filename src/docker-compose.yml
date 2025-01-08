@@ -1,0 +1,42 @@
+version: '3.8'
+services:
+  map_api:
+    build:
+      context: ./src/apis
+    ports:
+      - "8000:8000"
+      - "8001:8001"
+    volumes:
+      - ./src/apis:/app
+    env_file:
+      - ./src/apis/.env
+
+  web_page:
+    build:
+      context: ./src/web
+    ports:
+      - "3002:3002"
+      - "3004:3004"
+    volumes:
+      - ./src/web:/app
+    env_file:
+      - ./src/web/.env.local
+
+  admin_page:
+    build:
+      context: ./src/admin
+    ports:
+      - "3003:3003"
+      - "3001:3001"
+    volumes:
+      - ./src/admin:/app
+    env_file:
+      - ./src/admin/.env.local
+
+  study_web_app:
+    build:
+      context: ./src/web_app
+    volumes:
+      - ./src/web_app:/app
+    env_file:
+      - ./src/web_app/.env.local
