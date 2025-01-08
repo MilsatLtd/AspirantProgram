@@ -75,3 +75,13 @@ TextStyle kTimeTextStyle = GoogleFonts.raleway(
   fontWeight: FontWeight.w500,
   color: const Color(0xFF9A989A),
 );
+TextStyle kBlockerHeadingTextStyle = GoogleFonts.raleway(
+  fontSize: 16,
+  fontWeight: FontWeight.w700,
+  color: AppTheme.primaryColor,
+);
+TextStyle kBlockerSubHeadingTextStyle = GoogleFonts.raleway(
+  fontSize: 12,
+  fontWeight: FontWeight.w400,
+  color: AppTheme.kLightPurpleColor,
+);
