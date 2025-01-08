@@ -30,34 +30,48 @@ Map<int, String> status = {
 List pendingList = [];
 List resolvedList = [];
 
-getPendngAndResolvedList() {
-  pendingList = [];
-  resolvedList = [];
-  if (cred['blockers'] != null) {
-    for (var i in cred['blockers']) {
-      if (i['status'] == 0 && !pendingList.contains(i['blocker_id'])) {
-        pendingList.add(i);
-      } else if (i['status'] == 0 && pendingList.contains(i['blocker_id'])) {
-        return pendingList;
-      } else if (i['status'] == 1 && !pendingList.contains(i)) {
-        resolvedList.add(i);
-      } else {
-        return;
-      }
-    }
-  }
-}
-
-class AllBlockers extends ConsumerWidget {
+class AllBlockers extends ConsumerStatefulWidget {
   static const String name = 'all-blockers';
   static const String route = '/all-blockers';
   const AllBlockers({super.key});
 
   @override
-  Widget build(BuildContext context, ref) {
+  ConsumerState<AllBlockers> createState() => _AllBlockersState();
+}
+
+class _AllBlockersState extends ConsumerState<AllBlockers> {
+  void sortBlockersByDate(List blockers, {bool ascending = false}) {
+    blockers.sort((a, b) {
+      DateTime dateA = DateTime.parse(a['created_at']);
+      DateTime dateB = DateTime.parse(b['created_at']);
+      return ascending ? dateA.compareTo(dateB) : dateB.compareTo(dateA);
+    });
+  }
+
+  Future<void> getPendingAndResolvedList() async {
+    pendingList.clear();
+    resolvedList.clear();
+
+    if (cred['blockers'] != null) {
+      sortBlockersByDate(cred['blockers']);
+      for (var i in cred['blockers']) {
+        if (i['status'] == 0 && !pendingList.contains(i['blocker_id'])) {
+          pendingList.add(i);
+        } else if (i['status'] == 0 && pendingList.contains(i['blocker_id'])) {
+          continue;
+        } else if (i['status'] == 1 && !resolvedList.contains(i)) {
+          resolvedList.add(i);
+        }
+      }
+    }
+    setState(() {}); // Trigger UI update
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final allBlockersData = ref.watch(allBlockers);
 
-    void onDeleted(index) {
+    Future<void> onDeleted(index) async {
       ref
           .read(apiBlockerServiceProvider)
           .deleteBlocker(cred['blockers'][index]['blocker_id']);
@@ -65,7 +79,7 @@ class AllBlockers extends ConsumerWidget {
 
     return allBlockersData.when(
       data: (data) {
-        getPendngAndResolvedList();
+        getPendingAndResolvedList();
         return ListView.separated(
           itemBuilder: ((context, index) {
             String time = cred['blockers'][index]['created_at'];
@@ -145,61 +159,108 @@ class AllBlockers extends ConsumerWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            '${cred['blockers'][index]['title']}',
-                            style: kOnboardingLightTextStyle,
+                      Consumer(
+                        builder: (context, ref, child) {
+                          return SlidableAction(
+                            onPressed: (context) async {
+                              await onDeleted(index);
+                              showInSnackBar(
+                                  'Blocker Deleted Successfully', context);
+                              return ref.refresh(allBlockers.future);
+                            },
+                            backgroundColor: Colors.red,
+                            icon: Icons.delete,
+                            label: 'Delete',
+                          );
+                        },
+                        child: Card(
+                          elevation: 3,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
                           ),
-                          Row(
-                            children: [
-                              cred['blockers'][index]['status'] == 0
-                                  ? SvgPicture.asset('assets/double_mark.svg')
-                                  : const SizedBox.shrink(),
-                              Text(
-                                cred['blockers'][index]['status'] == 0
-                                    ? status[0] as String
-                                    : status[1] as String,
-                                style: GoogleFonts.raleway(
-                                  color: const Color(0xFF11A263),
-                                  fontSize: 10,
-                                  fontWeight: FontWeight.w600,
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 16,
+                              vertical: 16,
+                            ),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: AppTheme.kAppWhiteScheme,
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      '${cred['blockers'][index]['title']}',
+                                      style: kBlockerHeadingTextStyle,
+                                    ),
+                                    Row(
+                                      children: [
+                                        cred['blockers'][index]['status'] == 0
+                                            ? SvgPicture.asset(
+                                                'assets/double_mark.svg',
+                                                colorFilter: ColorFilter.mode(
+                                                  Colors.grey.shade500,
+                                                  BlendMode.srcIn,
+                                                ),
+                                              )
+                                            : const SizedBox.shrink(),
+                                        Text(
+                                          cred['blockers'][index]['status'] == 0
+                                              ? status[0] as String
+                                              : status[1] as String,
+                                          style: GoogleFonts.raleway(
+                                            color: cred['blockers'][index]
+                                                        ['status'] ==
+                                                    0
+                                                ? Colors.grey.shade500
+                                                : const Color(0xFF11A263),
+                                            fontSize: 10,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
                                 ),
-                              ),
-                            ],
+                                const SizedBox(
+                                  height: 4,
+                                ),
+                                Row(
+                                  children: [
+                                    Text(
+                                      '${cred['blockers'][index]['user_name']}',
+                                      style: kBlockerSubHeadingTextStyle,
+                                    ),
+                                    const SizedBox(
+                                      width: 8,
+                                    ),
+                                    Text(
+                                      '$timeAgo days ago',
+                                      style: kTimeTextStyle,
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                                Text(
+                                  'Hi everyone,\n'
+                                  '${cred['blockers'][index]['description']}',
+                                  style: GoogleFonts.raleway(
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w500,
+                                    color: const Color(0xFF504D51),
+                                    height: 2,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
-                        ],
-                      ),
-                      const SizedBox(
-                        height: 4,
-                      ),
-                      Row(
-                        children: [
-                          Text(
-                            '${cred['blockers'][index]['user_name']}',
-                            style: kTrackTextStyle,
-                          ),
-                          const SizedBox(
-                            width: 8,
-                          ),
-                          Text(
-                            '$timeAgo days ago',
-                            style: kTimeTextStyle,
-                          ),
-                        ],
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      Text(
-                        'Hi everyone,\n'
-                        '${cred['blockers'][index]['description']}',
-                        style: GoogleFonts.raleway(
-                          fontSize: 13,
-                          fontWeight: FontWeight.w500,
-                          color: const Color(0xFF504D51),
-                          height: 2,
                         ),
                       ),
                     ],
@@ -224,17 +285,17 @@ class AllBlockers extends ConsumerWidget {
       },
     );
   }
+}
 
-  void showInSnackBar(String value, BuildContext context) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          value,
-          textAlign: TextAlign.center,
-        ),
-        duration: const Duration(seconds: 7),
-        dismissDirection: DismissDirection.up,
+void showInSnackBar(String value, BuildContext context) {
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(
+      content: Text(
+        value,
+        textAlign: TextAlign.center,
       ),
-    );
-  }
+      duration: const Duration(seconds: 7),
+      dismissDirection: DismissDirection.up,
+    ),
+  );
 }

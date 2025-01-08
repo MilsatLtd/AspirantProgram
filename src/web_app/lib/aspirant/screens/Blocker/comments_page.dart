@@ -71,17 +71,17 @@ class _CommentsPageState extends ConsumerState<CommentsPage> {
               fontSize: 16,
               fontWeight: FontWeight.w600,
             ),
-            centerTitle: true,
-            elevation: 0.5,
-            leading: InkWell(
-              onTap: () => context.canPop()
-                  ? context.pop()
-                  : context.pushReplacement(HomeScreen.route),
-              child: const Icon(
-                Icons.arrow_back,
-                color: Colors.black,
-                size: 24,
-              ),
+          ),
+          centerTitle: true,
+          elevation: 0.5,
+          leading: InkWell(
+            onTap: () => context.canPop()
+                ? context.pop()
+                : context.pushReplacement(HomeScreen.route),
+            child: const Icon(
+              Icons.arrow_back,
+              color: Colors.black,
+              size: 24,
             ),
           ),
         ),
@@ -158,7 +158,7 @@ class _CommentsPageState extends ConsumerState<CommentsPage> {
                                   children: [
                                     SvgPicture.asset('assets/double_mark.svg'),
                                     Text(
-                                      status,
+                                      status[1].toString(),
                                       style: GoogleFonts.raleway(
                                         color: const Color(0xFF11A263),
                                         fontSize: 10,

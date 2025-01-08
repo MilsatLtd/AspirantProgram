@@ -48,7 +48,6 @@ Future<dynamic> popUpCard(BuildContext context, String? titleString,
   );
 }
 
-// Create a custom FAB location
 class CustomFabLocation extends FloatingActionButtonLocation {
   final FloatingActionButtonLocation location;
   final double offsetX;
@@ -66,6 +65,23 @@ class CustomFabLocation extends FloatingActionButtonLocation {
     return Offset(
       standardPosition.dx + offsetX,
       standardPosition.dy + offsetY,
+    );
+  }
+}
+
+class CircularLoadingWidget extends StatelessWidget {
+  final Color? color;
+  const CircularLoadingWidget({super.key, this.color});
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 20,
+      width: 20,
+      child: CircularProgressIndicator(
+        strokeWidth: 2,
+        color: color ?? Colors.white,
+      ),
     );
   }
 }

@@ -28,7 +28,7 @@ class _BlockerPageConsumerState extends ConsumerState<BlockerPage> {
           elevation: 0.5,
           leading: InkWell(
             onTap: () => context.canPop()
-                ? context.canPop()
+                ? context.pop()
                 : context.pushReplacement(HomeScreen.route),
             child: const Icon(
               Icons.arrow_back,
