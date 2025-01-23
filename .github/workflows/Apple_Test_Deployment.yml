@@ -11,70 +11,124 @@ jobs:
     defaults:
       run:
         working-directory: src/mobile
+    env:
+      APP_STORE_CONNECT_PRIVATE_KEY: ${{ secrets.APP_STORE_CONNECT_PRIVATE_KEY }}
+      APP_STORE_CONNECT_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
+      APP_STORE_CONNECT_KEY_IDENTIFIER: ${{ secrets.APP_STORE_CONNECT_KEY_IDENTIFIER }}
+      APP_STORE_APP_ID: ${{ secrets.APP_STORE_APP_ID }}
+      DISTRIBUTION_CERTIFICATE: ${{ secrets.DIST_CERTIFICATE_BASE64 }}
+      DISTRIBUTION_CERTIFICATE_PASSWORD: ${{ secrets.DIST_CERTIFICATE_PASSWORD }}
+      PROVISIONING_PROFILE: ${{ secrets.PROVISIONING_PROFILE_BASE64 }}
+
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up Flutter
-        uses: subosito/flutter-action@v2
+      - name: Set up Flutter SDK
+        uses: flutter-actions/setup-flutter@v3
         with:
-          flutter-version: "3.22.2"
+          channel: stable
+          version: 3.22.2
 
       - name: Install dependencies
         run: |
+          flutter clean
           flutter pub get
-          cd ios && pod install
+          flutter analyze --fatal-infos
 
-      - name: Decode and save Certificate
-        env:
-          CERTIFICATE_P12: ${{ secrets.APPLE_CERTIFICATE_P12 }}
+      - name: Install the CodeMagic CLI
+        run:  pip install codemagic-cli-tools
+
+      - name: Initialize keychain
+        run: keychain initialize
+
+      - name: Set up Provisioning Profile
         run: |
-          echo "$CERTIFICATE_P12" | base64 --decode > ios_distribution.p12
-          echo "IOS_CERTIFICATE_PATH=$(pwd)/ios_distribution.p12" >> $GITHUB_ENV
+          PROFILES_HOME="$HOME/Library/MobileDevice/Provisioning Profiles"
+          mkdir -p "$PROFILES_HOME"
+          PROFILE_PATH="$(mktemp "$PROFILES_HOME"/$(uuidgen).mobileprovision)"
+          echo ${PROVISIONING_PROFILE} | base64 --decode > "$PROFILE_PATH"
+          echo "Saved provisioning profile $PROFILE_PATH"   
 
-      - name: Decode and save Provisioning Profile
-        env:
-          PROVISIONING_PROFILE: ${{ secrets.APPLE_PROVISIONING_PROFILE }}
+      - name: Set up Distribution Certificate
         run: |
-          echo "$PROVISIONING_PROFILE" | base64 --decode > provisioning_profile.mobileprovision
-          echo "IOS_PROVISIONING_PROFILE_PATH=$(pwd)/provisioning_profile.mobileprovision" >> $GITHUB_ENV
+          echo $DISTRIBUTION_CERTIFICATE | base64 --decode > /tmp/certificate.p12
+          keychain add-certificates --certificate /tmp/certificate.p12 --certificate-password $DISTRIBUTION_CERTIFICATE_PASSWORD
 
-      - name: Install Certificate
+      - name: Set up Code signing settings on Xcode project
+        run: xcode-project use-profiles
+
+      - name: Build IPA for Distribution
         run: |
-          security create-keychain -p "" build.keychain
-          security import $IOS_CERTIFICATE_PATH -k build.keychain -P ${{ secrets.APPLE_CERTIFICATE_PASSWORD }} -T /usr/bin/codesign
-          security default-keychain -s build.keychain
-          security unlock-keychain -p "" build.keychain
-          security set-key-partition-list -S apple-tool:,apple: -s -k "" build.keychain
-          security find-identity -v -p codesigning
+          file='VERSION'
+          fileData=`cat $file`
+          IFS='.'
+          read -a versionValue <<< "$fileData"
+          buildNumber=$(( ${versionValue[0]} * 1000000 + ${versionValue[1]} * 10000 + ${{ github.run_number }} ))
+          IFS=''
+          buildName="${versionValue[0]}.${versionValue[1]}.${{ github.run_number }}"
+          echo "Uploading build $buildName"
+          flutter build ipa --release --build-number=$buildNumber --build-name=$buildName --export-options-plist=$HOME/export_options.plist
 
-      - name: Install Provisioning Profile
+      - name: Upload IPA to App Store Connect
         run: |
-          mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
-          cp $IOS_PROVISIONING_PROFILE_PATH ~/Library/MobileDevice/Provisioning\ Profiles/
+          APP_FILE=$(find $(pwd) -name "*.ipa")
+          app-store-connect publish \
+          --path "$APP_FILE" 
 
-      - name: Update Xcode Project
-        working-directory: src/mobile/ios
-        run: |
-          pod deintegrate
-          pod install
-          xcodebuild -project Runner.xcodeproj clean
 
-      - name: Build iOS app
-        run: flutter build ipa --release --export-options-plist=ExportOptions.plist
 
-      - name: Upload to App Store Connect via Fastlane
-        env:
-          APPLE_ID: ${{ secrets.APPLE_ID }}
-          APPLE_APP_SPECIFIC_PASSWORD: ${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}
-          BUNDLE_ID: ${{ secrets.APPLE_BUNDLE_ID }}
-        run: |
-          fastlane deliver \
-            --ipa "build/ios/ipa/*.ipa" \
-            --username "$APPLE_ID" \
-            --app_identifier "$BUNDLE_ID" \
-            --team_id "${{ secrets.APPLE_TEAM_ID }}" \
-            --force \
-            --skip_screenshots \
-            --skip_metadata
+
+      # - name: Decode and save Certificate
+      #   env:
+      #     CERTIFICATE_P12: ${{ secrets.APPLE_CERTIFICATE_P12 }}
+      #   run: |
+      #     echo "$CERTIFICATE_P12" | base64 --decode > ios_distribution.p12
+      #     echo "IOS_CERTIFICATE_PATH=$(pwd)/ios_distribution.p12" >> $GITHUB_ENV
+
+      # - name: Decode and save Provisioning Profile
+      #   env:
+      #     PROVISIONING_PROFILE: ${{ secrets.APPLE_PROVISIONING_PROFILE }}
+      #   run: |
+      #     echo "$PROVISIONING_PROFILE" | base64 --decode > provisioning_profile.mobileprovision
+      #     echo "IOS_PROVISIONING_PROFILE_PATH=$(pwd)/provisioning_profile.mobileprovision" >> $GITHUB_ENV
+
+      # - name: Install Certificate
+      #   run: |
+      #     security create-keychain -p "" build.keychain
+      #     security import $IOS_CERTIFICATE_PATH -k build.keychain -P ${{ secrets.APPLE_CERTIFICATE_PASSWORD }} -T /usr/bin/codesign
+      #     security default-keychain -s build.keychain
+      #     security unlock-keychain -p "" build.keychain
+      #     security set-key-partition-list -S apple-tool:,apple: -s -k "" build.keychain
+      #     security find-identity -v -p codesigning
+
+      # - name: Install Provisioning Profile
+      #   run: |
+      #     mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
+      #     cp $IOS_PROVISIONING_PROFILE_PATH ~/Library/MobileDevice/Provisioning\ Profiles/
+
+      # - name: Update Xcode Project
+      #   working-directory: src/mobile/ios
+      #   run: |
+      #     pod deintegrate
+      #     pod install
+      #     xcodebuild -project Runner.xcodeproj clean
+
+      # - name: Build iOS app
+      #   run: flutter build ipa --release --export-options-plist=ExportOptions.plist
+
+      # - name: Upload to App Store Connect via Fastlane
+      #   env:
+      #     APPLE_ID: ${{ secrets.APPLE_ID }}
+      #     APPLE_APP_SPECIFIC_PASSWORD: ${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}
+      #     BUNDLE_ID: ${{ secrets.APPLE_BUNDLE_ID }}
+      #   run: |
+      #     fastlane deliver \
+      #       --ipa "build/ios/ipa/*.ipa" \
+      #       --username "$APPLE_ID" \
+      #       --app_identifier "$BUNDLE_ID" \
+      #       --team_id "${{ secrets.APPLE_TEAM_ID }}" \
+      #       --force \
+      #       --skip_screenshots \
+      #       --skip_metadata
