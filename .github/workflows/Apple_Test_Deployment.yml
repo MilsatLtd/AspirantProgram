@@ -20,7 +20,6 @@ jobs:
       DISTRIBUTION_CERTIFICATE_PASSWORD: ${{ secrets.DIST_CERTIFICATE_PASSWORD }}
       PROVISIONING_PROFILE: ${{ secrets.PROVISIONING_PROFILE_BASE64 }}
 
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
