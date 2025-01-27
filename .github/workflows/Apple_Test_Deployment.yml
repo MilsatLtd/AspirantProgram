@@ -50,14 +50,13 @@ jobs:
           echo ${PROVISIONING_PROFILE} | base64 --decode > "$PROFILE_PATH"
           echo "Saved provisioning profile $PROFILE_PATH"   
 
-      - name: Install OpenSSL 3.4.0
+      - name: Install OpenSSL 3
         run: |
-          wget https://www.openssl.org/source/openssl-3.4.0.tar.gz
-          tar -xzvf openssl-3.4.0.tar.gz
-          cd openssl-3.4.0
-          ./config
-          make
-          sudo make install
+          brew update
+          brew install openssl@3
+          echo "PATH=/usr/local/opt/openssl@3/bin:$PATH" >> $GITHUB_ENV
+          echo "LDFLAGS=-L/usr/local/opt/openssl@3/lib" >> $GITHUB_ENV
+          echo "CPPFLAGS=-I/usr/local/opt/openssl@3/include" >> $GITHUB_ENV
             
       - name: Verify OpenSSL Version
         run: openssl version        
