@@ -54,12 +54,15 @@ jobs:
         run: |
           brew update
           brew install openssl@3
-          echo "PATH=/usr/local/opt/openssl@3/bin:$PATH" >> $GITHUB_ENV
-          echo "LDFLAGS=-L/usr/local/opt/openssl@3/lib" >> $GITHUB_ENV
-          echo "CPPFLAGS=-I/usr/local/opt/openssl@3/include" >> $GITHUB_ENV
-            
+
+      - name: Set up OpenSSL Environment
+        run: |
+          echo "PATH=/opt/homebrew/opt/openssl@3/bin:$PATH" >> $GITHUB_ENV
+          echo "LDFLAGS=-L/opt/homebrew/opt/openssl@3/lib" >> $GITHUB_ENV
+          echo "CPPFLAGS=-I/opt/homebrew/opt/openssl@3/include" >> $GITHUB_ENV
+
       - name: Verify OpenSSL Version
-        run: openssl version        
+        run: openssl version       
 
       - name: Set up Distribution Certificate
         run: |
