@@ -62,14 +62,24 @@ jobs:
           echo "CPPFLAGS=-I/opt/homebrew/opt/openssl@3/include" >> $GITHUB_ENV
 
       - name: Verify OpenSSL Version
-        run: openssl version       
+        run: openssl version
+        
+      # - name: Create OpenSSL config
+      #   run: |
+      #     echo ".include = /etc/ssl/openssl.cnf" > openssl_legacy.cnf
+      #     echo "legacy = legacy_sect" >> openssl_legacy.cnf
+      #     echo "[legacy_sect]" >> openssl_legacy.cnf
+      #     echo "activate = 1" >> openssl_legacy.cnf
+      
+      # - name: Set OpenSSL config
+      #   run: echo "OPENSSL_CONF=$(pwd)/openssl_legacy.cnf" >> $GITHUB_ENV        
 
       - name: Set up Distribution Certificate
         run: |
           echo $DISTRIBUTION_CERTIFICATE | base64 --decode > /tmp/certificate.p12
           openssl pkcs12 -legacy -in /tmp/certificate.p12 -info -noout -passin pass:$DISTRIBUTION_CERTIFICATE_PASSWORD || true
-          security import /tmp/certificate.p12 -P "$CERT_PASSWORD" -A -t cert -f pkcs12
-          
+          security import /tmp/certificate.p12 -P "$DISTRIBUTION_CERTIFICATE_PASSWORD" -A -t cert -f pkcs12
+
           # openssl pkcs12 -legacy -info -in /tmp/certificate.p12 -noout
           # keychain add-certificates --certificate /tmp/certificate.p12 --certificate-password $DISTRIBUTION_CERTIFICATE_PASSWORD
 
