@@ -67,9 +67,10 @@ jobs:
       - name: Set up Distribution Certificate
         run: |
           echo $DISTRIBUTION_CERTIFICATE | base64 --decode > /tmp/certificate.p12
-          # openssl pkcs12 -legacy -info -in /tmp/certificate.p12 -noout
-          openssl pkcs12 -in /tmp/certificate.p12 -info -noout -passin pass:$DISTRIBUTION_CERTIFICATE_PASSWORD || true
+          openssl pkcs12 -legacy -in /tmp/certificate.p12 -info -noout -passin pass:$DISTRIBUTION_CERTIFICATE_PASSWORD || true
           security import /tmp/certificate.p12 -P "$CERT_PASSWORD" -A -t cert -f pkcs12
+          
+          # openssl pkcs12 -legacy -info -in /tmp/certificate.p12 -noout
           # keychain add-certificates --certificate /tmp/certificate.p12 --certificate-password $DISTRIBUTION_CERTIFICATE_PASSWORD
 
       - name: Set up Code signing settings on Xcode project
