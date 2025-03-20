@@ -64,15 +64,26 @@ jobs:
       - name: Verify OpenSSL Version
         run: openssl version       
 
-      - name: Set up Distribution Certificate
+      # - name: Set up Distribution Certificate
+      #   run: |
+      #     echo $DISTRIBUTION_CERTIFICATE | base64 --decode > /tmp/certificate.p12
+      #     openssl pkcs12 -legacy -in /tmp/certificate.p12 -info -noout -passin pass:$DISTRIBUTION_CERTIFICATE_PASSWORD || true
+      #     security import /tmp/certificate.p12 -P "$DISTRIBUTION_CERTIFICATE_PASSWORD" -A -t cert -f pkcs12
+
+      #     # openssl pkcs12 -legacy -info -in /tmp/certificate.p12 -noout
+      #     # keychain add-certificates --certificate /tmp/certificate.p12 --certificate-password $DISTRIBUTION_CERTIFICATE_PASSWORD
+
+      - name: Import Code Signing Certificates
+        uses: apple-actions/import-codesign-certs@v3
+        with: 
+          p12-file-base64: ${{ secrets.CERTIFICATES_P12 }}
+          p12-password: ${{ secrets.CERTIFICATES_P12_PASSWORD }}
+      
+      - name: Verify certificates
         run: |
-          echo $DISTRIBUTION_CERTIFICATE | base64 --decode > /tmp/certificate.p12
-          openssl pkcs12 -legacy -in /tmp/certificate.p12 -info -noout -passin pass:$DISTRIBUTION_CERTIFICATE_PASSWORD || true
-          security import /tmp/certificate.p12 -P "$DISTRIBUTION_CERTIFICATE_PASSWORD" -A -t cert -f pkcs12
-
-          # openssl pkcs12 -legacy -info -in /tmp/certificate.p12 -noout
-          # keychain add-certificates --certificate /tmp/certificate.p12 --certificate-password $DISTRIBUTION_CERTIFICATE_PASSWORD
-
+          security find-identity -v -p codesigning
+          xcrun security cms -D -i "$HOME/Library/MobileDevice/Provisioning Profiles/"*.mobileprovision
+        
       - name: Set up Code signing settings on Xcode project
         run: xcode-project use-profiles       
 
@@ -86,7 +97,7 @@ jobs:
           IFS=''
           buildName="${versionValue[0]}.${versionValue[1]}.${{ github.run_number }}"
           echo "Uploading build $buildName"
-          flutter build ipa --release --build-number=$buildNumber --build-name=$buildName --export-options-plist=macos/ExportOptions.plist
+          flutter build ipa --release --version --build-number=$buildNumber --build-name=$buildName --export-options-plist=macos/ExportOptions.plist
 
       - name: Upload IPA to App Store Connect
         run: |
@@ -96,7 +107,7 @@ jobs:
 
 
 
-          
+
 
       # - name: Decode and save Certificate
       #   env:
