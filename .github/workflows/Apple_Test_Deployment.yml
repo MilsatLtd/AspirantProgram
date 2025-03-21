@@ -75,7 +75,7 @@ jobs:
           buildName="${versionValue[0]}.${versionValue[1]}.${{ github.run_number }}"
           echo "Uploading build $buildName"
           flutter build ipa --release --version --build-number=$buildNumber --build-name=$buildName --export-options-plist=macos/ExportOptions.plist
-          ls -la
+          find . -type d
 
       # - name: List IPA Directory Contents
       #   run: |
