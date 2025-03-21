@@ -77,7 +77,9 @@ jobs:
           flutter build ipa --release --version --build-number=$buildNumber --build-name=$buildName --export-options-plist=macos/ExportOptions.plist
 
       - name: List IPA Directory Contents
-        run: ls -la build/ios/ipa/        
+        run: |
+            ls -la build/ios/archive/
+            # ls -la build/ios/ipa/        
 
       - name: Upload IPA to TestFlight
         run: |
@@ -86,7 +88,7 @@ jobs:
             echo "Error: .ipa file not found!"
             exit 1
           fi
-          
+
           xcrun altool --validate-app \
           --type ios \
           --file "$APP_FILE" \
