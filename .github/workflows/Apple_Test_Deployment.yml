@@ -77,10 +77,12 @@ jobs:
           flutter build ipa --release --version --build-number=$buildNumber --build-name=$buildName --export-options-plist=macos/ExportOptions.plist
           find . -type d
 
-      # - name: List IPA Directory Contents
-      #   run: |
-      #       ls -la build/ios/archive/
-      #       # ls -la build/ios/ipa/        
+      - name: List IPA Directory Contents
+        run: |
+          find . -iname "*.ipa"
+          find . -name "*.ipa" -exec ls -lh {} +
+          find . -name "*.ipa" -mmin -60
+                
 
       # - name: Upload IPA to TestFlight
       #   run: |
