@@ -50,29 +50,6 @@ jobs:
           echo ${PROVISIONING_PROFILE} | base64 --decode > "$PROFILE_PATH"
           echo "Saved provisioning profile $PROFILE_PATH"   
 
-      # - name: Install OpenSSL 3
-      #   run: |
-      #     brew update
-      #     brew install openssl@3
-
-      # - name: Set up OpenSSL Environment
-      #   run: |
-      #     echo "PATH=/opt/homebrew/opt/openssl@3/bin:$PATH" >> $GITHUB_ENV
-      #     echo "LDFLAGS=-L/opt/homebrew/opt/openssl@3/lib" >> $GITHUB_ENV
-      #     echo "CPPFLAGS=-I/opt/homebrew/opt/openssl@3/include" >> $GITHUB_ENV
-
-      # - name: Verify OpenSSL Version
-      #   run: openssl version       
-
-      - name: Set up Distribution Certificate
-        run: |
-          echo $DISTRIBUTION_CERTIFICATE | base64 --decode > /tmp/certificate.p12
-          openssl pkcs12 -legacy -in /tmp/certificate.p12 -info -noout -passin pass:$DISTRIBUTION_CERTIFICATE_PASSWORD || true
-          security import /tmp/certificate.p12 -P "$DISTRIBUTION_CERTIFICATE_PASSWORD" -A -t cert -f pkcs12
-
-          # openssl pkcs12 -legacy -info -in /tmp/certificate.p12 -noout
-          # keychain add-certificates --certificate /tmp/certificate.p12 --certificate-password $DISTRIBUTION_CERTIFICATE_PASSWORD
-
       - name: Import Code Signing Certificates
         uses: apple-actions/import-codesign-certs@v3
         with: 
@@ -99,65 +76,12 @@ jobs:
           echo "Uploading build $buildName"
           flutter build ipa --release --version --build-number=$buildNumber --build-name=$buildName --export-options-plist=macos/ExportOptions.plist
 
-      # - name: Upload IPA to App Store Connect
-      #   run: |
-      #     APP_FILE=$(find $(pwd) -name "*.ipa")
-      #     app-store-connect publish \
-      #     --path "$APP_FILE" 
-
-
-
-
-
-      # - name: Decode and save Certificate
-      #   env:
-      #     CERTIFICATE_P12: ${{ secrets.APPLE_CERTIFICATE_P12 }}
-      #   run: |
-      #     echo "$CERTIFICATE_P12" | base64 --decode > ios_distribution.p12
-      #     echo "IOS_CERTIFICATE_PATH=$(pwd)/ios_distribution.p12" >> $GITHUB_ENV
-
-      # - name: Decode and save Provisioning Profile
-      #   env:
-      #     PROVISIONING_PROFILE: ${{ secrets.APPLE_PROVISIONING_PROFILE }}
-      #   run: |
-      #     echo "$PROVISIONING_PROFILE" | base64 --decode > provisioning_profile.mobileprovision
-      #     echo "IOS_PROVISIONING_PROFILE_PATH=$(pwd)/provisioning_profile.mobileprovision" >> $GITHUB_ENV
-
-      # - name: Install Certificate
-      #   run: |
-      #     security create-keychain -p "" build.keychain
-      #     security import $IOS_CERTIFICATE_PATH -k build.keychain -P ${{ secrets.APPLE_CERTIFICATE_PASSWORD }} -T /usr/bin/codesign
-      #     security default-keychain -s build.keychain
-      #     security unlock-keychain -p "" build.keychain
-      #     security set-key-partition-list -S apple-tool:,apple: -s -k "" build.keychain
-      #     security find-identity -v -p codesigning
-
-      # - name: Install Provisioning Profile
-      #   run: |
-      #     mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
-      #     cp $IOS_PROVISIONING_PROFILE_PATH ~/Library/MobileDevice/Provisioning\ Profiles/
-
-      # - name: Update Xcode Project
-      #   working-directory: src/mobile/ios
-      #   run: |
-      #     pod deintegrate
-      #     pod install
-      #     xcodebuild -project Runner.xcodeproj clean
-
-      # - name: Build iOS app
-      #   run: flutter build ipa --release --export-options-plist=ExportOptions.plist
-
-      # - name: Upload to App Store Connect via Fastlane
-      #   env:
-      #     APPLE_ID: ${{ secrets.APPLE_ID }}
-      #     APPLE_APP_SPECIFIC_PASSWORD: ${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}
-      #     BUNDLE_ID: ${{ secrets.APPLE_BUNDLE_ID }}
-      #   run: |
-      #     fastlane deliver \
-      #       --ipa "build/ios/ipa/*.ipa" \
-      #       --username "$APPLE_ID" \
-      #       --app_identifier "$BUNDLE_ID" \
-      #       --team_id "${{ secrets.APPLE_TEAM_ID }}" \
-      #       --force \
-      #       --skip_screenshots \
-      #       --skip_metadata
+      - name: Upload IPA to TestFlight
+        run: |
+          APP_FILE=$(find $(pwd) -name "*.ipa")
+          xcrun altool --upload-app \
+            --type ios \
+            -f "$APP_FILE" \
+            --apiKey ${{ secrets.APP_STORE_CONNECT_PRIVATE_KEY }} \
+            --apiIssuer ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
+        
