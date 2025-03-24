@@ -76,10 +76,9 @@ jobs:
           echo "Uploading build $buildName"
           flutter build ipa --release --version --build-number=$buildNumber --build-name=$buildName --export-options-plist=ios/ExportOptions.plist --verbose
 
-
       - name: Upload IPA to TestFlight
         run: |
-          APP_FILE=$(find $(pwd)/build/ios/ipa -name "*.ipa")
+          APP_FILE=$(find $(pwd)/ios/build/ios/ipa -name "*.ipa")
           xcrun altool --upload-app \
             --type ios \
             --file "$APP_FILE" \
