@@ -79,7 +79,7 @@ jobs:
 
       - name: Upload IPA to TestFlight
         run: |
-          # APP_FILE=$(find $(pwd)/build/ios/ipa -name "*.ipa")
+          APP_FILE=$(find $(pwd)/build/ios/ipa -name "*.ipa")
           # if [ -z "$APP_FILE" ]; then
           #   echo "Error: .ipa file not found!"
           #   exit 1
