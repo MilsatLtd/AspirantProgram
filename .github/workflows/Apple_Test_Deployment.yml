@@ -76,9 +76,17 @@ jobs:
           echo "Uploading build $buildName"
           flutter build ipa --release --version --build-number=$buildNumber --build-name=$buildName --export-options-plist=ios/ExportOptions.plist --verbose
 
+      - name: Install private API key P8
+        env:
+          PRIVATE_API_KEY_BASE64: ${{ secrets.APP_STORE_CONNECT_PRIVATE_KEY }}
+          API_KEY: ${{ secrets.APP_STORE_CONNECT_KEY_IDENTIFIER }}
+        run: | 
+          mkdir -p ~/private_keys
+          echo -n "$PRIVATE_API_KEY_BASE64" | base64 --decode --output ~/private_keys/AuthKey_$API_KEY.p8
+        
       - name: Upload IPA to TestFlight
         env:
           APP_FILE: /Users/runner/work/AspirantProgram/AspirantProgram/src/mobile/ios/build/ios/ipa/*.ipa
         run: |
-          xcrun altool --upload-app --type ios --file "$APP_FILE" --apiKey ${{ secrets.APP_STORE_CONNECT_PRIVATE_KEY }} --apiIssuer ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
+          xcrun altool --upload-app --type ios --file "$APP_FILE" --apiKey ${{ secrets.APP_STORE_CONNECT_KEY_IDENTIFIER }} --apiIssuer ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
         
