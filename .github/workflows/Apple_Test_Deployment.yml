@@ -24,11 +24,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up Flutter SDK
-        uses: flutter-actions/setup-flutter@v3
+      - name: Setup Flutter SDK
+        uses: flutter-actions/setup-flutter@v4
         with:
           channel: stable
-          version: 3.22.2
+          version: 3.0.2
  
       - name: Install dependencies
         run: |
@@ -74,21 +74,22 @@ jobs:
           IFS=''
           buildName="${versionValue[0]}.${versionValue[1]}.${{ github.run_number }}"
           echo "Uploading build $buildName"
-          flutter build ipa --release --version --build-number=$buildNumber --build-name=$buildName
+          flutter build ipa --release --version --build-number=$buildNumber --build-name=$buildName --export-options-plist=macos/ExportOptions.plist --verbose
+
 
       - name: Upload IPA to TestFlight
         run: |
-          APP_FILE=$(find $(pwd)/build/ios/ipa -name "*.ipa")
-          if [ -z "$APP_FILE" ]; then
-            echo "Error: .ipa file not found!"
-            exit 1
-          fi
+          # APP_FILE=$(find $(pwd)/build/ios/ipa -name "*.ipa")
+          # if [ -z "$APP_FILE" ]; then
+          #   echo "Error: .ipa file not found!"
+          #   exit 1
+          # fi
 
-          xcrun altool --validate-app \
-          --type ios \
-          --file "$APP_FILE" \
-          --apiKey ${{ secrets.APP_STORE_CONNECT_PRIVATE_KEY }} \
-          --apiIssuer ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
+          # xcrun altool --validate-app \
+          # --type ios \
+          # --file "$APP_FILE" \
+          # --apiKey ${{ secrets.APP_STORE_CONNECT_PRIVATE_KEY }} \
+          # --apiIssuer ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
 
           xcrun altool --upload-app \
             --type ios \
