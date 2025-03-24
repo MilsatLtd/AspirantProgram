@@ -74,7 +74,7 @@ jobs:
           IFS=''
           buildName="${versionValue[0]}.${versionValue[1]}.${{ github.run_number }}"
           echo "Uploading build $buildName"
-          flutter build ipa --release --version --build-number=$buildNumber --build-name=$buildName --export-options-plist=macos/ExportOptions.plist
+          flutter build ipa --release --version --build-number=$buildNumber --build-name=$buildName
 
       - name: Upload IPA to TestFlight
         run: |
