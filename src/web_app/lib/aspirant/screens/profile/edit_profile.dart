@@ -137,7 +137,7 @@ class _EditProfileState extends ConsumerState<EditProfile> {
                                 color: AppTheme.kAppWhiteScheme,
                               ),
                               child: Center(
-                                child: GestureDetector(
+                                child: InkWell(
                                   onTap: () async {
                                     DecodedTokenResponse? decodedToken =
                                         await SharedPreferencesUtil.getModel<

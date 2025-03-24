@@ -26,9 +26,9 @@ class _BlockerPageConsumerState extends ConsumerState<BlockerPage> {
           backgroundColor: Colors.white,
           automaticallyImplyLeading: false,
           elevation: 0.5,
-          leading: GestureDetector(
+          leading: InkWell(
             onTap: () => context.canPop()
-                ? context.canPop()
+                ? context.pop()
                 : context.pushReplacement(HomeScreen.route),
             child: const Icon(
               Icons.arrow_back,

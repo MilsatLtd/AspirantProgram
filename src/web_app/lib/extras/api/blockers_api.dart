@@ -46,6 +46,7 @@ class APIService {
     try {
       final token =
           await SharedPreferencesUtil.getString(SharedPrefKeys.accessToken);
+
       final headers = {
         'accept': 'application/json',
         'Authorization': 'Bearer $token',
@@ -56,10 +57,12 @@ class APIService {
         options: Options(headers: headers),
         data: data,
       );
+
       return response.data;
     } on DioException catch (e) {
       // Handle Dio errors
       final errorMessage = _parseDioException(e);
+
       return {'error': errorMessage};
     } catch (error) {
       // Handle generic errors
@@ -190,6 +193,7 @@ class APIService {
     try {
       String? token =
           await SharedPreferencesUtil.getString(SharedPrefKeys.accessToken);
+
       final headers = {
         'accept': 'application/json',
         'Authorization': 'Bearer $token',
@@ -200,12 +204,10 @@ class APIService {
         options: Options(headers: headers),
       );
       if (kDebugMode) {
-        print(response.data);
+        print("Raised Blockers ${response.data}");
       }
       cred['blockers'] = response.data;
-      if (kDebugMode) {
-        print(response.data);
-      }
+
       return response;
     } on DioException catch (e) {
       if (e.response != null) {
@@ -247,19 +249,23 @@ class APIService {
 
   Future<Response> deleteBlocker(String blockerId) async {
     final url = '${Env.apiUrl}/api/blockers/$blockerId';
+
     try {
       String? token =
           await SharedPreferencesUtil.getString(SharedPrefKeys.accessToken);
+
       final headers = {
         'accept': 'application/json',
         'Authorization': 'Bearer $token',
         'Content-Type': 'application/json',
       };
+
       final response = await dio.delete(
         url,
         options: Options(headers: headers),
       );
-      return response.data;
+
+      return response;
     } on DioException catch (e) {
       throw ('${e.response}');
     } catch (e) {
@@ -281,6 +287,7 @@ class APIService {
         url,
         options: Options(headers: headers),
       );
+
       return response;
     } on DioException catch (e) {
       if (e.response != null) {

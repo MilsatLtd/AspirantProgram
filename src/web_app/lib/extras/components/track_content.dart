@@ -113,7 +113,7 @@ class _TrackContentState extends State<TrackContent> {
                   ),
                 ],
               ),
-              GestureDetector(
+              InkWell(
                 onTap: widget.onTap,
                 child: Text(
                   widget.text,

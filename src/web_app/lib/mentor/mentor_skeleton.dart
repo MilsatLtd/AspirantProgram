@@ -115,7 +115,7 @@ class _MentorPageSkeletonState extends State<MentorPageSkeleton> {
                       : const Color(0xFF504D51),
                 ),
               ),
-              GestureDetector(
+              InkWell(
                 onTap: () {
                   setState(() {
                     firstTapped = false;

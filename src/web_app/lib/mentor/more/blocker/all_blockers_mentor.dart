@@ -34,8 +34,9 @@ class _AllMentorBlockersState extends ConsumerState<AllMentorBlockers> {
             backgroundColor: Colors.white,
             automaticallyImplyLeading: false,
             elevation: 0.5,
-            leading: GestureDetector(
-              onTap: () => context.go(MentorPageSkeleton.route, extra: 0),
+            leading: InkWell(
+              onTap: () => context
+                  .go(MentorPageSkeleton.route, extra: {"currentPage": 0}),
               child: const Icon(
                 Icons.arrow_back,
                 color: Colors.black,

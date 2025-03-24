@@ -25,7 +25,7 @@ class ReportPage2 extends StatelessWidget {
         centerTitle: true,
         backgroundColor: AppTheme.kAppWhiteScheme,
         elevation: 0.5,
-        leading: GestureDetector(
+        leading: InkWell(
           onTap: () => context.canPop()
               ? context.pop()
               : context.pushReplacement(HomeScreen.route),

@@ -52,7 +52,7 @@ class _PendingState extends ConsumerState<Pending> {
 
                 final duration = now.difference(p);
                 final timeAgo = duration.inDays;
-                return GestureDetector(
+                return InkWell(
                   onTap: () async {
                     String time = pendingList[index]['created_at'];
                     DateTime p = DateTime.parse(time);
@@ -67,6 +67,7 @@ class _PendingState extends ConsumerState<Pending> {
                       Navigator.push(context,
                           MaterialPageRoute(builder: (context) {
                         return ReplyBlocker(
+                          mentorName: mentorDetails.name ?? "Mentor",
                           description: '${pendingList[index]['description']}',
                           title: '${pendingList[index]['title']}',
                           userName: '${pendingList[index]['user_name']}',
@@ -104,7 +105,7 @@ class _PendingState extends ConsumerState<Pending> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        GestureDetector(
+                        InkWell(
                           onTap: () {},
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
