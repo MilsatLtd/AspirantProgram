@@ -77,11 +77,8 @@ jobs:
           flutter build ipa --release --version --build-number=$buildNumber --build-name=$buildName --export-options-plist=ios/ExportOptions.plist --verbose
 
       - name: Upload IPA to TestFlight
+        env:
+          APP_FILE: /Users/runner/work/AspirantProgram/AspirantProgram/src/mobile/ios/build/ios/ipa/*.ipa
         run: |
-          APP_FILE=$(find $(pwd)/ios/build/ios/ipa -name "*.ipa")
-          xcrun altool --upload-app \
-            --type ios \
-            --file "$APP_FILE" \
-            --apiKey ${{ secrets.APP_STORE_CONNECT_PRIVATE_KEY }} \
-            --apiIssuer ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
+          xcrun altool --upload-app --type ios --file "$APP_FILE" --apiKey ${{ secrets.APP_STORE_CONNECT_PRIVATE_KEY }} --apiIssuer ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
         
