@@ -1,10 +1,8 @@
 name: Deploy iOS to App Store
-
 on:
   push:
     branches:
       - apple-store-deployment
-
 jobs:
   build-and-deploy:
     runs-on: macos-latest
@@ -16,9 +14,6 @@ jobs:
       APP_STORE_CONNECT_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
       APP_STORE_CONNECT_KEY_IDENTIFIER: ${{ secrets.APP_STORE_CONNECT_KEY_IDENTIFIER }}
       APP_STORE_APP_ID: ${{ secrets.APP_STORE_APP_ID }}
-      DISTRIBUTION_CERTIFICATE: ${{ secrets.DIST_CERTIFICATE_BASE64 }}
-      DISTRIBUTION_CERTIFICATE_PASSWORD: ${{ secrets.DIST_CERTIFICATE_PASSWORD }}
-      PROVISIONING_PROFILE: ${{ secrets.PROVISIONING_PROFILE_BASE64 }}
  
     steps:
       - name: Checkout code
@@ -36,47 +31,38 @@ jobs:
           flutter pub get
           flutter analyze --fatal-infos
 
-      - name: Install the CodeMagic CLI
-        run:  pip install codemagic-cli-tools
-
-      - name: Initialize keychain
-        run: keychain initialize
-
-      - name: Set up Provisioning Profile
-        run: |
-          PROFILES_HOME="$HOME/Library/MobileDevice/Provisioning Profiles"
-          mkdir -p "$PROFILES_HOME"
-          PROFILE_PATH="$(mktemp "$PROFILES_HOME"/$(uuidgen).mobileprovision)"
-          echo ${PROVISIONING_PROFILE} | base64 --decode > "$PROFILE_PATH"
-          echo "Saved provisioning profile $PROFILE_PATH"   
-
       - name: Import Code Signing Certificates
         uses: apple-actions/import-codesign-certs@v3
         with: 
           p12-file-base64: ${{ secrets.CERTIFICATES_P12 }}
           p12-password: ${{ secrets.CERTIFICATES_P12_PASSWORD }}
       
-      - name: Verify certificates
+      - name: Set up Provisioning Profile
+        env:
+          PROVISIONING_PROFILE: ${{ secrets.PROVISIONING_PROFILE_BASE64 }}
         run: |
-          security find-identity -v -p codesigning
-          xcrun security cms -D -i "$HOME/Library/MobileDevice/Provisioning Profiles/"*.mobileprovision
-        
-      - name: Set up Code signing settings on Xcode project
-        run: xcode-project use-profiles       
+          PROFILES_HOME="$HOME/Library/MobileDevice/Provisioning Profiles"
+          mkdir -p "$PROFILES_HOME"
+          PROFILE_PATH="$PROFILES_HOME/deployment.mobileprovision"
+          echo ${PROVISIONING_PROFILE} | base64 --decode > "$PROFILE_PATH"
+          /usr/bin/xcrun provisioning.import "$PROFILE_PATH"
+
+      - name: Prepare App Version
+        id: app-version
+        run: |
+          version=$(cat VERSION)
+          echo "build-number=$(($(echo $version | cut -d. -f1) * 1000000 + $(echo $version | cut -d. -f2) * 10000 + ${{ github.run_number }}))" >> $GITHUB_OUTPUT
+          echo "build-name=$version.${{ github.run_number }}" >> $GITHUB_OUTPUT
 
       - name: Build IPA for Distribution
         run: |
-          file='VERSION'
-          fileData=`cat $file`
-          IFS='.'
-          read -a versionValue <<< "$fileData"
-          buildNumber=$(( ${versionValue[0]} * 1000000 + ${versionValue[1]} * 10000 + ${{ github.run_number }} ))
-          IFS=''
-          buildName="${versionValue[0]}.${versionValue[1]}.${{ github.run_number }}"
-          echo "Uploading build $buildName"
-          flutter build ipa --release --version --build-number=$buildNumber --build-name=$buildName --export-options-plist=ios/ExportOptions.plist --verbose
+          flutter build ipa \
+            --release \
+            --build-number=${{ steps.app-version.outputs.build-number }} \
+            --build-name=${{ steps.app-version.outputs.build-name }} \
+            --export-options-plist=ios/ExportOptions.plist
 
-      - name: Install private API key P8
+      - name: Prepare App Store Connect API Key
         env:
           PRIVATE_API_KEY_BASE64: ${{ secrets.APP_STORE_CONNECT_PRIVATE_KEY }}
           API_KEY: ${{ secrets.APP_STORE_CONNECT_KEY_IDENTIFIER }}
@@ -85,8 +71,14 @@ jobs:
           echo -n "$PRIVATE_API_KEY_BASE64" | base64 --decode --output ~/private_keys/AuthKey_$API_KEY.p8
         
       - name: Upload IPA to TestFlight
-        env:
-          APP_FILE: $(find $(pwd)/build/ios/ipa -name "*.ipa")
         run: |
-          xcrun altool --upload-app --type ios --file "$APP_FILE" --apiKey ${{ secrets.APP_STORE_CONNECT_KEY_IDENTIFIER }} --apiIssuer ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
-        
+          IPA_PATH=$(find build/ios/ipa -name "*.ipa" | head -n 1)
+          if [ -z "$IPA_PATH" ]; then
+            echo "Error: No IPA file found"
+            exit 1
+          fi
+          xcrun altool --upload-app \
+            --type ios \
+            --file "$IPA_PATH" \
+            --apiKey ${{ secrets.APP_STORE_CONNECT_KEY_IDENTIFIER }} \
+            --apiIssuer ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
