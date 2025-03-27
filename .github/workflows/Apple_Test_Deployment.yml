@@ -35,11 +35,12 @@ jobs:
           flutter clean
           flutter pub get
           flutter analyze --fatal-infos
+          
       - name: Install the CodeMagic CLI
         run:  pip install codemagic-cli-tools
 
-      - name: Initialize keychain
-        run: keychain initialize
+      # - name: Initialize keychain
+      #   run: keychain initialize
 
       - name: Set up Provisioning Profile
         run: |
@@ -54,29 +55,28 @@ jobs:
         with: 
           p12-file-base64: ${{ secrets.CERTIFICATES_P12 }}
           p12-password: ${{ secrets.CERTIFICATES_P12_PASSWORD }}
-      
+          keychain-password: "temppassword"
+
+      - name: Unlock Keychain
+        run: |
+          security unlock-keychain -p "temppassword" /Users/runner/Library/Keychains/signing_temp.keychain-db
+          security set-keychain-settings -t 3600 -l /Users/runner/Library/Keychains/signing_temp.keychain-db
+              
       - name: Verify certificates
         run: |
-          security find-identity -v -p codesigning
+          security find-identity -p codesigning -v
           xcrun security cms -D -i "$HOME/Library/MobileDevice/Provisioning Profiles/"*.mobileprovision
         
       - name: Set up Code signing settings on Xcode project
         run: xcode-project use-profiles       
 
-      - name: Build IPA for Distribution
+      - name: Building IPA
+        env:
+          KEYCHAIN: /Users/runner/Library/Keychains/signing_temp.keychain-db
         run: |
-          file='VERSION'
-          fileData=`cat $file`
-          IFS='.'
-          read -a versionValue <<< "$fileData"
-          buildNumber=$(( ${versionValue[0]} * 1000000 + ${versionValue[1]} * 10000 + ${{ github.run_number }} ))
-          IFS=''
-          buildName="${versionValue[0]}.${versionValue[1]}.${{ github.run_number }}"
-          echo "Uploading build $buildName"
-          flutter build ipa --release --version --build-number=$buildNumber --build-name=$buildName --export-options-plist=ios/ExportOptions.plist --verbose
-
-      # - name: Building IPA
-      #   run: flutter build ipa --release --export-options-plist=ios/ExportOptions.plist --verbose
+          security list-keychains -s $KEYCHAIN
+          security default-keychain -s $KEYCHAIN
+          flutter build ipa --release --export-options-plist=ios/ExportOptions.plist --verbose
                     
       - name: Save IPA to Artifacts
         uses: actions/upload-artifact@v4
