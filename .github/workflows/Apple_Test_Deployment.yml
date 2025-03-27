@@ -76,7 +76,7 @@ jobs:
       #     flutter build ipa --release --version --build-number=$buildNumber --build-name=$buildName --export-options-plist=ios/ExportOptions.plist --verbose
 
       - name: Building IPA
-        run: flutter build ipa --release --export-options-plist=ios/ExportOptions.plist
+        run: flutter build ipa --release --export-options-plist=ios/ExportOptions.plist --verbose
                     
       - name: Save IPA to Artifacts
         uses: actions/upload-artifact@v4
