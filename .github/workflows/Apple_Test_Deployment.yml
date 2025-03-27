@@ -70,7 +70,7 @@ jobs:
           xcrun security cms -D -i "$HOME/Library/MobileDevice/Provisioning Profiles/"*.mobileprovision
         
       - name: Set up Code signing settings on Xcode project
-        run: xcode-project use-profiles --keychain=/Users/runner/Library/Keychains/signing_temp.keychain-db     
+        run: xcode-project use-profiles
 
       - name: Building IPA
         run: |
