@@ -63,20 +63,20 @@ jobs:
       - name: Set up Code signing settings on Xcode project
         run: xcode-project use-profiles       
 
-      # - name: Build IPA for Distribution
-      #   run: |
-      #     file='VERSION'
-      #     fileData=`cat $file`
-      #     IFS='.'
-      #     read -a versionValue <<< "$fileData"
-      #     buildNumber=$(( ${versionValue[0]} * 1000000 + ${versionValue[1]} * 10000 + ${{ github.run_number }} ))
-      #     IFS=''
-      #     buildName="${versionValue[0]}.${versionValue[1]}.${{ github.run_number }}"
-      #     echo "Uploading build $buildName"
-      #     flutter build ipa --release --version --build-number=$buildNumber --build-name=$buildName --export-options-plist=ios/ExportOptions.plist --verbose
+      - name: Build IPA for Distribution
+        run: |
+          file='VERSION'
+          fileData=`cat $file`
+          IFS='.'
+          read -a versionValue <<< "$fileData"
+          buildNumber=$(( ${versionValue[0]} * 1000000 + ${versionValue[1]} * 10000 + ${{ github.run_number }} ))
+          IFS=''
+          buildName="${versionValue[0]}.${versionValue[1]}.${{ github.run_number }}"
+          echo "Uploading build $buildName"
+          flutter build ipa --release --version --build-number=$buildNumber --build-name=$buildName --export-options-plist=ios/ExportOptions.plist --verbose
 
-      - name: Building IPA
-        run: flutter build ipa --release --export-options-plist=ios/ExportOptions.plist --verbose
+      # - name: Building IPA
+      #   run: flutter build ipa --release --export-options-plist=ios/ExportOptions.plist --verbose
                     
       - name: Save IPA to Artifacts
         uses: actions/upload-artifact@v4
