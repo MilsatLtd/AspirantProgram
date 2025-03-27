@@ -47,7 +47,8 @@ jobs:
           mkdir -p "$PROFILES_HOME"
           PROFILE_PATH="$(mktemp "$PROFILES_HOME"/$(uuidgen).mobileprovision)"
           echo ${PROVISIONING_PROFILE} | base64 --decode > "$PROFILE_PATH"
-          echo "Saved provisioning profile $PROFILE_PATH"   
+          echo "Saved provisioning profile $PROFILE_PATH"  
+
       - name: Import Code Signing Certificates
         uses: apple-actions/import-codesign-certs@v3
         with: 
@@ -62,18 +63,33 @@ jobs:
       - name: Set up Code signing settings on Xcode project
         run: xcode-project use-profiles       
 
-      - name: Build IPA for Distribution
-        run: |
-          file='VERSION'
-          fileData=`cat $file`
-          IFS='.'
-          read -a versionValue <<< "$fileData"
-          buildNumber=$(( ${versionValue[0]} * 1000000 + ${versionValue[1]} * 10000 + ${{ github.run_number }} ))
-          IFS=''
-          buildName="${versionValue[0]}.${versionValue[1]}.${{ github.run_number }}"
-          echo "Uploading build $buildName"
-          flutter build ipa --release --version --build-number=$buildNumber --build-name=$buildName --export-options-plist=ios/ExportOptions.plist --verbose
-          
+      # - name: Build IPA for Distribution
+      #   run: |
+      #     file='VERSION'
+      #     fileData=`cat $file`
+      #     IFS='.'
+      #     read -a versionValue <<< "$fileData"
+      #     buildNumber=$(( ${versionValue[0]} * 1000000 + ${versionValue[1]} * 10000 + ${{ github.run_number }} ))
+      #     IFS=''
+      #     buildName="${versionValue[0]}.${versionValue[1]}.${{ github.run_number }}"
+      #     echo "Uploading build $buildName"
+      #     flutter build ipa --release --version --build-number=$buildNumber --build-name=$buildName --export-options-plist=ios/ExportOptions.plist --verbose
+
+      - name: Building IPA
+        run: flutter build ipa --release --export-options-plist=ios/ExportOptions.plist
+                    
+      - name: Save IPA to Artifacts
+        uses: actions/upload-artifact@v3
+        with:
+         name: release-ipa
+         path: build/ios/ipa/*.ipa
+
+      - name: Create Github Release
+        uses: ncipollo/release-action@v1
+        with:
+          artifacts: "build/ios/ipa/*.ipa"
+          tag: "v-test-ios"
+
       - name: Install private API key P8
         env:
           PRIVATE_API_KEY_BASE64: ${{ secrets.APP_STORE_CONNECT_PRIVATE_KEY }}
