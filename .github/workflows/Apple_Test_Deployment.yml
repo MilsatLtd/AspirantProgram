@@ -57,26 +57,24 @@ jobs:
           p12-password: ${{ secrets.CERTIFICATES_P12_PASSWORD }}
           keychain-password: "temppassword"
 
-      - name: Unlock Keychain
+      - name: Set temporary keychain as default
         run: |
+          security list-keychains -s /Users/runner/Library/Keychains/signing_temp.keychain-db
+          security default-keychain -s /Users/runner/Library/Keychains/signing_temp.keychain-db
           security unlock-keychain -p "temppassword" /Users/runner/Library/Keychains/signing_temp.keychain-db
-          security set-keychain-settings -t 3600 -l /Users/runner/Library/Keychains/signing_temp.keychain-db
-              
+          security set-keychain-settings -t 360000 -l /Users/runner/Library/Keychains/signing_temp.keychain-db
+                      
       - name: Verify certificates
         run: |
           security find-identity -p codesigning -v
           xcrun security cms -D -i "$HOME/Library/MobileDevice/Provisioning Profiles/"*.mobileprovision
         
       - name: Set up Code signing settings on Xcode project
-        run: xcode-project use-profiles       
+        run: xcode-project use-profiles --keychain=/Users/runner/Library/Keychains/signing_temp.keychain-db     
 
       - name: Building IPA
-        env:
-          KEYCHAIN: /Users/runner/Library/Keychains/signing_temp.keychain-db
         run: |
-          security list-keychains -s $KEYCHAIN
-          security default-keychain -s $KEYCHAIN
-          flutter build ipa --release --export-options-plist=ios/ExportOptions.plist --verbose
+          flutter build ipa --release --export-options-plist=/Users/runner/export_options.plist --verbose
                     
       - name: Save IPA to Artifacts
         uses: actions/upload-artifact@v4
