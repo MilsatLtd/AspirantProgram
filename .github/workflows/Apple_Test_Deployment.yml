@@ -24,81 +24,106 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up Flutter SDK
-        uses: flutter-actions/setup-flutter@v4
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
         with:
           channel: stable
-          version: 3.22.2
+          flutter-version: 3.22.2
+
+      - name: Install the CodeMagic CLI
+        run:  pip3 install codemagic-cli-tools
  
       - name: Install dependencies
         run: |
           flutter clean
           flutter pub get
           flutter analyze --fatal-infos
-          
-      - name: Install the CodeMagic CLI
-        run:  pip install codemagic-cli-tools
+
+      - name: Configure App Store Connect API
+        env:
+          APP_STORE_CONNECT_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
+          APP_STORE_CONNECT_KEY_IDENTIFIER: ${{ secrets.APP_STORE_CONNECT_KEY_IDENTIFIER }}
+          APP_STORE_CONNECT_PRIVATE_KEY: ${{ secrets.APP_STORE_CONNECT_PRIVATE_KEY }}
+        run: |
+           echo "$APP_STORE_CONNECT_PRIVATE_KEY" | base64 --decode > AuthKey_${{ secrets.APP_STORE_CONNECT_KEY_IDENTIFIER }}.p8
+
+      - name: Initialize code signing
+        run: |
+          keychain initialize
+          app-store-connect fetch-signing-files $(xcode-project detect-bundle-id) \
+            --platform IOS \
+            --type IOS_APP_STORE \
+            --certificate-key=@file:cert_key \
+            --create
+          keychain add-certificates
+          xcode-project use-profiles
+
+
+
+
+
+
 
       # - name: Initialize keychain
       #   run: keychain initialize
 
-      - name: Set up Provisioning Profile
-        run: |
-          PROFILES_HOME="$HOME/Library/MobileDevice/Provisioning Profiles"
-          mkdir -p "$PROFILES_HOME"
-          PROFILE_PATH="$(mktemp "$PROFILES_HOME"/$(uuidgen).mobileprovision)"
-          echo ${PROVISIONING_PROFILE} | base64 --decode > "$PROFILE_PATH"
-          echo "Saved provisioning profile $PROFILE_PATH"  
+      # - name: Set up Provisioning Profile
+      #   run: |
+      #     PROFILES_HOME="$HOME/Library/MobileDevice/Provisioning Profiles"
+      #     mkdir -p "$PROFILES_HOME"
+      #     PROFILE_PATH="$(mktemp "$PROFILES_HOME"/$(uuidgen).mobileprovision)"
+      #     echo ${PROVISIONING_PROFILE} | base64 --decode > "$PROFILE_PATH"
+      #     echo "Saved provisioning profile $PROFILE_PATH"  
 
-      - name: Import Code Signing Certificates
-        uses: apple-actions/import-codesign-certs@v3
-        with: 
-          p12-file-base64: ${{ secrets.CERTIFICATES_P12 }}
-          p12-password: ${{ secrets.CERTIFICATES_P12_PASSWORD }}
-          keychain-password: "temppassword"
+      # - name: Import Code Signing Certificates
+      #   uses: apple-actions/import-codesign-certs@v3
+      #   with: 
+      #     p12-file-base64: ${{ secrets.CERTIFICATES_P12 }}
+      #     p12-password: ${{ secrets.CERTIFICATES_P12_PASSWORD }}
+      #     keychain-password: "temppassword"
 
-      - name: Set temporary keychain as default
-        run: |
-          security list-keychains -s /Users/runner/Library/Keychains/signing_temp.keychain-db
-          security default-keychain -s /Users/runner/Library/Keychains/signing_temp.keychain-db
-          security unlock-keychain -p "temppassword" /Users/runner/Library/Keychains/signing_temp.keychain-db
-          security set-keychain-settings -t 360000 -l /Users/runner/Library/Keychains/signing_temp.keychain-db
+      # - name: Set temporary keychain as default
+      #   run: |
+      #     security list-keychains -s /Users/runner/Library/Keychains/signing_temp.keychain-db
+      #     security default-keychain -s /Users/runner/Library/Keychains/signing_temp.keychain-db
+      #     security unlock-keychain -p "temppassword" /Users/runner/Library/Keychains/signing_temp.keychain-db
+      #     security set-keychain-settings -t 360000 -l /Users/runner/Library/Keychains/signing_temp.keychain-db
                       
-      - name: Verify certificates
-        run: |
-          security find-identity -p codesigning -v
-          xcrun security cms -D -i "$HOME/Library/MobileDevice/Provisioning Profiles/"*.mobileprovision
+      # - name: Verify certificates
+      #   run: |
+      #     security find-identity -p codesigning -v
+      #     xcrun security cms -D -i "$HOME/Library/MobileDevice/Provisioning Profiles/"*.mobileprovision
         
-      - name: Set up Code signing settings on Xcode project
-        run: xcode-project use-profiles
+      # - name: Set up Code signing settings on Xcode project
+      #   run: xcode-project use-profiles
 
-      - name: Building IPA
-        run: |
-          flutter build ipa --release --export-options-plist=/Users/runner/export_options.plist --verbose
+      # - name: Building IPA
+      #   run: |
+      #     flutter build ipa --release --export-options-plist=/Users/runner/export_options.plist --verbose
                     
-      - name: Save IPA to Artifacts
-        uses: actions/upload-artifact@v4
-        with:
-         name: release-ipa
-         path: build/ios/ipa/*.ipa
+      # - name: Save IPA to Artifacts
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #    name: release-ipa
+      #    path: build/ios/ipa/*.ipa
 
-      - name: Create Github Release
-        uses: ncipollo/release-action@v1
-        with:
-          artifacts: "build/ios/ipa/*.ipa"
-          tag: "v-test-ios"
+      # - name: Create Github Release
+      #   uses: ncipollo/release-action@v1
+      #   with:
+      #     artifacts: "build/ios/ipa/*.ipa"
+      #     tag: "v-test-ios"
 
-      - name: Install private API key P8
-        env:
-          PRIVATE_API_KEY_BASE64: ${{ secrets.APP_STORE_CONNECT_PRIVATE_KEY }}
-          API_KEY: ${{ secrets.APP_STORE_CONNECT_KEY_IDENTIFIER }}
-        run: | 
-          mkdir -p ~/private_keys
-          echo -n "$PRIVATE_API_KEY_BASE64" | base64 --decode --output ~/private_keys/AuthKey_$API_KEY.p8
+      # - name: Install private API key P8
+      #   env:
+      #     PRIVATE_API_KEY_BASE64: ${{ secrets.APP_STORE_CONNECT_PRIVATE_KEY }}
+      #     API_KEY: ${{ secrets.APP_STORE_CONNECT_KEY_IDENTIFIER }}
+      #   run: | 
+      #     mkdir -p ~/private_keys
+      #     echo -n "$PRIVATE_API_KEY_BASE64" | base64 --decode --output ~/private_keys/AuthKey_$API_KEY.p8
         
-      - name: Upload IPA to TestFlight
-        env:
-          APP_FILE: $(find $(pwd)/build/ios/ipa -name "*.ipa")
-        run: |
-          xcrun altool --upload-app --type ios --file "$APP_FILE" --apiKey ${{ secrets.APP_STORE_CONNECT_KEY_IDENTIFIER }} --apiIssuer ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
+      # - name: Upload IPA to TestFlight
+      #   env:
+      #     APP_FILE: $(find $(pwd)/build/ios/ipa -name "*.ipa")
+      #   run: |
+      #     xcrun altool --upload-app --type ios --file "$APP_FILE" --apiKey ${{ secrets.APP_STORE_CONNECT_KEY_IDENTIFIER }} --apiIssuer ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
         
