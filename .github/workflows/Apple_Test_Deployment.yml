@@ -31,7 +31,7 @@ jobs:
           flutter-version: 3.22.2
 
       - name: Install the CodeMagic CLI
-        run:  pip3 install codemagic-cli-tools
+        run:  pip install codemagic-cli-tools
  
       - name: Install dependencies
         run: |
