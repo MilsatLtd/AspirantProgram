@@ -17,9 +17,10 @@ interface formSectionType {
 }
 
 const FormSectionA = (props: formSectionType) => {
-  const [selectedCountry, setSelectedCountry] = useState<string | undefined>("");
+  const [selectedCountry, setSelectedCountry] = useState<string | undefined>(""); 
   const [selectedState, setSelectedState] = useState<string>("");
   const [availableLGAs, setAvailableLGAs] = useState<{label: string, value: string}[]>([]);
+  const [showOtherSourceInput, setShowOtherSourceInput] = useState<boolean>(false);
 
   // setting form SectionA validation with Yup
   const validationSchema = Yup.object().shape({
@@ -43,6 +44,12 @@ const FormSectionA = (props: formSectionType) => {
       otherwise: (schema) => schema.notRequired(),
     }),
     skills: Yup.string().required("Skills are required"),
+    referral_source: Yup.string().required("How you heard about us is required"),
+    other_source: Yup.string().when("referral_source", {
+      is: "Others",
+      then: (schema) => schema.required("Please specify how you heard about us"),
+      otherwise: (schema) => schema.notRequired(),
+    }),
     terms: Yup.boolean().oneOf([true], "You must accept the Terms and Conditions"),
     accurate: Yup.boolean().oneOf([true], "You must accept the Terms and Conditions")
   });
@@ -66,17 +73,18 @@ const FormSectionA = (props: formSectionType) => {
   const watchCountry = watch("country");
   const watchState = watch("state");
   const watchRole = watch("role") as number | undefined;
+  const watchReferralSource = watch("referral_source");
 
   // Update the selected country state when the country field changes
-useEffect(() => {
-  setSelectedCountry(watchCountry || "");
-  
-  // Reset state and LGA values when country changes
-  if (watchCountry !== "Nigeria") {
-    setValue("state", "");
-    setValue("lga", "");
-  }
-}, [watchCountry, setValue]);
+  useEffect(() => {
+    setSelectedCountry(watchCountry || "");
+    
+    // Reset state and LGA values when country changes
+    if (watchCountry !== "Nigeria") {
+      setValue("state", "");
+      setValue("lga", "");
+    }
+  }, [watchCountry, setValue]);
 
   // Update available LGAs when state changes
   useEffect(() => {
@@ -96,6 +104,16 @@ useEffect(() => {
       setValue("lga", "");
     }
   }, [watchState, setValue]);
+
+  // Handle the "Others" option for referral source
+  useEffect(() => {
+    setShowOtherSourceInput(watchReferralSource === "Others");
+    
+    // Reset other_source when referral_source changes away from "Others"
+    if (watchReferralSource !== "Others") {
+      setValue("other_source", "");
+    }
+  }, [watchReferralSource, setValue]);
 
   // Sends data to main form component and changes form section
   const onSubmit = (data: basicInfo) => {
@@ -318,6 +336,40 @@ useEffect(() => {
           />
         )}
       </div>
+      {/* New "How did you hear about us?" field */}
+      <div className="grid lg:grid-cols-12 grid-cols-1 gap-24 w-full">
+        <DropDownField
+          label="How did you hear about us?"
+          textValue={undefined}
+          placeholder="Select an option"
+          options={[
+            { label: "Milsat Website", value: "Milsat Website" },
+            { label: "Social Media Post", value: "Social Media Post" },
+            { label: "Friends", value: "Friends" },
+            { label: "3MTT Program", value: "3MTT Program" },
+            { label: "Others", value: "Others" },
+          ]}
+          dropDownStyle=""
+          onTextChange={(e) => handleSetValue(e, "referral_source")}
+          inputStyle=""
+          containerStyle="lg:col-span-12 col-span-1"
+          error={errors.referral_source?.message}
+        />
+      </div>
+      {/* Additional input field for "Others" option */}
+      {showOtherSourceInput && (
+        <div className="grid lg:grid-cols-12 grid-cols-1 gap-24 w-full">
+          <TextField
+            label="Please specify how you heard about us"
+            onTextChange={(e) => handleSetValue(e.target.value, "other_source")}
+            inputStyle=""
+            placeholder="Enter source"
+            containerStyle="lg:col-span-12 col-span-1"
+            type="text"
+            error={errors.other_source?.message}
+          />
+        </div>
+      )}
       <TermsAndConditions
         onFirstTermChange={(e) => handleSetValue(e.target.checked, "accurate")}
         valueForAccurate={watch("accurate")}

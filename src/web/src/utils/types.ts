@@ -13,6 +13,8 @@ export interface basicInfo {
     purpose: string | undefined;
     accurate: boolean | undefined;
     terms: boolean | undefined;
+    referral_source: string| undefined;
+    other_source?: string| undefined;
   }
 
 export interface reasonInfo {
