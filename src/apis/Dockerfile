@@ -18,6 +18,8 @@ EXPOSE 8000
 
 RUN chmod +x /app/entrypoint.sh
 
+ENV DJANGO_SETTINGS_MODULE=map.settings
+
 ENTRYPOINT ["/app/entrypoint.sh"]
 
 CMD ["gunicorn", "map.wsgi:application", "--bind", "0.0.0.0:8000"]
