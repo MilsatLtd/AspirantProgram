@@ -1,9 +1,6 @@
 #!/bin/bash
 set -e  # Exit immediately if a command exits with a non-zero status.
 
-# Setup environment
-export DJANGO_SETTINGS_MODULE=map.settings
-
 # Run database migrations
 echo "Running Django migrations..."
 python manage.py migrate --noinput
