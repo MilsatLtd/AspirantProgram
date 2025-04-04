@@ -8,7 +8,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 import { ChangeEvent } from "react";
 import MultiTextField from "@/components/atom/Customfields/MultiTextField";
-import { africanCountries } from "@/utils/data";
+import { africanCountries, nigerianStatesAndLGAs } from "@/utils/data";
 
 interface formSectionType {
   changeSection: () => void;
@@ -17,6 +17,10 @@ interface formSectionType {
 }
 
 const FormSectionA = (props: formSectionType) => {
+  const [selectedCountry, setSelectedCountry] = useState<string | undefined>("");
+  const [selectedState, setSelectedState] = useState<string>("");
+  const [availableLGAs, setAvailableLGAs] = useState<{label: string, value: string}[]>([]);
+
   // setting form SectionA validation with Yup
   const validationSchema = Yup.object().shape({
     first_name: Yup.string().required("First Name is required"),
@@ -26,8 +30,18 @@ const FormSectionA = (props: formSectionType) => {
     gender: Yup.number().required("Gender is required"),
     phone_number: Yup.string().required("Phone Number is required"),
     role: Yup.number().required("Role is required"),
-    purpose:Yup.string().required("Purpose is required"),
+    purpose: Yup.string().required("Purpose is required"),
     country: Yup.string().required("Country is required"),
+    state: Yup.string().when("country", {
+      is: "Nigeria",
+      then: (schema) => schema.required("State is required"),
+      otherwise: (schema) => schema.notRequired(),
+    }),
+    lga: Yup.string().when("country", {
+      is: "Nigeria",
+      then: (schema) => schema.required("LGA is required"),
+      otherwise: (schema) => schema.notRequired(),
+    }),
     skills: Yup.string().required("Skills are required"),
     terms: Yup.boolean().oneOf([true], "You must accept the Terms and Conditions"),
     accurate: Yup.boolean().oneOf([true], "You must accept the Terms and Conditions")
@@ -46,28 +60,65 @@ const FormSectionA = (props: formSectionType) => {
       last_name: '',
       terms: false,
       accurate: false,
-  }});
+    }
+  });
 
-  // Sends data to main form component and chnages form section
+  const watchCountry = watch("country");
+  const watchState = watch("state");
+  const watchRole = watch("role") as number | undefined;
+
+  // Update the selected country state when the country field changes
+useEffect(() => {
+  setSelectedCountry(watchCountry || "");
+  
+  // Reset state and LGA values when country changes
+  if (watchCountry !== "Nigeria") {
+    setValue("state", "");
+    setValue("lga", "");
+  }
+}, [watchCountry, setValue]);
+
+  // Update available LGAs when state changes
+  useEffect(() => {
+    if (watchState) {
+      const stateData = nigerianStatesAndLGAs.find(state => state.name === watchState);
+      if (stateData) {
+        const lgaOptions = stateData.lgas.map(lga => ({
+          label: lga,
+          value: lga
+        }));
+        setAvailableLGAs(lgaOptions);
+      } else {
+        setAvailableLGAs([]);
+      }
+      
+      // Reset LGA when state changes
+      setValue("lga", "");
+    }
+  }, [watchState, setValue]);
+
+  // Sends data to main form component and changes form section
   const onSubmit = (data: basicInfo) => {
     if (data.purpose) {
-     const formatedData = removeTerms(data);
+      const formatedData = removeTerms(data);
       props.passData(formatedData);
-      props.passEmail(data?.email)
+      props.passEmail(data?.email);
     } else {
       data.purpose = "";
-     const formatedData = removeTerms(data);
-     props.passData(formatedData);
-     props.passEmail(data?.email)
+      const formatedData = removeTerms(data);
+      props.passData(formatedData);
+      props.passEmail(data?.email);
     }
     props.changeSection();
   };
 
   const removeTerms = (data: basicInfo) => {
-      delete data["terms"];
-      delete data["accurate"];
-      return data;
-  }
+    // Create a copy of data to avoid mutating the original
+    const formattedData = { ...data };
+    delete formattedData["terms"];
+    delete formattedData["accurate"];
+    return formattedData;
+  };
 
   const handleSetValue = (
     value:
@@ -84,7 +135,11 @@ const FormSectionA = (props: formSectionType) => {
     if (e.key === "Enter") e.preventDefault();
   };
 
-  const watchRole = watch("role") as number | undefined;
+  // Prepare Nigerian states dropdown options
+  const nigerianStatesOptions = nigerianStatesAndLGAs.map(state => ({
+    label: state.name,
+    value: state.name
+  }));
 
   return (
     <form
@@ -191,6 +246,37 @@ const FormSectionA = (props: formSectionType) => {
           containerStyle="lg:col-span-4 col-span-1"
           error={errors.country?.message}
         />
+      </div>
+      
+      {/* Nigeria-specific fields - State and LGA */}
+      {selectedCountry === "Nigeria" && (
+        <div className="grid lg:grid-cols-12 grid-cols-1 gap-24 w-full">
+          <DropDownField
+            label="State"
+            textValue={undefined}
+            placeholder="Select State"
+            options={nigerianStatesOptions}
+            dropDownStyle="h-[20rem] overflow-auto"
+            onTextChange={(e) => handleSetValue(e, "state")}
+            inputStyle=""
+            containerStyle="lg:col-span-6 col-span-1"
+            error={errors.state?.message}
+          />
+          <DropDownField
+            label="LGA"
+            textValue={undefined}
+            placeholder="Select LGA"
+            options={availableLGAs}
+            dropDownStyle="h-[20rem] overflow-auto"
+            onTextChange={(e) => handleSetValue(e, "lga")}
+            inputStyle=""
+            containerStyle="lg:col-span-6 col-span-1"
+            error={errors.lga?.message}
+          />
+        </div>
+      )}
+      
+      <div className="grid lg:grid-cols-12 grid-cols-1 gap-24 w-full">
         <DropDownField
           label="Role"
           textValue={undefined}
@@ -233,10 +319,9 @@ const FormSectionA = (props: formSectionType) => {
         )}
       </div>
       <TermsAndConditions
-        onFirstTermChange={(e) =>handleSetValue(e.target.checked, "accurate")}
+        onFirstTermChange={(e) => handleSetValue(e.target.checked, "accurate")}
         valueForAccurate={watch("accurate")}
         valueForTerms={watch("terms")}
-
         onSecondTermChange={(e) => handleSetValue(e.target.checked, "terms")}
         errorData={errors.accurate?.message}
         errorTerms={errors.terms?.message}

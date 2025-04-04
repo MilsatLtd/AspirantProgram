@@ -7,6 +7,8 @@ export interface basicInfo {
     phone_number: string | undefined;
     role: number | undefined;
     country: string | undefined;
+    state?: string | undefined; 
+    lga?: string | undefined; 
     skills: string | undefined;
     purpose: string | undefined;
     accurate: boolean | undefined;
