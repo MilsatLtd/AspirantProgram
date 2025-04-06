@@ -50,6 +50,9 @@ class User(AbstractUser):
     last_name = models.CharField(max_length=50)
     gender = models.IntegerField(choices=GENDER_CHOICES)
     country = models.CharField(max_length=30)
+    state = models.CharField(max_length=50, null=True, blank=True, default=None)
+    lga = models.CharField(max_length=50, null=True, blank=True, default=None)
+    referral_source = models.CharField(max_length=100, null=True, blank=True, default=None)
     phone_number = models.CharField(max_length=11)
     bio = models.TextField(blank=True, max_length=370, default='')
     profile_picture = models.ImageField(
