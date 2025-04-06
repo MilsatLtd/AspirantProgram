@@ -15,7 +15,7 @@ class FullUserSerializer(serializers.ModelSerializer):
         model = User
         fields = [
             'user_id', 'first_name', 'last_name', 'email', 'gender', 'country',
-            'phone_number', 'bio', 'profile_picture'
+            'state', 'lga', 'referral_source', 'phone_number', 'bio', 'profile_picture'
         ]
 
 
@@ -23,7 +23,7 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['user_id', 'first_name', 'last_name',
-                  'email', 'gender', 'country', 'phone_number', 'bio']
+                  'email', 'gender', 'country', 'state', 'lga', 'referral_source', 'phone_number', 'bio']
 
 
 class CourseAdminSerializer(serializers.ModelSerializer):
@@ -405,6 +405,9 @@ class CreateApplicationSerializer(serializers.Serializer):
     gender = serializers.ChoiceField(
         [(gender.value, gender.name) for gender in GENDER])
     country = serializers.CharField(max_length=30)
+    state = serializers.CharField(max_length=50, required=False, allow_null=True)
+    lga = serializers.CharField(max_length=50, required=False, allow_null=True)
+    referral_source = serializers.CharField(max_length=100, required=False, allow_null=True)
     phone_number = serializers.CharField(max_length=11)
     reason = serializers.CharField(max_length=1500)
     referral = serializers.CharField(max_length=100)
@@ -425,6 +428,9 @@ class CreateApplicationSerializer(serializers.Serializer):
         email = validated_data.pop('email')
         gender = validated_data.pop('gender')
         country = validated_data.pop('country')
+        state = validated_data.pop('state', None)
+        lga = validated_data.pop('lga', None)
+        referral_source = validated_data.pop('referral_source', None)
         phone_number = validated_data.pop('phone_number')
 
         User = get_user_model()
@@ -432,7 +438,8 @@ class CreateApplicationSerializer(serializers.Serializer):
             user = User.objects.get(email=email)
         except User.DoesNotExist:
             user = User.objects.create_user(first_name=first_name, last_name=last_name, email=email,
-                                            gender=gender, country=country, phone_number=phone_number)
+                                            gender=gender, country=country, state=state, lga=lga, 
+                                            referral_source=referral_source, phone_number=phone_number)
         application = Applications.objects.create(
             user=user, cohort=track.cohort, track=track, status=APPLICATION_STATUS.PENDING.value, **validated_data)
         return application
