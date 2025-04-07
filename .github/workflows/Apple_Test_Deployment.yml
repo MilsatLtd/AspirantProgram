@@ -10,7 +10,7 @@ jobs:
     runs-on: macos-latest
     defaults:
       run:
-        working-directory: src/mobile
+        working-directory: src/mobile/ios
     env:
       APP_STORE_CONNECT_PRIVATE_KEY: ${{ secrets.APP_STORE_CONNECT_PRIVATE_KEY }}
       APP_STORE_CONNECT_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
@@ -98,7 +98,7 @@ jobs:
         
       - name: Find IPA files
         run: |
-          echo "APP_FILE=$(find $(pwd)/build/ios/ipa -name "*.ipa")" >> $GITHUB_ENV
+          echo "APP_FILE=$(find $(pwd) -name "*.ipa")" >> $GITHUB_ENV
 
       - name: Upload IPAs to TestFlight
         run: |
