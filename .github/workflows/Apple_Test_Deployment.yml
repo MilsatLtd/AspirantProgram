@@ -86,8 +86,9 @@ jobs:
 
       - name: Build Flutter app
         run: |
+          ls -la
           flutter build ipa --help
-          flutter build ipa --export-options-plist=ios/ExportOptions.plist --verbose
+          flutter build ipa --export-options-plist=./ExportOptions.plist --verbose
 
       - name: Install private API key P8
         env:
