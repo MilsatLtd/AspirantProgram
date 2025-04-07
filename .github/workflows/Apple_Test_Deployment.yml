@@ -103,7 +103,7 @@ jobs:
       - name: View IPA files
         run: |
           ls -la
-          cd ./build
+          cd ../build
           ls -la
           cd ./ios
           ls -la
