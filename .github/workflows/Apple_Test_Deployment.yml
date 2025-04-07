@@ -62,6 +62,7 @@ jobs:
         with: 
           p12-file-base64: ${{ secrets.DIST_CERTIFICATE_BASE64 }}
           p12-password: ${{ secrets.DIST_CERTIFICATE_PASSWORD }}
+          keychain-password: "temppassword"
       
       - name: Verify certificates
         run: |
@@ -69,7 +70,14 @@ jobs:
           xcrun security cms -D -i "$HOME/Library/MobileDevice/Provisioning Profiles/"*.mobileprovision
         
       # - name: Set up Code signing settings on Xcode project
-      #   run: xcode-project use-profiles       
+      #   run: xcode-project use-profiles  
+
+      - name: Set temporary keychain as default
+        run: |
+          security list-keychains -s /Users/runner/Library/Keychains/signing_temp.keychain-db
+          security default-keychain -s /Users/runner/Library/Keychains/signing_temp.keychain-db
+          security unlock-keychain -p "temppassword" /Users/runner/Library/Keychains/signing_temp.keychain-db
+          security set-keychain-settings -t 360000 -l /Users/runner/Library/Keychains/signing_temp.keychain-db
 
       - name: Build IPA for Distribution
         run: |
@@ -88,7 +96,7 @@ jobs:
         run: |
           ls -la
           flutter build ipa --help
-          flutter build ipa --export-options-plist=./ExportOptions.plist --verbose
+          flutter build ipa --release --export-options-plist=./ExportOptions.plist --verbose
 
       - name: Install private API key P8
         env:
