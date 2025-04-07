@@ -102,11 +102,12 @@ jobs:
 
       - name: View IPA files
         run: |
-          cd build
           ls -la
-          cd ios
+          cd ./build
           ls -la
-          cd ipa
+          cd ./ios
+          ls -la
+          cd ./ipa
           ls -la
 
       - name: Upload IPAs to TestFlight
