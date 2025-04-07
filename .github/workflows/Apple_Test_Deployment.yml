@@ -45,7 +45,10 @@ jobs:
           channel: stable
           version: 3.22.2
 
-      - run: flutter pub get
+      - run: |
+          cd src/mobile
+          flutter clean
+          flutter pub get
 
       - name: Building IPA
         run: flutter build ipa --release --export-options-plist=ios/ExportOptions.plist --verbose
