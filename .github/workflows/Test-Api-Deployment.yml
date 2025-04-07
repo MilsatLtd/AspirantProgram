@@ -46,12 +46,14 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           script: |
             cd ~/test-aspirant-program/src/apis
+            echo "Building Docker Image..."
+            docker build -t map-api-test:latest .
+
+
             echo "Stopping existing test container (if any)..."
             docker stop map-api-test || true
             docker rm map-api-test || true
 
-            echo "Building Docker Image..."
-            docker build -t map-api-test:latest .
 
             echo "Running Docker Container..."
             docker run -d --name map-api-test --env-file .env -p 8001:8001 map-api-test:latest
