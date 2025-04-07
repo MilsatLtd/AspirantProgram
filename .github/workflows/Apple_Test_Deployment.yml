@@ -100,6 +100,15 @@ jobs:
       #   run: |
       #     echo "APP_FILE=$(find $(pwd) -name "*.ipa")" >> $GITHUB_ENV
 
+      - name: View IPA files
+        run: |
+          cd build
+          ls -la
+          cd ios
+          ls -la
+          cd ipa
+          ls -la
+
       - name: Upload IPAs to TestFlight
         run: |
           xcrun altool --upload-app --type ios --file ~/**/*.ipa --apiKey ${{ secrets.APP_STORE_CONNECT_KEY_IDENTIFIER }} --apiIssuer ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
