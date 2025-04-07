@@ -86,7 +86,7 @@ jobs:
 
       - name: Build Flutter app
         run: |
-          flutter build ipa --release --version --build-number=$BUILD_NUMBER --build-name=$BUILD_NAME --export-options-plist=ios/ExportOptions.plist --verbose
+          flutter build ipa --release --target-platform ios --verbose
 
       - name: Install private API key P8
         env:
@@ -103,11 +103,9 @@ jobs:
       - name: View IPA files
         run: |
           ls -la
-          cd ../build
+          cd ../
           ls -la
-          cd ./ios
-          ls -la
-          cd ./ipa
+          cd ../
           ls -la
 
       - name: Upload IPAs to TestFlight
