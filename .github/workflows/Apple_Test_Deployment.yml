@@ -68,8 +68,8 @@ jobs:
           security find-identity -v -p codesigning
           xcrun security cms -D -i "$HOME/Library/MobileDevice/Provisioning Profiles/"*.mobileprovision
         
-      - name: Set up Code signing settings on Xcode project
-        run: xcode-project use-profiles       
+      # - name: Set up Code signing settings on Xcode project
+      #   run: xcode-project use-profiles       
 
       - name: Build IPA for Distribution
         run: |
@@ -87,7 +87,7 @@ jobs:
       - name: Build Flutter app
         run: |
           flutter build ipa --help
-          flutter build ipa --export-method app-store --verbose
+          flutter build ipa --export-options-plist=ios/ExportOptions.plist --verbose
 
       - name: Install private API key P8
         env:
