@@ -86,7 +86,8 @@ jobs:
 
       - name: Build Flutter app
         run: |
-          flutter build ipa --release --target-platform ios --verbose
+          flutter build ipa --help
+          flutter build ipa --verbose
 
       - name: Install private API key P8
         env:
