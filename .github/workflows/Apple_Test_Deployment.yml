@@ -51,7 +51,9 @@ jobs:
           flutter pub get
 
       - name: Building IPA
-        run: flutter build ipa --release --export-options-plist=ios/ExportOptions.plist --verbose
+        run: |
+          ls -la
+          flutter build ipa --release --export-options-plist=src/mobile/ios/ExportOptions.plist --verbose
           
       # Collect the file and upload as artifact         
       - name: collect ipa artifacts
