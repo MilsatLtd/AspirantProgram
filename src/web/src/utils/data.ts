@@ -51,8 +51,8 @@ export const routes = {
   tracks: [
     {
       id: 1,
-      name: "Data Collection and Field Mapping",
-      link: "/track/data-collection-and-field-mapping",
+      name: "Geospatial Data Collection & GIS for Professionals",
+      link: "/track/geospatial-data-collection-and-gis-for-professionals",
     },
     {
       id: 2,
@@ -132,12 +132,12 @@ export const eligibility = [
 
 export const AvailableTracks = [
   {
-    id: "data-collection-and-field-mapping",
-    trackName: "Data Collection and Field Mapping",
+    id: "geospatial-data-collection-and-gis-for-professionals",
+    trackName: "Geospatial Data Collection & GIS for Professionals",
     description:
       "Designed to equip participants with the essential skills and knowledge needed for effective field data collection, spatial analysis, and utilizing cutting-edge data collection technologies",
-    startDate: "23rd August, 2024",
-    endDate: "14th September, 2024",
+    startDate: "9th April, 2025",
+    endDate: "2nd May, 2025",
     learningTimeLine: "2 weeks",
     TrackInfo: [
       {
@@ -198,8 +198,8 @@ export const AvailableTracks = [
     trackName: "Fundamental of GIS",
     description:
       "Explore the foundational principles and essential skills of Geographic Information Systems (GIS) in this beginner-friendly track, gaining a solid understanding of the system",
-    startDate: "23rd August, 2024",
-    endDate: "14th September, 2024",
+    startDate: "",
+    endDate: "",
     learningTimeLine: "2 weeks",
     TrackInfo: [
       {
@@ -296,8 +296,8 @@ export const AvailableTracks = [
 ];
 
 export const applictionTimeline = {
-  startDate: "23rd August, 2024",
-  endDate: "14th September, 2024",
+  startDate: "9th April, 2025",
+  endDate: "2nd May, 2025",
 };
 
 export const termsAndConditions = {
@@ -339,9 +339,9 @@ export const ProgrammeFeatures = {
 export const TrackCardsInfo = [
   {
     id: 2,
-    name: "Data Collection and Field Mapping",
+    name: "Geospatial Data Collection & GIS for Professionals",
     picture: dataCollectionImage,
-    route: "/track/data-collection-and-field-mapping",
+    route: "/track/geospatial-data-collection-and-gis-for-professionals",
   },
   {
     id: 1,
