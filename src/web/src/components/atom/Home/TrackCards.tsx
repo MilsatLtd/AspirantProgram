@@ -43,12 +43,23 @@ const TrackCards = () => {
                     <h2 className="font-semibold lg:text-lg text-m-sm text-start lg:leading-[36px] leading-[24px] text-N400">
                       {trackcard.name}
                     </h2>
-                    <Link href={trackcard.route} className="flex items-center">
-                      <span className="lg:text-base text-m-sm font-medium lg:leading-[32px] leading-[16px] text-P300">
-                        Learn more
-                      </span>
-                      <Image src={nextArrow} alt="next-arrow" />
-                    </Link>
+                    {trackcard.id !== 2 ? (
+                      <div className="w-full flex items-start">
+                        <span className="lg:text-base text-m-sm font-medium lg:leading-[32px] leading-[16px] text-P300">
+                          Coming Soon..
+                        </span>
+                      </div>
+                    ) : (
+                      <Link
+                        href={trackcard.route}
+                        className="flex items-center"
+                      >
+                        <span className="lg:text-base text-m-sm font-medium lg:leading-[32px] leading-[16px] text-P300">
+                          Learn more
+                        </span>
+                        <Image src={nextArrow} alt="next-arrow" />
+                      </Link>
+                    )}
                   </div>
                 </div>
               )
