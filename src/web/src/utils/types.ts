@@ -7,10 +7,15 @@ export interface basicInfo {
     phone_number: string | undefined;
     role: number | undefined;
     country: string | undefined;
+    state?: string | undefined; 
+    lga?: string | undefined; 
     skills: string | undefined;
     purpose: string | undefined;
     accurate: boolean | undefined;
     terms: boolean | undefined;
+    referral_source: string| undefined;
+    other_source?: string| undefined;
+    referral: string | undefined;
   }
 
 export interface reasonInfo {
