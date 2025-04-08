@@ -98,7 +98,7 @@ const ResetPasswordConfirm = () => {
   return (
     <>
       <Head>
-        <title>Create New Password | MilSat Aspirant Program</title>
+        <title>Create New Password | Milsat Aspirant Program</title>
       </Head>
       <div className="flex min-h-screen">
         {/* Left side - Form */}

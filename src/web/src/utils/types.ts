@@ -15,6 +15,7 @@ export interface basicInfo {
     terms: boolean | undefined;
     referral_source: string| undefined;
     other_source?: string| undefined;
+    referral: string | undefined;
   }
 
 export interface reasonInfo {

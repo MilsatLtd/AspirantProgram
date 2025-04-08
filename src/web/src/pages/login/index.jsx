@@ -52,7 +52,7 @@ const Login = () => {
   return (
     <>
       <Head>
-        <title>Login | MilSat Aspirant Program</title>
+        <title>Login | Milsat Aspirant Program</title>
       </Head>
       <div className="flex min-h-screen">
         {/* Left side - Form */}
@@ -179,10 +179,10 @@ const Login = () => {
           <div className="flex items-center justify-center h-full px-48">
             <div className="max-w-md text-N00">
               <h2 className="text-2xl font-bold mb-24">
-                Empower Your Future with MilSat
+                Empower Your Future with Milsat
               </h2>
               <p className="text-lg mb-32">
-                Join the MilSat Aspirant Program and embark on a journey to accelerate your tech career.
+                Join the Milsat Aspirant Program and embark on a journey to accelerate your tech career.
               </p>
               <div className="grid grid-cols-2 gap-16">
                 <div className="bg-white/10 p-16 rounded-lg">

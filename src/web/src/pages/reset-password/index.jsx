@@ -49,7 +49,7 @@ const ResetPassword = () => {
   return (
     <>
       <Head>
-        <title>Reset Password | MilSat Aspirant Program</title>
+        <title>Reset Password | Milsat Aspirant Program</title>
       </Head>
       <div className="flex min-h-screen">
         {/* Left side - Banner */}
