@@ -21,6 +21,7 @@ const FormSectionA = (props: formSectionType) => {
   const [selectedState, setSelectedState] = useState<string>("");
   const [availableLGAs, setAvailableLGAs] = useState<{label: string, value: string}[]>([]);
   const [showOtherSourceInput, setShowOtherSourceInput] = useState<boolean>(false);
+  const [isLgaDisabled, setIsLgaDisabled] = useState<boolean>(true); // New state to track if LGA should be disabled
 
   // setting form SectionA validation with Yup
   const validationSchema = Yup.object().shape({
@@ -83,6 +84,10 @@ const FormSectionA = (props: formSectionType) => {
     if (watchCountry !== "Nigeria") {
       setValue("state", "");
       setValue("lga", "");
+      setIsLgaDisabled(true); // Disable LGA when country is not Nigeria
+    } else {
+      // When Nigeria is selected, LGA remains disabled until state is selected
+      setIsLgaDisabled(true);
     }
   }, [watchCountry, setValue]);
 
@@ -96,12 +101,17 @@ const FormSectionA = (props: formSectionType) => {
           value: lga
         }));
         setAvailableLGAs(lgaOptions);
+        setIsLgaDisabled(false); // Enable LGA dropdown when state is selected
       } else {
         setAvailableLGAs([]);
+        setIsLgaDisabled(true); // Disable LGA if no valid state is selected
       }
       
       // Reset LGA when state changes
       setValue("lga", "");
+    } else {
+      // If state is cleared or not set, disable LGA dropdown
+      setIsLgaDisabled(true);
     }
   }, [watchState, setValue]);
 
@@ -283,13 +293,14 @@ const FormSectionA = (props: formSectionType) => {
           <DropDownField
             label="LGA"
             textValue={undefined}
-            placeholder="Select LGA"
+            placeholder={isLgaDisabled ? "Please select a state first" : "Select LGA"}
             options={availableLGAs}
             dropDownStyle="h-[20rem] overflow-auto"
             onTextChange={(e) => handleSetValue(e, "lga")}
-            inputStyle=""
+            inputStyle={isLgaDisabled ? "cursor-not-allowed bg-gray-100" : ""}
             containerStyle="lg:col-span-6 col-span-1"
             error={errors.lga?.message}
+            disabled={isLgaDisabled} // Pass the disabled state to the DropDownField component
           />
         </div>
       )}
