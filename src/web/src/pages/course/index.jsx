@@ -13,7 +13,7 @@ const CourseDetail = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [course, setCourse] = useState({
-    title: "",
+    name: "",
     description: "",
     lessons: [],
     resources: []
@@ -32,19 +32,57 @@ const CourseDetail = () => {
           throw new Error("Authentication required");
         }
         
-        // Fetch course data
-        const response = await axios.get(
+        // Get user ID from token
+        const userId = getUserIdFromToken(token);
+        
+        // Get the latest track of the student
+        const latestTrackResponse = await axios.get(
+          `${process.env.NEXT_PUBLIC_API_ROUTE}students/recent/${userId}`,
+          {
+            headers: { Authorization: `Bearer ${token}` }
+          }
+        );
+        
+        const trackId = latestTrackResponse.data.track_id;
+        
+        // Fetch courses for the student's track
+        const coursesResponse = await axios.get(
+          `${process.env.NEXT_PUBLIC_API_ROUTE}students/courses/${userId}/${trackId}`,
+          {
+            headers: { Authorization: `Bearer ${token}` }
+          }
+        );
+        
+        // Find the current course in the list
+        const currentCourse = coursesResponse.data.courses.find(
+          course => course.course_id === id
+        );
+        
+        if (!currentCourse) {
+          throw new Error("Course not found");
+        }
+        
+        // Fetch course details including lessons 
+        // This is a placeholder - your actual API might have a different endpoint for detailed course info
+        const courseDetailsResponse = await axios.get(
           `${process.env.NEXT_PUBLIC_API_ROUTE}courses/${id}`,
           {
             headers: { Authorization: `Bearer ${token}` }
           }
         );
         
-        setCourse(response.data);
+        const courseData = {
+          title: currentCourse.name,
+          description: currentCourse.description,
+          lessons: courseDetailsResponse.data.lessons || [],
+          resources: courseDetailsResponse.data.resources || []
+        };
+        
+        setCourse(courseData);
         
         // Set first lesson as active by default
-        if (response.data.lessons && response.data.lessons.length > 0) {
-          setActiveLesson(response.data.lessons[0]);
+        if (courseData.lessons && courseData.lessons.length > 0) {
+          setActiveLesson(courseData.lessons[0]);
         }
         
       } catch (err) {
@@ -57,6 +95,13 @@ const CourseDetail = () => {
     
     fetchCourseData();
   }, [id]);
+
+  // Helper function to extract user ID from token
+  // This is a placeholder - implement according to your token structure
+  const getUserIdFromToken = (token) => {
+    // In a real application, decode JWT token or get user ID from appropriate storage
+    return localStorage.getItem("userId") || "current-user-id";
+  };
 
   const extractYouTubeId = (url) => {
     if (!url) return null;

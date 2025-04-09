@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import DropDownField from "@/components/atom/Customfields/DropDownField";
 import TermsAndConditions from "@/components/atom/Customfields/TermsAndConditions";
 import TextField from "@/components/atom/Customfields/TextField";
@@ -9,6 +9,128 @@ import * as Yup from "yup";
 import { ChangeEvent } from "react";
 import MultiTextField from "@/components/atom/Customfields/MultiTextField";
 import { africanCountries, nigerianStatesAndLGAs } from "@/utils/data";
+
+// Define types for dropdown options
+interface DropdownOption {
+  label: string;
+  value: string | number;
+}
+
+// Define props interface for SearchableDropDown
+interface SearchableDropDownProps {
+  label: string;
+  placeholder: string;
+  options: DropdownOption[];
+  onSelect: (option: DropdownOption) => void;
+  error?: string;
+  containerStyle?: string;
+  value?: string | number;
+  disabled?: boolean;
+}
+
+// Create a searchable dropdown component
+const SearchableDropDown = ({
+  label,
+  placeholder,
+  options,
+  onSelect,
+  error,
+  containerStyle,
+  value,
+  disabled = false
+}: SearchableDropDownProps) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filteredOptions, setFilteredOptions] = useState<DropdownOption[]>(options);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    // Filter options based on search term
+    if (searchTerm) {
+      const filtered = options.filter(option => 
+        String(option.label).toLowerCase().includes(searchTerm.toLowerCase())
+      );
+      setFilteredOptions(filtered);
+    } else {
+      setFilteredOptions(options);
+    }
+  }, [searchTerm, options]);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+    
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const handleSelect = (option: DropdownOption) => {
+    onSelect(option);
+    setIsOpen(false);
+    setSearchTerm("");
+  };
+
+  const selectedLabel = value !== undefined ? 
+    options.find(option => option.value === value)?.label : "";
+  
+  return (
+    <div className={`flex flex-col gap-8 ${containerStyle}`} ref={dropdownRef}>
+      <label className="text-N800 font-medium">{label}</label>
+      <div className="relative">
+        <div 
+          className={`border border-N200 rounded-lg px-16 py-12 flex justify-between items-center ${disabled ? 'bg-gray-100 cursor-not-allowed' : 'cursor-pointer'}`}
+          onClick={() => !disabled && setIsOpen(!isOpen)}
+        >
+          <span className={`${!selectedLabel ? 'text-gray-400' : 'text-black'}`}>
+            {selectedLabel || placeholder}
+          </span>
+          <svg 
+            className={`w-5 h-5 transition-transform ${isOpen ? 'transform rotate-180' : ''}`} 
+            fill="none" 
+            stroke="currentColor" 
+            viewBox="0 0 24 24"
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+          </svg>
+        </div>
+
+        {isOpen && (
+          <div className="absolute z-10 mt-1 w-full bg-white border border-gray-200 rounded-md shadow-lg max-h-60 overflow-auto">
+            <div className="sticky top-0 bg-white p-2 border-b">
+              <input
+                type="text"
+                className="w-full p-2 border border-gray-300 rounded"
+                placeholder="Search..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                onClick={(e) => e.stopPropagation()}
+              />
+            </div>
+            
+            {filteredOptions.length > 0 ? (
+              filteredOptions.map((option) => (
+                <div
+                  key={String(option.value)}
+                  className="p-2 hover:bg-gray-100 cursor-pointer"
+                  onClick={() => handleSelect(option)}
+                >
+                  {option.label}
+                </div>
+              ))
+            ) : (
+              <div className="p-2 text-gray-500">No results found</div>
+            )}
+          </div>
+        )}
+      </div>
+      {error && <span className="text-red-500 text-sm mt-1">{error}</span>}
+    </div>
+  );
+};
 
 interface formSectionType {
   changeSection: () => void;
@@ -21,13 +143,14 @@ const FormSectionA = (props: formSectionType) => {
   const [selectedState, setSelectedState] = useState<string>("");
   const [availableLGAs, setAvailableLGAs] = useState<{label: string, value: string}[]>([]);
   const [showOtherSourceInput, setShowOtherSourceInput] = useState<boolean>(false);
-  const [isLgaDisabled, setIsLgaDisabled] = useState<boolean>(true); // New state to track if LGA should be disabled
+  const [isLgaDisabled, setIsLgaDisabled] = useState<boolean>(true);
+  const [otherSourceText, setOtherSourceText] = useState<string>("");
 
-  // setting form SectionA validation with Yup
+  // Setting form SectionA validation with Yup
   const validationSchema = Yup.object().shape({
     first_name: Yup.string().required("First Name is required"),
     last_name: Yup.string().required("Last Name is required"),
-    email: Yup.string().required("Email is required"),
+    email: Yup.string().email("Invalid email format").required("Email is required"),
     education: Yup.number().required("Level of Education is required"),
     gender: Yup.number().required("Gender is required"),
     phone_number: Yup.string().required("Phone Number is required"),
@@ -55,7 +178,7 @@ const FormSectionA = (props: formSectionType) => {
     accurate: Yup.boolean().oneOf([true], "You must accept the Terms and Conditions")
   });
 
-  // setting form SectionA validation with react-hook-form
+  // Setting form SectionA validation with react-hook-form
   const {
     handleSubmit,
     setValue,
@@ -84,9 +207,8 @@ const FormSectionA = (props: formSectionType) => {
     if (watchCountry !== "Nigeria") {
       setValue("state", "");
       setValue("lga", "");
-      setIsLgaDisabled(true); // Disable LGA when country is not Nigeria
+      setIsLgaDisabled(true);
     } else {
-      // When Nigeria is selected, LGA remains disabled until state is selected
       setIsLgaDisabled(true);
     }
   }, [watchCountry, setValue]);
@@ -101,16 +223,15 @@ const FormSectionA = (props: formSectionType) => {
           value: lga
         }));
         setAvailableLGAs(lgaOptions);
-        setIsLgaDisabled(false); // Enable LGA dropdown when state is selected
+        setIsLgaDisabled(false);
       } else {
         setAvailableLGAs([]);
-        setIsLgaDisabled(true); // Disable LGA if no valid state is selected
+        setIsLgaDisabled(true);
       }
       
       // Reset LGA when state changes
       setValue("lga", "");
     } else {
-      // If state is cleared or not set, disable LGA dropdown
       setIsLgaDisabled(true);
     }
   }, [watchState, setValue]);
@@ -122,6 +243,7 @@ const FormSectionA = (props: formSectionType) => {
     // Reset other_source when referral_source changes away from "Others"
     if (watchReferralSource !== "Others") {
       setValue("other_source", "");
+      setOtherSourceText("");
     }
   }, [watchReferralSource, setValue]);
 
@@ -159,7 +281,23 @@ const FormSectionA = (props: formSectionType) => {
     setValue(name, value, { shouldValidate: true });
   };
 
-  const checkKeyDown = (e: any) => {
+  const handleCountrySelect = (option: DropdownOption) => {
+    handleSetValue(option.value, "country");
+  };
+
+  const handleStateSelect = (option: DropdownOption) => {
+    handleSetValue(option.value, "state");
+  };
+
+  const handleLGASelect = (option: DropdownOption) => {
+    handleSetValue(option.value, "lga");
+  };
+
+  const handleReferralSelect = (option: DropdownOption) => {
+    handleSetValue(option.value, "referral_source");
+  };
+
+  const checkKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter") e.preventDefault();
   };
 
@@ -228,7 +366,7 @@ const FormSectionA = (props: formSectionType) => {
           error={errors.education?.message}
         />
       </div>
-      <div className="grid  lg:grid-cols-12 grid-cols-1 gap-24 w-full">
+      <div className="grid lg:grid-cols-12 grid-cols-1 gap-24 w-full">
         <DropDownField
           label="Gender"
           placeholder="Select gender"
@@ -263,44 +401,40 @@ const FormSectionA = (props: formSectionType) => {
           error={errors.skills?.message}
           sendSkills={(skills: string) => handleSetValue(skills, "skills")}
         />
-        <DropDownField
+        
+        {/* Searchable Country Dropdown */}
+        <SearchableDropDown
           label="Country"
-          textValue={undefined}
-          placeholder="Select Country"
+          placeholder="Search Country"
           options={africanCountries}
-          dropDownStyle="h-[20rem] overflow-auto"
-          onTextChange={(e) => handleSetValue(e, "country")}
-          inputStyle=""
-          containerStyle="lg:col-span-4 col-span-1"
+          onSelect={handleCountrySelect}
           error={errors.country?.message}
+          containerStyle="lg:col-span-4 col-span-1"
+          value={watchCountry}
         />
       </div>
       
-      {/* Nigeria-specific fields - State and LGA */}
+      {/* Nigeria-specific fields - State and LGA with searchable dropdowns */}
       {selectedCountry === "Nigeria" && (
         <div className="grid lg:grid-cols-12 grid-cols-1 gap-24 w-full">
-          <DropDownField
+          <SearchableDropDown
             label="State"
-            textValue={undefined}
-            placeholder="Select State"
+            placeholder="Search State"
             options={nigerianStatesOptions}
-            dropDownStyle="h-[20rem] overflow-auto"
-            onTextChange={(e) => handleSetValue(e, "state")}
-            inputStyle=""
-            containerStyle="lg:col-span-6 col-span-1"
+            onSelect={handleStateSelect}
             error={errors.state?.message}
-          />
-          <DropDownField
-            label="LGA"
-            textValue={undefined}
-            placeholder={isLgaDisabled ? "Please select a state first" : "Select LGA"}
-            options={availableLGAs}
-            dropDownStyle="h-[20rem] overflow-auto"
-            onTextChange={(e) => handleSetValue(e, "lga")}
-            inputStyle={isLgaDisabled ? "cursor-not-allowed bg-gray-100" : ""}
             containerStyle="lg:col-span-6 col-span-1"
+            value={watchState}
+          />
+          <SearchableDropDown
+            label="LGA"
+            placeholder={isLgaDisabled ? "Please select a state first" : "Search LGA"}
+            options={availableLGAs}
+            onSelect={handleLGASelect}
             error={errors.lga?.message}
-            disabled={isLgaDisabled} // Pass the disabled state to the DropDownField component
+            containerStyle="lg:col-span-6 col-span-1"
+            value={watch("lga")}
+            disabled={isLgaDisabled}
           />
         </div>
       )}
@@ -347,12 +481,12 @@ const FormSectionA = (props: formSectionType) => {
           />
         )}
       </div>
-      {/* New "How did you hear about us?" field */}
+      
+      {/* Referral source with improved "Others" handling */}
       <div className="grid lg:grid-cols-12 grid-cols-1 gap-24 w-full">
-        <DropDownField
+        <SearchableDropDown
           label="How did you hear about us?"
-          textValue={undefined}
-          placeholder="Select an option"
+          placeholder="Select or search for an option"
           options={[
             { label: "Milsat Website", value: "Milsat Website" },
             { label: "Social Media Post", value: "Social Media Post" },
@@ -360,27 +494,30 @@ const FormSectionA = (props: formSectionType) => {
             { label: "3MTT Program", value: "3MTT Program" },
             { label: "Others", value: "Others" },
           ]}
-          dropDownStyle=""
-          onTextChange={(e) => handleSetValue(e, "referral_source")}
-          inputStyle=""
-          containerStyle="lg:col-span-12 col-span-1"
+          onSelect={handleReferralSelect}
           error={errors.referral_source?.message}
+          containerStyle="lg:col-span-12 col-span-1"
+          value={watchReferralSource}
         />
       </div>
-      {/* Additional input field for "Others" option */}
+      
       {showOtherSourceInput && (
-        <div className="grid lg:grid-cols-12 grid-cols-1 gap-24 w-full">
-          <TextField
-            label="Please specify how you heard about us"
-            onTextChange={(e) => handleSetValue(e.target.value, "other_source")}
-            inputStyle=""
-            placeholder="Enter source"
-            containerStyle="lg:col-span-12 col-span-1"
-            type="text"
-            error={errors.other_source?.message}
-          />
-        </div>
-      )}
+  <div className="grid lg:grid-cols-12 grid-cols-1 gap-24 w-full">
+    <TextField
+      label="Please specify how you heard about us"
+      onTextChange={(e) => {
+        setOtherSourceText(e.target.value);
+        handleSetValue(e.target.value, "other_source");
+      }}
+      inputStyle=""
+      placeholder="Enter source"
+      containerStyle="lg:col-span-12 col-span-1"
+      type="text"
+      error={errors.other_source?.message}
+    />
+  </div>
+)}
+      
       <TermsAndConditions
         onFirstTermChange={(e) => handleSetValue(e.target.checked, "accurate")}
         valueForAccurate={watch("accurate")}
@@ -389,6 +526,7 @@ const FormSectionA = (props: formSectionType) => {
         errorData={errors.accurate?.message}
         errorTerms={errors.terms?.message}
       />
+      
       <button
         className="w-full rounded-lg text-N00 font-semibold leading-[32px] bg-P300 py-12"
         type="submit"

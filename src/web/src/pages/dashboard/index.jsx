@@ -12,6 +12,8 @@ const StudentDashboard = () => {
     name: "",
     cohort: "",
     track: "",
+    trackId: "",
+    studentId: "",
   });
   const [courses, setCourses] = useState([]);
   const [mentor, setMentor] = useState({
@@ -32,25 +34,31 @@ const StudentDashboard = () => {
           throw new Error("Authentication required");
         }
         
-        // Fetch student data
+        // Get user ID from token (assuming JWT with user_id in payload)
+        // In a real implementation, you would decode the token or get the user ID from somewhere
+        const userId = getUserIdFromToken(token);
+        
+        // Get the latest track of the student
+        const latestTrackResponse = await axios.get(
+          `${process.env.NEXT_PUBLIC_API_ROUTE}students/recent/${userId}`,
+          {
+            headers: { Authorization: `Bearer ${token}` }
+          }
+        );
+        
+        const trackId = latestTrackResponse.data.track_id;
+        
+        // Fetch student data with the latest track
         const userResponse = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_ROUTE}students/profile`, 
+          `${process.env.NEXT_PUBLIC_API_ROUTE}students/${userId}/${trackId}`,
           {
             headers: { Authorization: `Bearer ${token}` }
           }
         );
         
-        // Fetch courses data
+        // Fetch courses for the student's track
         const coursesResponse = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_ROUTE}courses/track/${userResponse.data.track_id}`,
-          {
-            headers: { Authorization: `Bearer ${token}` }
-          }
-        );
-        
-        // Fetch mentor data
-        const mentorResponse = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_ROUTE}mentors/${userResponse.data.mentor_id}`,
+          `${process.env.NEXT_PUBLIC_API_ROUTE}students/courses/${userId}/${trackId}`,
           {
             headers: { Authorization: `Bearer ${token}` }
           }
@@ -58,18 +66,25 @@ const StudentDashboard = () => {
         
         setUserData({
           name: userResponse.data.full_name,
-          cohort: userResponse.data.cohort_name,
-          track: userResponse.data.track_name,
+          cohort: userResponse.data.cohort,
+          track: userResponse.data.track,
+          trackId: trackId,
+          studentId: userId,
         });
         
-        setCourses(coursesResponse.data);
+        // The courses are nested in a track object based on the API docs
+        setCourses(coursesResponse.data.courses || []);
         
-        setMentor({
-          name: mentorResponse.data.full_name,
-          bio: mentorResponse.data.bio,
-          whatsappLink: mentorResponse.data.whatsapp_group_link,
-          avatar: mentorResponse.data.avatar || "/api/placeholder/80/80",
-        });
+        // For mentor data, we would need additional API call or data might be included in student response
+        // This depends on how your API is structured
+        if (userResponse.data.mentor) {
+          setMentor({
+            name: userResponse.data.mentor,
+            bio: "Mentor information", // This would need to come from API
+            whatsappLink: "#", // This would need to come from API
+            avatar: userResponse.data.profile_picture || "/api/placeholder/80/80",
+          });
+        }
         
       } catch (err) {
         setError(err.message || "Failed to load student data");
@@ -81,6 +96,14 @@ const StudentDashboard = () => {
     
     fetchStudentData();
   }, []);
+
+  // Helper function to extract user ID from token
+  // This is a placeholder - implement according to your token structure
+  const getUserIdFromToken = (token) => {
+    // In a real application, decode JWT token or get user ID from appropriate storage
+    // For example, if using JWT, you might use jwt_decode library
+    return localStorage.getItem("userId") || "current-user-id";
+  };
 
   if (loading) {
     return (
@@ -207,22 +230,22 @@ const StudentDashboard = () => {
                             {course.thumbnail ? (
                               <Image 
                                 src={course.thumbnail} 
-                                alt={course.title}
+                                alt={course.name}
                                 layout="fill"
                                 objectFit="cover"
                               />
                             ) : (
                               <div className="w-full h-full flex items-center justify-center bg-P50">
-                                <span className="text-P300 font-medium">{course.title.charAt(0)}</span>
+                                <span className="text-P300 font-medium">{course.name.charAt(0)}</span>
                               </div>
                             )}
                           </div>
                           
                           <div className="p-16">
-                            <h3 className="text-base font-semibold text-N500 mb-8">{course.title}</h3>
+                            <h3 className="text-base font-semibold text-N500 mb-8">{course.name}</h3>
                             <p className="text-sm text-N200 mb-16">{course.description}</p>
                             
-                            <Link href={`/courses/${course.id}`}>
+                            <Link href={`/courses/${course.course_id}`}>
                               <button className="w-full bg-P300 text-N00 py-8 px-16 rounded-lg text-sm font-medium hover:bg-P200 transition duration-300">
                                 View Course
                               </button>
