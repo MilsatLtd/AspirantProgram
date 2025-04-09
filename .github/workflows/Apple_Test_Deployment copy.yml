@@ -1,0 +1,124 @@
+name: Deploy iOS to App Store
+
+on:
+  push:
+    branches:
+      - apple-store-deployment
+
+jobs:
+  build-and-deploy:
+    runs-on: macos-latest
+    defaults:
+      run:
+        working-directory: src/mobile/ios
+    env:
+      APP_STORE_CONNECT_PRIVATE_KEY: ${{ secrets.APP_STORE_CONNECT_PRIVATE_KEY }}
+      APP_STORE_CONNECT_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
+      APP_STORE_CONNECT_KEY_IDENTIFIER: ${{ secrets.APP_STORE_CONNECT_KEY_IDENTIFIER }}
+      APP_STORE_APP_ID: ${{ secrets.APP_STORE_APP_ID }}
+      DISTRIBUTION_CERTIFICATE: ${{ secrets.DIST_CERTIFICATE_BASE64 }}
+      DISTRIBUTION_CERTIFICATE_PASSWORD: ${{ secrets.DIST_CERTIFICATE_PASSWORD }}
+      PROVISIONING_PROFILE: ${{ secrets.PROVISIONING_PROFILE_BASE64 }}
+ 
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Flutter SDK
+        uses: flutter-actions/setup-flutter@v4
+        with:
+          channel: stable
+          version: 3.22.2
+ 
+      - name: Install dependencies
+        run: |
+          flutter clean
+          flutter pub get
+          flutter analyze --fatal-infos
+
+      - name: Install the CodeMagic CLI
+        run:  pip install codemagic-cli-tools
+
+      - name: Configure App Store Connect API
+        env:
+          APP_STORE_CONNECT_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
+          APP_STORE_CONNECT_KEY_IDENTIFIER: ${{ secrets.APP_STORE_CONNECT_KEY_IDENTIFIER }}
+          APP_STORE_CONNECT_PRIVATE_KEY: ${{ secrets.APP_STORE_CONNECT_PRIVATE_KEY }}
+        run: |
+           echo "$APP_STORE_CONNECT_PRIVATE_KEY" | base64 --decode > AuthKey_${{ secrets.APP_STORE_CONNECT_KEY_IDENTIFIER }}.p8
+           echo "APP_STORE_KEY_FILE=AuthKey_${APP_STORE_CONNECT_KEY_IDENTIFIER}.p8" >> $GITHUB_ENV
+
+      - name: Set up Provisioning Profile
+        run: |
+          PROFILES_HOME="$HOME/Library/MobileDevice/Provisioning Profiles"
+          mkdir -p "$PROFILES_HOME"
+          PROFILE_PATH="$(mktemp "$PROFILES_HOME"/$(uuidgen).mobileprovision)"
+          echo "${PROVISIONING_PROFILE}" | base64 --decode > "$PROFILE_PATH"
+          echo "PROVISIONING_PROFILE_PATH=$PROFILE_PATH" >> $GITHUB_ENV
+          echo "Saved provisioning profile $PROFILE_PATH"
+
+      - name: Import Code Signing Certificates
+        uses: apple-actions/import-codesign-certs@v3
+        with: 
+          p12-file-base64: ${{ secrets.DIST_CERTIFICATE_BASE64 }}
+          p12-password: ${{ secrets.DIST_CERTIFICATE_PASSWORD }}
+          keychain-password: "temppassword"
+      
+      - name: Verify certificates
+        run: |
+          security find-identity -v -p codesigning
+          xcrun security cms -D -i "$HOME/Library/MobileDevice/Provisioning Profiles/"*.mobileprovision
+        
+      # - name: Set up Code signing settings on Xcode project
+      #   run: xcode-project use-profiles  
+
+      - name: Set temporary keychain as default
+        run: |
+          security list-keychains -s /Users/runner/Library/Keychains/signing_temp.keychain-db
+          security default-keychain -s /Users/runner/Library/Keychains/signing_temp.keychain-db
+          security unlock-keychain -p "temppassword" /Users/runner/Library/Keychains/signing_temp.keychain-db
+          security set-keychain-settings -t 360000 -l /Users/runner/Library/Keychains/signing_temp.keychain-db
+
+      - name: Build IPA for Distribution
+        run: |
+          file='VERSION'
+          fileData=`cat $file`
+          IFS='.'
+          read -a versionValue <<< "$fileData"
+          buildNumber=$(( ${versionValue[0]} * 1000000 + ${versionValue[1]} * 10000 + ${{ github.run_number }} ))
+          IFS=''
+          buildName="${versionValue[0]}.${versionValue[1]}.${{ github.run_number }}"
+          echo "BUILD_NAME=$buildName" >> $GITHUB_ENV
+          echo "BUILD_NUMBER=$buildNumber" >> $GITHUB_ENV
+          echo "Uploading build $buildName"
+
+      - name: Build Flutter app
+        run: |
+          ls -la
+          flutter build ipa --help
+          flutter build ipa --release --export-options-plist=./ExportOptions.plist --verbose
+
+      - name: Install private API key P8
+        env:
+          PRIVATE_API_KEY_BASE64: ${{ secrets.APP_STORE_CONNECT_PRIVATE_KEY }}
+          API_KEY: ${{ secrets.APP_STORE_CONNECT_KEY_IDENTIFIER }}
+        run: | 
+          mkdir -p ~/private_keys
+          echo -n "$PRIVATE_API_KEY_BASE64" | base64 --decode --output ~/private_keys/AuthKey_$API_KEY.p8  >> $GITHUB_ENV
+        
+      # - name: Find IPA files
+      #   run: |
+      #     echo "APP_FILE=$(find $(pwd) -name "*.ipa")" >> $GITHUB_ENV
+
+      - name: View IPA files
+        run: |
+          ls -la
+          cd ../
+          ls -la
+          cd ../
+          ls -la
+
+      - name: Upload IPAs to TestFlight
+        run: |
+          xcrun altool --upload-app --type ios --file ~/**/*.ipa --apiKey ${{ secrets.APP_STORE_CONNECT_KEY_IDENTIFIER }} --apiIssuer ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
+        
