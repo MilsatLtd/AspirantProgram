@@ -1,7 +1,6 @@
 name: Deploy Map API-Test
 on:
   workflow_dispatch:
-    
   pull_request:
      branches: [ "main" ]
      paths: ["src/apis/**"]
@@ -50,9 +49,11 @@ jobs:
             echo "Building Docker Image..."
             docker build -t map-api-test:latest .
 
+
             echo "Stopping existing test container (if any)..."
             docker stop map-api-test || true
             docker rm map-api-test || true
+
 
             echo "Running Docker Container..."
             docker run -d --name map-api-test --env-file .env -p 8001:8001 map-api-test:latest
