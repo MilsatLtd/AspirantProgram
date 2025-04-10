@@ -3,15 +3,19 @@ import Image from "next/image";
 import Link from "next/link";
 import Head from "next/head";
 import axios from "axios";
+import { useRouter } from "next/router";
 import Logo from "../../Assets/logo.svg";
 
 const StudentDashboard = () => {
+  const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [userData, setUserData] = useState({
     name: "",
     cohort: "",
     track: "",
+    trackId: "",
+    studentId: "",
   });
   const [courses, setCourses] = useState([]);
   const [mentor, setMentor] = useState({
@@ -22,65 +26,225 @@ const StudentDashboard = () => {
   });
   const [activeTab, setActiveTab] = useState("courses");
 
-  useEffect(() => {
-    const fetchStudentData = async () => {
-      try {
-        setLoading(true);
-        const token = localStorage.getItem("token");
-        
-        if (!token) {
-          throw new Error("Authentication required");
-        }
-        
-        // Fetch student data
-        const userResponse = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_ROUTE}students/profile`, 
-          {
-            headers: { Authorization: `Bearer ${token}` }
-          }
-        );
-        
-        // Fetch courses data
-        const coursesResponse = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_ROUTE}courses/track/${userResponse.data.track_id}`,
-          {
-            headers: { Authorization: `Bearer ${token}` }
-          }
-        );
-        
-        // Fetch mentor data
-        const mentorResponse = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_ROUTE}mentors/${userResponse.data.mentor_id}`,
-          {
-            headers: { Authorization: `Bearer ${token}` }
-          }
-        );
-        
-        setUserData({
-          name: userResponse.data.full_name,
-          cohort: userResponse.data.cohort_name,
-          track: userResponse.data.track_name,
-        });
-        
-        setCourses(coursesResponse.data);
-        
-        setMentor({
-          name: mentorResponse.data.full_name,
-          bio: mentorResponse.data.bio,
-          whatsappLink: mentorResponse.data.whatsapp_group_link,
-          avatar: mentorResponse.data.avatar || "/api/placeholder/80/80",
-        });
-        
-      } catch (err) {
-        setError(err.message || "Failed to load student data");
-        console.error(err);
-      } finally {
-        setLoading(false);
+  const ensureSafeRender = (value) => {
+    if (value === null || value === undefined) {
+      return '';
+    }
+    if (typeof value === 'object') {
+      if (value.cohort_id && value.name && value.cohort_duration) {
+        return value.name; 
       }
-    };
+      return JSON.stringify(value); 
+    }
+    return value;
+  };
+
+  // Add useEffect to trigger data fetching when component mounts
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    
+    if (!token) {
+      router.push("/login");
+      return;
+    }
     
     fetchStudentData();
   }, []);
+
+  const fetchStudentData = async () => {
+    try {
+      setLoading(true);
+      const token = localStorage.getItem("token");
+      
+      if (!token) {
+        throw new Error("Authentication required");
+      }
+      
+      // Get user ID from token
+      const userId = getUserIdFromToken(token);
+      console.log("User ID extracted from token:", userId);
+      
+      if (!userId) {
+        throw new Error("Invalid authentication token");
+      }
+      
+      try {
+        // Get the latest track of the student
+        const latestTrackResponse = await axios.get(
+          `${process.env.NEXT_PUBLIC_API_ROUTE}students/recent/${userId}`,
+          {
+            headers: { Authorization: `Bearer ${token}` }
+          }
+        );
+        
+        console.log("Latest track response:", latestTrackResponse.data);
+        
+        // Check if we have a valid track_id
+        if (!latestTrackResponse.data || !latestTrackResponse.data.track_id) {
+          console.log("No track_id in recent response, trying alternative approach");
+          
+          const studentResponse = await axios.get(
+            `${process.env.NEXT_PUBLIC_API_ROUTE}students/${userId}`,
+            {
+              headers: { Authorization: `Bearer ${token}` }
+            }
+          );
+          
+          console.log("Student response:", studentResponse.data);
+          
+          // Check if the response includes any track information we can use
+          if (studentResponse.data && studentResponse.data.track_id) {
+            const trackId = studentResponse.data.track_id;
+            console.log("Found track_id in student data:", trackId);
+            // Continue with this track ID
+            await completeDataFetch(userId, trackId, token);
+          } else {
+            console.log("No track_id found in any response");
+            
+            // FALLBACK: Instead of erroring, set default data
+            setUserData({
+              name: studentResponse.data?.full_name || "Student",
+              // Handle cohort as an object or string
+              cohort: typeof studentResponse.data?.cohort === 'object' 
+                ? studentResponse.data?.cohort.name 
+                : (studentResponse.data?.cohort || "Current Cohort"),
+              track: "Unassigned",
+              trackId: "default",
+              studentId: userId,
+            });
+            
+            setCourses([]);
+            
+            if (studentResponse.data?.mentor) {
+              // Handle mentor data safely
+              const mentorData = studentResponse.data.mentor;
+              setMentor({
+                name: typeof mentorData === 'object' ? mentorData.full_name || "Mentor" : mentorData,
+                bio: typeof mentorData === 'object' ? mentorData.bio || "Mentor information" : "Mentor information",
+                whatsappLink: "#",
+                avatar: studentResponse.data.profile_picture || "/api/placeholder/80/80",
+              });
+            }
+            
+            setLoading(false);
+          }
+        } else {
+          // We have a valid track ID, continue normally
+          const trackId = latestTrackResponse.data.track_id;
+          console.log("Using track_id from recent response:", trackId);
+          await completeDataFetch(userId, trackId, token);
+        }
+      } catch (trackError) {
+        console.error("Error fetching track:", trackError);
+        
+        // FALLBACK: Instead of showing error, show empty dashboard
+        setUserData({
+          name: "Student",
+          cohort: "Current Cohort",
+          track: "Unassigned",
+          trackId: "default",
+          studentId: userId,
+        });
+        
+        setCourses([]);
+        setLoading(false);
+      }
+    } catch (err) {
+      console.error("Overall error:", err);
+      setError(err.message || "Failed to load student data");
+      setLoading(false);
+      
+      // If authentication error, redirect to login
+      if (err.message === "Authentication required" || err.message === "Invalid authentication token") {
+        router.push("/login");
+      }
+    }
+  };
+  
+  const completeDataFetch = async (userId, trackId, token) => {
+    try {
+      // Fetch student data with the track
+      const userResponse = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_ROUTE}students/${userId}/${trackId}`,
+        {
+          headers: { Authorization: `Bearer ${token}` }
+        }
+      );
+      
+      // Fetch courses for the student's track
+      const coursesResponse = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_ROUTE}students/courses/${userId}/${trackId}`,
+        {
+          headers: { Authorization: `Bearer ${token}` }
+        }
+      );
+      
+      setUserData({
+        name: userResponse.data.full_name || "Student",
+        // Handle cohort as an object or string
+        cohort: typeof userResponse.data.cohort === 'object' 
+          ? userResponse.data.cohort.name 
+          : (userResponse.data.cohort || "Current Cohort"),
+        track: userResponse.data.track || "General",
+        trackId: trackId,
+        studentId: userId,
+      });
+      
+      setCourses(coursesResponse.data.courses || []);
+      
+      // For mentor data 
+      if (userResponse.data.mentor) {
+        const mentorData = userResponse.data.mentor;
+        // Check if mentor is an object or a string
+        if (typeof mentorData === 'object' && mentorData !== null) {
+          setMentor({
+            name: mentorData.full_name || "Mentor",
+            bio: mentorData.bio || "Mentor information",
+            whatsappLink: "#",
+            avatar: mentorData.profile_picture || "/api/placeholder/80/80",
+          });
+        } else {
+          // If it's a string or other primitive value
+          setMentor({
+            name: String(mentorData),
+            bio: "Mentor information",
+            whatsappLink: "#", 
+            avatar: "/api/placeholder/80/80",
+          });
+        }
+      }
+    } catch (error) {
+      console.error("Error completing data fetch:", error);
+      setError("Error loading data with track information");
+    } finally {
+      setLoading(false);
+    }
+  };
+  
+  // Helper function to extract user ID from token
+  const getUserIdFromToken = (token) => {
+    try {
+      // JWT tokens are in format: header.payload.signature
+      const parts = token.split('.');
+      
+      if (parts.length !== 3) {
+        console.error("Invalid token format");
+        return null;
+      }
+      
+      const payload = parts[1];
+      
+      // Base64 decode the payload
+      // Note: JWT uses base64url encoding, so we need to replace some characters
+      const base64 = payload.replace(/-/g, '+').replace(/_/g, '/');
+      const decodedPayload = JSON.parse(atob(base64));
+      
+      return decodedPayload.user_id;
+    } catch (error) {
+      console.error("Error decoding token:", error);
+      return null;
+    }
+  };
 
   if (loading) {
     return (
@@ -137,7 +301,7 @@ const StudentDashboard = () => {
                   <p className="text-xs text-N200">{userData.track} Track</p>
                 </div>
                 <button className="bg-P300 text-N00 rounded-full w-40 h-40 flex items-center justify-center">
-                  <span className="font-semibold">{userData.name.charAt(0)}</span>
+                  <span className="font-semibold">{userData.name ? userData.name.charAt(0) : ''}</span>
                 </button>
               </div>
             </div>
@@ -150,7 +314,7 @@ const StudentDashboard = () => {
           <div className="bg-P300 text-N00 rounded-lg p-24 mb-32 shadow-card">
             <div className="flex flex-col md:flex-row md:items-center justify-between">
               <div>
-                <h1 className="text-xl font-bold mb-8">Welcome to {userData.cohort}</h1>
+                <h1 className="text-xl font-bold mb-8">Welcome to {ensureSafeRender(userData.cohort)}</h1>
                 <p className="text-sm opacity-90">Track: {userData.track}</p>
               </div>
               <div className="mt-16 md:mt-0">
@@ -207,22 +371,22 @@ const StudentDashboard = () => {
                             {course.thumbnail ? (
                               <Image 
                                 src={course.thumbnail} 
-                                alt={course.title}
+                                alt={course.name}
                                 layout="fill"
                                 objectFit="cover"
                               />
                             ) : (
                               <div className="w-full h-full flex items-center justify-center bg-P50">
-                                <span className="text-P300 font-medium">{course.title.charAt(0)}</span>
+                                <span className="text-P300 font-medium">{course.name.charAt(0)}</span>
                               </div>
                             )}
                           </div>
                           
                           <div className="p-16">
-                            <h3 className="text-base font-semibold text-N500 mb-8">{course.title}</h3>
+                            <h3 className="text-base font-semibold text-N500 mb-8">{course.name}</h3>
                             <p className="text-sm text-N200 mb-16">{course.description}</p>
                             
-                            <Link href={`/courses/${course.id}`}>
+                            <Link href={`/courses/${course.course_id}`}>
                               <button className="w-full bg-P300 text-N00 py-8 px-16 rounded-lg text-sm font-medium hover:bg-P200 transition duration-300">
                                 View Course
                               </button>
