@@ -39,7 +39,7 @@ const Header = (props: headerType) => {
                 Apply
               </button>
               <Link
-                href={WEB_APP_ROUTE ? WEB_APP_ROUTE : "/login"}
+                href={"/login"}
                 className="py-12 px-40 bg-P300 hover:bg-P200  text-N00 rounded-lg font-semibold"
                 target="_blank"
               >
@@ -66,7 +66,7 @@ const Header = (props: headerType) => {
                 Apply
               </button>
               <Link
-                href={WEB_APP_ROUTE ? WEB_APP_ROUTE : ""}
+                href={"/login"}
                 className="py-12 px-40 bg-P300 hover:bg-P200 w-full text-center  text-N00 rounded-lg font-semibold"
                 target="_blank"
               >
