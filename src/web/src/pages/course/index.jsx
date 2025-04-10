@@ -12,8 +12,15 @@ const CourseDetail = () => {
   
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [course, setCourse] = useState({
+  const [userData, setUserData] = useState({
     name: "",
+    cohort: "",
+    track: "",
+    trackId: "",
+    studentId: "",
+  });
+  const [course, setCourse] = useState({
+    title: "",
     description: "",
     lessons: [],
     resources: []
@@ -21,86 +28,141 @@ const CourseDetail = () => {
   const [activeLesson, setActiveLesson] = useState(null);
 
   useEffect(() => {
-    const fetchCourseData = async () => {
-      if (!id) return;
+    if (id) {
+      const token = localStorage.getItem("token");
       
-      try {
-        setLoading(true);
-        const token = localStorage.getItem("token");
-        
-        if (!token) {
-          throw new Error("Authentication required");
-        }
-        
-        // Get user ID from token
-        const userId = getUserIdFromToken(token);
-        
-        // Get the latest track of the student
-        const latestTrackResponse = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_ROUTE}students/recent/${userId}`,
-          {
-            headers: { Authorization: `Bearer ${token}` }
-          }
-        );
-        
-        const trackId = latestTrackResponse.data.track_id;
-        
-        // Fetch courses for the student's track
-        const coursesResponse = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_ROUTE}students/courses/${userId}/${trackId}`,
-          {
-            headers: { Authorization: `Bearer ${token}` }
-          }
-        );
-        
-        // Find the current course in the list
-        const currentCourse = coursesResponse.data.courses.find(
-          course => course.course_id === id
-        );
-        
-        if (!currentCourse) {
-          throw new Error("Course not found");
-        }
-        
-        // Fetch course details including lessons 
-        // This is a placeholder - your actual API might have a different endpoint for detailed course info
-        const courseDetailsResponse = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_ROUTE}courses/${id}`,
-          {
-            headers: { Authorization: `Bearer ${token}` }
-          }
-        );
-        
-        const courseData = {
-          title: currentCourse.name,
-          description: currentCourse.description,
-          lessons: courseDetailsResponse.data.lessons || [],
-          resources: courseDetailsResponse.data.resources || []
-        };
-        
-        setCourse(courseData);
-        
-        // Set first lesson as active by default
-        if (courseData.lessons && courseData.lessons.length > 0) {
-          setActiveLesson(courseData.lessons[0]);
-        }
-        
-      } catch (err) {
-        setError(err.message || "Failed to load course data");
-        console.error(err);
-      } finally {
-        setLoading(false);
+      if (!token) {
+        router.push("/login");
+        return;
       }
-    };
-    
-    fetchCourseData();
-  }, [id]);
+      
+      fetchCourseData();
+    }
+  }, [id, router]);
+
+  const fetchCourseData = async () => {
+    try {
+      setLoading(true);
+      const token = localStorage.getItem("token");
+      
+      if (!token) {
+        throw new Error("Authentication required");
+      }
+      
+      // Get user ID from token
+      const userId = getUserIdFromToken(token);
+      
+      if (!userId) {
+        throw new Error("Invalid authentication token");
+      }
+      
+      const latestTrackResponse = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_ROUTE}students/recent/${userId}`,
+        {
+          headers: { Authorization: `Bearer ${token}` }
+        }
+      );
+      
+      // Check if we have a valid track_id
+      if (!latestTrackResponse.data || !latestTrackResponse.data.track_id) {
+        const studentResponse = await axios.get(
+          `${process.env.NEXT_PUBLIC_API_ROUTE}students/${userId}`,
+          {
+            headers: { Authorization: `Bearer ${token}` }
+          }
+        );
+        
+        if (studentResponse.data && studentResponse.data.track_id) {
+          const trackId = studentResponse.data.track_id;
+          await fetchUserAndCourseData(userId, trackId, token);
+        } else {
+          throw new Error("Could not determine user's track");
+        }
+      } else {
+        const trackId = latestTrackResponse.data.track_id;
+        await fetchUserAndCourseData(userId, trackId, token);
+      }
+    } catch (err) {
+      console.error("Error fetching course data:", err);
+      setError(err.message || "Failed to load course data");
+      setLoading(false);
+      
+      // If authentication error, redirect to login
+      if (err.message === "Authentication required" || err.message === "Invalid authentication token") {
+        router.push("/login");
+      }
+    }
+  };
+  
+  const fetchUserAndCourseData = async (userId, trackId, token) => {
+    try {
+      // Fetch student data with the track
+      const userResponse = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_ROUTE}students/${userId}/${trackId}`,
+        {
+          headers: { Authorization: `Bearer ${token}` }
+        }
+      );
+      
+      setUserData({
+        name: userResponse.data.full_name || "",
+        // Handle cohort as an object or string
+        cohort: typeof userResponse.data.cohort === 'object' 
+          ? userResponse.data.cohort.name 
+          : (userResponse.data.cohort || ""),
+        track: userResponse.data.track || "",
+        trackId: trackId,
+        studentId: userId,
+      });
+      
+      // Fetch the specific course details
+      const courseResponse = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_ROUTE}courses/${id}`,
+        {
+          headers: { Authorization: `Bearer ${token}` }
+        }
+      );
+      
+      setCourse({
+        title: courseResponse.data.name || "Course",
+        description: courseResponse.data.description || "",
+        lessons: courseResponse.data.lessons || [],
+        resources: courseResponse.data.resources || []
+      });
+      
+      if (courseResponse.data.lessons && courseResponse.data.lessons.length > 0) {
+        setActiveLesson(courseResponse.data.lessons[0]);
+      }
+    } catch (error) {
+      console.error("Error fetching course details:", error);
+      setError("Error loading course details");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   // Helper function to extract user ID from token
-  // This is a placeholder - implement according to your token structure
   const getUserIdFromToken = (token) => {
-    // In a real application, decode JWT token or get user ID from appropriate storage
-    return localStorage.getItem("userId") || "current-user-id";
+    try {
+      // JWT tokens are in format: header.payload.signature
+      const parts = token.split('.');
+      
+      if (parts.length !== 3) {
+        console.error("Invalid token format");
+        return null;
+      }
+      
+      const payload = parts[1];
+      
+      // Base64 decode the payload
+      const base64 = payload.replace(/-/g, '+').replace(/_/g, '/');
+      const decodedPayload = JSON.parse(atob(base64));
+      
+      return decodedPayload.user_id;
+    } catch (error) {
+      console.error("Error decoding token:", error);
+      return null;
+    }
   };
 
   const extractYouTubeId = (url) => {

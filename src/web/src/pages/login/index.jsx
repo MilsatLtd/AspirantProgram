@@ -33,9 +33,15 @@ const Login = () => {
         formData
       );
       
-      // Store tokens in localStorage or cookies
+      // Decode the token to get user ID
+      const payload = response.data.access.split('.')[1];
+      const decodedPayload = JSON.parse(atob(payload));
+      const userId = decodedPayload.user_id;
+      
+      // Store tokens and user ID in localStorage
       localStorage.setItem("token", response.data.access);
       localStorage.setItem("refreshToken", response.data.refresh);
+      localStorage.setItem("userId", userId);
       
       // Redirect to dashboard
       router.push("/dashboard");
