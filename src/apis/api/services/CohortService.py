@@ -97,7 +97,7 @@ class GetOpenCohort:
     def get(self):
         try:
             cohort = Cohort.objects.filter(
-                apply_start_date__lte=timezone.now(), apply_end_date__gte=timezone.now()).exclude(name__icontains='test')
+                apply_start_date__lte=timezone.now(), apply_end_date__gte=timezone.now())
             cohort_serializer = OpenCohortSerializer(cohort, many=True)
             return Response(cohort_serializer.data, status=status.HTTP_200_OK)
         except Cohort.DoesNotExist:
