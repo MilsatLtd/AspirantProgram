@@ -458,7 +458,7 @@ const StudentDashboard = () => {
               
               <div className="flex space-x-16">
                 <Link href="/dashboard" className="text-sm text-N100 hover:text-N00">Dashboard</Link>
-                <Link href="/courses" className="text-sm text-N100 hover:text-N00">Courses</Link>
+                <Link href="/course" className="text-sm text-N100 hover:text-N00">Courses</Link>
                 <Link href="/support" className="text-sm text-N100 hover:text-N00">Support</Link>
               </div>
             </div>
