@@ -23,6 +23,13 @@ export interface reasonInfo {
     track_id: string | undefined;
     file: File | undefined;
     reason: string | undefined;
+}
+
+export interface allReasonInfo {
+    cohort: string | undefined;
+    track_id: string | undefined;
+    file: File | undefined;
+    reason: string | undefined;
     referral: string | undefined;
 }
 

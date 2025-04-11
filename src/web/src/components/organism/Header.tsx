@@ -41,7 +41,6 @@ const Header = (props: headerType) => {
               <Link
                 href={"/login"}
                 className="py-12 px-40 bg-P300 hover:bg-P200  text-N00 rounded-lg font-semibold"
-                target="_blank"
               >
                 Login
               </Link>
@@ -68,7 +67,6 @@ const Header = (props: headerType) => {
               <Link
                 href={"/login"}
                 className="py-12 px-40 bg-P300 hover:bg-P200 w-full text-center  text-N00 rounded-lg font-semibold"
-                target="_blank"
               >
                 Login
               </Link>
