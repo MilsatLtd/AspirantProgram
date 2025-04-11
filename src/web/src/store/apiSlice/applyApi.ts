@@ -46,7 +46,7 @@ export const applyApi = createApi({
     sendEmail: builder.mutation({
       query: (body: { email:string, subject:string, message:string}) => {
           return {
-            url: "/email_async_test",
+            url: "/email",
             method: "post",
             body,
             providesTags: ['apply-email']
