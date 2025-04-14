@@ -49,7 +49,7 @@ const TermsAndConditions = (props: termsAndConditionType) => {
             I hereby declare that i have read through the{" "}
             <span className="text-P300 cursor-pointer font-semibold hover:underline">
               <Link
-                href={"T&C"}
+                href={"terms-and-condition"}
                 target="_blank"
               >
                 Terms and Condition

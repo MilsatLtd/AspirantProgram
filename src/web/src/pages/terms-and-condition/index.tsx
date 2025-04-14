@@ -20,7 +20,7 @@ const TermsConditionsPage = () => {
       <meta property="og:image" content="/og-image.jpg" /> */}
 
       {/* Add a canonical URL if needed */}
-      <link rel="canonical" href="https://aspirant.milsat.africa/apply/T&C" />
+      <link rel="canonical" href="https://aspirant.milsat.africa/terms-and-condition" />
 
       {/* Add your CSS styles or external stylesheets */}
       <link rel="stylesheet" href="/styles.css" />

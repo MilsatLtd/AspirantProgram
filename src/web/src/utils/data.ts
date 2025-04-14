@@ -45,7 +45,7 @@ export const routes = {
     {
       id: 1,
       name: "Terms and Conditions",
-      link: "T&C",
+      link: "terms-and-condition",
     },
   ],
   tracks: [
