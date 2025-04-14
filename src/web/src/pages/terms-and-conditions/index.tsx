@@ -1,6 +1,6 @@
 import Footer from "@/components/organism/Footer";
 import Header from "@/components/organism/Header";
-import blurEffectTopRight from "../../../Assets/blur-effect-top-right.svg";
+import blurEffectTopRight from "../../Assets/blur-effect-top-right.svg";
 import Link from "next/link";
 import React from "react";
 import Head from 'next/head'
@@ -11,7 +11,7 @@ const TermsConditionsPage = () => {
     <Head>
     <title>Terms and Condition</title>
       <meta name="description" content="Our Terms and Condition for Milsat Aspirant Programme" />
-      <meta name="keywords" content="MAP, Aspirant Programmer, GIS Training, Milsat, Educaton, GIS Skills, GIS Mentorship, Esri,Fundalmental of GIS, Field Mapping, Data collection, Africa GIS, Data, learning GIS" />
+      <meta name="keywords" content="MAP, Aspirant Programmer, GIS Training, Milsat, Education, GIS Skills, GIS Mentorship, Esri,Fundamental of GIS, Field Mapping, Data collection, Africa GIS, Data, learning GIS" />
       
       {/* Add a link to your favicon (replace 'favicon.ico' with your actual favicon) */}
       <link rel="icon" href="/favicon.ico" />
@@ -20,7 +20,7 @@ const TermsConditionsPage = () => {
       <meta property="og:image" content="/og-image.jpg" /> */}
 
       {/* Add a canonical URL if needed */}
-      <link rel="canonical" href="https://aspirant.milsat.africa/apply/T&C" />
+      <link rel="canonical" href="https://aspirant.milsat.africa/terms-and-condition" />
 
       {/* Add your CSS styles or external stylesheets */}
       <link rel="stylesheet" href="/styles.css" />
