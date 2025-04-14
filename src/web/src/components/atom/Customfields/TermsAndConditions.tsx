@@ -51,7 +51,6 @@ const TermsAndConditions = (props: termsAndConditionType) => {
               <Link
                 href={"T&C"}
                 target="_blank"
-                rel="noopener noreferrer"
               >
                 Terms and Condition
               </Link>
