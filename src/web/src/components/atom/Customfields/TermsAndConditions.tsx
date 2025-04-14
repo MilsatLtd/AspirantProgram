@@ -21,11 +21,7 @@ const TermsAndConditions = (props: termsAndConditionType) => {
       </h2>
       <ul className="flex flex-col gap-20">
         <li className="flex gap-[19px] items-center">
-          <div
-            className={`flex items-center p-[1px] ${
-              props.errorData && "border-R300 border-2 "
-            }`}
-          >
+        <div className={`flex items-center p-[1px] ${ props.errorData && "border-R300 border-2 "}`}>
             <input
               type="checkbox"
               name="accurate"
@@ -39,11 +35,7 @@ const TermsAndConditions = (props: termsAndConditionType) => {
           </p>
         </li>
         <li className="flex gap-[19px] items-center">
-          <div
-            className={`flex items-center p-[1px] ${
-              props.errorTerms && "border-R300 border-2"
-            }`}
-          >
+          <div className={`flex items-center p-[1px] ${ props.errorTerms && "border-R300 border-2"}`}>
             <input
               type="checkbox"
               name="terms"
@@ -55,17 +47,12 @@ const TermsAndConditions = (props: termsAndConditionType) => {
           <p className="text-sm text-N300 font-medium leading-[20px]">
             {" "}
             I hereby declare that i have read through the{" "}
-            <span
-              onClick={() => {
-                window.open(
-                  "/terms-and-conditions",
-                  "_blank",
-                  "noopener,noreferrer"
-                );
-              }}
-              className="text-P300 cursor-pointer font-semibold hover:underline"
-            >
-              Terms and Condition
+            <span className="text-P300 cursor-pointer font-semibold hover:underline">
+              <Link
+                href={"/terms-and-conditions"}
+              >
+                Terms and Condition
+              </Link>
             </span>{" "}
             of this Application
           </p>
