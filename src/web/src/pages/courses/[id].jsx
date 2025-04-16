@@ -130,23 +130,32 @@ const CourseDetail = () => {
         studentId: userId,
       });
       
-      // Fetch the specific course details
+      // Fetch the courses for the student
       const courseResponse = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_ROUTE}courses/${id}`,
+        `${process.env.NEXT_PUBLIC_API_ROUTE}students/courses/${userId}/${trackId}`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
       
+      // Find the specific course by ID
+      const courseData = Array.isArray(courseResponse.data)
+        ? courseResponse.data.find(course => course.id === id)
+        : courseResponse.data;
+      
+      if (!courseData) {
+        throw new Error("Course not found");
+      }
+      
       // Process lessons to ensure video URLs are ready
-      const processedLessons = courseResponse.data.lessons?.map(lesson => ({
+      const processedLessons = courseData.lessons?.map(lesson => ({
         ...lesson,
         youtube_id: lesson.video_url ? extractYouTubeId(lesson.video_url) : null
       })) || [];
       
       setCourse({
-        title: courseResponse.data.name || "Course",
-        description: courseResponse.data.description || "",
+        title: courseData.name || "Course",
+        description: courseData.description || "",
         lessons: processedLessons,
-        resources: courseResponse.data.resources || []
+        resources: courseData.resources || []
       });
       
       if (processedLessons.length > 0) {

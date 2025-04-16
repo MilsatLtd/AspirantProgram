@@ -4,8 +4,8 @@ const nextConfig = {
   images: {
     unoptimized: true,
   },
-  output: 'export',
-  useFileSystemPublicRoutes: true
+output:"export",
+useFileSystemPublicRoutes: false
 }
 
 module.exports = nextConfig

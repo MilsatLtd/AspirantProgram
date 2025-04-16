@@ -33,18 +33,24 @@ const Login = () => {
         formData
       );
       
-      // Decode the token to get user ID
+      // Decode the token to get user ID and role
       const payload = response.data.access.split('.')[1];
       const decodedPayload = JSON.parse(atob(payload));
       const userId = decodedPayload.user_id;
+      const userRole = decodedPayload.role;
       
-      // Store tokens and user ID in localStorage
+      // Store tokens, user ID, and role in localStorage
       localStorage.setItem("token", response.data.access);
       localStorage.setItem("refreshToken", response.data.refresh);
       localStorage.setItem("userId", userId);
+      localStorage.setItem("userRole", userRole);
       
-      // Redirect to dashboard
-      router.push("/dashboard");
+      // Redirect based on role - 2 for mentor, other values for student
+      if (userRole === 2) {
+        router.push("/mentor-dashboard");
+      } else {
+        router.push("/dashboard");
+      }
     } catch (err) {
       setError(
         err.response?.data?.detail || 
