@@ -51,6 +51,17 @@ const StudentDashboard = () => {
     return value;
   };
 
+  // Logout handler function
+  const handleLogout = () => {
+    // Clear all authentication data from localStorage
+    localStorage.removeItem("token");
+    localStorage.removeItem("refreshToken");
+    localStorage.removeItem("userId");
+    
+    // Redirect to login page
+    router.push("/login");
+  };
+
   const fetchStudentData = async () => {
     try {
       setLoading(true);
@@ -295,13 +306,23 @@ const StudentDashboard = () => {
               </Link>
               
               <div className="flex items-center space-x-16">
+                <button 
+                  onClick={handleLogout}
+                  className="text-sm font-medium text-N400 hover:text-R300 transition duration-300 flex items-center"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-16 w-16 mr-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                  </svg>
+                  Logout
+                </button>
+                
                 <div className="text-right mr-16">
                   <p className="text-sm font-medium text-N300">{userData.name}</p>
                   <p className="text-xs text-N200">{userData.track} Track</p>
                 </div>
-                <button className="bg-P300 text-N00 rounded-full w-40 h-40 flex items-center justify-center">
+                <div className="bg-P300 text-N00 rounded-full w-40 h-40 flex items-center justify-center">
                   <span className="font-semibold">{userData.name ? userData.name.charAt(0) : ''}</span>
-                </button>
+                </div>
               </div>
             </div>
           </div>

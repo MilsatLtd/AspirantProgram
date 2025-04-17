@@ -37,23 +37,56 @@ const Login = () => {
       const payload = response.data.access.split('.')[1];
       const decodedPayload = JSON.parse(atob(payload));
       const userId = decodedPayload.user_id;
-      const userRole = decodedPayload.role;
       
-      // Store tokens, user ID, and role in localStorage
+      // Store token information
       localStorage.setItem("token", response.data.access);
       localStorage.setItem("refreshToken", response.data.refresh);
       localStorage.setItem("userId", userId);
+      
+      // Determine user role - handle both string and array formats
+      let userRole;
+      if (Array.isArray(decodedPayload.role)) {
+        userRole = decodedPayload.role.includes(2) ? 2 : 1; // Prioritize mentor role if present
+        localStorage.setItem("userRoles", JSON.stringify(decodedPayload.role));
+      } else {
+        userRole = decodedPayload.role;
+      }
       localStorage.setItem("userRole", userRole);
       
-      // Redirect based on role - 2 for mentor, other values for student
-      if (userRole === 2) {
-        router.push("/mentor-dashboard");
-      } else {
+      // After login, check if the user is a student or mentor
+      try {
+        // First, try to fetch student data
+        const studentResponse = await axios.get(
+          `${process.env.NEXT_PUBLIC_API_ROUTE}students/${userId}`,
+          { headers: { Authorization: `Bearer ${response.data.access}` } }
+        );
+        
+        // If successful, user is a student - redirect to student dashboard
+        console.log("User is a student:", studentResponse.data);
         router.push("/dashboard");
+        return;
+      } catch (studentError) {
+        // If student fetch fails, try mentor data
+        try {
+          const mentorResponse = await axios.get(
+            `${process.env.NEXT_PUBLIC_API_ROUTE}mentors/${userId}`,
+            { headers: { Authorization: `Bearer ${response.data.access}` } }
+          );
+          
+          // If successful, user is a mentor - redirect to mentor dashboard
+          console.log("User is a mentor:", mentorResponse.data);
+          router.push("/mentor-dashboard");
+          return;
+        } catch (mentorError) {
+          // If both fail, we have an issue with the user role
+          console.error("Failed to determine user role:", studentError, mentorError);
+          throw new Error("Unable to determine user role. Please contact support.");
+        }
       }
     } catch (err) {
+      console.error("Login error:", err);
       setError(
-        err.response?.data?.detail || 
+        err.response?.data?.detail || err.message || 
         "Login failed. Please check your credentials."
       );
     } finally {
