@@ -442,17 +442,15 @@ const MentorDashboard = () => {
                             </div>
                             
                             <div className="mt-16 flex justify-end">
-                              <button 
-                                onClick={() => {
-                                  // Handle view mentee details
-                                  console.log("View mentee:", mentee);
-                                  // Could navigate to a detailed view or open a modal
-                                  router.push(`/mentor-dashboard/mentee/${mentee.id}`);
-                                }}
-                                className="text-sm text-P300 hover:text-P200 font-medium"
-                              >
-                                View Details
-                              </button>
+                            <button 
+  onClick={() => {
+    console.log("View mentee:", mentee);
+    router.push(`/mentor-dashboard/mentee/${mentee.user_id}`);
+  }}
+  className="text-sm text-P300 hover:text-P200 font-medium"
+>
+  View Details
+</button>
                             </div>
                           </div>
                         </div>
