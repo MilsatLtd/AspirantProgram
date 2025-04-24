@@ -17,10 +17,19 @@ const MentorDashboard = () => {
     track: "",
     trackId: "",
     cohort: "",
-    profilePicture: "",
+    profilePicture: ""
   });
   const [mentees, setMentees] = useState([]);
-  const [courses, setCourses] = useState([]);
+  const [trackData, setTrackData] = useState({
+    name: "",
+    id: "",
+    enrolled_count: 0
+  });
+  const [cohortData, setCohortData] = useState({
+    name: "",
+    id: "",
+    duration: 0
+  });
   const [activeTab, setActiveTab] = useState("mentees");
 
   useEffect(() => {
@@ -41,87 +50,96 @@ const MentorDashboard = () => {
     fetchMentorData();
   }, []);
 
-  const ensureSafeRender = (value) => {
-    if (value === null || value === undefined) {
-      return '';
-    }
-    if (typeof value === 'object') {
-      if (value.name) {
-        return value.name; 
-      }
-      return JSON.stringify(value); 
-    }
-    return value;
-  };
-
   const fetchMentorData = async () => {
     try {
       setLoading(true);
       const token = localStorage.getItem("token");
+      const userId = localStorage.getItem("userId");
       
-      if (!token) {
+      if (!token || !userId) {
         throw new Error("Authentication required");
       }
       
-      // Get user ID from token or local storage
-      const userId = localStorage.getItem("userId") || getUserIdFromToken(token);
-      
-      if (!userId) {
-        throw new Error("Invalid authentication token");
-      }
-      
+      // First try to get the most recent track
       try {
-        // Step 1: Try to get the most recent track for the mentor
         const recentTrackResponse = await axios.get(
           `${process.env.NEXT_PUBLIC_API_ROUTE}mentors/recent/${userId}`,
           { headers: { Authorization: `Bearer ${token}` } }
         );
         
-        console.log("Recent track response:", recentTrackResponse.data);
-        
-        let trackId;
-        // Check if we have a valid track from the recent endpoint
-        if (recentTrackResponse.data && recentTrackResponse.data.track_id) {
-          trackId = recentTrackResponse.data.track_id;
-          console.log("Using track from recent response:", trackId);
-        } else {
-          console.log("No track in recent response, trying alternative approach");
-          
-          // Step 2: If no recent track, get mentor info
+        if (recentTrackResponse.data && recentTrackResponse.data.track) {
+          // We have a track ID, get detailed info
+          const trackId = recentTrackResponse.data.track;
           const mentorResponse = await axios.get(
-            `${process.env.NEXT_PUBLIC_API_ROUTE}mentors/${userId}`,
+            `${process.env.NEXT_PUBLIC_API_ROUTE}mentors/${userId}/${trackId}`,
             { headers: { Authorization: `Bearer ${token}` } }
           );
           
-          console.log("Mentor response:", mentorResponse.data);
+          // Set track data
+          setTrackData({
+            name: mentorResponse.data.track?.name || "Unassigned",
+            id: trackId,
+            enrolled_count: mentorResponse.data.track?.enrolled_count || 0
+          });
           
-          // Set default data from mentor info
-          handleBasicMentorData(mentorResponse.data, userId);
-          return;
+          // Set cohort data
+          setCohortData({
+            name: mentorResponse.data.cohort?.name || "Current Cohort",
+            id: mentorResponse.data.cohort?.cohort_id || "",
+            duration: mentorResponse.data.cohort?.cohort_duration || 0
+          });
+          
+          // Update user data
+          setUserData({
+            name: mentorResponse.data.full_name || "Mentor",
+            email: mentorResponse.data.email || "",
+            bio: mentorResponse.data.bio || "",
+            track: mentorResponse.data.track?.name || "Unassigned",
+            trackId: trackId,
+            cohort: mentorResponse.data.cohort?.name || "Current Cohort",
+            profilePicture: mentorResponse.data.profile_picture || "",
+          });
+          
+          // Set mentees
+          setMentees(mentorResponse.data.mentees || []);
+        } else {
+          throw new Error("No track found");
         }
-        
-        // Step 3: We have a track ID, fetch detailed data
-        await fetchMentorDataWithTrack(userId, trackId, token);
-        
       } catch (error) {
-        console.error("Error in data fetching flow:", error);
+        // Fallback to basic mentor data
+        const basicMentorResponse = await axios.get(
+          `${process.env.NEXT_PUBLIC_API_ROUTE}mentors/${userId}`,
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
         
-        // Try one more approach - just get basic mentor data
-        try {
-          const basicMentorResponse = await axios.get(
-            `${process.env.NEXT_PUBLIC_API_ROUTE}mentors/${userId}`,
-            { headers: { Authorization: `Bearer ${token}` } }
-          );
-          
-          handleBasicMentorData(basicMentorResponse.data, userId);
-        } catch (finalError) {
-          console.error("Failed to get any mentor data:", finalError);
-          setError("Could not retrieve your mentor information. Please try again later.");
-          setLoading(false);
-        }
+        // Set track data
+        setTrackData({
+          name: basicMentorResponse.data.track?.name || "Unassigned",
+          id: basicMentorResponse.data.track?.track_id || "",
+          enrolled_count: basicMentorResponse.data.track?.enrolled_count || 0
+        });
+        
+        // Set cohort data
+        setCohortData({
+          name: basicMentorResponse.data.cohort?.name || "Current Cohort",
+          id: basicMentorResponse.data.cohort?.cohort_id || "",
+          duration: basicMentorResponse.data.cohort?.cohort_duration || 0
+        });
+        
+        setUserData({
+          name: basicMentorResponse.data.full_name || "Mentor",
+          email: basicMentorResponse.data.email || "",
+          bio: basicMentorResponse.data.bio || "",
+          track: basicMentorResponse.data.track?.name || "Unassigned",
+          trackId: basicMentorResponse.data.track?.track_id || "default",
+          cohort: basicMentorResponse.data.cohort?.name || "Current Cohort",
+          profilePicture: basicMentorResponse.data.profile_picture || "",
+        });
+        
+        setMentees(basicMentorResponse.data.mentees || []);
       }
     } catch (err) {
-      console.error("Overall error:", err);
+      console.error("Error fetching mentor data:", err);
       
       if (err.response && err.response.status === 401) {
         // Token expired
@@ -132,136 +150,16 @@ const MentorDashboard = () => {
       }
       
       setError(err.message || "Failed to load mentor data");
-      setLoading(false);
-    }
-  };
-  
-  const handleBasicMentorData = (mentorData, userId) => {
-    // Set basic mentor data
-    setUserData({
-      name: mentorData?.full_name || "Mentor",
-      email: mentorData?.email || "",
-      bio: mentorData?.bio || "",
-      track: ensureSafeRender(mentorData?.track) || "Unassigned",
-      trackId: "default",
-      cohort: ensureSafeRender(mentorData?.cohort) || "Current Cohort",
-      profilePicture: mentorData?.profile_picture || "",
-    });
-    
-    // Parse mentees if available
-    if (mentorData?.mentees) {
-      try {
-        const parsedMentees = typeof mentorData.mentees === 'string' 
-          ? JSON.parse(mentorData.mentees) 
-          : Array.isArray(mentorData.mentees) 
-            ? mentorData.mentees 
-            : [];
-            
-        setMentees(parsedMentees);
-      } catch (e) {
-        console.error("Failed to parse mentees:", e);
-        setMentees([]);
-      }
-    }
-    
-    // Set empty courses
-    setCourses([]);
-    
-    setLoading(false);
-  };
-  
-  const fetchMentorDataWithTrack = async (userId, trackId, token) => {
-    try {
-      // Fetch mentor data with the track
-      const mentorResponse = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_ROUTE}mentors/${userId}/${trackId}`,
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
-      
-      console.log("Mentor data with track:", mentorResponse.data);
-      
-      // Update user data
-      setUserData({
-        name: mentorResponse.data.full_name || "Mentor",
-        email: mentorResponse.data.email || "",
-        bio: mentorResponse.data.bio || "",
-        track: ensureSafeRender(mentorResponse.data.track) || "Unassigned",
-        trackId: trackId,
-        cohort: ensureSafeRender(mentorResponse.data.cohort) || "Current Cohort",
-        profilePicture: mentorResponse.data.profile_picture || "",
-      });
-      
-      // Parse mentees if available
-      if (mentorResponse.data.mentees) {
-        try {
-          const parsedMentees = typeof mentorResponse.data.mentees === 'string' 
-            ? JSON.parse(mentorResponse.data.mentees) 
-            : Array.isArray(mentorResponse.data.mentees) 
-              ? mentorResponse.data.mentees 
-              : [];
-              
-          setMentees(parsedMentees);
-        } catch (e) {
-          console.error("Failed to parse mentees:", e);
-          setMentees([]);
-        }
-      }
-      
-      // Try to fetch courses for the track
-      try {
-        const coursesResponse = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_ROUTE}tracks/courses/${trackId}`,
-          { headers: { Authorization: `Bearer ${token}` } }
-        );
-        
-        console.log("Courses data:", coursesResponse.data);
-        
-        // Update courses
-        setCourses(coursesResponse.data.courses || []);
-      } catch (coursesError) {
-        console.error("Failed to fetch courses:", coursesError);
-        setCourses([]);
-      }
-    } catch (error) {
-      console.error("Error fetching mentor data with track:", error);
-      setError("Error loading data with track information");
     } finally {
       setLoading(false);
     }
   };
-  
-  // Helper function to extract user ID from token
-  const getUserIdFromToken = (token) => {
-    try {
-      // JWT tokens are in format: header.payload.signature
-      const parts = token.split('.');
-      
-      if (parts.length !== 3) {
-        console.error("Invalid token format");
-        return null;
-      }
-      
-      const payload = parts[1];
-      
-      // Base64 decode the payload
-      const base64 = payload.replace(/-/g, '+').replace(/_/g, '/');
-      const decodedPayload = JSON.parse(atob(base64));
-      
-      return decodedPayload.user_id;
-    } catch (error) {
-      console.error("Error decoding token:", error);
-      return null;
-    }
-  };
 
   const handleLogout = () => {
-    // Clear all auth data from localStorage
     localStorage.removeItem("token");
     localStorage.removeItem("refreshToken");
     localStorage.removeItem("userId");
     localStorage.removeItem("userRole");
-    
-    // Redirect to login page
     router.push("/login");
   };
 
@@ -319,7 +217,7 @@ const MentorDashboard = () => {
                   <p className="text-sm font-medium text-N300">{userData.name}</p>
                   <p className="text-xs text-N200">Mentor - {userData.track} Track</p>
                 </div>
-                <div className="bg-P300 text-N00 rounded-full w-40 h-40 flex items-center justify-center">
+                {/* <div className="bg-P300 text-N00 rounded-full w-40 h-40 flex items-center justify-center">
                   {userData.profilePicture ? (
                     <Image 
                       src={userData.profilePicture}
@@ -331,7 +229,7 @@ const MentorDashboard = () => {
                   ) : (
                     <span className="font-semibold">{userData.name ? userData.name.charAt(0) : "M"}</span>
                   )}
-                </div>
+                </div> */}
               </div>
             </div>
           </div>
@@ -354,10 +252,10 @@ const MentorDashboard = () => {
                   View Mentees
                 </button>
                 <button 
-                  onClick={() => setActiveTab("courses")}
+                  onClick={() => setActiveTab("trackDetails")}
                   className="bg-N00 text-P300 py-8 px-16 rounded-lg font-medium text-sm hover:bg-N50 transition duration-300"
                 >
-                  View Courses
+                  View Track Details
                 </button>
               </div>
             </div>
@@ -377,14 +275,14 @@ const MentorDashboard = () => {
                 My Mentees
               </button>
               <button 
-                onClick={() => setActiveTab("courses")}
+                onClick={() => setActiveTab("trackDetails")}
                 className={`flex-1 py-16 text-center font-medium text-sm ${
-                  activeTab === "courses" 
+                  activeTab === "trackDetails" 
                     ? "text-P300 border-b-2 border-P300" 
                     : "text-N300 hover:text-P200"
                 }`}
               >
-                Track Courses
+                Track Details
               </button>
               <button 
                 onClick={() => setActiveTab("profile")}
@@ -400,6 +298,7 @@ const MentorDashboard = () => {
             
             {/* Tab Content */}
             <div className="p-24">
+              {/* Mentees Tab */}
               {activeTab === "mentees" && (
                 <div>
                   <h2 className="text-lg font-bold text-N500 mb-24">Assigned Mentees</h2>
@@ -414,11 +313,21 @@ const MentorDashboard = () => {
                         <div key={index} className="bg-N50 rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition duration-300">
                           <div className="p-20">
                             <div className="flex items-center mb-16">
-                              <div className="w-48 h-48 rounded-full bg-P300 text-N00 flex items-center justify-center mr-12">
-                                <span className="font-semibold text-base">
-                                  {mentee.full_name ? mentee.full_name.charAt(0) : "S"}
-                                </span>
-                              </div>
+                              {/* <div className="w-48 h-48 rounded-full bg-P300 text-N00 flex items-center justify-center mr-12">
+                                {mentee.profile_picture ? (
+                                  <Image 
+                                    src={mentee.profile_picture}
+                                    alt={mentee.full_name}
+                                    width={48}
+                                    height={48}
+                                    className="rounded-full"
+                                  />
+                                ) : (
+                                  <span className="font-semibold text-base">
+                                    {mentee.full_name ? mentee.full_name.charAt(0) : "S"}
+                                  </span>
+                                )}
+                              </div> */}
                               <div>
                                 <h3 className="text-base font-semibold text-N500">{mentee.full_name}</h3>
                                 <p className="text-xs text-N200">{mentee.email}</p>
@@ -442,15 +351,12 @@ const MentorDashboard = () => {
                             </div>
                             
                             <div className="mt-16 flex justify-end">
-                            <button 
-  onClick={() => {
-    console.log("View mentee:", mentee);
-    router.push(`/mentor-dashboard/mentee/${mentee.user_id}`);
-  }}
-  className="text-sm text-P300 hover:text-P200 font-medium"
->
-  View Details
-</button>
+                              <button 
+                                onClick={() => router.push(`/mentor-dashboard/mentee/${mentee.user_id}`)}
+                                className="text-sm text-P300 hover:text-P200 font-medium"
+                              >
+                                View Details
+                              </button>
                             </div>
                           </div>
                         </div>
@@ -460,50 +366,52 @@ const MentorDashboard = () => {
                 </div>
               )}
               
-              {activeTab === "courses" && (
+              {/* Track Details Tab */}
+              {activeTab === "trackDetails" && (
                 <div>
-                  <h2 className="text-lg font-bold text-N500 mb-24">Track Courses</h2>
+                  <h2 className="text-lg font-bold text-N500 mb-24">Track & Cohort Information</h2>
                   
-                  {courses.length === 0 ? (
-                    <div className="text-center py-48">
-                      <p className="text-N200">No courses are currently available for your track.</p>
-                    </div>
-                  ) : (
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-24">
-                      {courses.map((course, index) => (
-                        <div key={index} className="bg-N50 rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition duration-300">
-                          <div className="aspect-video bg-N100 relative">
-                            {course.thumbnail ? (
-                              <Image 
-                                src={course.thumbnail} 
-                                alt={course.name}
-                                layout="fill"
-                                objectFit="cover"
-                              />
-                            ) : (
-                              <div className="w-full h-full flex items-center justify-center bg-P50">
-                                <span className="text-P300 font-medium">{course.name?.charAt(0)}</span>
-                              </div>
-                            )}
-                          </div>
-                          
-                          <div className="p-16">
-                            <h3 className="text-base font-semibold text-N500 mb-8">{course.name}</h3>
-                            <p className="text-sm text-N200 mb-16">{course.description}</p>
-                            
-                            <Link href={`/courses/${course.course_id}`}>
-                              <button className="w-full bg-P300 text-N00 py-8 px-16 rounded-lg text-sm font-medium hover:bg-P200 transition duration-300">
-                                View Course
-                              </button>
-                            </Link>
-                          </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-24">
+                    {/* Track Information */}
+                    <div className="bg-N50 rounded-lg p-24 shadow-lg">
+                      <h3 className="text-base font-semibold text-N500 mb-16">Track Details</h3>
+                      
+                      <div className="space-y-12">
+                        <div className="flex justify-between">
+                          <span className="text-sm text-N300">Track Name:</span>
+                          <span className="text-sm font-medium text-N500">{trackData.name}</span>
                         </div>
-                      ))}
+                        <div className="flex justify-between">
+                          <span className="text-sm text-N300">Enrolled Students:</span>
+                          <span className="text-sm font-medium text-N500">{trackData.enrolled_count}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-sm text-N300">Your Mentees:</span>
+                          <span className="text-sm font-medium text-N500">{mentees.length}</span>
+                        </div>
+                      </div>
                     </div>
-                  )}
+                    
+                    {/* Cohort Information */}
+                    <div className="bg-N50 rounded-lg p-24 shadow-lg">
+                      <h3 className="text-base font-semibold text-N500 mb-16">Cohort Details</h3>
+                      
+                      <div className="space-y-12">
+                        <div className="flex justify-between">
+                          <span className="text-sm text-N300">Cohort Name:</span>
+                          <span className="text-sm font-medium text-N500">{cohortData.name}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-sm text-N300">Duration:</span>
+                          <span className="text-sm font-medium text-N500">{cohortData.duration} {cohortData.duration === 1 ? 'month' : 'months'}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               )}
               
+              {/* Profile Tab */}
               {activeTab === "profile" && (
                 <div>
                   <h2 className="text-lg font-bold text-N500 mb-24">Mentor Profile</h2>
@@ -546,10 +454,6 @@ const MentorDashboard = () => {
                           <div className="flex justify-between">
                             <span className="text-sm text-N300">Assigned Mentees:</span>
                             <span className="text-sm font-medium text-N500">{mentees.length}</span>
-                          </div>
-                          <div className="flex justify-between">
-                            <span className="text-sm text-N300">Track Courses:</span>
-                            <span className="text-sm font-medium text-N500">{courses.length}</span>
                           </div>
                         </div>
                         
