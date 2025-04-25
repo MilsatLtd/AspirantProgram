@@ -135,6 +135,53 @@ const MenteeDetail = () => {
     }
   };
   
+  // Helper function to render profile image
+  const renderProfileImage = (imageUrl, name, size = "medium") => {
+    // Check if the image is a complete URL or just a path
+    const isFullUrl = imageUrl && (imageUrl.startsWith("http://") || imageUrl.startsWith("https://"));
+    
+    if (!imageUrl) {
+      // If no image, render the first letter of the name
+      return (
+        <div className={`w-full h-full flex items-center justify-center bg-P75 text-P400`}>
+          <span className="font-bold text-2xl">{name ? name.charAt(0) : "U"}</span>
+        </div>
+      );
+    }
+    
+    // If it's a FormData-type reference (usually a path without domain)
+    if (!isFullUrl) {
+      // Construct the full URL using the API base URL
+      const baseUrl = process.env.NEXT_PUBLIC_API_URL || "";
+      const fullImageUrl = `${baseUrl}${imageUrl.startsWith('/') ? '' : '/'}${imageUrl}`;
+      
+      return (
+        <img
+          src={fullImageUrl}
+          alt={name}
+          className="w-full h-full object-cover"
+          onError={(e) => {
+            e.target.onerror = null;
+            e.target.parentNode.innerHTML = `<div class="w-full h-full flex items-center justify-center bg-P75 text-P400"><span class="font-bold text-2xl">${name ? name.charAt(0) : "U"}</span></div>`;
+          }}
+        />
+      );
+    }
+    
+    // If it's already a full URL (like from AWS S3)
+    return (
+      <img
+        src={imageUrl}
+        alt={name}
+        className="w-full h-full object-cover"
+        onError={(e) => {
+          e.target.onerror = null;
+          e.target.parentNode.innerHTML = `<div class="w-full h-full flex items-center justify-center bg-P75 text-P400"><span class="font-bold text-2xl">${name ? name.charAt(0) : "U"}</span></div>`;
+        }}
+      />
+    );
+  };
+  
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-N50">
@@ -189,18 +236,8 @@ const MenteeDetail = () => {
                   <p className="text-sm font-medium text-N500">{mentorData.name}</p>
                   <p className="text-xs text-N200">Mentor - {mentorData.track}</p>
                 </div>
-                <div className="bg-P300 text-N00 rounded-full w-40 h-40 flex items-center justify-center shadow-card">
-                  {mentorData.profilePicture ? (
-                    <Image 
-                      src={mentorData.profilePicture}
-                      alt={mentorData.name}
-                      width={40}
-                      height={40}
-                      className="rounded-full"
-                    />
-                  ) : (
-                    <span className="font-semibold">{mentorData.name ? mentorData.name.charAt(0) : "M"}</span>
-                  )}
+                <div className="bg-P300 text-N00 rounded-full w-40 h-40 flex items-center justify-center shadow-card overflow-hidden">
+                  {renderProfileImage(mentorData.profilePicture, mentorData.name, "small")}
                 </div>
               </div>
             </div>
@@ -233,17 +270,7 @@ const MenteeDetail = () => {
                 {/* Profile Image */}
                 <div className="flex-shrink-0">
                   <div className="w-96 h-96 rounded-full overflow-hidden bg-N50 border-4 border-N00 shadow-card">
-                    {menteeData.profile_picture ? (
-                      <img 
-                        src={menteeData.profile_picture}
-                        alt={menteeData.full_name}
-                        className="w-full h-full object-cover"
-                      />
-                    ) : (
-                      <div className="w-full h-full flex items-center justify-center bg-P75 text-P400">
-                        <span className="font-bold text-2xl">{menteeData.full_name.charAt(0)}</span>
-                      </div>
-                    )}
+                    {renderProfileImage(menteeData.profile_picture, menteeData.full_name, "large")}
                   </div>
                 </div>
                 
