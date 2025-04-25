@@ -6,9 +6,9 @@ import Head from "next/head";
 import axios from "axios";
 import Logo from "../../Assets/logo.svg";
 
-const CourseDetail = () => {
+const TrackDetail = () => {
   const router = useRouter();
-  const { courseId } = router.query;
+  const { trackId, courseId } = router.query;
   
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -30,7 +30,7 @@ const CourseDetail = () => {
   const [videoError, setVideoError] = useState(false);
 
   useEffect(() => {
-    if (courseId) {
+    if (trackId) {
       const token = localStorage.getItem("token");
       
       if (!token) {
@@ -38,11 +38,21 @@ const CourseDetail = () => {
         return;
       }
       
-      fetchCourseData();
+      fetchTrackData();
     }
-  }, [courseId, router]);
+  }, [trackId, router]);
 
-  const fetchCourseData = async () => {
+  useEffect(() => {
+    // When courses are loaded, find the current course index
+    if (trackData.courses.length > 0 && courseId) {
+      const index = trackData.courses.findIndex(course => course.course_id === courseId);
+      if (index !== -1) {
+        setCurrentCourseIndex(index);
+      }
+    }
+  }, [trackData.courses, courseId]);
+
+  const fetchTrackData = async () => {
     try {
       setLoading(true);
       const token = localStorage.getItem("token");
@@ -64,24 +74,7 @@ const CourseDetail = () => {
       }
       
       try {
-        // First fetch the course data
-        const courseResponse = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_ROUTE}courses/${courseId}`,
-          { headers: { Authorization: `Bearer ${token}` } }
-        );
-        
-        if (!courseResponse.data) {
-          throw new Error("Course not found");
-        }
-        
-        // Get the trackId from the course data
-        const courseTrackId = courseResponse.data.track_id;
-        
-        if (!courseTrackId) {
-          throw new Error("This course is not associated with any track");
-        }
-        
-        // Now fetch user data
+        // Fetch user data
         const userResponse = await axios.get(
           `${process.env.NEXT_PUBLIC_API_ROUTE}students/${userId}`,
           { headers: { Authorization: `Bearer ${token}` } }
@@ -91,13 +84,13 @@ const CourseDetail = () => {
           name: userResponse.data.full_name || "",
           cohort: ensureSafeRender(userResponse.data.cohort) || "",
           track: userResponse.data.track ? ensureSafeRender(userResponse.data.track) : "",
-          trackId: courseTrackId,
+          trackId: trackId,
           studentId: userId,
         });
         
         // Fetch track data
         const trackResponse = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_ROUTE}tracks/${courseTrackId}`,
+          `${process.env.NEXT_PUBLIC_API_ROUTE}tracks/${trackId}`,
           { headers: { Authorization: `Bearer ${token}` } }
         );
         
@@ -119,14 +112,13 @@ const CourseDetail = () => {
           courses: sortedCourses || []
         });
         
-        // Find the index of the current course
-        const index = sortedCourses.findIndex(course => course.course_id === courseId);
-        if (index !== -1) {
-          setCurrentCourseIndex(index);
+        // If no courseId is specified in URL, update the URL with the first course
+        if (!courseId && sortedCourses.length > 0) {
+          router.replace(`/track/${trackId}/courses/${sortedCourses[0].course_id}`, undefined, { shallow: true });
         }
       } catch (error) {
         console.error("Error in data fetching flow:", error);
-        setError("Could not retrieve your course information. Please return to dashboard and try again.");
+        setError("Could not retrieve your track information. Please return to dashboard and try again.");
       }
     } catch (err) {
       console.error("Overall error:", err);
@@ -139,7 +131,7 @@ const CourseDetail = () => {
         return;
       }
       
-      setError(err.message || "Failed to load course data");
+      setError(err.message || "Failed to load track data");
     } finally {
       setLoading(false);
     }
@@ -187,7 +179,7 @@ const CourseDetail = () => {
   const goToNextCourse = () => {
     if (currentCourseIndex < trackData.courses.length - 1) {
       const nextCourse = trackData.courses[currentCourseIndex + 1];
-      router.push(`/courses/${nextCourse.course_id}`);
+      router.push(`/track/${trackId}/courses/${nextCourse.course_id}`);
     }
   };
   
@@ -195,7 +187,7 @@ const CourseDetail = () => {
   const goToPreviousCourse = () => {
     if (currentCourseIndex > 0) {
       const prevCourse = trackData.courses[currentCourseIndex - 1];
-      router.push(`/courses/${prevCourse.course_id}`);
+      router.push(`/track/${trackId}/courses/${prevCourse.course_id}`);
     }
   };
   
@@ -263,7 +255,7 @@ const CourseDetail = () => {
       <div className="flex items-center justify-center min-h-screen bg-N50">
         <div className="text-center">
           <div className="animate-spin rounded-full h-32 w-32 border-t-4 border-b-4 border-P300 mx-auto"></div>
-          <p className="mt-16 font-medium text-N300">Loading course content...</p>
+          <p className="mt-16 font-medium text-N300">Loading track content...</p>
         </div>
       </div>
     );
@@ -278,7 +270,7 @@ const CourseDetail = () => {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
           </div>
-          <h3 className="text-xl font-bold text-N500 mb-8">Error Loading Course</h3>
+          <h3 className="text-xl font-bold text-N500 mb-8">Error Loading Track</h3>
           <p className="text-N300 mb-16">{error}</p>
           <Link href="/dashboard">
             <button className="w-full bg-P300 text-N00 py-12 px-24 rounded-lg hover:bg-P200 transition duration-300 font-semibold">
@@ -314,7 +306,7 @@ const CourseDetail = () => {
   return (
     <>
       <Head>
-        <title>{currentCourse.name} | {trackData.name} | Milsat Aspirant Program</title>
+        <title>{trackData.name} | Milsat Aspirant Program</title>
       </Head>
       
       <div className="min-h-screen bg-N50">
@@ -483,7 +475,7 @@ const CourseDetail = () => {
               <div className="space-y-8">
                 {trackData.courses.map((course, index) => (
                   <Link 
-                    href={`/courses/${course.course_id}`}
+                    href={`/track/${trackId}/courses/${course.course_id}`}
                     key={course.course_id}
                   >
                     <div className={`p-16 rounded-lg transition ${
@@ -540,4 +532,4 @@ const CourseDetail = () => {
   );
 };
 
-export default CourseDetail;
+export default TrackDetail;
