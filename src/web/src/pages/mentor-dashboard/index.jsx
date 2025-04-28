@@ -23,8 +23,8 @@ const MentorDashboard = () => {
   const [trackData, setTrackData] = useState({
     name: "",
     id: "",
-    enrolled_count: 0
   });
+  const [trackCourses, setTrackCourses] = useState([]);
   const [cohortData, setCohortData] = useState({
     name: "",
     id: "",
@@ -79,8 +79,21 @@ const MentorDashboard = () => {
           setTrackData({
             name: mentorResponse.data.track?.name || "Unassigned",
             id: trackId,
-            enrolled_count: mentorResponse.data.track?.enrolled_count || 0
           });
+          
+          // Fetch track courses
+          try {
+            const trackDetailsResponse = await axios.get(
+              `${process.env.NEXT_PUBLIC_API_ROUTE}tracks/${trackId}`,
+              { headers: { Authorization: `Bearer ${token}` } }
+            );
+            
+            if (trackDetailsResponse.data && trackDetailsResponse.data.courses) {
+              setTrackCourses(trackDetailsResponse.data.courses);
+            }
+          } catch (error) {
+            console.error("Error fetching track courses:", error);
+          }
           
           // Set cohort data
           setCohortData({
@@ -113,11 +126,27 @@ const MentorDashboard = () => {
         );
         
         // Set track data
+        const currentTrackId = basicMentorResponse.data.track?.track_id || "";
         setTrackData({
           name: basicMentorResponse.data.track?.name || "Unassigned",
-          id: basicMentorResponse.data.track?.track_id || "",
-          enrolled_count: basicMentorResponse.data.track?.enrolled_count || 0
+          id: currentTrackId,
         });
+        
+        // Fetch track courses if we have a track ID
+        if (currentTrackId) {
+          try {
+            const trackDetailsResponse = await axios.get(
+              `${process.env.NEXT_PUBLIC_API_ROUTE}tracks/${currentTrackId}`,
+              { headers: { Authorization: `Bearer ${token}` } }
+            );
+            
+            if (trackDetailsResponse.data && trackDetailsResponse.data.courses) {
+              setTrackCourses(trackDetailsResponse.data.courses);
+            }
+          } catch (error) {
+            console.error("Error fetching track courses:", error);
+          }
+        }
         
         // Set cohort data
         setCohortData({
@@ -131,7 +160,7 @@ const MentorDashboard = () => {
           email: basicMentorResponse.data.email || "",
           bio: basicMentorResponse.data.bio || "",
           track: basicMentorResponse.data.track?.name || "Unassigned",
-          trackId: basicMentorResponse.data.track?.track_id || "default",
+          trackId: currentTrackId,
           cohort: basicMentorResponse.data.cohort?.name || "Current Cohort",
           profilePicture: basicMentorResponse.data.profile_picture || "",
         });
@@ -161,6 +190,74 @@ const MentorDashboard = () => {
     localStorage.removeItem("userId");
     localStorage.removeItem("userRole");
     router.push("/login");
+  };
+
+  // Function to check if a link is YouTube
+  const isYoutubeLink = (url) => {
+    return url && (
+      url.includes('youtube.com') || 
+      url.includes('youtu.be')
+    );
+  };
+
+  // Function to convert YouTube link to embed format
+  const getYoutubeEmbedLink = (url) => {
+    if (!url) return null;
+    
+    // Handle youtu.be format
+    if (url.includes('youtu.be')) {
+      const videoId = url.split('youtu.be/')[1].split('?')[0];
+      return `https://www.youtube.com/embed/${videoId}`;
+    }
+    
+    // Handle youtube.com format
+    if (url.includes('youtube.com/watch')) {
+      const videoId = new URL(url).searchParams.get('v');
+      return `https://www.youtube.com/embed/${videoId}`;
+    }
+    
+    return url;
+  };
+
+  // Function to handle profile picture upload
+  const handleProfilePictureUpload = async (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+    
+    const token = localStorage.getItem("token");
+    const userId = localStorage.getItem("userId");
+    
+    if (!token || !userId) {
+      alert("Authentication required");
+      return;
+    }
+    
+    try {
+      const formData = new FormData();
+      formData.append('profile_picture', file);
+      
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_ROUTE}mentors/${userId}/upload-picture`,
+        formData,
+        { 
+          headers: { 
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'multipart/form-data'
+          } 
+        }
+      );
+      
+      if (response.data && response.data.profile_picture) {
+        setUserData(prev => ({
+          ...prev,
+          profilePicture: response.data.profile_picture
+        }));
+        alert("Profile picture updated successfully");
+      }
+    } catch (err) {
+      console.error("Error uploading profile picture:", err);
+      alert("Failed to upload profile picture");
+    }
   };
 
   if (loading) {
@@ -217,19 +314,15 @@ const MentorDashboard = () => {
                   <p className="text-sm font-medium text-N300">{userData.name}</p>
                   <p className="text-xs text-N200">Mentor - {userData.track} Track</p>
                 </div>
-                {/* <div className="bg-P300 text-N00 rounded-full w-40 h-40 flex items-center justify-center">
-                  {userData.profilePicture ? (
-                    <Image 
-                      src={userData.profilePicture}
-                      alt={userData.name}
-                      width={40}
-                      height={40}
-                      className="rounded-full"
-                    />
-                  ) : (
-                    <span className="font-semibold">{userData.name ? userData.name.charAt(0) : "M"}</span>
-                  )}
-                </div> */}
+                <button 
+                  onClick={handleLogout}
+                  className="text-sm font-medium text-N400 hover:text-R300 transition duration-300 flex items-center"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-16 w-16 mr-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                  </svg>
+                  Logout
+                </button>
               </div>
             </div>
           </div>
@@ -313,21 +406,6 @@ const MentorDashboard = () => {
                         <div key={index} className="bg-N50 rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition duration-300">
                           <div className="p-20">
                             <div className="flex items-center mb-16">
-                              {/* <div className="w-48 h-48 rounded-full bg-P300 text-N00 flex items-center justify-center mr-12">
-                                {mentee.profile_picture ? (
-                                  <Image 
-                                    src={mentee.profile_picture}
-                                    alt={mentee.full_name}
-                                    width={48}
-                                    height={48}
-                                    className="rounded-full"
-                                  />
-                                ) : (
-                                  <span className="font-semibold text-base">
-                                    {mentee.full_name ? mentee.full_name.charAt(0) : "S"}
-                                  </span>
-                                )}
-                              </div> */}
                               <div>
                                 <h3 className="text-base font-semibold text-N500">{mentee.full_name}</h3>
                                 <p className="text-xs text-N200">{mentee.email}</p>
@@ -371,28 +449,8 @@ const MentorDashboard = () => {
                 <div>
                   <h2 className="text-lg font-bold text-N500 mb-24">Track & Cohort Information</h2>
                   
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-24">
-                    {/* Track Information */}
-                    <div className="bg-N50 rounded-lg p-24 shadow-lg">
-                      <h3 className="text-base font-semibold text-N500 mb-16">Track Details</h3>
-                      
-                      <div className="space-y-12">
-                        <div className="flex justify-between">
-                          <span className="text-sm text-N300">Track Name:</span>
-                          <span className="text-sm font-medium text-N500">{trackData.name}</span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span className="text-sm text-N300">Enrolled Students:</span>
-                          <span className="text-sm font-medium text-N500">{trackData.enrolled_count}</span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span className="text-sm text-N300">Your Mentees:</span>
-                          <span className="text-sm font-medium text-N500">{mentees.length}</span>
-                        </div>
-                      </div>
-                    </div>
-                    
-                    {/* Cohort Information */}
+                  <div className="grid grid-cols-1 gap-24">
+                    {/* Cohort Information - Now appears first */}
                     <div className="bg-N50 rounded-lg p-24 shadow-lg">
                       <h3 className="text-base font-semibold text-N500 mb-16">Cohort Details</h3>
                       
@@ -407,6 +465,81 @@ const MentorDashboard = () => {
                         </div>
                       </div>
                     </div>
+                    
+                    {/* Track Information */}
+                    <div className="bg-N50 rounded-lg p-24 shadow-lg">
+                      <h3 className="text-base font-semibold text-N500 mb-16">Track Details</h3>
+                      
+                      <div className="space-y-12 mb-24">
+                        <div className="flex justify-between">
+                          <span className="text-sm text-N300">Track Name:</span>
+                          <span className="text-sm font-medium text-N500">{trackData.name}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-sm text-N300">Your Mentees:</span>
+                          <span className="text-sm font-medium text-N500">{mentees.length}</span>
+                        </div>
+                      </div>
+                      
+                      {/* Track Courses */}
+                      <div>
+                        <h4 className="text-base font-semibold text-N400 mb-16 border-b border-N100 pb-8">Track Courses</h4>
+                        
+                        {trackCourses.length === 0 ? (
+                          <p className="text-sm text-N200">No courses found for this track.</p>
+                        ) : (
+                          <div className="space-y-24">
+                            {trackCourses.map((course, index) => (
+                              <div key={index} className="bg-N00 p-16 rounded-lg shadow-sm">
+                                <div className="flex justify-between items-start mb-8">
+                                  <h5 className="text-sm font-bold text-N500">
+                                    {course.order && `${course.order}. `}{course.name}
+                                  </h5>
+                                </div>
+                                <p className="text-sm text-N300 mb-12">{course.description}</p>
+                                
+                                {course.requirements && (
+                                  <div className="mb-12">
+                                    <span className="text-sm font-semibold text-N500">Requirements:</span>
+                                    <p className="text-sm text-N400">{course.requirements}</p>
+                                  </div>
+                                )}
+                                
+                                {course.access_link && (
+                                  <div>
+                                    <span className="text-sm font-semibold text-N400 block mb-8">Access:</span>
+                                    {isYoutubeLink(course.access_link) ? (
+                                      <div className="aspect-w-16 aspect-h-9 mt-8">
+                                        <iframe
+                                          src={getYoutubeEmbedLink(course.access_link)}
+                                          title={course.name}
+                                          frameBorder="0"
+                                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                          allowFullScreen
+                                          className="w-full h-64 rounded"
+                                        ></iframe>
+                                      </div>
+                                    ) : (
+                                      <a
+                                        href={course.access_link}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="text-P300 hover:text-P200 text-sm inline-flex items-center"
+                                      >
+                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-16 w-16 mr-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                                        </svg>
+                                        Open Course Material
+                                      </a>
+                                    )}
+                                  </div>
+                                )}
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    </div>
                   </div>
                 </div>
               )}
@@ -418,7 +551,7 @@ const MentorDashboard = () => {
                   
                   <div className="bg-N50 rounded-lg p-24">
                     <div className="flex flex-col md:flex-row items-start gap-24">
-                      <div className="w-80 h-80 rounded-full overflow-hidden bg-P50 flex-shrink-0">
+                      <div className="w-80 h-80 rounded-full overflow-hidden bg-P50 flex-shrink-0 relative group">
                         {userData.profilePicture ? (
                           <Image 
                             src={userData.profilePicture} 
@@ -432,6 +565,23 @@ const MentorDashboard = () => {
                             <span className="font-semibold text-lg">{userData.name.charAt(0)}</span>
                           </div>
                         )}
+                        
+                        {/* Image upload overlay */}
+                        <div className="absolute inset-0 bg-N500 bg-opacity-50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer">
+                          <label htmlFor="profile-upload" className="cursor-pointer">
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-24 w-24 text-N00" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
+                            </svg>
+                          </label>
+                          <input 
+                            id="profile-upload"
+                            type="file"
+                            accept="image/*"
+                            className="hidden"
+                            onChange={handleProfilePictureUpload}
+                          />
+                        </div>
                       </div>
                       
                       <div className="flex-1">
@@ -457,18 +607,12 @@ const MentorDashboard = () => {
                           </div>
                         </div>
                         
-                        <div className="flex space-x-16 mt-24">
+                        <div className="mt-24">
                           <button 
                             onClick={() => router.push("/mentor-dashboard/edit-profile")}
-                            className="flex-1 bg-P50 text-P300 py-12 px-20 rounded-lg text-sm font-medium hover:bg-P100 transition duration-300"
+                            className="bg-P50 text-P300 py-12 px-20 rounded-lg text-sm font-medium hover:bg-P100 transition duration-300"
                           >
                             Edit Profile
-                          </button>
-                          <button 
-                            onClick={handleLogout}
-                            className="flex-1 bg-R50 text-R300 py-12 px-20 rounded-lg text-sm font-medium hover:bg-R100 transition duration-300"
-                          >
-                            Logout
                           </button>
                         </div>
                       </div>

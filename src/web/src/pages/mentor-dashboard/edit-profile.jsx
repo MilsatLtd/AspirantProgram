@@ -21,13 +21,11 @@ const EditMentorProfile = () => {
     cohort: "",
   });
   const [formData, setFormData] = useState({
-    full_name: "",
-    email: "",
     bio: "",
     profile_picture: null,
-    current_password: "",
+    old_password: "",
     new_password: "",
-    confirm_password: "",
+    new_password_confirm: "",
   });
   const [previewUrl, setPreviewUrl] = useState("");
 
@@ -83,15 +81,13 @@ const EditMentorProfile = () => {
         cohort: ensureSafeRender(mentorData?.cohort) || "Current Cohort",
       });
       
-      // Set form data
+      // Set form data (only for editable fields)
       setFormData({
-        full_name: mentorData?.full_name || "",
-        email: mentorData?.email || "",
         bio: mentorData?.bio || "",
         profile_picture: null,
-        current_password: "",
+        old_password: "",
         new_password: "",
-        confirm_password: "",
+        new_password_confirm: "",
       });
       
       // Set profile picture preview if available
@@ -178,34 +174,23 @@ const EditMentorProfile = () => {
     }
   };
   
-  const validateForm = () => {
+  const validatePasswordChange = () => {
     // Reset error and success messages
     setError("");
-    setSuccessMessage("");
     
-    // Validate email format
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (formData.email && !emailRegex.test(formData.email)) {
-      setError("Please enter a valid email address");
+    if (!formData.old_password) {
+      setError("Current password is required to set a new password");
       return false;
     }
     
-    // Validate password if changing password
-    if (formData.new_password || formData.current_password) {
-      if (!formData.current_password) {
-        setError("Current password is required to set a new password");
-        return false;
-      }
-      
-      if (formData.new_password.length < 8) {
-        setError("New password must be at least 8 characters long");
-        return false;
-      }
-      
-      if (formData.new_password !== formData.confirm_password) {
-        setError("New passwords do not match");
-        return false;
-      }
+    if (formData.new_password.length < 8) {
+      setError("New password must be at least 8 characters long");
+      return false;
+    }
+    
+    if (formData.new_password !== formData.new_password_confirm) {
+      setError("New passwords do not match");
+      return false;
     }
     
     return true;
@@ -213,13 +198,11 @@ const EditMentorProfile = () => {
   
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    if (!validateForm()) {
-      return;
-    }
+    setError("");
+    setSuccessMessage("");
+    setSubmitting(true);
     
     try {
-      setSubmitting(true);
       const token = localStorage.getItem("token");
       const userId = localStorage.getItem("userId") || getUserIdFromToken(token);
       
@@ -227,63 +210,49 @@ const EditMentorProfile = () => {
         throw new Error("Authentication required");
       }
       
-      // Create FormData object to handle file uploads
-      const formDataObj = new FormData();
-      
-      // Only add fields that have been changed
-      if (formData.full_name !== userData.name) {
-        formDataObj.append("full_name", formData.full_name);
-      }
-      
-      if (formData.email !== userData.email) {
-        formDataObj.append("email", formData.email);
-      }
-      
+      let successCount = 0;
+      let totalChanges = 0;
+
+      // 1. Update bio if changed
       if (formData.bio !== userData.bio) {
-        formDataObj.append("bio", formData.bio);
+        totalChanges++;
+        await updateBio(userId, token);
+        successCount++;
       }
       
+      // 2. Update profile picture if changed
       if (formData.profile_picture) {
-        formDataObj.append("profile_picture", formData.profile_picture);
+        totalChanges++;
+        await updateProfilePicture(userId, token);
+        successCount++;
       }
       
-      if (formData.current_password && formData.new_password) {
-        formDataObj.append("current_password", formData.current_password);
-        formDataObj.append("new_password", formData.new_password);
-      }
-      
-      // Only submit if there are changes
-      if (formDataObj.entries().next().done) {
-        setError("No changes to save");
-        setSubmitting(false);
-        return;
-      }
-      
-      // Send update request
-      const response = await axios.patch(
-        `${process.env.NEXT_PUBLIC_API_ROUTE}mentors/${userId}`,
-        formDataObj,
-        { 
-          headers: { 
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "multipart/form-data"
-          } 
+      // 3. Update password if changed
+      if (formData.old_password && formData.new_password) {
+        totalChanges++;
+        if (validatePasswordChange()) {
+          await updatePassword(token);
+          successCount++;
         }
-      );
+      }
       
-      setSuccessMessage("Profile updated successfully");
-      
-      // Clear password fields
-      setFormData(prev => ({
-        ...prev,
-        current_password: "",
-        new_password: "",
-        confirm_password: "",
-        profile_picture: null
-      }));
-      
-      // Update user data
-      fetchMentorData();
+      if (totalChanges === 0) {
+        setError("No changes to save");
+      } else if (successCount === totalChanges) {
+        setSuccessMessage("Profile updated successfully");
+        
+        // Clear password fields
+        setFormData(prev => ({
+          ...prev,
+          old_password: "",
+          new_password: "",
+          new_password_confirm: "",
+          profile_picture: null
+        }));
+        
+        // Refresh user data
+        fetchMentorData();
+      }
       
     } catch (err) {
       console.error("Error updating profile:", err);
@@ -298,6 +267,56 @@ const EditMentorProfile = () => {
     } finally {
       setSubmitting(false);
     }
+  };
+  
+  const updateBio = async (userId, token) => {
+    const bioData = { bio: formData.bio };
+    
+    await axios.put(
+      `${process.env.NEXT_PUBLIC_API_ROUTE}users/update/${userId}`,
+      bioData,
+      { 
+        headers: { 
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json"
+        } 
+      }
+    );
+  };
+  
+  const updateProfilePicture = async (userId, token) => {
+    const pictureFormData = new FormData();
+    pictureFormData.append("profile_picture", formData.profile_picture);
+    
+    await axios.put(
+      `${process.env.NEXT_PUBLIC_API_ROUTE}users/update/picture/${userId}`,
+      pictureFormData,
+      { 
+        headers: { 
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data"
+        } 
+      }
+    );
+  };
+  
+  const updatePassword = async (token) => {
+    const passwordData = {
+      old_password: formData.old_password,
+      new_password: formData.new_password,
+      new_password_confirm: formData.new_password_confirm
+    };
+    
+    await axios.put(
+      `${process.env.NEXT_PUBLIC_API_ROUTE}auth/password/change`,
+      passwordData,
+      { 
+        headers: { 
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json"
+        } 
+      }
+    );
   };
   
   const handleCancel = () => {
@@ -415,7 +434,7 @@ const EditMentorProfile = () => {
                   </label>
                 </div>
                 
-                {/* Personal Information */}
+                {/* Personal Information - Read-only */}
                 <div>
                   <h2 className="text-lg font-semibold text-N500 mb-16">Personal Information</h2>
                   
@@ -423,26 +442,25 @@ const EditMentorProfile = () => {
                     <label className="block text-sm font-medium text-N300 mb-8">Full Name</label>
                     <input 
                       type="text" 
-                      name="full_name"
-                      value={formData.full_name}
-                      onChange={handleInputChange}
-                      className="w-full px-16 py-12 border border-N100 rounded-lg focus:outline-none focus:ring-2 focus:ring-P300"
-                      placeholder="Your full name"
+                      value={userData.name}
+                      className="w-full px-16 py-12 border border-N100 rounded-lg bg-N50"
+                      disabled
                     />
+                    <p className="text-xs text-N200 mt-4">Name cannot be changed here</p>
                   </div>
                   
                   <div className="mb-16">
                     <label className="block text-sm font-medium text-N300 mb-8">Email Address</label>
                     <input 
                       type="email" 
-                      name="email"
-                      value={formData.email}
-                      onChange={handleInputChange}
-                      className="w-full px-16 py-12 border border-N100 rounded-lg focus:outline-none focus:ring-2 focus:ring-P300"
-                      placeholder="Your email address"
+                      value={userData.email}
+                      className="w-full px-16 py-12 border border-N100 rounded-lg bg-N50"
+                      disabled
                     />
+                    <p className="text-xs text-N200 mt-4">Email cannot be changed here</p>
                   </div>
                   
+                  {/* Bio - Editable */}
                   <div className="mb-16">
                     <label className="block text-sm font-medium text-N300 mb-8">Bio</label>
                     <textarea 
@@ -452,7 +470,9 @@ const EditMentorProfile = () => {
                       className="w-full px-16 py-12 border border-N100 rounded-lg focus:outline-none focus:ring-2 focus:ring-P300 min-h-32"
                       rows={5}
                       placeholder="Tell us about yourself"
+                      maxLength={50} // As per API documentation
                     ></textarea>
+                    <p className="text-xs text-N200 mt-4">Maximum 50 characters</p>
                   </div>
                 </div>
                 
@@ -488,8 +508,8 @@ const EditMentorProfile = () => {
                     <label className="block text-sm font-medium text-N300 mb-8">Current Password</label>
                     <input 
                       type="password" 
-                      name="current_password"
-                      value={formData.current_password}
+                      name="old_password"
+                      value={formData.old_password}
                       onChange={handleInputChange}
                       className="w-full px-16 py-12 border border-N100 rounded-lg focus:outline-none focus:ring-2 focus:ring-P300"
                       placeholder="Enter current password"
@@ -512,8 +532,8 @@ const EditMentorProfile = () => {
                     <label className="block text-sm font-medium text-N300 mb-8">Confirm New Password</label>
                     <input 
                       type="password" 
-                      name="confirm_password"
-                      value={formData.confirm_password}
+                      name="new_password_confirm"
+                      value={formData.new_password_confirm}
                       onChange={handleInputChange}
                       className="w-full px-16 py-12 border border-N100 rounded-lg focus:outline-none focus:ring-2 focus:ring-P300"
                       placeholder="Confirm new password"
