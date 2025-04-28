@@ -405,12 +405,11 @@ const StudentDashboard = () => {
                             <h3 className="text-base font-semibold text-N500 mb-8">{course.name}</h3>
                             <p className="text-sm text-N200 mb-16">{course.description}</p>
                             
-                            {/* Modified to allow viewing all courses */}
-                            <Link href={`/courses/${course.course_id}`}>
-                              <button className="w-full bg-P300 text-N00 py-8 px-16 rounded-lg text-sm font-medium hover:bg-P200 transition duration-300">
-                                View Course
-                              </button>
-                            </Link>
+                            <Link href={`/tracks/${userData.trackId}?course=${course.course_id}`}>
+  <button className="w-full bg-P300 text-N00 py-8 px-16 rounded-lg text-sm font-medium hover:bg-P200 transition duration-300">
+    View Course
+  </button>
+</Link>
                             
                             {/* Original code with conditional rendering based on course.can_view
                             {course.can_view ? (

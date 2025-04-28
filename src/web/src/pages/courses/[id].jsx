@@ -8,7 +8,7 @@ import Logo from "../../Assets/logo.svg";
 
 const CourseDetail = () => {
   const router = useRouter();
-  const { courseId } = router.query;
+  const { id } = router.query;
   
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -19,18 +19,17 @@ const CourseDetail = () => {
     trackId: "",
     studentId: "",
   });
-  
-  const [trackData, setTrackData] = useState({
-    name: "",
+  const [course, setCourse] = useState({
+    title: "",
     description: "",
-    courses: []
+    lessons: [],
+    resources: []
   });
-  
-  const [currentCourseIndex, setCurrentCourseIndex] = useState(0);
+  const [activeLesson, setActiveLesson] = useState(null);
   const [videoError, setVideoError] = useState(false);
 
   useEffect(() => {
-    if (courseId) {
+    if (id) {
       const token = localStorage.getItem("token");
       
       if (!token) {
@@ -40,7 +39,7 @@ const CourseDetail = () => {
       
       fetchCourseData();
     }
-  }, [courseId, router]);
+  }, [id, router]);
 
   const fetchCourseData = async () => {
     try {
@@ -64,69 +63,39 @@ const CourseDetail = () => {
       }
       
       try {
-        // First fetch the course data
-        const courseResponse = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_ROUTE}courses/${courseId}`,
+        // Step 1: Try to get the most recent track
+        const latestTrackResponse = await axios.get(
+          `${process.env.NEXT_PUBLIC_API_ROUTE}students/recent/${userId}`,
           { headers: { Authorization: `Bearer ${token}` } }
         );
         
-        if (!courseResponse.data) {
-          throw new Error("Course not found");
-        }
+        let trackId;
         
-        // Get the trackId from the course data
-        const courseTrackId = courseResponse.data.track_id;
-        
-        if (!courseTrackId) {
-          throw new Error("This course is not associated with any track");
-        }
-        
-        // Now fetch user data
-        const userResponse = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_ROUTE}students/${userId}`,
-          { headers: { Authorization: `Bearer ${token}` } }
-        );
-        
-        setUserData({
-          name: userResponse.data.full_name || "",
-          cohort: ensureSafeRender(userResponse.data.cohort) || "",
-          track: userResponse.data.track ? ensureSafeRender(userResponse.data.track) : "",
-          trackId: courseTrackId,
-          studentId: userId,
-        });
-        
-        // Fetch track data
-        const trackResponse = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_ROUTE}tracks/${courseTrackId}`,
-          { headers: { Authorization: `Bearer ${token}` } }
-        );
-        
-        if (!trackResponse.data) {
-          throw new Error("Track not found");
-        }
-        
-        // Sort courses by order if available
-        const sortedCourses = trackResponse.data.courses.sort((a, b) => {
-          if (a.order && b.order) {
-            return a.order - b.order;
+        // Check if we have a valid track from the recent endpoint
+        if (latestTrackResponse.data && latestTrackResponse.data.track) {
+          trackId = latestTrackResponse.data.track;
+        } else {
+          // Step 2: If no recent track, get student info to find any track_id
+          const studentResponse = await axios.get(
+            `${process.env.NEXT_PUBLIC_API_ROUTE}students/${userId}`,
+            { headers: { Authorization: `Bearer ${token}` } }
+          );
+          
+          // Check if the response includes track information we can use
+          if (studentResponse.data && studentResponse.data.track && studentResponse.data.track.track_id) {
+            trackId = studentResponse.data.track.track_id;
+          } else {
+            throw new Error("Could not determine your track. Please contact support.");
           }
-          return 0;
-        });
-        
-        setTrackData({
-          name: trackResponse.data.name || "Track",
-          description: trackResponse.data.description || "",
-          courses: sortedCourses || []
-        });
-        
-        // Find the index of the current course
-        const index = sortedCourses.findIndex(course => course.course_id === courseId);
-        if (index !== -1) {
-          setCurrentCourseIndex(index);
         }
+        
+        // Step 3: We have a track ID, fetch detailed data
+        await fetchUserAndCourseData(userId, trackId, token);
+        
       } catch (error) {
         console.error("Error in data fetching flow:", error);
         setError("Could not retrieve your course information. Please return to dashboard and try again.");
+        setLoading(false);
       }
     } catch (err) {
       console.error("Overall error:", err);
@@ -140,11 +109,66 @@ const CourseDetail = () => {
       }
       
       setError(err.message || "Failed to load course data");
-    } finally {
       setLoading(false);
     }
   };
   
+  const fetchUserAndCourseData = async (userId, trackId, token) => {
+    try {
+      // Fetch student data with the track
+      const userResponse = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_ROUTE}students/${userId}/${trackId}`,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      
+      // Update user data
+      setUserData({
+        name: userResponse.data.full_name || "",
+        cohort: ensureSafeRender(userResponse.data.cohort) || "",
+        track: userResponse.data.track ? ensureSafeRender(userResponse.data.track) : "",
+        trackId: trackId,
+        studentId: userId,
+      });
+      
+      // Fetch the courses for the student
+      const courseResponse = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_ROUTE}students/courses/${userId}/${trackId}`,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      
+      // Find the specific course by ID
+      const courseData = Array.isArray(courseResponse.data)
+        ? courseResponse.data.find(course => course.id === id)
+        : courseResponse.data;
+      
+      if (!courseData) {
+        throw new Error("Course not found");
+      }
+      
+      // Process lessons to ensure video URLs are ready
+      const processedLessons = courseData.lessons?.map(lesson => ({
+        ...lesson,
+        youtube_id: lesson.video_url ? extractYouTubeId(lesson.video_url) : null
+      })) || [];
+      
+      setCourse({
+        title: courseData.name || "Course",
+        description: courseData.description || "",
+        lessons: processedLessons,
+        resources: courseData.resources || []
+      });
+      
+      if (processedLessons.length > 0) {
+        setActiveLesson(processedLessons[0]);
+      }
+    } catch (error) {
+      console.error("Error fetching course details:", error);
+      setError("Error loading course details. This course may not be available to you.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   // Helper function for safe rendering
   const ensureSafeRender = (value) => {
     if (value === null || value === undefined) {
@@ -182,36 +206,8 @@ const CourseDetail = () => {
       return null;
     }
   };
-  
-  // Function to navigate to the next course
-  const goToNextCourse = () => {
-    if (currentCourseIndex < trackData.courses.length - 1) {
-      const nextCourse = trackData.courses[currentCourseIndex + 1];
-      router.push(`/courses/${nextCourse.course_id}`);
-    }
-  };
-  
-  // Function to navigate to the previous course
-  const goToPreviousCourse = () => {
-    if (currentCourseIndex > 0) {
-      const prevCourse = trackData.courses[currentCourseIndex - 1];
-      router.push(`/courses/${prevCourse.course_id}`);
-    }
-  };
-  
-  // Function to check if a URL is a YouTube link
-  const isYouTubeLink = (url) => {
-    if (!url) return false;
-    return url.includes('youtube.com') || url.includes('youtu.be');
-  };
-  
-  // Function to check if a URL is a Google Drive link
-  const isGoogleDriveLink = (url) => {
-    if (!url) return false;
-    return url.includes('drive.google.com');
-  };
-  
-  // Function to extract YouTube video ID from various URL formats
+
+  // Enhanced function to extract YouTube video ID from various URL formats
   const extractYouTubeId = (url) => {
     if (!url) return null;
     
@@ -236,27 +232,17 @@ const CourseDetail = () => {
     
     return null;
   };
-  
-  // Function to convert Google Drive view links to embed links
-  const getGoogleDriveEmbedLink = (url) => {
-    if (!url) return null;
-    
-    // Extract the file ID from Google Drive link
-    const fileIdMatch = url.match(/[-\w]{25,}/);
-    if (fileIdMatch && fileIdMatch[0]) {
-      return `https://drive.google.com/file/d/${fileIdMatch[0]}/preview`;
-    }
-    
-    return url;
-  };
-  
+
   // Function to handle iframe load errors
   const handleVideoError = () => {
     setVideoError(true);
   };
-  
-  // Current course being displayed
-  const currentCourse = trackData.courses[currentCourseIndex] || null;
+
+  // Function to reset video error when changing lessons
+  const handleLessonChange = (lesson) => {
+    setVideoError(false);
+    setActiveLesson(lesson);
+  };
 
   if (loading) {
     return (
@@ -290,31 +276,10 @@ const CourseDetail = () => {
     );
   }
 
-  if (!currentCourse) {
-    return (
-      <div className="flex items-center justify-center min-h-screen bg-N50">
-        <div className="bg-N00 p-24 rounded-lg shadow-xl max-w-md w-full">
-          <div className="text-center text-R300 mb-16">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-32 w-32 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-          </div>
-          <h3 className="text-xl font-bold text-N500 mb-8">Course Not Found</h3>
-          <p className="text-N300 mb-16">The requested course could not be found in this track.</p>
-          <Link href="/dashboard">
-            <button className="w-full bg-P300 text-N00 py-12 px-24 rounded-lg hover:bg-P200 transition duration-300 font-semibold">
-              Back to Dashboard
-            </button>
-          </Link>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <>
       <Head>
-        <title>{currentCourse.name} | {trackData.name} | Milsat Aspirant Program</title>
+        <title>{course.title} | Milsat Aspirant Program</title>
       </Head>
       
       <div className="min-h-screen bg-N50">
@@ -339,180 +304,154 @@ const CourseDetail = () => {
         
         {/* Main Content */}
         <main className="container mx-auto px-16 lg:px-48 py-32">
-          {/* Track Header */}
+          {/* Course Header */}
           <div className="bg-P300 text-N00 rounded-lg p-24 mb-32 shadow-card">
-            <h1 className="text-xl font-bold mb-8">{trackData.name}</h1>
-            <p className="text-sm opacity-90">{trackData.description}</p>
+            <h1 className="text-xl font-bold mb-8">{course.title}</h1>
+            <p className="text-sm opacity-90">{course.description}</p>
           </div>
           
-          {/* Course Progress Indicator */}
-          <div className="mb-24">
-            <div className="flex items-center justify-between">
-              <h2 className="text-lg font-bold text-N500">
-                Course {currentCourseIndex + 1} of {trackData.courses.length}
-              </h2>
-              <div className="text-sm text-N300">
-                Progress: {Math.round(((currentCourseIndex + 1) / trackData.courses.length) * 100)}%
-              </div>
-            </div>
-            <div className="mt-8 w-full bg-N100 rounded-full h-8">
-              <div 
-                className="bg-P300 h-8 rounded-full" 
-                style={{ width: `${((currentCourseIndex + 1) / trackData.courses.length) * 100}%` }}
-              ></div>
-            </div>
-          </div>
-          
-          {/* Course Navigation */}
-          <div className="flex justify-between mb-24">
-            <button 
-              onClick={goToPreviousCourse} 
-              disabled={currentCourseIndex === 0}
-              className={`flex items-center px-16 py-8 rounded-lg ${
-                currentCourseIndex === 0 
-                  ? 'bg-N100 text-N200 cursor-not-allowed' 
-                  : 'bg-N200 text-N00 hover:bg-N300'
-              }`}
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-16 w-16 mr-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-              </svg>
-              Previous Course
-            </button>
-            
-            <button 
-              onClick={goToNextCourse} 
-              disabled={currentCourseIndex === trackData.courses.length - 1}
-              className={`flex items-center px-16 py-8 rounded-lg ${
-                currentCourseIndex === trackData.courses.length - 1 
-                  ? 'bg-N100 text-N200 cursor-not-allowed' 
-                  : 'bg-P300 text-N00 hover:bg-P200'
-              }`}
-            >
-              Next Course
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-16 w-16 ml-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-              </svg>
-            </button>
-          </div>
-          
-          {/* Course Content Card */}
+          {/* Course Content */}
           <div className="bg-N00 rounded-lg shadow-xl mb-32">
-            <div className="p-24">
-              {/* Course Title and Description */}
-              <div className="mb-24">
-                <h3 className="text-xl font-bold text-N500 mb-8">{currentCourse.name}</h3>
-                <p className="text-sm text-N300 mb-16">{currentCourse.description}</p>
-                
-                {currentCourse.requirements && (
-                  <div className="bg-N50 p-16 rounded-lg mb-16">
-                    <h4 className="text-sm font-semibold text-N500 mb-8">Requirements</h4>
-                    <p className="text-sm text-N300">{currentCourse.requirements}</p>
-                  </div>
-                )}
-              </div>
-              
-              {/* Course Content */}
-              <div className="mb-24">
-                <h4 className="text-base font-semibold text-N500 mb-16">Course Content</h4>
-                
-                {currentCourse.access_link ? (
-                  <div className="mt-16">
-                    {/* YouTube Video */}
-                    {isYouTubeLink(currentCourse.access_link) && (
-                      <div className="aspect-video mb-16">
-                        <iframe
-                          className="w-full h-full rounded-lg"
-                          src={`https://www.youtube.com/embed/${extractYouTubeId(currentCourse.access_link)}`}
-                          title={currentCourse.name}
-                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                          allowFullScreen
-                          onError={handleVideoError}
-                        ></iframe>
-                      </div>
-                    )}
-                    
-                    {/* Google Drive Embed */}
-                    {isGoogleDriveLink(currentCourse.access_link) && (
-                      <div className="aspect-video mb-16">
-                        <iframe
-                          className="w-full h-full rounded-lg"
-                          src={getGoogleDriveEmbedLink(currentCourse.access_link)}
-                          title={currentCourse.name}
-                          allow="autoplay"
-                          onError={handleVideoError}
-                        ></iframe>
-                      </div>
-                    )}
-                    
-                    {/* Other Links */}
-                    {!isYouTubeLink(currentCourse.access_link) && !isGoogleDriveLink(currentCourse.access_link) && (
-                      <div className="bg-N50 p-16 rounded-lg mb-16">
-                        <h4 className="text-sm font-semibold text-N500 mb-8">Access Resource</h4>
-                        <a 
-                          href={currentCourse.access_link} 
-                          target="_blank" 
-                          rel="noopener noreferrer"
-                          className="flex items-center p-12 bg-P50 text-P300 hover:bg-P100 rounded-lg transition"
+            <div className="flex flex-col md:flex-row">
+              {/* Sidebar - Lesson List */}
+              <div className="md:w-1/3 border-r border-N50">
+                <div className="p-16">
+                  <h2 className="text-base font-bold text-N500 mb-16">Course Lessons</h2>
+                  
+                  {course.lessons && course.lessons.length === 0 ? (
+                    <p className="text-sm text-N200">No lessons available for this course.</p>
+                  ) : (
+                    <div className="space-y-8">
+                      {course.lessons.map((lesson, index) => (
+                        <button
+                          key={index}
+                          onClick={() => handleLessonChange(lesson)}
+                          className={`w-full text-left p-12 rounded-lg text-sm transition ${
+                            activeLesson && activeLesson.id === lesson.id
+                              ? "bg-P50 text-P300 font-medium"
+                              : "hover:bg-N50 text-N300"
+                          }`}
                         >
-                          <svg xmlns="http://www.w3.org/2000/svg" className="h-16 w-16 mr-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                          </svg>
-                          Access Course Material
-                        </a>
+                          <div className="flex items-center">
+                            <span className="w-24 h-24 rounded-full bg-N100 flex items-center justify-center text-xs text-N00 mr-12">
+                              {index + 1}
+                            </span>
+                            <span className="line-clamp-2">{lesson.title}</span>
+                            {lesson.youtube_id && (
+                              <span className="ml-8 text-P300">
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                              </span>
+                            )}
+                          </div>
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
+              
+              {/* Main Content - Video Player and Resources */}
+              <div className="md:w-2/3 p-24">
+                {activeLesson ? (
+                  <>
+                    <h2 className="text-lg font-bold text-N500 mb-16">{activeLesson.title}</h2>
+                    
+                    {/* Video Player with improved handling */}
+                    {activeLesson.video_url ? (
+                      <div className="aspect-video mb-24">
+                        {activeLesson.youtube_id && !videoError ? (
+                          <iframe
+                            className="w-full h-full rounded-lg"
+                            src={`https://www.youtube.com/embed/${activeLesson.youtube_id}`}
+                            title={activeLesson.title}
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                            allowFullScreen
+                            onError={handleVideoError}
+                          ></iframe>
+                        ) : (
+                          <div className="aspect-video bg-N100 rounded-lg flex items-center justify-center">
+                            <div className="text-center p-16">
+                              <svg xmlns="http://www.w3.org/2000/svg" className="h-32 w-32 mx-auto text-N200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                              </svg>
+                              <p className="mt-8 text-N200">
+                                {videoError ? "Error loading video. Please try again later." : "Unable to display video"}
+                              </p>
+                              <a 
+                                href={activeLesson.video_url} 
+                                target="_blank" 
+                                rel="noopener noreferrer"
+                                className="mt-8 inline-block text-P300 hover:text-P200 text-sm font-medium"
+                              >
+                                Open video in new tab
+                              </a>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    ) : (
+                      <div className="aspect-video bg-N100 rounded-lg mb-24 flex items-center justify-center">
+                        <p className="text-N200">No video available for this lesson</p>
                       </div>
                     )}
-                  </div>
-                ) : (
-                  <div className="bg-N50 p-16 rounded-lg text-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-32 w-32 mx-auto text-N200 mb-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                    <p className="text-N300">No content link available for this course.</p>
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
-          
-          {/* Course List - All courses in this track */}
-          <div className="bg-N00 rounded-lg shadow-xl mb-32">
-            <div className="p-24">
-              <h3 className="text-lg font-bold text-N500 mb-16">All Courses in this Track</h3>
-              
-              <div className="space-y-8">
-                {trackData.courses.map((course, index) => (
-                  <Link 
-                    href={`/courses/${course.course_id}`}
-                    key={course.course_id}
-                  >
-                    <div className={`p-16 rounded-lg transition ${
-                      course.course_id === currentCourse.course_id
-                        ? 'bg-P50 border-l-4 border-P300'
-                        : 'bg-N50 hover:bg-N100'
-                    }`}>
-                      <div className="flex items-center">
-                        <div className={`w-32 h-32 rounded-full flex items-center justify-center text-sm mr-12 ${
-                          course.course_id === currentCourse.course_id
-                            ? 'bg-P300 text-N00'
-                            : 'bg-N200 text-N00'
-                        }`}>
-                          {index + 1}
-                        </div>
-                        <div>
-                          <h4 className={`font-medium ${
-                            course.course_id === currentCourse.course_id
-                              ? 'text-P300'
-                              : 'text-N500'
-                          }`}>
-                            {course.name}
-                          </h4>
-                          <p className="text-xs text-N300 truncate">{course.description}</p>
+                    
+                    {/* Lesson Description */}
+                    <div className="mb-32">
+                      <h3 className="text-base font-semibold text-N500 mb-8">Description</h3>
+                      <p className="text-sm text-N300">{activeLesson.description}</p>
+                    </div>
+                    
+                    {/* Resources Section */}
+                    {activeLesson.resources && activeLesson.resources.length > 0 && (
+                      <div>
+                        <h3 className="text-base font-semibold text-N500 mb-16">Additional Resources</h3>
+                        <div className="space-y-8">
+                          {activeLesson.resources.map((resource, index) => (
+                            <a
+                              key={index}
+                              href={resource.url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="flex items-center p-12 rounded-lg bg-N50 hover:bg-P50 transition group"
+                            >
+                              <div className="w-32 h-32 rounded-full bg-P300 text-N00 flex items-center justify-center mr-12">
+                                {/* Display YouTube icon for video resources */}
+                                {resource.type?.toLowerCase().includes('video') || extractYouTubeId(resource.url) ? (
+                                  <svg xmlns="http://www.w3.org/2000/svg" className="h-16 w-16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                  </svg>
+                                ) : (
+                                  <svg xmlns="http://www.w3.org/2000/svg" className="h-16 w-16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                                  </svg>
+                                )}
+                              </div>
+                              <div>
+                                <p className="text-sm font-medium text-N500 group-hover:text-P300 transition">{resource.title}</p>
+                                <p className="text-xs text-N200">{resource.type}</p>
+                              </div>
+                            </a>
+                          ))}
                         </div>
                       </div>
+                    )}
+                  </>
+                ) : (
+                  <div className="flex items-center justify-center h-full">
+                    <div className="text-center">
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-48 w-48 mx-auto text-N100" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                      <p className="mt-16 text-N200">Select a lesson to view its content</p>
                     </div>
-                  </Link>
-                ))}
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -529,7 +468,7 @@ const CourseDetail = () => {
               
               <div className="flex space-x-16">
                 <Link href="/dashboard" className="text-sm text-N100 hover:text-N00">Dashboard</Link>
-                <Link href="/courses" className="text-sm text-N100 hover:text-N00">Courses</Link>
+                <Link href="/course" className="text-sm text-N100 hover:text-N00">Courses</Link>
                 <Link href="/support" className="text-sm text-N100 hover:text-N00">Support</Link>
               </div>
             </div>
