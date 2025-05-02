@@ -37,6 +37,7 @@ jobs:
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SSH_KEY }}
           script: |
+            set -e
             cd ~/test-aspirant-program/src/web
             echo "Building Docker Image..."
             docker build -t web-app-test:latest .

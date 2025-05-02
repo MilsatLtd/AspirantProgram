@@ -40,6 +40,7 @@ jobs:
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SSH_KEY }}
           script: |
+              set -e
               cd ~/AspirantProgram/src/admin
               echo "Building Docker Image..."
               docker build -t admin-app:latest .
