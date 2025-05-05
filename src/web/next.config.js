@@ -8,6 +8,4 @@ output:"export",
 useFileSystemPublicRoutes: false
 }
 
-module.exports = {
-  reactStrictMode: true,
-};
+module.exports = nextConfig
