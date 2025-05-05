@@ -58,6 +58,7 @@ class User(AbstractUser):
     profile_picture = models.ImageField(
         upload_to=unique_profile_picture, blank=True, null=True)
     objects = UserManager()
+    class_url  = models.CharField(max_length=300, null=True, blank=True)
     password_reset_token = models.IntegerField(null=True, blank=True)
     password_reset_token_expiry = models.DateTimeField(null=True, blank=True)
     password_reset_token_used = models.BooleanField(default=False)
