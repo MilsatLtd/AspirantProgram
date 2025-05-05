@@ -69,7 +69,7 @@ const TrackCards = () => {
       </div>
       <div>
         <Link
-          href={"explore"}
+          href={"explore-tracks"}
           className="text-N00 px-32 py-14 bg-P300 transition-all delay-150 ease-in-out hover:bg-P200 text-center rounded-lg font-semibold leading-[32px] text-base"
         >
           Explore Tracks
