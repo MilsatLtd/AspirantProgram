@@ -1,11 +1,12 @@
 from api.tasks import send_html_email_task, send_html_email_task2
-from ..models import User
+from ..models import User, Mentors, Cohort
 from ..serializers import UserSerializer, FullUserSerializer
 from rest_framework.response import Response
 from rest_framework import status
 from api.common.enums import *
 from api.backends.map_permissions import get_claim, get_role_from_claim
 import logging
+from django.utils import timezone
 
 logger = logging.getLogger(__name__)
 
@@ -45,20 +46,51 @@ class GetAllUsersService:
 
 
 class UpdateUserByIdService:
-    def update(self, reqeuest, pk):
+    def update(self, request, pk):
         try:
             user = User.objects.get(user_id=pk)
-            serializer = UserSerializer(user, data=reqeuest.data, partial=True)
+
+            if 'class_url' in request.data:
+                if not self.is_mentor_in_latest_active_cohort(pk):
+                    return Response(
+                        data={"message": "Only mentors in an active cohort can update the class URL."},
+                        status=status.HTTP_403_FORBIDDEN)
+
+            serializer = UserSerializer(user, data=request.data, partial=True)
             if serializer.is_valid():
                 serializer.save()
                 return Response(serializer.data, status=status.HTTP_200_OK)
             else:
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        except User.DoesNotExist:
+             return Response(
+                data={"message": "User not found."},
+                status=status.HTTP_404_NOT_FOUND)
         except Exception as e:
             logger.exception(e)
             return Response(
                 data={"message": "Something went wrong \U0001F9D0"},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
+
+    def is_mentor_in_latest_active_cohort(self, user_id):
+        """
+        Checks if a user is a mentor in the latest currently active cohort.
+        """
+        now = timezone.now()
+        latest_active_cohort = Cohort.objects.filter(
+            end_date__gte=now
+        ).order_by('-start_date').first()
+
+        if not latest_active_cohort:
+            return False
+
+        is_mentor = Mentors.objects.filter(
+            user__user_id=user_id,
+            track__cohort=latest_active_cohort
+        ).exists()
+
+        return is_mentor
 
 
 # Create service to delete a user by id
@@ -178,4 +210,3 @@ class SendAnyEmailService2:
             return Response(
                 data={"message": "Something went wrong \U0001F9D0"},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-        

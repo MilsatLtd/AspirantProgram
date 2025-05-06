@@ -23,8 +23,7 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['user_id', 'first_name', 'last_name',
-                  'email', 'gender', 'country', 'state', 'lga', 'referral_source', 'phone_number', 'bio']
-
+                  'email', 'gender', 'country', 'state', 'lga', 'referral_source', 'phone_number', 'bio', 'class_url']
 
 class CourseAdminSerializer(serializers.ModelSerializer):
     class Meta:
@@ -494,6 +493,7 @@ class GetMentorSerializer(serializers.Serializer):
     cohort = serializers.SerializerMethodField()
     mentees = serializers.SerializerMethodField()
     profile_picture = serializers.ImageField(required=False, allow_null=True)
+    class_url = serializers.CharField(max_length=100, allow_blank=True, required=False)
 
     # convert a mentor model to the required format
     def to_representation(self, instance):
@@ -505,6 +505,7 @@ class GetMentorSerializer(serializers.Serializer):
         representation['cohort'] = self.get_cohort(instance)
         representation['mentees'] = self.get_mentees(instance)
         representation['profile_picture'] = self.get_profile_picture(instance)
+        representation['class_url'] = instance.user.class_url
         return representation
 
     def get_profile_picture(self, instance):
@@ -606,6 +607,7 @@ class GetLatestTrackSerializer(serializers.Serializer):
 
 class UpdateUserProfileSerializer(serializers.Serializer):
     bio = serializers.CharField(max_length=50, allow_blank=True)
+    class_url = serializers.CharField(max_length=100, allow_blank=False, required=False)
 
 
 class ReportSubmitSerializer(serializers.Serializer):
