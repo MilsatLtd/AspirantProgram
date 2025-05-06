@@ -89,7 +89,11 @@ const MentorDashboard = () => {
             );
             
             if (trackDetailsResponse.data && trackDetailsResponse.data.courses) {
-              setTrackCourses(trackDetailsResponse.data.courses);
+              // Sort courses by order
+              const sortedCourses = [...trackDetailsResponse.data.courses].sort(
+                (a, b) => (a.order || Infinity) - (b.order || Infinity)
+              );
+              setTrackCourses(sortedCourses);
             }
           } catch (error) {
             console.error("Error fetching track courses:", error);
@@ -141,7 +145,11 @@ const MentorDashboard = () => {
             );
             
             if (trackDetailsResponse.data && trackDetailsResponse.data.courses) {
-              setTrackCourses(trackDetailsResponse.data.courses);
+              // Sort courses by order
+              const sortedCourses = [...trackDetailsResponse.data.courses].sort(
+                (a, b) => (a.order || Infinity) - (b.order || Infinity)
+              );
+              setTrackCourses(sortedCourses);
             }
           } catch (error) {
             console.error("Error fetching track courses:", error);
@@ -507,32 +515,33 @@ const MentorDashboard = () => {
                                 
                                 {course.access_link && (
                                   <div>
-                                    <span className="text-sm font-semibold text-N400 block mb-8">Access:</span>
-                                    {isYoutubeLink(course.access_link) ? (
-                                      <div className="aspect-w-16 aspect-h-9 mt-8">
-                                        <iframe
-                                          src={getYoutubeEmbedLink(course.access_link)}
-                                          title={course.name}
-                                          frameBorder="0"
-                                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                          allowFullScreen
-                                          className="w-full h-64 rounded"
-                                        ></iframe>
-                                      </div>
-                                    ) : (
-                                      <a
-                                        href={course.access_link}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="text-P300 hover:text-P200 text-sm inline-flex items-center"
-                                      >
-                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-16 w-16 mr-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                                        </svg>
-                                        Open Course Material
-                                      </a>
-                                    )}
-                                  </div>
+  {/* <span className="text-sm font-semibold text-N400 block mb-8">Access:</span> */}
+  {isYoutubeLink(course.access_link) ? (
+    <div className="mt-8 w-full" style={{ position: 'relative', paddingBottom: '56.25%', height: 0, overflow: 'hidden' }}>
+      <iframe
+        src={getYoutubeEmbedLink(course.access_link)}
+        title={course.name}
+        frameBorder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowFullScreen
+        style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}
+        className="rounded"
+      ></iframe>
+    </div>
+  ) : (
+    <a
+      href={course.access_link}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="text-P300 hover:text-P200 text-sm inline-flex items-center"
+    >
+      <svg xmlns="http://www.w3.org/2000/svg" className="h-16 w-16 mr-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+      </svg>
+      Open Course Material
+    </a>
+  )}
+</div>
                                 )}
                               </div>
                             ))}
@@ -552,7 +561,7 @@ const MentorDashboard = () => {
                   <div className="bg-N50 rounded-lg p-24">
                     <div className="flex flex-col md:flex-row items-start gap-24">
                       <div className="w-80 h-80 rounded-full overflow-hidden bg-P50 flex-shrink-0 relative group">
-                        {userData.profilePicture ? (
+                        {/* {userData.profilePicture ? (
                           <Image 
                             src={userData.profilePicture} 
                             alt={userData.name}
@@ -564,7 +573,7 @@ const MentorDashboard = () => {
                           <div className="w-full h-full flex items-center justify-center bg-P300 text-N00">
                             <span className="font-semibold text-lg">{userData.name.charAt(0)}</span>
                           </div>
-                        )}
+                        )} */}
                         
                         {/* Image upload overlay */}
                         <div className="absolute inset-0 bg-N500 bg-opacity-50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer">
