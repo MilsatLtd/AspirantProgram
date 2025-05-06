@@ -23,7 +23,7 @@ export const routes = {
     {
       id: 2,
       name: "Explore",
-      link: "/explore",
+      link: "/explore-tracks",
     },
     // {
     //     id:3,
@@ -52,17 +52,17 @@ export const routes = {
     {
       id: 1,
       name: "Geospatial Data Collection & GIS for Professionals",
-      link: "/track/geospatial-data-collection-and-gis-for-professionals",
+      link: "/explore-tracks/geospatial-data-collection-and-gis-for-professionals",
     },
     {
       id: 2,
       name: "Fundamental of GIS",
-      link: "/track/fundamental-of-gis",
+      link: "/explore-tracks/fundamental-of-gis",
     },
     {
       id: 3,
       name: "Geospatial Enterprise Solution",
-      link: "/track/geospatial-enterprise-solution",
+      link: "/explore-tracks/geospatial-enterprise-solution",
     },
   ],
 };
@@ -341,19 +341,19 @@ export const TrackCardsInfo = [
     id: 2,
     name: "Geospatial Data Collection & GIS for Professionals",
     picture: dataCollectionImage,
-    route: "/track/geospatial-data-collection-and-gis-for-professionals",
+    route: "/explore-tracks/geospatial-data-collection-and-gis-for-professionals",
   },
   {
     id: 1,
     name: "Fundamental of GIS",
     picture: community,
-    route: "/track/fundamental-of-gis",
+    route: "/explore-tracks/fundamental-of-gis",
   },
   {
     id: 3,
     name: "Geospatial Enterprise Solution",
     picture: gisEnterprise,
-    route: "/track/geospatial-enterprise-solution",
+    route: "/explore-tracks/geospatial-enterprise-solution",
   },
 ];
 
