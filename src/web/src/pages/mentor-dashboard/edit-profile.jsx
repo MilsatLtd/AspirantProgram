@@ -16,12 +16,14 @@ const EditMentorProfile = () => {
     name: "",
     email: "",
     bio: "",
+    class_url: "",
     profilePicture: "",
     track: "",
     cohort: "",
   });
   const [formData, setFormData] = useState({
     bio: "",
+    class_url: "",
     profile_picture: null,
     old_password: "",
     new_password: "",
@@ -76,6 +78,7 @@ const EditMentorProfile = () => {
         name: mentorData?.full_name || "",
         email: mentorData?.email || "",
         bio: mentorData?.bio || "",
+        class_url: mentorData?.class_url || "",
         profilePicture: mentorData?.profile_picture || "",
         track: ensureSafeRender(mentorData?.track) || "Unassigned",
         cohort: ensureSafeRender(mentorData?.cohort) || "Current Cohort",
@@ -84,6 +87,7 @@ const EditMentorProfile = () => {
       // Set form data (only for editable fields)
       setFormData({
         bio: mentorData?.bio || "",
+        class_url: mentorData?.class_url || "",
         profile_picture: null,
         old_password: "",
         new_password: "",
@@ -196,6 +200,17 @@ const EditMentorProfile = () => {
     return true;
   };
   
+  const validateClassUrl = (url) => {
+    if (!url) return true; // Empty URL is valid (optional field)
+    
+    try {
+      new URL(url);
+      return true;
+    } catch (e) {
+      return false;
+    }
+  };
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
@@ -210,13 +225,20 @@ const EditMentorProfile = () => {
         throw new Error("Authentication required");
       }
       
+      // Validate class URL if provided
+      if (formData.class_url && !validateClassUrl(formData.class_url)) {
+        setError("Please enter a valid URL for your class");
+        setSubmitting(false);
+        return;
+      }
+      
       let successCount = 0;
       let totalChanges = 0;
 
-      // 1. Update bio if changed
-      if (formData.bio !== userData.bio) {
+      // 1. Update bio and class_url if changed
+      if (formData.bio !== userData.bio || formData.class_url !== userData.class_url) {
         totalChanges++;
-        await updateBio(userId, token);
+        await updateUserProfile(userId, token);
         successCount++;
       }
       
@@ -269,12 +291,15 @@ const EditMentorProfile = () => {
     }
   };
   
-  const updateBio = async (userId, token) => {
-    const bioData = { bio: formData.bio };
+  const updateUserProfile = async (userId, token) => {
+    const profileData = { 
+      bio: formData.bio,
+      class_url: formData.class_url 
+    };
     
     await axios.put(
       `${process.env.NEXT_PUBLIC_API_ROUTE}users/update/${userId}`,
-      bioData,
+      profileData,
       { 
         headers: { 
           Authorization: `Bearer ${token}`,
@@ -470,9 +495,23 @@ const EditMentorProfile = () => {
                       className="w-full px-16 py-12 border border-N100 rounded-lg focus:outline-none focus:ring-2 focus:ring-P300 min-h-32"
                       rows={5}
                       placeholder="Tell us about yourself"
-                      maxLength={50} // As per API documentation
+                      maxLength={300} 
                     ></textarea>
-                    <p className="text-xs text-N200 mt-4">Maximum 50 characters</p>
+                    <p className="text-xs text-N200 mt-4">Maximum 300 characters</p>
+                  </div>
+                  
+                  {/* Class URL - Editable */}
+                  <div className="mb-16">
+                    <label className="block text-sm font-medium text-N300 mb-8">Class URL</label>
+                    <input 
+                      type="url"
+                      name="class_url"
+                      value={formData.class_url}
+                      onChange={handleInputChange}
+                      className="w-full px-16 py-12 border border-N100 rounded-lg focus:outline-none focus:ring-2 focus:ring-P300"
+                      placeholder="https://your-class-url.com"
+                    />
+                    <p className="text-xs text-N200 mt-4">Enter the URL for your virtual classroom</p>
                   </div>
                 </div>
                 
