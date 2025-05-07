@@ -14,6 +14,7 @@ const MentorDashboard = () => {
     name: "",
     email: "",
     bio: "",
+    classUrl: "",
     track: "",
     trackId: "",
     cohort: "",
@@ -89,7 +90,11 @@ const MentorDashboard = () => {
             );
             
             if (trackDetailsResponse.data && trackDetailsResponse.data.courses) {
-              setTrackCourses(trackDetailsResponse.data.courses);
+              // Sort courses by order
+              const sortedCourses = [...trackDetailsResponse.data.courses].sort(
+                (a, b) => (a.order || Infinity) - (b.order || Infinity)
+              );
+              setTrackCourses(sortedCourses);
             }
           } catch (error) {
             console.error("Error fetching track courses:", error);
@@ -107,6 +112,7 @@ const MentorDashboard = () => {
             name: mentorResponse.data.full_name || "Mentor",
             email: mentorResponse.data.email || "",
             bio: mentorResponse.data.bio || "",
+            classUrl: mentorResponse.data.class_url || "",
             track: mentorResponse.data.track?.name || "Unassigned",
             trackId: trackId,
             cohort: mentorResponse.data.cohort?.name || "Current Cohort",
@@ -141,7 +147,11 @@ const MentorDashboard = () => {
             );
             
             if (trackDetailsResponse.data && trackDetailsResponse.data.courses) {
-              setTrackCourses(trackDetailsResponse.data.courses);
+              // Sort courses by order
+              const sortedCourses = [...trackDetailsResponse.data.courses].sort(
+                (a, b) => (a.order || Infinity) - (b.order || Infinity)
+              );
+              setTrackCourses(sortedCourses);
             }
           } catch (error) {
             console.error("Error fetching track courses:", error);
@@ -159,6 +169,7 @@ const MentorDashboard = () => {
           name: basicMentorResponse.data.full_name || "Mentor",
           email: basicMentorResponse.data.email || "",
           bio: basicMentorResponse.data.bio || "",
+          classUrl: basicMentorResponse.data.class_url || "",
           track: basicMentorResponse.data.track?.name || "Unassigned",
           trackId: currentTrackId,
           cohort: basicMentorResponse.data.cohort?.name || "Current Cohort",
@@ -507,32 +518,33 @@ const MentorDashboard = () => {
                                 
                                 {course.access_link && (
                                   <div>
-                                    <span className="text-sm font-semibold text-N400 block mb-8">Access:</span>
-                                    {isYoutubeLink(course.access_link) ? (
-                                      <div className="aspect-w-16 aspect-h-9 mt-8">
-                                        <iframe
-                                          src={getYoutubeEmbedLink(course.access_link)}
-                                          title={course.name}
-                                          frameBorder="0"
-                                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                          allowFullScreen
-                                          className="w-full h-64 rounded"
-                                        ></iframe>
-                                      </div>
-                                    ) : (
-                                      <a
-                                        href={course.access_link}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="text-P300 hover:text-P200 text-sm inline-flex items-center"
-                                      >
-                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-16 w-16 mr-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                                        </svg>
-                                        Open Course Material
-                                      </a>
-                                    )}
-                                  </div>
+  {/* <span className="text-sm font-semibold text-N400 block mb-8">Access:</span> */}
+  {isYoutubeLink(course.access_link) ? (
+    <div className="mt-8 w-full" style={{ position: 'relative', paddingBottom: '56.25%', height: 0, overflow: 'hidden' }}>
+      <iframe
+        src={getYoutubeEmbedLink(course.access_link)}
+        title={course.name}
+        frameBorder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowFullScreen
+        style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}
+        className="rounded"
+      ></iframe>
+    </div>
+  ) : (
+    <a
+      href={course.access_link}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="text-P300 hover:text-P200 text-sm inline-flex items-center"
+    >
+      <svg xmlns="http://www.w3.org/2000/svg" className="h-16 w-16 mr-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+      </svg>
+      Open Course Material
+    </a>
+  )}
+</div>
                                 )}
                               </div>
                             ))}
@@ -546,80 +558,116 @@ const MentorDashboard = () => {
               
               {/* Profile Tab */}
               {activeTab === "profile" && (
-                <div>
-                  <h2 className="text-lg font-bold text-N500 mb-24">Mentor Profile</h2>
-                  
-                  <div className="bg-N50 rounded-lg p-24">
-                    <div className="flex flex-col md:flex-row items-start gap-24">
-                      <div className="w-80 h-80 rounded-full overflow-hidden bg-P50 flex-shrink-0 relative group">
-                        {userData.profilePicture ? (
-                          <Image 
-                            src={userData.profilePicture} 
-                            alt={userData.name}
-                            width={80}
-                            height={80}
-                            className="w-full h-full object-cover"
-                          />
-                        ) : (
-                          <div className="w-full h-full flex items-center justify-center bg-P300 text-N00">
-                            <span className="font-semibold text-lg">{userData.name.charAt(0)}</span>
-                          </div>
-                        )}
-                        
-                        {/* Image upload overlay */}
-                        <div className="absolute inset-0 bg-N500 bg-opacity-50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer">
-                          <label htmlFor="profile-upload" className="cursor-pointer">
-                            <svg xmlns="http://www.w3.org/2000/svg" className="h-24 w-24 text-N00" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
-                            </svg>
-                          </label>
-                          <input 
-                            id="profile-upload"
-                            type="file"
-                            accept="image/*"
-                            className="hidden"
-                            onChange={handleProfilePictureUpload}
-                          />
-                        </div>
-                      </div>
-                      
-                      <div className="flex-1">
-                        <h3 className="text-xl font-bold text-N500 mb-8">{userData.name}</h3>
-                        <p className="text-sm text-N300 mb-8">{userData.email}</p>
-                        <div className="bg-N100 p-16 rounded-lg mb-16">
-                          <h4 className="text-sm font-semibold text-N400 mb-8">About Me</h4>
-                          <p className="text-sm text-N300">{userData.bio || "No bio available."}</p>
-                        </div>
-                        
-                        <div className="space-y-12">
-                          <div className="flex justify-between">
-                            <span className="text-sm text-N300">Track:</span>
-                            <span className="text-sm font-medium text-N500">{userData.track}</span>
-                          </div>
-                          <div className="flex justify-between">
-                            <span className="text-sm text-N300">Cohort:</span>
-                            <span className="text-sm font-medium text-N500">{userData.cohort}</span>
-                          </div>
-                          <div className="flex justify-between">
-                            <span className="text-sm text-N300">Assigned Mentees:</span>
-                            <span className="text-sm font-medium text-N500">{mentees.length}</span>
-                          </div>
-                        </div>
-                        
-                        <div className="mt-24">
-                          <button 
-                            onClick={() => router.push("/mentor-dashboard/edit-profile")}
-                            className="bg-P50 text-P300 py-12 px-20 rounded-lg text-sm font-medium hover:bg-P100 transition duration-300"
-                          >
-                            Edit Profile
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )}
+  <div>
+    <h2 className="text-lg font-bold text-N500 mb-24">Mentor Profile</h2>
+    
+    <div className="bg-N50 rounded-lg p-24">
+      <div className="flex flex-col md:flex-row items-start gap-24">
+        <div className="w-80 h-80 rounded-full overflow-hidden bg-P50 flex-shrink-0 relative group">
+          {/* {userData.profilePicture ? (
+            <Image 
+              src={userData.profilePicture} 
+              alt={userData.name}
+              width={80}
+              height={80}
+              className="w-full h-full object-cover"
+            />
+          ) : (
+            <div className="w-full h-full flex items-center justify-center bg-P300 text-N00">
+              <span className="font-semibold text-lg">{userData.name.charAt(0)}</span>
+            </div>
+          )} */}
+          
+          {/* Image upload overlay */}
+          <div className="absolute inset-0 bg-N500 bg-opacity-50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer">
+            <label htmlFor="profile-upload" className="cursor-pointer">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-24 w-24 text-N00" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
+              </svg>
+            </label>
+            <input 
+              id="profile-upload"
+              type="file"
+              accept="image/*"
+              className="hidden"
+              onChange={handleProfilePictureUpload}
+            />
+          </div>
+        </div>
+        
+        <div className="flex-1">
+          <h3 className="text-xl font-bold text-N500 mb-8">{userData.name}</h3>
+          <p className="text-sm text-N300 mb-8">{userData.email}</p>
+          
+          {/* Bio Section - Enhanced */}
+          <div className="bg-N100 p-16 rounded-lg mb-16">
+            <h4 className="text-sm font-semibold text-N500 mb-8">About Me</h4>
+            {userData.bio ? (
+              <p className="text-sm text-N300">{userData.bio}</p>
+            ) : (
+              <div className="flex items-center justify-between">
+                <p className="text-sm text-N200 italic">No bio available</p>
+                <Link href="/mentor-dashboard/edit-profile">
+                  <span className="text-sm text-P500 hover:text-P200 cursor-pointer">Add Bio</span>
+                </Link>
+              </div>
+            )}
+          </div>
+          
+          {/* Class URL Section - New */}
+          <div className="bg-N100 p-16 rounded-lg mb-16">
+            <h4 className="text-sm font-semibold text-N400 mb-8">Virtual Classroom</h4>
+            {userData.classUrl ? (
+              <div className="flex items-center justify-between">
+                <p className="text-sm text-N300 truncate max-w-xs">{userData.classUrl}</p>
+                <a 
+                  href={userData.classUrl}
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="text-xs bg-P50 text-P300 px-8 py-4 rounded hover:bg-P100 transition duration-300"
+                >
+                  Open
+                </a>
+              </div>
+            ) : (
+              <div className="flex items-center justify-between">
+                <p className="text-sm text-N200 italic">No classroom link set</p>
+                <Link href="/mentor-dashboard/edit-profile">
+                  <span className="text-sm text-P500 hover:text-P200 cursor-pointer">Add Link</span>
+                </Link>
+              </div>
+            )}
+          </div>
+          
+          <div className="space-y-12">
+            <div className="flex justify-between">
+              <span className="text-sm text-N300">Track:</span>
+              <span className="text-sm font-medium text-N500">{userData.track}</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-sm text-N300">Cohort:</span>
+              <span className="text-sm font-medium text-N500">{userData.cohort}</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-sm text-N300">Assigned Mentees:</span>
+              <span className="text-sm font-medium text-N500">{mentees.length}</span>
+            </div>
+          </div>
+          
+          <div className="mt-24">
+            <button 
+              onClick={() => router.push("/mentor-dashboard/edit-profile")}
+              className="bg-P50 text-P300 py-12 px-20 rounded-lg text-sm font-medium hover:bg-P100 transition duration-300"
+            >
+              Edit Profile
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+)}
             </div>
           </div>
           

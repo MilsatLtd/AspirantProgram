@@ -5,6 +5,7 @@ import { useRouter } from "next/router";
 import axios from "axios";
 import Head from "next/head";
 import Logo from "../../Assets/logo.svg";
+import { Eye, EyeOff } from "lucide-react";
 
 const Login = () => {
   const router = useRouter();
@@ -14,12 +15,17 @@ const Login = () => {
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleChange = (e) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
     });
+  };
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
   };
 
   const handleSubmit = async (e) => {
@@ -153,11 +159,11 @@ const Login = () => {
                 >
                   🔑 Password
                 </label>
-                <div className="mt-6">
+                <div className="mt-6 relative">
                   <input
                     id="password"
                     name="password"
-                    type="password"
+                    type={showPassword ? "text" : "password"}
                     autoComplete="current-password"
                     required
                     value={formData.password}
@@ -165,6 +171,17 @@ const Login = () => {
                     className="appearance-none block w-full px-12 py-12 border border-N75 rounded-lg shadow-xl placeholder-N100 focus:outline-none focus:ring-2 focus:ring-P300 focus:border-P300 sm:text-sm"
                     placeholder="••••••••"
                   />
+                  <button
+                    type="button"
+                    onClick={togglePasswordVisibility}
+                    className="absolute inset-y-0 right-0 flex items-center pr-12 text-N200 hover:text-N300"
+                  >
+                    {showPassword ? (
+                      <EyeOff className="h-16 w-16" />
+                    ) : (
+                      <Eye className="h-16 w-16" />
+                    )}
+                  </button>
                 </div>
               </div>
 
