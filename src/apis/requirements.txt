@@ -24,7 +24,7 @@ coreschema==0.0.4
 cron-descriptor==1.2.35
 cryptography==40.0.2
 daphne==4.0.0
-Django==4.0.4
+Django==4.2.20
 django-background-tasks==1.2.5
 django-celery-results==2.5.0
 django-compat==1.0.15
