@@ -1,0 +1,84 @@
+name: iOS App Deployment
+
+on:
+  # trigger for automatic testflight beta builds on push to the main branch
+  push:
+    branches:
+      - main
+      - feat/ios-app-deployment # for testing
+    paths:
+      - 'src/mobile/ios/**'
+  
+  # trigger for automatic appstore deployment on workflow_dispatch
+  workflow_dispatch:
+    inputs:
+      app_version:
+        description: 'Application marketing version (e.g., 1.0.0)'
+        required: true
+        default: '1.0.0'
+        type: string
+      release_notes_content:
+        description: 'Release Notes for App Store (optional)'
+        required: false
+        default: 'We have made new updates based on your feedback and reviews...'
+        type: string
+        
+concurrency:
+  group: ios-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  beta_to_testflight:
+    if: github.event_name == 'push'
+    uses: milsatltd/builds/.github/workflows/ios-deployment.yml@feat/ios-app-deployment
+    with:
+      fastlane_lane: beta
+      working_directory: 'src/mobile/ios'
+    secrets:
+      APP_STORE_CONNECT_JSON_KEY: ${{ secrets.APP_STORE_CONNECT_JSON_KEY }}
+      MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+      MATCH_GIT_BASIC_AUTHORIZATION: ${{ secrets.MATCH_GIT_BASIC_AUTHORIZATION }}
+      FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
+  
+# might not need manual approval as it's a public repo,
+# but if it does, get the app id and app private key secrest and uncomment this
+# also implement this step in other internal ios repos
+  # manual_approval:
+  #   if: github.event_name == 'workflow_dispatch'
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Generate token
+  #       id: generate_token
+  #       uses: tibdex/github-app-token@v1
+  #       with:
+  #         app_id: ${{ secrets.WORKFKOW_APPROVAL_APP_ID }}
+  #         private_key: ${{ secrets.WORKFLOW_APP_PRIVATE_KEY }}
+  #     - name: Wait for approval
+  #       uses: trstringer/manual-approval@v1
+  #       with:
+  #         secret: ${{ steps.generate_token.outputs.token }}
+  #         approvers: mobile dev, services, pms
+  #         minimum-approvals: 1
+  #         issue-title: "Deploying Milsat Aspirant iOS application to App Store"
+  #         issue-body: "Please approve or deny the deployment"
+  #         exclude-workflow-initiator-as-approver: true
+  #         additional-approved-words: ''
+  #         additional-denied-words: ''
+
+  release_to_appstore:
+    # needs: manual_approval - (add: github.event_name == 'workflow_dispatch' && needs.manual_approval.result == 'success')
+    if: github.event_name == 'workflow_dispatch' 
+    uses: milsatltd/builds/.github/workflows/ios-deployment.yml@feat/ios-app-deployment
+    with:
+      fastlane_lane: release
+      working_directory: 'src/mobile/ios'
+      app_version: ${{ github.event.inputs.app_version }}
+      release_notes_content: ${{ github.event.inputs.release_notes_content }}
+    secrets:
+      APP_STORE_CONNECT_JSON_KEY: ${{ secrets.APP_STORE_CONNECT_JSON_KEY }}
+      MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+      MATCH_GIT_BASIC_AUTHORIZATION: ${{ secrets.MATCH_GIT_BASIC_AUTHORIZATION }}
+      FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
+        
+
+        

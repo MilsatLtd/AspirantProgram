@@ -1,0 +1,93 @@
+# This file contains the fastlane.tools configuration
+# You can find the documentation at https://docs.fastlane.tools
+#
+# For a list of all available actions, check out
+#
+#     https://docs.fastlane.tools/actions
+#
+# For a list of all available plugins, check out
+#
+#     https://docs.fastlane.tools/plugins/available-plugins
+#
+
+# Uncomment the line if you want fastlane to automatically update itself
+# update_fastlane
+
+default_platform(:ios)
+
+platform :ios do
+  desc "Push a new beta build to TestFlight"
+  lane :beta do
+
+    latest_build = latest_testflight_build_number(
+      api_key_path: "fastlane/store.json",
+      app_identifier: "com.milsat.aspirant"
+    )
+
+    increment_build_number( 
+      xcodeproj: "Runner.xcodeproj",
+      build_number: latest_build + 1
+    )
+
+    match(
+      app_identifier: "com.milsat.aspirant", 
+      type: "appstore"
+    )
+
+    build_app(
+      workspace: "Runner.xcworkspace",
+      scheme: "Runner"
+    )
+    
+    pilot(
+      api_key_path: "fastlane/store.json",
+      skip_waiting_for_build_processing: true,
+      groups: ["milsat_team"]
+    )
+  end
+
+  desc "Deploy new version to App Store"
+  lane :release do
+
+    latest_appstore_build = latest_app_store_build_number(
+      api_key_path: "fastlane/store.json",
+      app_identifier: "com.milsat.aspirant"
+    )
+
+    app_version_from_ci = ENV["APP_VERSION_FROM_GH_ACTIONS"]
+
+    increment_build_number( 
+      xcodeproj: "Runner.xcodeproj",
+      build_number: latest_appstore_build + 1
+    )
+
+    match(
+      app_identifier: "com.milsat.aspirant", 
+      type: "appstore",
+      read_only: true
+    )
+
+    build_app(
+      workspace: "Runner.xcworkspace",
+      scheme: "Runner",
+      configuration: "Release"
+    )
+    
+    deliver(
+      api_key_path: "fastlane/store.json",
+      submit_for_review: true, # Automatically submit the build for review
+      automatic_release: true, # Or `true` if you want it to be released immediately after approval
+      force: true, # Overwrite existing metadata if something goes wrong
+      # Other optional parameters for deliver:
+      app_identifier: "com.milsat.aspirant",
+      release_notes: ENV["RELEASE_NOTES_FROM_GH_ACTIONS"],
+      app_version: app_version_from_ci
+      # localized_release_notes: {
+      #   "en-US" => "English release notes",
+      #   "fr-FR" => "Notes de version en français"
+      # },
+      # screenshots_path: "fastlane/screenshots", # Path to your screenshots
+      # metadata_path: "fastlane/metadata", # Path to your metadata (e.g., app description, keywords)
+    )
+  end
+end
