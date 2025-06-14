@@ -35,3 +35,4 @@ Runner/GeneratedPluginRegistrant.*
 
 # fastlane
 fastlane/store.json
+fastlane/report.xml
