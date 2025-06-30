@@ -1,0 +1,79 @@
+
+default_platform(:ios)
+
+platform :ios do
+  desc "Push a new beta build to TestFlight"
+  lane :beta do
+
+    setup_ci() if ENV['CI']
+
+    latest_build = latest_testflight_build_number(
+      api_key_path: "fastlane/store.json",
+      app_identifier: "com.milsat.aspirant"
+    )
+
+    increment_build_number( 
+      xcodeproj: "Runner.xcodeproj",
+      build_number: latest_build + 1
+    )
+
+    match(
+      app_identifier: "com.milsat.aspirant", 
+      type: "appstore"
+    )
+
+    build_app(
+      workspace: "Runner.xcworkspace",
+      scheme: "Runner"
+    )
+    
+    pilot(
+      api_key_path: "fastlane/store.json",
+      skip_waiting_for_build_processing: true,
+      groups: ["milsat_team"]
+    )
+  end
+
+  desc "Deploy new version to App Store"
+  lane :release do
+
+        setup_ci() if ENV['CI']
+
+    latest_testflight_build = latest_testflight_build_number(
+      api_key_path: "fastlane/store.json",
+      app_identifier: "com.milsat.aspirant"
+    )
+
+    latest_testflight_version = lane_context[SharedValues::LATEST_TESTFLIGHT_VERSION]
+    
+    UI.message("Latest TestFlight build number found: #{latest_testflight_build}")
+    UI.message("Latest TestFlight version found: #{latest_testflight_version}")
+
+    match(
+      app_identifier: "com.milsat.aspirant", 
+      type: "appstore"
+    )
+
+    deliver(
+      api_key_path: "fastlane/store.json",
+      app_identifier: "com.milsat.aspirant",
+      app_version: latest_testflight_version,
+      build_number: latest_testflight_build.to_s,
+      precheck_default_rule_level: :skip,
+      run_precheck_before_submit: false,
+      precheck_include_in_app_purchases: false,
+      submit_for_review: true,
+      automatic_release: true,
+      skip_metadata: true,
+      skip_screenshots: true,
+      skip_binary_upload: true,
+      release_notes: {
+        "en-US" => ENV["RELEASE_NOTES_FROM_GH_ACTIONS"]
+      },
+      submission_information: {
+        export_compliance_uses_encryption: false
+      }
+    )
+    UI.success("Successfully promoted TestFlight build #{latest_testflight_build} (version #{latest_testflight_version}) to App Store for review!")
+  end
+end
