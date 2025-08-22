@@ -15,22 +15,22 @@ RUN \
 COPY . .
 COPY .env.local .env 
 
-# Build the static files
+# Build with standalone output
 RUN npm run build
 
 # Production stage
-FROM node:18-alpine
+FROM node:18-alpine AS runner
 WORKDIR /app
 
-# Install a lightweight HTTP server
-RUN npm install -g serve
-
-# Copy the static export folder from the build stage
-COPY --from=builder /app/out .
+# Copy standalone server build
+COPY --from=builder /app/.next/standalone ./
+COPY --from=builder /app/.next/static ./.next/static
+COPY --from=builder /app/public ./public
 COPY --from=builder /app/.env .env
 
 # Expose port 3002
 EXPOSE 3002
+ENV PORT=3002
 
-# Use 'serve' to serve the static files
-CMD ["serve", "-s", ".", "-l", "3002"]
+# Start the Next.js server
+CMD ["node", "server.js"]

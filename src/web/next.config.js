@@ -7,8 +7,9 @@ const nextConfig = {
     ],
     unoptimized: true,
   },
-output:"export",
-useFileSystemPublicRoutes: false
+output: 'standalone',
+// output:"export",
+useFileSystemPublicRoutes: true
 }
 
 module.exports = nextConfig
