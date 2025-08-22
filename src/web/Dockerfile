@@ -30,6 +30,7 @@ COPY --from=builder /app/.env .env
 
 # Expose port 3004
 EXPOSE 3004
+ENV PORT=3004
 
 # Start the Next.js server
 CMD ["node", "server.js"]

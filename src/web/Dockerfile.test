@@ -28,8 +28,9 @@ COPY --from=builder /app/.next/static ./.next/static
 COPY --from=builder /app/public ./public
 COPY --from=builder /app/.env .env
 
-# Expose port 3004
+# Expose port 3002
 EXPOSE 3002
+ENV PORT=3002
 
 # Start the Next.js server
 CMD ["node", "server.js"]
